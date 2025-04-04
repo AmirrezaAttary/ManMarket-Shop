@@ -1,12 +1,16 @@
 from django.contrib.auth import views as auth_views
-from accounts.forms import AuthenticationForm
+from accounts.forms import AuthenticationForm,RegisterForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponseRedirect
+from django.views.generic.base import TemplateView
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth import get_user_model
 from accounts.utils import send_password_reset_email
+from django.contrib.auth import login
+from django.shortcuts import redirect
+
 
 
 class LoginView(auth_views.LoginView):
@@ -14,6 +18,24 @@ class LoginView(auth_views.LoginView):
     form_class = AuthenticationForm
     redirect_authenticated_user = True
     
+    
+class RegisterView(TemplateView):
+    template_name = 'accounts/register.html'
+
+    def get(self, request, *args, **kwargs):
+        return self.render_to_response({'form': RegisterForm()})
+
+    def post(self, request, *args, **kwargs):
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # ورود خودکار پس از ثبت‌نام
+            return redirect(self.get_success_url())
+        return self.render_to_response({'form': form})
+
+    def get_success_url(self):
+        return reverse_lazy('website:index')
+
     
 class LogoutView(auth_views.LogoutView):
     pass

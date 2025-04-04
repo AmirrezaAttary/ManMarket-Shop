@@ -1,15 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block title %}
-    login
-{% endblock title %}
-    
-
+{% block title %}ثبت نام{% endblock title %}
 {% block content %}
-    
-
-    
 
 <div style="display: none !important;" class="sidebar has-scrollbar">
 
@@ -190,7 +182,7 @@
             <div class="showcase-container">
                 <div class="showcase">
                     <a href="#" class="showcase-img-box">
-                        <img src="{% static 'img/K.F.1.png' %}" alt="baby fabric shoes" class="showcase-img" width="75" height="75">
+                        <img src="{% static 'img/K.F.1.png'%}" alt="baby fabric shoes" class="showcase-img" width="75" height="75">
                     </a>
 
                     <div class="showcase-content">
@@ -212,7 +204,7 @@
 
                 <div class="showcase">
                     <a href="#" class="showcase-img-box">
-                        <img src="{% static 'img/T.S.1.png' %}" alt="men's hoodies t-shirt" class="showcase-img" width="75" height="75">
+                        <img src="{% static 'img/T.S.1.png'%}" alt="men's hoodies t-shirt" class="showcase-img" width="75" height="75">
                     </a>
 
                     <div class="showcase-content">
@@ -234,7 +226,7 @@
 
                 <div class="showcase">
                     <a href="#" class="showcase-img-box">
-                        <img src="{% static 'img/GT.S.1.png' %}" alt="girls t-shirt" class="showcase-img" width="75" height="75">
+                        <img src="{% static 'img/GT.S.1.png'%}" alt="girls t-shirt" class="showcase-img" width="75" height="75">
                     </a>
 
                     <div class="showcase-content">
@@ -256,7 +248,7 @@
 
                 <div class="showcase">
                     <a href="#" class="showcase-img-box">
-                        <img src="{% static 'img/H.T.1.webp' %}" alt="woolen hat for men" class="showcase-img" width="75" height="75">
+                        <img src="{% static 'img/H.T.1.webp'%}" alt="woolen hat for men" class="showcase-img" width="75" height="75">
                     </a>
 
                     <div class="showcase-content">
@@ -326,24 +318,16 @@
 
 
 
-
-
-
-
-
-
-
 <main class="login d-flex justify-content-center align-items-center">
 
 
 <!------------    login form :::::: start--------->
-<form action="{% url 'accounts:login' %}" method="post" class="px-2 py-3 d-flex justify-content-center flex-column align-items-center my-5">
-    <!--    title in login box start-->
-    {% csrf_token %}
+<form action="{% url 'accounts:register' %}" method="post" class="px-2 py-3 d-flex justify-content-center flex-column align-items-center my-5">
+       {% csrf_token %}
         <div>
             <h5 class="text-center my-3">
                 <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
-                <span class="px-2">ورود</span>
+                <span class="px-2">ثبت نام</span>
                 <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
             </h5>
         </div>
@@ -352,39 +336,48 @@
     <!--caption in login form start-->
         <div class="my-2">
             <p class="custom-text">
-                لطفا جزئیات حساب خودرا وارد کنید
+                لطفا جزئیات لازم را وارد کنید
             </p>
         </div>
     <!--caption in login form end---->
 
-        <!--name input start-------->
+    <!--email input start-------->
         <label class="w-100 px-3 my-1">
             ایمیل
-            <input type="text" name="username" class="form-control custom-text my-3 py-2" placeholder="ایمیل خود را وارد کنید">
+            <input type="email" name="email" class="form-control custom-text my-2 py-2" placeholder="ایمیل خود را وارد کنید">
         </label>
-        <!--name input end---------->
 
-        <!--email input start-------->
+    <!--email input end---------->
+
+    <!--password input start-------->
         <label class="w-100 px-3 my-1">
-            رمز ورود
-            <input type="password" name="password" class="form-control custom-text my-3 py-2" placeholder="رمز خود را وارد کنید">
+            رمزی برای خودتان انتخاب کنید
+            <input type="password" name="password1" class="form-control custom-text my-2 py-2" placeholder="رمز خود را وارد کنید">
         </label>
-        <!--email input end---------->
+    <!--password input end---------->
+
+    <!--password input start-------->
+        <label class="w-100 px-3 my-1">
+            تکرار رمز
+            <input type="password" name="password2" class="form-control custom-text my-2 py-2" placeholder="رمز خود را وارد کنید">
+        </label>
+    <!--password input end---------->
 
     <!--more in login form start----->
         <button type="submit" class="btn-tv px-5">
-            ورود
+            ثبت نام
         </button>
         <div class="d-flex justify-content-center flex-column my-3">
-            <a class="custom-text my-1" href="forget.pass.html">رمز خود را فراموش کردید؟</a>
-            <p class="my-2 h6"> تا حالا حسابی درست نکرده اید</p>
-            <a class="custom-text my-1" href="{% url 'accounts:register' %}">تشکیل اکانت؟</a>
+            <p class="my-2 h6">از قبل حساب دارید؟</p>
+            <a class="custom-text my-1" href="{% url 'accounts:login' %}">ورود</a>
         </div>
-    <!--more in login form end------->
+    
 
 </form>
 <!------------    login form :::::: end----------->
 
 </main>
+
+
 
 {% endblock content %}
