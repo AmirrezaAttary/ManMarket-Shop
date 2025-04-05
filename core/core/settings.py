@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # other app for internet
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -3656,6 +3656,7 @@ section,
   display: flex;
   overflow: hidden;
   position: relative;
+  height: 300px;
 }
 
 .tr-z-slide {
@@ -3729,6 +3730,7 @@ section,
   margin: 10px;
   cursor: pointer;
   position: relative;
+  box-shadow: rgba(0, 0, 0, 0.4) 0 2px 4px, rgba(0, 0, 0, 0.3) 0 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .color-circle svg {
   width: 0.3em !important;
