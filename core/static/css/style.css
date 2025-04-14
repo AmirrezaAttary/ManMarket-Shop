@@ -3672,7 +3672,7 @@ section,
 }
 
 .tr-z-slide img {
-  width: 65%; /* Ensures images are responsive */
+  width: 48%; /* Ensures images are responsive */
   height: auto; /* Maintains aspect ratio */
 }
 
