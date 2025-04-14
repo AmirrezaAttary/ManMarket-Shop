@@ -5,7 +5,7 @@ from django.utils import timezone
 
 register = template.Library()
 
-@register.inclusion_tag("blog/blog-categories.html")
+@register.inclusion_tag("includes/blog-categories.html")
 def postcategory():
     posts = Post.objects.filter(status = 1)
     categoryies = Category.objects.all()

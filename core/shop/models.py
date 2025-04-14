@@ -11,7 +11,7 @@ class ProductStatusType(models.IntegerChoices):
 
 class ProductModel(models.Model):
     user = models.ForeignKey("accounts.User",on_delete=models.PROTECT)
-    category = models.ManyToManyField("ProductCategoryModel")
+    category = models.ForeignKey("ProductCategoryModel", on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255)
     slug = models.SlugField(allow_unicode=True,unique=True)
     image = models.ImageField(default="/default/product-image.png",upload_to="product/img/")
@@ -104,3 +104,12 @@ class ProductColorVariant(models.Model):
 
     def __str__(self):
         return f"{self.product.title} - {self.color.title} - {self.price} تومان"
+    
+    
+class ProductSpecifications(models.Model):
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name="specifications")
+    title = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.product.title} - {self.title} : {self.value}"

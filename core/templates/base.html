@@ -6,7 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>من مارکت</title>
+    <title>{% block title %}
+        
+    {% endblock title %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -138,10 +140,10 @@
         <div class="container">
             <ul class="desktop-menu-category-list">
                 <li class="menu-category">
-                    <a href="collection.html" target="_blank" class="menu-title">تینیجر من</a>
+                    <a href="{% url 'website:collection' %}" target="_blank" class="menu-title">تینیجر من</a>
                 </li>
                 <li class="menu-category">
-                    <a href="collection.html" class="menu-title">فروشگاه</a>
+                    <a href="{% url 'shop:product-list' %}" class="menu-title">فروشگاه</a>
                     <div class="dropdown-panel">
                         <ul class="dropdown-panel-list">
                             <li class="menu-title"><a href="#">من پلاس </a></li>
@@ -155,31 +157,31 @@
 
                         <ul class="dropdown-panel-list">
                             <li class="menu-title"><a href="#">کالای دیجیتال </a></li>
-                            <li class="panel-list-item"><a href="search.html">موبایل</a></li>
-                            <li class="panel-list-item"><a href="search.html">تبلت</a></li>
-                            <li class="panel-list-item"><a href="search.html">دایرکت</a></li>
-                            <li class="panel-list-item"><a href="search.html">لپ تاپ</a></li>
-                            <li class="panel-list-item"><a href="search.html">مانیتور</a></li>
-                            <li class="panel-list-item"><a href="search.html">لوازم جانبی</a></li>
-                            <li class="panel-list-item"><a href="search.html">کنسول بازی</a></li>
-                            <li class="panel-list-item"><a href="search.html">دوربین عکاسی</a></li>
-                            <li class="panel-list-item"><a href="search.html">کامپیوتر همه کاره</a></li>
-                            <li class="panel-list-item"><a href="search.html">دوربین مدار بسته</a></li>
-                            <li class="panel-list-item"><a href="search.html">ماشین های اداری</a></li>
-                            <li class="panel-list-item"><a href="search.html">بیمه تجهیزات دیجیتال</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">موبایل</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">تبلت</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">دایرکت</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">لپ تاپ</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">مانیتور</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">لوازم جانبی</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">کنسول بازی</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">دوربین عکاسی</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">کامپیوتر همه کاره</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">دوربین مدار بسته</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">ماشین های اداری</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">بیمه تجهیزات دیجیتال</a></li>
                             <li class="panel-list-item">
                             </li>
                         </ul>
 
                         <ul class="dropdown-panel-list">
                             <li class="menu-title"><a href="#">خانه و آشپز خانه </a></li>
-                            <li class="panel-list-item"><a href="search.html">مبلمان</a></li>
-                            <li class="panel-list-item"><a href="search.html">تلویزیون</a></li>
-                            <li class="panel-list-item"><a href="search.html">لوازم برقی</a></li>
-                            <li class="panel-list-item"><a href="search.html">دزدگیر اماکن</a></li>
-                            <li class="panel-list-item"><a href="search.html">اندروید باکس</a></li>
-                            <li class="panel-list-item"><a href="search.html">یخچال و فریزر</a></li>
-                            <li class="panel-list-item"><a href="search.html">سرمایش و گرمایش</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">مبلمان</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">تلویزیون</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">لوازم برقی</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">دزدگیر اماکن</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">اندروید باکس</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">یخچال و فریزر</a></li>
+                            <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">سرمایش و گرمایش</a></li>
                             <li class="panel-list-item">
                             </li>
                         </ul>
@@ -192,16 +194,16 @@
                     </div>
                 </li>
                 <li class="menu-category">
-                    <a href="index.html" class="menu-title">خانه</a>
+                    <a href="{% url 'website:index' %}" class="menu-title">خانه</a>
                 </li>
                 <li class="menu-category">
-                    <a href="contact.html" class="menu-title">تماس  با  ما</a>
+                    <a href="{% url 'website:contact' %}" class="menu-title">تماس  با  ما</a>
                 </li>
                 <li class="menu-category">
-                    <a href="about.html" class="menu-title">درباره  ما</a>
+                    <a href="{% url 'website:about' %}" class="menu-title">درباره  ما</a>
                 </li>
                 <li class="menu-category">
-                    <a href="blog.html" class="menu-title">بلاگ</a>
+                    <a href="{% url 'blog:blog-list' %}" class="menu-title">بلاگ</a>
                 </li>
                 <li class="menu-category">
                     <a href="#" class="menu-title">اعتبار من</a>
@@ -252,7 +254,7 @@
             </div>
         </button>
         <button class="action-btn">
-            <a class="text-dark" href="index.html"><svg
+            <a class="text-dark" href="{% url 'website:index' %}"><svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"
                     width="0.8em"
@@ -266,7 +268,7 @@
         </button>
 
         <button class="action-btn">
-            <a class="text-dark" href="collection.html"><svg
+            <a class="text-dark" href="{% url 'website:collection' %}"><svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     width="1em"
@@ -307,7 +309,7 @@
         </div>
 
         <ul class="mobile-menu-category-list">
-            <li class="menu-category"><a href="index.html" class="menu-title">خانه</a></li>
+            <li class="menu-category"><a href="{% url 'website:index' %}" class="menu-title">خانه</a></li>
 
             <li class="menu-category">
                 <button class="accordion-menu" data-accordion-btn>
@@ -417,11 +419,9 @@
                     <li class="submenu-category"><a href="#" class="submenu-title">سرمایش و گرمایش</a></li>
                 </ul>
             </li>
-            <li class="menu-category"><a href="index.html" class="menu-title">من تریپ</a></li>
+            <li class="menu-category"><a href="{% url 'website:index' %}" class="menu-title">من تریپ</a></li>
 
-
-
-            <li class="menu-category"><a href="blog.html" class="menu-title">وبلاگ</a></li>
+            <li class="menu-category"><a href="{% url 'blog:blog-list' %}" class="menu-title">وبلاگ</a></li>
 
         </ul>
 
