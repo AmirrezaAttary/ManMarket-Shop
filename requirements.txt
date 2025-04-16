@@ -9,5 +9,5 @@ django-debug-toolbar==4.2.0
 idna==3.6
 pillow==10.2.0
 
-psycopg-binary==3.1.12
+# psycopg-binary==3.1.12
 python-decouple==3.8
