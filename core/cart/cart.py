@@ -30,8 +30,8 @@ class CartSession:
         }
         self.save()
 
-    def get_cart_items(self):
-        return self.cart['items']
+    def get_cart_dict(self):
+        return self._cart
 
     def save(self):
         self.session.modified = True
