@@ -745,7 +745,34 @@
     <script src="{% static 'js/stras.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
 
+    <script>
+        function addToCart(product_id,color_id) {
+            console.log(product_id)
+            $.ajax({
+                url: "{%  url 'cart:session-add-product' %}",
+                method: 'POST',
+                data: {
+                    product_id: product_id,
+                    color_id: color_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+                },
+                success: function (response) {
+                    $("#total-cart-item-count").html(response.total_quantity)
+                    console.log(response);
+                    window.location.reload();
+                    // do something with the response data
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    // handle the error case
+                }
+            });
+        }
+    </script>
+
     {% block extra_js %}
+
 
     {% endblock extra_js %}
 </body>

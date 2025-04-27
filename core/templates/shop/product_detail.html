@@ -69,7 +69,8 @@
                 
                 {% for color in colors %}
 
-                <h5>{{color.color}} {{color.get_price}}</h5> 
+                <h5>{{color.color}} {{color.get_price}} </h5> 
+                <a onclick="addToCart('{{object.id}}','{{color.id}}')">افزودن</a>
                 {% endfor %}
                     
                 
@@ -433,4 +434,8 @@
 
 {% block extra_js %}
 <script src="{% static 'js/single.product.js' %}"></script>
+
+
+
+
 {% endblock extra_js %}

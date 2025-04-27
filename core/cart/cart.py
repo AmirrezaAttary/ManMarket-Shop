@@ -1,35 +1,36 @@
-from shop.models import ProductModel,ProductStatusType
+from shop.models import (ProductModel,ProductStatusType,
+                         ProductColorInventory)
 
 class CartSession:
     def __init__(self, session):
         self.session = session
         self._cart = self.session.setdefault("cart", {"items": []})
 
-    def update_product_quantity(self,product_id,quantity):
+    def update_product_quantity(self, product_id, color_id, quantity):
         for item in self._cart["items"]:
-            if product_id == item["product_id"]:
+            if product_id == item["product_id"] and color_id == item["color_id"]:
                 item["quantity"] = int(quantity)
                 break
         else:
             return
         self.save()
     
-    def remove_product(self,product_id):
+    def remove_product(self, product_id, color_id):
         for item in self._cart["items"]:
-            if product_id == item["product_id"]:
+            if product_id == item["product_id"] and color_id == item["color_id"]:
                 self._cart["items"].remove(item)
                 break
         else:
             return
         self.save()
         
-    def add_product(self, product_id):
+    def add_product(self, product_id, color_id):
         for item in self._cart["items"]:
-            if product_id == item["product_id"]:
+            if product_id == item["product_id"] and color_id == item["color_id"]:
                 item["quantity"] += 1
                 break
         else:
-            new_item = {"product_id": product_id, "quantity": 1}
+            new_item = {"product_id": product_id, "color_id": color_id, "quantity": 1}
             self._cart["items"].append(new_item)
         self.save()
 
@@ -42,15 +43,14 @@ class CartSession:
 
     def get_cart_items(self):
         for item in self._cart["items"]:
-            product_obj = ProductModel.objects.get(id=item["product_id"], status=ProductStatusType.publish.value)
+            product_obj = ProductColorInventory.objects.get(id=item["product_id"], color_id=item["color_id"])
             item.update({"product_obj": product_obj, "total_price": item["quantity"] * product_obj.get_price()})
 
         return self._cart["items"]
 
-    def has_product(self, product_id):
-        count = sum(1 for item in self._cart["items"] if item["product_id"] == product_id)
+    def has_product(self, product_id, color_id):
+        count = sum(1 for item in self._cart["items"] if item["product_id"] == product_id and item["color_id"] == color_id)
         return count
-
 
     def get_total_payment_amount(self):
         return sum(item["total_price"] for item in self._cart["items"])
@@ -61,32 +61,27 @@ class CartSession:
     def save(self):
         self.session.modified = True
 
-
-
-    def decrease_product_quantity(self, product_id):
+    def decrease_product_quantity(self, product_id, color_id):
         for item in self._cart["items"]:
-            if product_id == item["product_id"]:
+            if product_id == item["product_id"] and color_id == item["color_id"]:
                 if item["quantity"] > 1:
                     item["quantity"] -= 1
                 else:
-                    self._cart["items"].remove(item)  # یا می‌تونی فقط quantity رو صفر کنی
+                    self._cart["items"].remove(item)
                 break
         else:
-            return  # اگر محصول در سبد نبود کاری نکن
+            return
         self.save()
 
-
-
-    def increase_product_quantity(self, product_id):
-        # بررسی اینکه آیا محصول در سبد خرید وجود دارد یا خیر
+    def increase_product_quantity(self, product_id, color_id):
         for item in self._cart["items"]:
-            if product_id == item["product_id"]:
-                item["quantity"] += 1  # افزایش مقدار محصول
+            if product_id == item["product_id"] and color_id == item["color_id"]:
+                item["quantity"] += 1
                 break
         else:
-            # اگر محصول در سبد خرید نباشد، آن را به سبد اضافه کن
             self._cart["items"].append({
                 "product_id": product_id,
-                "quantity": 1  # شروع تعداد از 1
+                "color_id": color_id,
+                "quantity": 1
             })
-        self.save()  # ذخیره تغییرات
+        self.save()
