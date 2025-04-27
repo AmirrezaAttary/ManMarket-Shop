@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import ProductModel, ProductCategoryModel, ProductImageModel, Color, ProductColorInventory
+from django.utils.html import format_html
 
 # ثبت رنگ‌ها به صورت مستقل
 @admin.register(Color)
@@ -35,5 +36,12 @@ class ProductCategoryModelAdmin(admin.ModelAdmin):
 # مدیریت عکس‌های اضافی محصولات
 @admin.register(ProductImageModel)
 class ProductImageModelAdmin(admin.ModelAdmin):
-    list_display = ("id", "file", "created_date")
+    list_display = ("id", "thumbnail_preview", "file", "created_date")
     search_fields = ("file",)
+    list_per_page = 20
+
+    def thumbnail_preview(self, obj):
+        if obj.file:
+            return format_html('<img src="{}" width="20" height="20" style="object-fit: cover; border-radius: 6px;" />', obj.file.url)
+        return "-"
+    thumbnail_preview.short_description = "Preview"  # عنوان ستون

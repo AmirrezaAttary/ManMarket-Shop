@@ -66,96 +66,14 @@
     
     <!--color product :: start------>
             <div class="my-2">
-                <div class="color-circle bg-danger" onclick="selectColor(this)">
-                <span class="checkmark"><svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 15 15"
-                        width="1em"
-                        height="1em"
-                >
-          <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="square"
-                  d="m1 7l4.5 4.5L14 3"
-          ></path>
-        </svg></span>
-                </div>
-                <div class="color-circle bg-success" onclick="selectColor(this)">
-        <span class="checkmark"><svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 15 15"
-                width="1em"
-                height="1em"
-        >
-          <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="square"
-                  d="m1 7l4.5 4.5L14 3"
-          ></path>
-        </svg></span>
-                </div>
-                <div class="color-circle bg-primary"  onclick="selectColor(this)">
-        <span class="checkmark"><svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 15 15"
-                width="1em"
-                height="1em"
-        >
-          <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="square"
-                  d="m1 7l4.5 4.5L14 3"
-          ></path>
-        </svg></span>
-                </div>
-                <div class="color-circle bg-light"  onclick="selectColor(this)">
-            <span class="checkmark"><svg class="text-dark "
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         viewBox="0 0 15 15"
-                                         width="1em"
-                                         height="1em"
-            >
-          <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="square"
-                  d="m1 7l4.5 4.5L14 3"
-          ></path>
-        </svg></span>
-                </div>
-                <div class="color-circle bg-dark"  onclick="selectColor(this)">
-            <span class="checkmark"><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 15 15"
-                    width="1em"
-                    height="1em"
-            >
-          <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="square"
-                  d="m1 7l4.5 4.5L14 3"
-          ></path>
-        </svg></span>
-                </div>
-                <div class="color-circle bg-warning"  onclick="selectColor(this)">
-            <span class="checkmark"><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 15 15"
-                    width="1em"
-                    height="1em"
-            >
-          <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="square"
-                  d="m1 7l4.5 4.5L14 3"
-          ></path>
-        </svg></span>
-                </div>
+                
+                {% for color in colors %}
+
+                <h5>{{color.color}} {{color.get_price}}</h5> 
+                {% endfor %}
+                    
+                
+
             </div>
     <!--color product :: end-------->
     
