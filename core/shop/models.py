@@ -7,6 +7,15 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class ProductStatusType(models.IntegerChoices):
     publish = 1 ,("نمایش")
     draft = 2 ,("عدم نمایش")
+    
+    
+    
+class Color(models.Model):
+    title = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.title
+
 
 
 class ProductModel(models.Model):
@@ -18,12 +27,7 @@ class ProductModel(models.Model):
     description = models.TextField()
     brief_description = models.TextField(null=True,blank=True)
     
-    
-    
-    stock = models.PositiveIntegerField(default=0)
     status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.draft.value)
-    price = models.DecimalField(default=0,max_digits=10,decimal_places=0)
-    discount_percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)])
     
     avg_rate = models.FloatField(default=0.0)
     
@@ -34,25 +38,11 @@ class ProductModel(models.Model):
         ordering = ["-created_date"]
         
     def __str__(self):
-        return self.title
-    
-    def get_price(self):        
-        discount_amount = self.price * Decimal(self.discount_percent / 100)
-        discounted_amount = self.price - discount_amount
-        return '{:,}'.format(round(discounted_amount)) 
-    
-    def is_discounted(self):
-        return self.discount_percent != 0
+        return self.title  
     
     def is_published(self):
         return self.status == ProductStatusType.publish.value
     
-    def get_price_by_color(self, color_id):
-        """گرفتن قیمت محصول بر اساس رنگ انتخاب شده"""
-        variant = self.color_variants.filter(color_id=color_id).first()
-        if variant:
-            return variant.price
-        return self.get_price()
     
     
     
@@ -81,12 +71,29 @@ class ProductImageModel(models.Model):
         ordering = ["-created_date"]
         
         
-class ProductColor(models.Model):
-    title = models.CharField(max_length=100)
-    hex_value = models.CharField(max_length=7)  # برای ذخیره مقدار رنگ به صورت HEX (مثلاً #FF5733)
+class ProductColorInventory(models.Model):
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name="color_inventories")
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name="product_inventories")
+    stock = models.PositiveIntegerField(default=0)
+    discount_percent = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+    price = models.DecimalField(default=0, max_digits=10, decimal_places=0)
+
+    def get_price(self):
+        discount_amount = self.price * (Decimal(self.discount_percent) / Decimal('100'))
+        discounted_price = self.price - discount_amount
+        return round(discounted_price)
+
+    def is_discounted(self):
+        return self.discount_percent != 0
+
+    class Meta:
+        unique_together = ("product", "color")  # هر محصول فقط یک بار یک رنگ خاص داشته باشد.
 
     def __str__(self):
-        return self.title
+        return f"{self.product.title} - {self.color.title}"
 
         
 class WishlistProductModel(models.Model):
@@ -97,19 +104,4 @@ class WishlistProductModel(models.Model):
         return self.product.title
     
     
-class ProductColorVariant(models.Model):
-    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name="color_variants")
-    color = models.ForeignKey("ProductColor", on_delete=models.CASCADE)
-    price = models.DecimalField(default=0, max_digits=10, decimal_places=0)  # قیمت مخصوص این رنگ
 
-    def __str__(self):
-        return f"{self.product.title} - {self.color.title} - {self.price} تومان"
-    
-    
-class ProductSpecifications(models.Model):
-    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name="specifications")
-    title = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"{self.product.title} - {self.title} : {self.value}"
