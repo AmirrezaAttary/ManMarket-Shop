@@ -1,13 +1,16 @@
 
 
 {% load static %}
-{% load humanize %}
+
 
 
 
 
 {% for ct in cart.get_cart_items %}
     <li>{{ct}}</li>
+    <li>{{ct.color_inventory.get_price}}
+        
+    </li>
 {% endfor %}
     
-
+{{total_payment_price}} k
