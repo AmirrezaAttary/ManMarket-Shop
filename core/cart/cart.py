@@ -41,13 +41,21 @@ class CartSession:
     def get_cart_dict(self):
         return self._cart
 
-    def get_cart_items(self):
+    def get_cart_items(self): 
+        valid_items = []
         for item in self._cart["items"]:
-            product_obj = ProductColorInventory.objects.get(id=item["product_id"], color_id=item["color_id"])
-            item.update({"product_obj": product_obj, "total_price": item["quantity"] * product_obj.get_price()})
+            product_id = int(item["product_id"])
+            color_id = int(item["color_id"])
+            product_obj = ProductModel.objects.get(id=item["product_id"], status=ProductStatusType.publish.value)
+            color_inventory = ProductColorInventory.objects.filter(
+                product_id=product_id,
+                color_id=color_id
+            ).first()
+            item["product_obj"] = product_obj
+            item["color_inventory"] = color_inventory
+            valid_items.append(item)
 
-        return self._cart["items"]
-
+        return valid_items
     def has_product(self, product_id, color_id):
         count = sum(1 for item in self._cart["items"] if item["product_id"] == product_id and item["color_id"] == color_id)
         return count

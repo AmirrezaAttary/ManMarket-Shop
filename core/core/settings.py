@@ -29,8 +29,6 @@ DEBUG = config("DEBUG",default=True)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast= lambda v: [item.strip() for item in v.split(',')] ,default="*")
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,6 +46,7 @@ INSTALLED_APPS = [
     'cart',
     'blog',
     # other app for internet
+    'django.contrib.humanize',
 ]
 
 
