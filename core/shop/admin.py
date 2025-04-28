@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProductModel, ProductCategoryModel, ProductImageModel, Color, ProductColorInventory
+from .models import ProductModel, ProductCategoryModel, ProductImageModel, Color, ProductColorInventory, ProductSpecification
 from django.utils.html import format_html
 
 # ثبت رنگ‌ها به صورت مستقل
@@ -7,6 +7,11 @@ from django.utils.html import format_html
 class ColorAdmin(admin.ModelAdmin):
     search_fields = ("title",)
     list_display = ("id", "title")
+
+class ProductSpecificationInline(admin.TabularInline):
+    model = ProductSpecification
+    extra = 1
+    fields = ("name", "value")
 
 # اینلاین رنگ و قیمت برای محصولات
 class ProductColorInventoryInline(admin.TabularInline):
@@ -22,7 +27,7 @@ class ProductModelAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "status", "created_date")
     search_fields = ("title",)
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [ProductColorInventoryInline]
+    inlines = [ProductSpecificationInline,ProductColorInventoryInline]
     list_filter = ("status", "category")
     list_per_page = 20
 

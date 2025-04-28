@@ -255,12 +255,12 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 });
 
 
-document.getElementById('close-cart').addEventListener('click', () => {
-    const cartDashboard = document.getElementById('cart-dashboard');
-    cartDashboard.classList.remove('show-dashboard');
-    cartDashboard.classList.add('hidden-dashboard');
-    overlay.classList.remove('active');
-});
+// document.getElementById('close-cart').addEventListener('click', () => {
+//     const cartDashboard = document.getElementById('cart-dashboard');
+//     cartDashboard.classList.remove('show-dashboard');
+//     cartDashboard.classList.add('hidden-dashboard');
+//     overlay.classList.remove('active');
+// });
 
 
 
