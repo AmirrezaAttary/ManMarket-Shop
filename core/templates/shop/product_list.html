@@ -17,7 +17,7 @@
                     <div class="col-lg-3 col-md-3 col-xs-12 pr sticky-sidebar px-3">
                         <div class="shop-archive-sidebar">
                             <div class="sidebar-archive mb-3">
-                                <form>
+                                <form action=".">
                                     <section class="widget-product-categories">
                                         <header class="cat-header">
                                             <h2 class="mb-0">
@@ -36,7 +36,7 @@
                                                         {% for category in categories %}
                                                         <div class="form-auth-row">
                                                             <label class="ui-checkbox">
-                                                                <input type="checkbox" value="1" name="login">
+                                                                <input type="checkbox"  value="{{category.id}}" name="category_id">
                                                                 <span class="ui-checkbox-check"></span>
                                                             </label>
                                                             <label for="" class="remember-me">{{category}}</label>
@@ -62,7 +62,7 @@
                                             <div class="card">
                                                 <div class="collapse show" id="headingTwo">
                                                     <div class="card-main mb-0">
-                                                        
+
                                                         {% for category in categories %}
                                                         <div class="form-auth-row">
                                                             <label class="ui-checkbox">
@@ -72,7 +72,7 @@
                                                             <label for="" class="remember-me">{{category}}</label>
                                                         </div>
                                                         {% endfor %}
-                                                            
+
 
 
                                                     </div>
@@ -190,7 +190,8 @@
                                             <div class="col-lg-3 col-md-3 col-xs-12 order-1 d-block mb-3">
                                                 <section class="product-box product product-type-simple">
                                                     <div class="thumb">
-                                                        <a href="{% url 'shop:product-detail' slug=object.slug %}" class="d-block">
+                                                        <a href="{% url 'shop:product-detail' slug=object.slug %}"
+                                                            class="d-block">
                                                             <div class="product-rate align-items-baseline"><svg
                                                                     class="star rated mb-1 cs-star" viewBox="0 0 24 24">
                                                                     <polygon
@@ -200,12 +201,12 @@
                                                                     {{object.avg_rate}}
                                                                 </span>
                                                             </div>
-                                                            <img alt="{{object.title}}"
-                                                                src="{{object.image.url}}">
+                                                            <img alt="{{object.title}}" src="{{object.image.url}}">
                                                         </a>
                                                     </div>
                                                     <div class="title">
-                                                        <a href="{% url 'shop:product-detail' slug=object.slug %}">{{object.title}}</a>
+                                                        <a
+                                                            href="{% url 'shop:product-detail' slug=object.slug %}">{{object.title}}</a>
                                                     </div>
                                                     <div class="price">
                                                         <span class="amount">6,000,000
@@ -229,29 +230,43 @@
                                 </div>
                             </div>
                             <div class="pagination-product">
+                                {% if page_obj.has_other_pages %}
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination">
+                                        {% if page_obj.has_previous %}
                                         <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous">
+                                            <a class="page-link"
+                                                onclick="changePage(`{{ page_obj.previous_page_number }}`)"
+                                                aria-label="Previous">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
-                                        <li class="page-item">
-                                            <a class="page-link active" href="#">1</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">2</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">3</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
+                                        {% endif %}
+                                        {{page_obj.page_range}}
+                                        {% for i in page_obj.paginator.page_range %}
+                                        {% if page_obj.number == i %}
+                                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                                        {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %} <li
+                                            class="page-item">
+                                            <button class="page-link" onclick="changePage(`{{i}}`)">{{ i }}</button>
+                                            </li>
+
+                                            {% endif %}
+
+                                            {% endfor %}
+                                            {% if page_obj.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    onclick="changePage(`{{ page_obj.next_page_number }}`)"
+                                                    aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
                                     </ul>
                                 </nav>
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
@@ -267,28 +282,32 @@
 
 {% block extra_js %}
 <script>
-    function addToCart(product_id) {
-        console.log(product_id)
-        $.ajax({
-            url: "{%  url 'cart:session-add-product' %}",
-            method: 'POST',
-            data: {
-                product_id: product_id,
-                csrfmiddlewaretoken: '{{ csrf_token }}'
 
-            },
-            success: function (response) {
-                console.log(response);
-                // do something with the response data
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(errorThrown);
-                // handle the error case
-            }
-        });
-    }
+    $(document).ready(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        $("#order-by-filter").val(current_url_params.get("order_by") || "")
+        $("#search-query-filter").val(current_url_params.get("q") || "")
+        $("#min-price-filter").val(current_url_params.get("min_price") || "")
+        $("#max-price-filter").val(current_url_params.get("max_price") || "")
+
+    });
+    $('#page-size-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("page_size", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#order-by-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("order_by", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+
 </script>
 
 {% endblock extra_js %}
-
+<script src="{% static 'js/custom.js' %}"></script>
 {% endblock content %}

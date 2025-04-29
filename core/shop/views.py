@@ -7,7 +7,7 @@ from shop.models import (ProductModel, ProductStatusType,
 
 class ShopListProductView(ListView):
     template_name = 'shop/product_list.html'
-    paginate_by = 9
+    paginate_by = 12
     
 
     def get_queryset(self):
@@ -16,9 +16,9 @@ class ShopListProductView(ListView):
         if search_q:
             queryset = queryset.filter(title__icontains=search_q)
             
-        category_id=self.request.GET.get('category_id')
-        if category_id:
-            queryset = queryset.filter(category__id=category_id)
+        category_ids = self.request.GET.getlist('category_id')
+        if category_ids:
+            queryset = queryset.filter(category__id__in=category_ids)
 
         if min_price:= self.request.GET.get('min_price'):
             queryset = queryset.filter(price__gte=min_price)

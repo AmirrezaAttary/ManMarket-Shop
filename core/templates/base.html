@@ -703,8 +703,8 @@
          </svg>
     </span>
     <h5 class="py-3 text-center">دنبال چی میگردی ؟</h5>
-    <form class="text-center position-relative container">
-        <input class="form-control my-inp" type="search" placeholder="مثلا آیفون 16 ">
+    <form action="{% url 'shop:product-list' %}" class="text-center position-relative container">
+        <input class="form-control my-inp" name="q" type="search" placeholder="مثلا آیفون 16 ">
         <div>
             <button class="sub-btn" type="submit">
                 <svg
