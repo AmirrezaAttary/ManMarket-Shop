@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.db.models import F
+from django.db.models import Min, Max, Avg
+from django.core.exceptions import FieldError
 from django.views.generic import ListView, DetailView
 from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
-                         ProductSpecification)
+                         ProductSpecification,Brand)
 # Create your views here.
 
 class ShopListProductView(ListView):
@@ -12,27 +14,48 @@ class ShopListProductView(ListView):
 
     def get_queryset(self):
         queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
-        search_q=self.request.GET.get('q')
+
+        search_q = self.request.GET.get('q')
         if search_q:
             queryset = queryset.filter(title__icontains=search_q)
-            
+
         category_ids = self.request.GET.getlist('category_id')
         if category_ids:
             queryset = queryset.filter(category__id__in=category_ids)
 
-        if min_price:= self.request.GET.get('min_price'):
-            queryset = queryset.filter(price__gte=min_price)
+        brand_ids = self.request.GET.getlist('brand_id')
+        if brand_ids:
+            queryset = queryset.filter(brand__id__in=brand_ids)
 
-        if max_price:= self.request.GET.get('max_price'):
-            queryset = queryset.filter(price__lte=max_price)
+        min_price = self.request.GET.get('min_price')
+        if min_price:
+            queryset = queryset.filter(color_inventories__price__gte=min_price)
 
-        return queryset
+        max_price = self.request.GET.get('max_price')
+        if max_price:
+            queryset = queryset.filter(color_inventories__price__lte=max_price)
+
+        order_by = self.request.GET.get("order_by")
+        if order_by:
+            if order_by == "visited":
+                queryset = queryset.order_by("-product_view")
+            elif order_by == "newest":
+                queryset = queryset.order_by("-created_date")
+            elif order_by == "popular":
+                queryset = queryset.order_by("-avg_rate")
+            elif order_by == "cheap":
+                queryset = queryset.annotate(min_price=Min("color_inventories__price")).order_by("min_price")
+            elif order_by == "expensive":
+                queryset = queryset.annotate(max_price=Max("color_inventories__price")).order_by("-max_price")
+
+        return queryset.distinct()
     
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_items'] = self.get_queryset().count()
         context["categories"] = ProductCategoryModel.objects.all()
+        context["brands"] = Brand.objects.all()
         return context
     
     
@@ -41,7 +64,16 @@ class ShopDetailProductView(DetailView):
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
     context_object_name = 'product'
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        session = self.request.session
+        viewed_key = f'viewed_product_{obj.pk}'
 
+        if not session.get(viewed_key, False):
+            ProductModel.objects.filter(pk=obj.pk).update(product_view=F('product_view') + 1)
+            session[viewed_key] = True
+
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

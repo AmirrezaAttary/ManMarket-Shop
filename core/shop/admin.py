@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProductModel, ProductCategoryModel, ProductImageModel, Color, ProductColorInventory, ProductSpecification
+from .models import ProductModel, ProductCategoryModel, ProductImageModel, Color, ProductColorInventory, ProductSpecification , Brand
 from django.utils.html import format_html
 
 # ثبت رنگ‌ها به صورت مستقل
@@ -24,16 +24,23 @@ class ProductColorInventoryInline(admin.TabularInline):
 # مدیریت محصولات
 @admin.register(ProductModel)
 class ProductModelAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "status", "created_date")
+    list_display = ("id", "title", "status", "created_date","product_view")
     search_fields = ("title",)
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ProductSpecificationInline,ProductColorInventoryInline]
-    list_filter = ("status", "category")
+    list_filter = ("status", "category", "brand")
     list_per_page = 20
 
 # مدیریت دسته‌بندی محصولات
 @admin.register(ProductCategoryModel)
 class ProductCategoryModelAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "created_date")
+    search_fields = ("title",)
+    prepopulated_fields = {"slug": ("title",)}
+    
+# مدیریت برند محصولات
+@admin.register(Brand)
+class ProductBrandModelAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "created_date")
     search_fields = ("title",)
     prepopulated_fields = {"slug": ("title",)}

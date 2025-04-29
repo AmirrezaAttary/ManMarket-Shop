@@ -5,7 +5,6 @@
 {% block content %}
 
 <!--main collection start------->
-
 <main class="main">
     <!-- arshive-product----------------------->
     <div class="px-2">
@@ -63,13 +62,13 @@
                                                 <div class="collapse show" id="headingTwo">
                                                     <div class="card-main mb-0">
 
-                                                        {% for category in categories %}
+                                                        {% for brand in brands %}
                                                         <div class="form-auth-row">
                                                             <label class="ui-checkbox">
-                                                                <input type="checkbox" value="1" name="login">
+                                                                <input type="checkbox" value="{{brand.id}}" name="brand_id">
                                                                 <span class="ui-checkbox-check"></span>
                                                             </label>
-                                                            <label for="" class="remember-me">{{category}}</label>
+                                                            <label for="" class="remember-me">{{brand}}</label>
                                                         </div>
                                                         {% endfor %}
 
@@ -101,11 +100,11 @@
                                                                     <fieldset class="filter-price">
 
                                                                         <div class="price-field">
-                                                                            <input type="range" min="0" max="300000000"
+                                                                            <!-- <input type="range" name="min_price" min="0" max="300000000"
                                                                                 step="500000" value="0" id="lower">
-                                                                            <input type="range" min="" max="300000000"
+                                                                            <input type="range" name="max_price" min="" max="300000000"
                                                                                 step="500000" value="300000000"
-                                                                                id="upper">
+                                                                                id="upper"> -->
                                                                         </div>
                                                                         <div class="price-wrap">
                                                                             <div class="price-wrap-1 px-2">
@@ -159,25 +158,43 @@
                                 </div>
                                 <div class="nav-sort-tabs-res">
                                     <ul class="nav sort-tabs-options" id="myTab" role="tablist">
-                                        <li class="nav-item"><a class="nav-link active" id="Most-visited-tab"
-                                                data-bs-toggle="tab" data-bs-target="#Most-visited" role="tab"
-                                                aria-controls="Most-visited" aria-selected="true">پربازدیدترین</a></li>
-                                        <li class="nav-item"><a class="nav-link" id="Bestselling-tab"
-                                                data-bs-toggle="tab" data-bs-target="#Bestselling" role="tab"
-                                                aria-controls="Bestselling" aria-selected="false">جدید ترین</a></li>
-                                        <li class="nav-item"><a class="nav-link" id="Most-Popular-tab"
-                                                data-bs-toggle="tab" data-bs-target="#Most-Popular" role="tab"
-                                                aria-controls="Most-Popular" aria-selected="false">محبوب‌ ترین</a></li>
-                                        <li class="nav-item"><a class="nav-link" id="Most-min-money"
-                                                data-bs-toggle="tab" data-bs-target="#m-money" role="tab"
-                                                aria-controls="m-money" aria-selected="false">ارزان ترین</a></li>
-                                        <li class="nav-item"><a class="nav-link" id="Most-big-seen" data-bs-toggle="tab"
-                                                data-bs-target="#b-seen" role="tab" aria-controls="b-seen"
-                                                aria-selected="false">پر بازدید ترین</a></li>
-                                        <li class="nav-item"><a class="nav-link" id="Most-big-money"
-                                                data-bs-toggle="tab" data-bs-target="#b-money" role="tab"
-                                                aria-controls="b-money" aria-selected="false">گران ترین</a></li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if request.GET.order_by == 'visited' %}active{% endif %}" data-order-by="visited" id="Most-visited-tab"
+                                               data-bs-toggle="tab" data-bs-target="#Most-visited" role="tab"
+                                               aria-controls="Most-visited" aria-selected="true">
+                                                پربازدیدترین
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if request.GET.order_by == 'newest' %}active{% endif %}" data-order-by="newest" id="Bestselling-tab"
+                                               data-bs-toggle="tab" data-bs-target="#Bestselling" role="tab"
+                                               aria-controls="Bestselling" aria-selected="false">
+                                               جدید ترین
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if request.GET.order_by == 'popular' %}active{% endif %}" data-order-by="popular" id="Most-Popular-tab"
+                                               data-bs-toggle="tab" data-bs-target="#Most-Popular" role="tab"
+                                               aria-controls="Most-Popular" aria-selected="false">
+                                               محبوب‌ ترین
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if request.GET.order_by == 'cheap' %}active{% endif %}" data-order-by="cheap" id="Most-min-money"
+                                               data-bs-toggle="tab" data-bs-target="#m-money" role="tab"
+                                               aria-controls="m-money" aria-selected="false">
+                                               ارزان ترین
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if request.GET.order_by == 'expensive' %}active{% endif %}" data-order-by="expensive" id="Most-big-money"
+                                               data-bs-toggle="tab" data-bs-target="#b-money" role="tab"
+                                               aria-controls="b-money" aria-selected="false">
+                                               گران ترین
+                                            </a>
+                                        </li>
                                     </ul>
+                                    
                                 </div>
                             </div>
                             <div class="product-items">
@@ -280,6 +297,10 @@
 
 </main>
 
+
+{% endblock content %}
+
+
 {% block extra_js %}
 <script>
 
@@ -298,16 +319,18 @@
         let new_url = window.location.pathname + "?" + current_url_params.toString()
         window.location.href = new_url
     });
-    $('#order-by-filter').change(function () {
-        let current_url_params = new URLSearchParams(window.location.search)
-        var selectedOption = $(this).val();
-        current_url_params.set("order_by", selectedOption)
-        let new_url = window.location.pathname + "?" + current_url_params.toString()
-        window.location.href = new_url
+    $('.sort-tabs-options .nav-link').click(function (e) {
+        e.preventDefault();
+        let orderByValue = $(this).data('order-by');
+        if (orderByValue) {
+            let current_url_params = new URLSearchParams(window.location.search);
+            current_url_params.set("order_by", orderByValue);
+            let new_url = window.location.pathname + "?" + current_url_params.toString();
+            window.location.href = new_url;
+        }
     });
 
 </script>
-
-{% endblock extra_js %}
 <script src="{% static 'js/custom.js' %}"></script>
-{% endblock content %}
+<script src="{% static 'js/search.js' %}"></script>
+{% endblock extra_js %}

@@ -21,11 +21,13 @@ class Color(models.Model):
 class ProductModel(models.Model):
     user = models.ForeignKey("accounts.User",on_delete=models.PROTECT)
     category = models.ForeignKey("ProductCategoryModel", on_delete=models.SET_NULL, null=True)
+    brand = models.ForeignKey("Brand", on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255)
     slug = models.SlugField(allow_unicode=True,unique=True)
     image = models.ImageField(default="/default/product-image.png",upload_to="product/img/")
     description = models.TextField()
     brief_description = models.TextField(null=True,blank=True)
+    product_view = models.IntegerField(default=0)
     
     status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.draft.value)
     
@@ -66,6 +68,19 @@ class ProductCategoryModel(models.Model):
     def __str__(self):
         return self.title
     
+    
+class Brand(models.Model):
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True, allow_unicode=True)
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_date"]
+
+    def __str__(self):
+        return self.title
     
 class ProductImageModel(models.Model):
     product = models.ForeignKey(ProductModel,on_delete=models.CASCADE,related_name="product_images")
