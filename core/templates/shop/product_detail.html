@@ -69,6 +69,7 @@
                 
                 {% for color in colors %}
                 <button class="col-md-3 bg-custom mx-1 px-3 cs-space col-sm-4 col-3 rounded-3">{{color.color}}</button>
+                <button onclick="addToCart('{{object.id}}','{{color.color.id}}')">افزودن به سبد خرید</button>
                 {% endfor %}
                     {{object.product_view}}
                 

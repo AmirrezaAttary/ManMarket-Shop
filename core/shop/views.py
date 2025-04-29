@@ -1,6 +1,5 @@
 from django.db.models import F
 from django.db.models import Min, Max, Avg
-from django.core.exceptions import FieldError
 from django.views.generic import ListView, DetailView
 from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
