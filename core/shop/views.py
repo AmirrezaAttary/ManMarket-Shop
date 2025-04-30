@@ -1,4 +1,4 @@
-from django.db.models import F
+from django.db.models import Min, F, ExpressionWrapper, DecimalField
 from django.db.models import Min, Max, Avg
 from django.views.generic import ListView, DetailView
 from shop.models import (ProductModel, ProductStatusType,
@@ -46,7 +46,18 @@ class ShopListProductView(ListView):
                 queryset = queryset.annotate(min_price=Min("color_inventories__price")).order_by("min_price")
             elif order_by == "expensive":
                 queryset = queryset.annotate(max_price=Max("color_inventories__price")).order_by("-max_price")
+            queryset = queryset.annotate(min_price=Min("color_inventories__price"))
+            discounted_price_expr = ExpressionWrapper(
+                F('color_inventories__price') - (
+                    F('color_inventories__price') * F('color_inventories__discount_percent') / 100
+                ),
+                output_field=DecimalField()
+            )
 
+            # اضافه کردن کمترین قیمت تخفیف‌خورده برای هر محصول
+            queryset = queryset.annotate(
+                min_discounted_price=Min(discounted_price_expr)
+            )
         return queryset.distinct()
     
 
