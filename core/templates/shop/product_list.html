@@ -232,11 +232,15 @@
                                                     </div>
                                                     <div class="title">
                                                         <a
-                                                            href="{% url 'shop:product-detail' slug=object.slug %}">{{object.title}}</a>
+                                                            href="{% url 'shop:product-detail' slug=object.slug %}">{{object.title|truncatewords:7}}</a>
                                                     </div>
                                                     <div class="price">    
-                                                        <span class="amount">{{object.min_price|intcomma}} تومان</span>
+                                                        
                                                         <span class="amount">{{object.min_discounted_price|intcomma}} تومان</span>
+                                                        {% if object.min_discount_percent %}
+                                                            <p>تخفیف: {{ object.min_discount_percent }}٪</p>
+                                                        {% endif %}
+
                                                             <span><svg class="ms-3" width="25" height="25"
                                                                     viewBox="0 0 14 16" fill="none"
                                                                     xmlns="http://www.w3.org/2000/svg">
