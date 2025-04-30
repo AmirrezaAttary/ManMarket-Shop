@@ -46,30 +46,30 @@ class ShopListProductView(ListView):
             elif order_by == "expensive":
                 queryset = queryset.annotate(max_price=Max("color_inventories__price")).order_by("-max_price")
             queryset = queryset.annotate(min_price=Min("color_inventories__price"))
-            discounted_price_expr = ExpressionWrapper(
-                F('price') - (F('price') * F('discount_percent') / 100),
-                output_field=DecimalField()
-            )
+        discounted_price_expr = ExpressionWrapper(
+            F('price') - (F('price') * F('discount_percent') / 100),
+            output_field=DecimalField()
+        )
 
-            # زیرکوئری گرفتن کمترین قیمت تخفیف خورده
-            discounted_inventory = ProductColorInventory.objects.filter(
-                product=OuterRef('pk')
-            ).annotate(
-                discounted_price=discounted_price_expr
-            ).order_by('discounted_price')
+        # زیرکوئری گرفتن کمترین قیمت تخفیف خورده
+        discounted_inventory = ProductColorInventory.objects.filter(
+            product=OuterRef('pk')
+        ).annotate(
+            discounted_price=discounted_price_expr
+        ).order_by('discounted_price')
 
-            min_discounted_price_subquery = Subquery(
-                discounted_inventory.values('discounted_price')[:1]
-            )
+        min_discounted_price_subquery = Subquery(
+            discounted_inventory.values('discounted_price')[:1]
+        )
 
-            min_discount_percent_subquery = Subquery(
-                discounted_inventory.values('discount_percent')[:1]
-            )
+        min_discount_percent_subquery = Subquery(
+            discounted_inventory.values('discount_percent')[:1]
+        )
 
-            queryset = queryset.annotate(
-                min_discounted_price=min_discounted_price_subquery,
-                min_discount_percent=min_discount_percent_subquery
-            )
+        queryset = queryset.annotate(
+            min_discounted_price=min_discounted_price_subquery,
+            min_discount_percent=min_discount_percent_subquery
+        )
         return queryset.distinct()
     
 
