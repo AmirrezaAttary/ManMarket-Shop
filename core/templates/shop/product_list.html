@@ -235,7 +235,7 @@
                                                             href="{% url 'shop:product-detail' slug=object.slug %}">{{object.title|truncatewords:7}}</a>
                                                     </div>
                                                     <div class="price">    
-                                                        
+                                                        <span class="amount">{{object.min_price|intcomma}} تومان</span>
                                                         <span class="amount">{{object.min_discounted_price|intcomma}} تومان</span>
                                                         {% if object.min_discount_percent %}
                                                             <p>تخفیف: {{ object.min_discount_percent }}٪</p>
