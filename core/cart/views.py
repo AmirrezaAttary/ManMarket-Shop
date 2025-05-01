@@ -17,6 +17,21 @@ class SessionAddProduct(View):
 
 class SessionCartSummry(TemplateView):
     template_name = 'cart/cart-summery.html'
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        cart = CartSession(self.request.session)
+        cart_items = cart.get_cart_items()
+        context["cart_items"] = cart_items
+        context["total_quantity"] = cart.get_total_quantity()
+        total_payment_price = cart.get_total_payment_amount()
+        tot_payment_price = cart.get_tot_payment_amount()
+        sod = tot_payment_price - total_payment_price
+        context["sod"] = sod
+        context["total_payment_price"] = total_payment_price
+        context["tot_payment_price"] = tot_payment_price
+        return context
+    
 
 
 class SessionRemoveProductView(View):
@@ -52,3 +67,26 @@ class SessionCartSummryView(TemplateView):
         context["total_quantity"] = cart.get_total_quantity()
         context["total_payment_price"] = cart.get_total_payment_amount()
         return context
+    
+    
+    
+class SessionCartProductRemoveOneQuantityView(View):
+
+    def post(self,request,*args,**kwargs):
+        cart = CartSession(request.session)
+        product_id = request.POST.get("product_id")
+        color_id = request.POST.get("color_id")
+        cart.decrease_product_quantity(product_id,color_id)
+
+        return JsonResponse({"cart":cart.get_cart_dict()})
+
+
+class SessionCartProductAddOneQuantityView(View):
+
+    def post(self,request,*args,**kwargs):
+        cart = CartSession(request.session)
+        product_id = request.POST.get("product_id")
+        color_id = request.POST.get("color_id")
+        cart.increase_product_quantity(product_id,color_id)
+
+        return JsonResponse({"cart":cart.get_cart_dict()})

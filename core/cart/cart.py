@@ -54,6 +54,7 @@ class CartSession:
             item["product_obj"] = product_obj
             item["color_inventory"] = color_inventory
             item["total_price"] = color_inventory.get_price() * item["quantity"]    
+            item["tot_price"] = color_inventory.get_price_product() * item["quantity"]    
             valid_items.append(item)
 
         return valid_items
@@ -63,6 +64,9 @@ class CartSession:
 
     def get_total_payment_amount(self):
         return sum(item["total_price"] for item in self.get_cart_items())
+    
+    def get_tot_payment_amount(self):
+        return sum(item["tot_price"] for item in self.get_cart_items())
 
     def get_total_quantity(self):
         return sum(item["quantity"] for item in self.get_cart_items())

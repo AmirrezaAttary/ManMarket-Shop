@@ -107,6 +107,9 @@ class ProductColorInventory(models.Model):
         discount_amount = self.price * (Decimal(self.discount_percent) / Decimal('100'))
         discounted_price = self.price - discount_amount
         return round(discounted_price)
+    
+    def get_price_product(self):
+        return round(self.price)
 
     def is_discounted(self):
         return self.discount_percent != 0

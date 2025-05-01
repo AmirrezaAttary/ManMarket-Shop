@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load humanize %}
 
 
 
@@ -17,12 +18,7 @@
 
     <div class="cart-content position-sticky">
         <div class="cart-items">
-            <!-- Empty Cart Message -->
-            <div id="empty-cart-message" class="empty-cart">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#bdc3c7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="20.5" r="1"/><circle cx="18" cy="20.5" r="1"/><path d="M2.5 2.5h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6l1.6-8.4H7.1"/></svg>
-                <p>سبد خرید شما خالی است!</p>
-                <a href="#">بازگشت به صفحه اصلی</a>
-            </div>
+
 
             <div class="cart-items-header">
                 <div>شرح محصول</div>
@@ -34,7 +30,7 @@
                 {% for item in cart.get_cart_items %}
                 <li class="cart-item" data-id="1">
                     <div class="item-info">
-                        <img src="{{item.product_obj.image.url}}" alt="گوشی موبایل سامسونگ A15">
+                        <img src="{{item.product_obj.image.url}}" alt="{{item.product_obj.title}}">
                         <div class="item-details">
                             <h3>{{item.product_obj.title}}</h3>
                             <p class="variant">رنگ:{{item.color_inventory.color}} </p>
@@ -44,15 +40,15 @@
                     <div class="item-actions-pricing">
                         <div class="item-actions">
                             <div class="item-quantity">
-                                <button class="quantity-btn increase" data-id="1" aria-label="افزایش تعداد">
+                                <button class="quantity-btn increase" onclick="addOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')" data-id="1" aria-label="افزایش تعداد">
                                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                                 </button>
-                                <span class="quantity-value">1</span>
-                                <button class="quantity-btn decrease" data-id="1" aria-label="کاهش تعداد">
+                                <span class="quantity-value">{{item.quantity}}</span>
+                                <button class="quantity-btn decrease" onclick="removeOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')" data-id="1" aria-label="کاهش تعداد">
                                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                                 </button>
                             </div>
-                            <button class="remove-item-btn" aria-label="حذف محصول">
+                            <button class="remove-item-btn" onclick="removeProduct('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')" aria-label="حذف محصول">
                                 <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 2048 2048"
@@ -69,10 +65,20 @@
                         </div>
                         <!-- Added data-unit-price here -->
                         <div class="item-pricing" data-unit-price="5800000">
-                            <span class="item-total-price">{{item.color_inventory.get_price}}</span> <span class="currency">تومان</span>
+                            <span class="item-total-price">{{item.total_price|intcomma}}</span> <span class="currency">تومان</span>
                         </div>
                     </div>
                 </li>
+                {% empty %}
+            <!-- Empty Cart Message -->
+            <div id="empty-cart-message" >
+                <center>
+                    <br>
+                <p>سبد خرید شما خالی است!</p>
+                <br><br>
+                <a href="{% url 'website:index' %}">بازگشت به صفحه اصلی</a>
+            </center>
+            </div>
                 {% endfor %}
 
             </ul>
@@ -81,16 +87,16 @@
         <div class="cart-summary">
             <h6 class="my-2">خلاصه سفارش</h6>
             <div class="summary-row mt-1">
-                <span>قیمت کالاها (<span id="total-items-count">0</span> کالا)</span>
-                <span id="subtotal-price">۰ <span class="currency">تومان</span></span>
+                <span>قیمت کالاها (<span id="total-items-count">{{cart.get_total_quantity}}</span> کالا)</span>
+                <span id="subtotal-price">{{cart.get_tot_payment_amount|intcomma}}<span class="currency">تومان</span></span>
             </div>
             <div class="summary-row mt-1 discount">
                 <span>سود شما از خرید</span>
-                <span id="discount-amount">۰ <span class="currency">تومان</span></span>
+                <span id="discount-amount">{{sod|intcomma}} <span class="currency">تومان</span></span>
             </div>
             <div class="summary-row mt-1 total">
                 <span>جمع سبد خرید</span>
-                <span id="total-payable">{{cart.get_total_payment_amount}}<span class="currency">تومان</span></span>
+                <span id="total-payable">{{cart.get_total_payment_amount|intcomma}}<span class="currency">تومان</span></span>
             </div>
             <button class="checkout-btn more-shop">ادامه فرآیند خرید</button>
         </div>
@@ -98,12 +104,75 @@
 </div>
 {% endblock content %}
     
-{% for ct in cart.get_cart_items %}
-    <li>{{ct}}</li>
-    <li>{{ct.color_inventory.get_price}}
-        
-    </li>
-{% endfor %}
+{% block extra_js %}
+<script>
+  
+    function removeProduct(product_id,color_id){
+        $.ajax({
+            url: "{%  url 'cart:session-remove-product' %}",
+            method: 'POST',
+            data: {
+                product_id: product_id,
+                color_id: color_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
     
-{{total_payment_price}} 
+            },
+            success: function (response) {
+                console.log(response);
+                window.location.reload();
+                // do something with the response data
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                // handle the error case
+            }
+        });
+    }
+</script>
+
+<script>
+    function removeOneProductQuantity(product_id,color_id){
+        $.ajax({
+            url: "{%  url 'cart:session-remove-one-quantity' %}",
+            method: 'POST',
+            data: {
+                product_id: product_id,
+                color_id: color_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+    
+            },
+            success: function (response) {
+                console.log(response);
+                window.location.reload();
+                // do something with the response data
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                // handle the error case
+            }
+        });
+    }
+    function addOneProductQuantity(product_id,color_id){
+        $.ajax({
+            url: "{%  url 'cart:session-add-one-quantity' %}",
+            method: 'POST',
+            data: {
+                product_id: product_id,
+                color_id: color_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+    
+            },
+            success: function (response) {
+                console.log(response);
+                window.location.reload();
+                // do something with the response data
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                // handle the error case
+            }
+        });
+    }
+</script>
+{% endblock %}
 
