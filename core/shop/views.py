@@ -88,15 +88,11 @@ class ShopDetailProductView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        session = self.request.session
-        viewed_key = f'viewed_product_{obj.pk}'
 
-        if not session.get(viewed_key, False):
-            ProductModel.objects.filter(pk=obj.pk).update(product_view=F('product_view') + 1)
-            session[viewed_key] = True
-
+        # هر بار که صفحه دیده می‌شود، 1 واحد به بازدید افزوده می‌شود
+        ProductModel.objects.filter(pk=obj.pk).update(product_view=F('product_view') + 1)
+        
         return obj
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = context['product']
