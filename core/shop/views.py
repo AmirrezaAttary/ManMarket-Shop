@@ -99,9 +99,20 @@ class ShopDetailProductView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        product = context['product']  # محصول خاص در context
+        product = context['product']
 
-        # افزودن رنگ‌ها و قیمت‌ها به context
-        context['colors'] = ProductColorInventory.objects.filter(product=product)  # دسترسی به رنگ‌ها و قیمت‌های محصول
-        context['specifications'] = ProductSpecification.objects.filter(product=product)  # دسترسی به مشخصات محصول
+        # تمام رنگ‌ها
+        colors = ProductColorInventory.objects.filter(product=product)
+
+        # محاسبه قیمت تخفیف‌خورده برای هر رنگ
+        for color in colors:
+            color.discounted_price = color.price - (color.price * color.discount_percent / 100)
+
+        # پیدا کردن رنگ با کمترین قیمت تخفیف‌خورده
+        default_color = min(colors, key=lambda c: c.discounted_price, default=None)
+
+        context['colors'] = colors
+        context['default_color'] = default_color
+        context['specifications'] = ProductSpecification.objects.filter(product=product)
+
         return context
