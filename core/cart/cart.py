@@ -1,5 +1,6 @@
 from shop.models import (ProductModel,ProductStatusType,
                          ProductColorInventory)
+from cart.models import CartModel,CartItemModel
 
 class CartSession:
     def __init__(self, session):
@@ -98,3 +99,56 @@ class CartSession:
                 "quantity": 1
             })
         self.save()
+
+
+    def sync_cart_items_from_db(self, user):
+        cart, _ = CartModel.objects.get_or_create(user=user)
+        cart_items = CartItemModel.objects.filter(cart=cart)
+
+        for cart_item in cart_items:
+            for item in self._cart["items"]:
+                if (str(cart_item.product.id) == str(item["product_id"]) and
+                    str(cart_item.color.id) == str(item["color_inventory_id"])):
+                    cart_item.quantity = item["quantity"]
+                    cart_item.save()
+                    break
+            else:
+                new_item = {
+                    "product_id": str(cart_item.product.id),
+                    "color_inventory_id": str(cart_item.color.id),
+                    "quantity": cart_item.quantity
+                }
+                self._cart["items"].append(new_item)
+        
+        self.merge_session_cart_in_db(user)
+        self.save()
+
+
+    def merge_session_cart_in_db(self, user):
+        cart, _ = CartModel.objects.get_or_create(user=user)
+
+        for item in self._cart["items"]:
+            product_obj = ProductModel.objects.get(
+                id=item["product_id"],
+                status=ProductStatusType.publish.value
+            )
+            color_inventory = ProductColorInventory.objects.get(
+                id=item["color_inventory_id"],
+                product=product_obj
+            )
+
+            cart_item, _ = CartItemModel.objects.get_or_create(
+                cart=cart,
+                product=product_obj,
+                color=color_inventory
+            )
+            cart_item.quantity = item["quantity"]
+            cart_item.save()
+
+        session_keys = [
+            (item["product_id"], item["color_inventory_id"]) for item in self._cart["items"]
+        ]
+        CartItemModel.objects.filter(cart=cart).exclude(
+            product__id__in=[pid for pid, _ in session_keys],
+            color__id__in=[cid for _, cid in session_keys]
+        ).delete()
