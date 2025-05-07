@@ -173,7 +173,7 @@ if SHOW_DEBUGGER_TOOLBAR:
 
 
 AUTH_USER_MODEL = 'accounts.User'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL= '/'
 
 # payment gateway settings
