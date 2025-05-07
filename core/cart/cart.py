@@ -108,14 +108,14 @@ class CartSession:
         for cart_item in cart_items:
             for item in self._cart["items"]:
                 if (str(cart_item.product.id) == str(item["product_id"]) and
-                    str(cart_item.color.id) == str(item["color_inventory_id"])):
+                    str(cart_item.color.id) == str(item["color_id"])):
                     cart_item.quantity = item["quantity"]
                     cart_item.save()
                     break
             else:
                 new_item = {
                     "product_id": str(cart_item.product.id),
-                    "color_inventory_id": str(cart_item.color.id),
+                    "color_id": str(cart_item.color.id),
                     "quantity": cart_item.quantity
                 }
                 self._cart["items"].append(new_item)
@@ -133,7 +133,7 @@ class CartSession:
                 status=ProductStatusType.publish.value
             )
             color_inventory = ProductColorInventory.objects.get(
-                id=item["color_inventory_id"],
+                id=item["color_id"],
                 product=product_obj
             )
 
@@ -146,7 +146,7 @@ class CartSession:
             cart_item.save()
 
         session_keys = [
-            (item["product_id"], item["color_inventory_id"]) for item in self._cart["items"]
+            (item["product_id"], item["color_id"]) for item in self._cart["items"]
         ]
         CartItemModel.objects.filter(cart=cart).exclude(
             product__id__in=[pid for pid, _ in session_keys],

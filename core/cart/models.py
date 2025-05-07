@@ -17,7 +17,7 @@ class CartModel(models.Model):
 class CartItemModel(models.Model):
     cart = models.ForeignKey(CartModel,on_delete=models.CASCADE,related_name="cart_items") 
     product = models.ForeignKey('shop.ProductModel',on_delete=models.PROTECT)
-    color = models.ForeignKey('shop.ProductColorInventory',null=True,blank=True,on_delete=models.PROTECT)
+    color = models.ForeignKey('shop.Color',null=True,blank=True,on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=0)
     
     created_date = models.DateTimeField(auto_now_add=True)
