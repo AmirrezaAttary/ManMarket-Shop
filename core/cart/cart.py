@@ -1,5 +1,5 @@
 from shop.models import (ProductModel,ProductStatusType,
-                         ProductColorInventory)
+                         ProductColorInventory,Color)
 from cart.models import CartModel,CartItemModel
 
 class CartSession:
@@ -108,7 +108,7 @@ class CartSession:
         for cart_item in cart_items:
             for item in self._cart["items"]:
                 if (str(cart_item.product.id) == str(item["product_id"]) and
-                    str(cart_item.color.id) == str(item["color_id"])):
+                    str(cart_item.color) == str(item["color_id"])):
                     cart_item.quantity = item["quantity"]
                     cart_item.save()
                     break
@@ -132,9 +132,8 @@ class CartSession:
                 id=item["product_id"],
                 status=ProductStatusType.publish.value
             )
-            color_inventory = ProductColorInventory.objects.get(
+            color_inventory = Color.objects.get(
                 id=item["color_id"],
-                product=product_obj
             )
 
             cart_item, _ = CartItemModel.objects.get_or_create(
