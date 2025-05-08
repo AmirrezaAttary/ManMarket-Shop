@@ -9,4 +9,6 @@ urlpatterns = [
     path("product/<int:pk>/delete/",views.AdminProductDeleteView.as_view(),name="product-delete"),
     path("product/<int:pk>/add-image/",views.AdminProductAddImageView.as_view(),name="product-add-image"),
     path("product/<int:pk>/image/<int:image_id>/remove/",views.AdminProductRemoveImageView.as_view(),name="product-remove-image"),
+    path("product/<int:pk>/add-color/",views.AdminProductAddColorView.as_view(),name="product-add-color"),
+    path("product/<int:pk>/edit-color/",views.AdminProductEditColorView.as_view(),name="product-edit-color"),
 ]
