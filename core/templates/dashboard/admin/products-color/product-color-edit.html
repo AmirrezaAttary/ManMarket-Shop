@@ -14,7 +14,7 @@
                 <h4 class="card-header-title">ویرایش رنگ </h4>
             </div>
 
-            <form action="." method="post">
+            <form action="{% url 'dashboard:admin:product-edit-color'  pk=object.id prduct_pk=object.product.id %}" method="post">
                 <!-- Body -->
                 <div class="card-body">
                     <!-- Form -->
@@ -45,11 +45,11 @@
                         </div>
                     </div>
                 <!-- End Body -->
-
+                    
                 <!-- Footer -->
                 <div class="card-footer pt-0">
                     <div class="d-flex justify-content-end gap-3">
-                        <a  href="{% url 'dashboard:admin:product-edit' pk=object.pk %}"><button class="btn btn-secondary">بازگشت</button> </a>
+                        <a class="btn btn-secondary"  href="{% url 'dashboard:admin:product-edit' pk=object.product.id %}">بازگشت</a>
                         <button class="btn btn-primary" type="submit">ذخیره تغییرات</button>
                     </div>
                 </div>
