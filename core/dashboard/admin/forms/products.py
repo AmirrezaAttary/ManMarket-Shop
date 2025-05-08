@@ -1,5 +1,5 @@
 from django import forms
-from shop.models import ProductModel, ProductImageModel
+from shop.models import ProductModel, ProductImageModel,ProductColorInventory
 
 
 class ProductForm(forms.ModelForm):
@@ -13,6 +13,7 @@ class ProductForm(forms.ModelForm):
             "description",
             "brief_description",
             "status",
+            'brand',
 
         ]
 
@@ -21,6 +22,7 @@ class ProductForm(forms.ModelForm):
         self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['slug'].widget.attrs['class'] = 'form-control'
         self.fields['category'].widget.attrs['class'] = 'form-control'
+        self.fields['brand'].widget.attrs['class'] = 'form-control'
         self.fields['image'].widget.attrs['class'] = 'form-control'
         self.fields['brief_description'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['class'] = 'form-control'
@@ -40,3 +42,21 @@ class ProductImageForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['file'].widget.attrs['class'] = 'form-control'
         self.fields['file'].widget.attrs['accept'] = 'image/png, image/jpg, image/jpeg'
+
+
+
+class ProductColorInventoryForm(forms.ModelForm):
+    model = ProductColorInventory
+    fields = [
+        'color',
+        'stock',
+        'discount_percent',
+        'price',
+    ] 
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['color'].widget.attrs['class'] = 'form-control'
+        self.fields['stock'].widget.attrs['class'] = 'form-control'
+        self.fields['discount_percent'].widget.attrs['class'] = 'form-control'
+        self.fields['price'].widget.attrs['class'] = 'form-control'

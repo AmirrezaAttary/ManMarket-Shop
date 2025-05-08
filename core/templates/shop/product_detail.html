@@ -13,15 +13,19 @@
 
             <div class="tr-z-slider" id="tr-z-slider-for">
                 <div class="tr-z-slide tr-z-active"><img src="{{object.image.url}}" alt="گوشی سامسونگ گلسی a15" /></div>
-                <div class="tr-z-slide"><img src="{% static 'img/2.slider.png' %}" alt="گوشی سامسونگ گلسی a15" /></div>
-                <div class="tr-z-slide"><img src="{{object.image.url}}" alt="گوشی سامسونگ گلسی a15" /></div>
-                <div class="tr-z-slide"><img src="{{object.image.url}}" alt="گوشی سامسونگ گلسی a15" /></div>
+                
+                {% for product_image in object.product_images.all %}
+                <div class="tr-z-slide"><img src="{{product_image.file.url}}" alt="گوشی سامسونگ گلسی a15" /></div>
+                {% endfor %}
+                    
+                
+
             </div>
             <div class="tr-z-nav mt-5" id="tr-z-slider-nav">
                 <img src="{{object.image.url}}" alt="گوشی سامسونگ گلسی a15" data-index="0" />
-                <img src="{% static 'img/2.slider.png' %}" alt="گوشی سامسونگ گلسی a15" data-index="1" />
-                <img src="{{object.image.url}}" alt="گوشی سامسونگ گلسی a15" data-index="2" />
-                <img src="{{object.image.url}}" alt="گوشی سامسونگ گلسی a15" data-index="2" />
+                {% for product_image in object.product_images.all %}
+                <img src="{{product_image.file.url}}" alt="گوشی سامسونگ گلسی a15" data-index="{{ forloop.counter }}" />
+                {% endfor %}
             </div>
 
             <button class="tr-z-button tr-z-next">

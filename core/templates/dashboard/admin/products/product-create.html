@@ -24,20 +24,10 @@
 
 
 
-{% block breadcrumb %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb breadcrumb-light mb-0">
-        <li class="breadcrumb-item">حساب</li>
-        <li class="breadcrumb-item">داشبورد ادمین</li>
-        <li class="breadcrumb-item">محصولات</li>
-        <li class="breadcrumb-item active" aria-current="page">
-            ایجاد محصول
-        </li>
-    </ol>
-</nav>
-{% endblock %}
-
 {% block content %}
+<div class="row">
+    {% include 'dashboard/admin/sidebar.html' %}
+    <div class="col-md-9">
 <div class="card">
     <!-- Header -->
     <div class="card-header border-bottom">
@@ -51,7 +41,7 @@
         {% csrf_token %}
         <div class="card-body">
             <div class="row d-flex ">
-                <div class="col-md-6 mb-3">
+                <div style="margin-top: 28px;" class="col-md-6 mb-3">
                     <label>نام محصول</label>
                     {{form.title}}
                 </div>
@@ -60,10 +50,7 @@
                         onclick="generateSlug()">ساخت slug</button> </label>
                     {{form.slug}}
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label>تعداد</label>
-                    {{form.stock}}
-                </div>
+
 
                 <div class="col-md-6 mb-3">
                     <label>وضعیت</label>
@@ -73,14 +60,11 @@
                     <label>دسته بندی</label>
                     {{form.category}}
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label>قیمت</label>
-                    {{form.price}}
+                <div class="col-md-6 mb-3">
+                    <label> برند</label>
+                    {{form.brand}}
                 </div>
-                <div class="col-md-2 mb-3">
-                    <label>درصد تخفیف</label>
-                    {{form.discount_percent}}
-                </div>
+                
 
                 <div class="col-md-12 mb-3">
                     <label>توضیح کوتاه</label>
@@ -106,7 +90,8 @@
             </div>
     </form>
 </div>
-
+</div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
