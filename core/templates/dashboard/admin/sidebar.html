@@ -1,0 +1,75 @@
+<div class="col-md-3 mb-3">
+  <aside class="user-panel-aside">
+      <div class="aside-header d-flex align-items-center flex-column">
+          <img class="profile-img" src="{{request.user.user_profile.image.url}}" alt="">
+          <div class="me-2 flex-column d-flex mx-3 mt-3">
+              <span class="mb-1 d-inline-block custom-text text-wrap text-center">{{request.user.user_profile.get_full_name}}</span>
+              <span class="text-muted fw-lighter">{{request.user.email}}</span>
+          </div>
+      </div>
+      <div class="aside-menu">
+          <a href="{% url 'dashboard:admin:profile-edit' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:profile-edit' %}active {% endif %}custom-text">
+              <svg
+                      viewBox="0 0 448 512"
+                      fill="currentColor"
+                      height="1.4em"
+                      width="1.4em"
+              >
+                  <path d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32 0-97.2-78.8-176-176-176zM48.99 464c7.9-63.1 61.81-112 127.01-112h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128S294.69 0 224 0 96 57.31 96 128c0 70.7 57.3 128 128 128zm0-208c44.11 0 80 35.89 80 80s-35.89 80-80 80-80-35.9-80-80c0-44.11 35.9-80 80-80z" />
+              </svg>
+              پروفایل
+          </a>
+          <a href="{% url 'dashboard:admin:product-list' %}" class="custom-text">
+
+              <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="{2}"
+                      viewBox="0 0 24 24"
+                      height="1.4em"
+                      width="1.4em"
+              >
+                  <path stroke="none" d="M0 0h24v24H0z" />
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                  <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
+                  <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
+              </svg>
+              محصولات
+          </a>
+          <a href="track.orders.html" class="custom-text">
+
+              <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="{2}"
+                      viewBox="0 0 24 24"
+                      height="1.4em"
+                      width="1.4em"
+              >
+                  <path stroke="none" d="M0 0h24v24H0z" />
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+                  <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
+                  <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
+              </svg>
+              پیگیری سفارشات
+          </a>
+
+          <a href="{% url 'accounts:logout' %}" class="custom-text">
+              <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      height="1.4em"
+                      width="1.4em"
+              >
+                  <path fill="none" d="M0 0h24v24H0z" />
+                  <path d="M5 11h8v2H5v3l-5-4 5-4v3zm-1 7h2.708a8 8 0 100-12H4a9.985 9.985 0 018-4c5.523 0 10 4.477 10 10s-4.477 10-10 10a9.985 9.985 0 01-8-4z" />
+              </svg>
+              خروج
+          </a>
+      </div>
+  </aside>
+</div>
