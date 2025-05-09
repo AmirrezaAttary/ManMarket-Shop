@@ -10,8 +10,9 @@ class SessionAddProduct(View):
         cart = CartSession(request.session)
         product_id = request.POST.get("product_id")
         color_id = request.POST.get("color_id")
+        color_inventory_id = request.POST.get("color_inventory_id")
         if product_id:
-            cart.add_product(product_id,color_id)
+            cart.add_product(product_id,color_id,color_inventory_id)
         if request.user.is_authenticated:
             cart.merge_session_cart_in_db(request.user)
         return JsonResponse({'cart':cart.get_cart_dict()})

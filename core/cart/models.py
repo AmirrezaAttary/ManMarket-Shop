@@ -11,13 +11,14 @@ class CartModel(models.Model):
         return self.user.email
     
     def calculate_total_price(self):
-        return sum(item.product.get_price() * item.quantity for item in self.cart_items.all())
+        return sum(item.color_inventory.get_price() * item.quantity for item in self.cart_items.all())
         
     
 class CartItemModel(models.Model):
     cart = models.ForeignKey(CartModel,on_delete=models.CASCADE,related_name="cart_items") 
     product = models.ForeignKey('shop.ProductModel',on_delete=models.PROTECT)
     color = models.ForeignKey('shop.Color',on_delete=models.PROTECT)
+    color_inventory = models.ForeignKey('shop.ProductColorInventory',on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=0)
     
     created_date = models.DateTimeField(auto_now_add=True)

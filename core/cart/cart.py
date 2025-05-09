@@ -25,13 +25,13 @@ class CartSession:
             return
         self.save()
         
-    def add_product(self, product_id, color_id):
+    def add_product(self, product_id, color_id,color_inventory_id):
         for item in self._cart["items"]:
-            if product_id == item["product_id"] and color_id == item["color_id"]:
+            if product_id == item["product_id"] and color_id == item["color_id"] and color_inventory_id == item['color_inventory_id']:
                 item["quantity"] += 1
                 break
         else:
-            new_item = {"product_id": product_id, "color_id": color_id, "quantity": 1}
+            new_item = {"product_id": product_id, "color_id": color_id,"color_inventory_id":color_inventory_id, "quantity": 1}
             self._cart["items"].append(new_item)
         self.save()
 
@@ -133,8 +133,11 @@ class CartSession:
 
         for cart_item in cart_items:
             for item in self._cart["items"]:
-                if (str(cart_item.product.id) == str(item["product_id"]) and
-                    str(cart_item.color) == str(item["color_id"])):
+                if (
+                    str(cart_item.product.id) == str(item["product_id"]) and
+                    str(cart_item.color.id) == str(item["color_id"]) and
+                    str(cart_item.color_inventory.id if cart_item.color_inventory else "") == str(item.get("color_inventory_id", ""))
+                ):
                     cart_item.quantity = item["quantity"]
                     cart_item.save()
                     break
@@ -142,13 +145,13 @@ class CartSession:
                 new_item = {
                     "product_id": str(cart_item.product.id),
                     "color_id": str(cart_item.color.id),
+                    "color_inventory_id": str(cart_item.color_inventory.id) if cart_item.color_inventory else None,
                     "quantity": cart_item.quantity
                 }
                 self._cart["items"].append(new_item)
         
         self.merge_session_cart_in_db(user)
         self.save()
-
 
     def merge_session_cart_in_db(self, user):
         cart, _ = CartModel.objects.get_or_create(user=user)
@@ -158,22 +161,36 @@ class CartSession:
                 id=item["product_id"],
                 status=ProductStatusType.publish.value
             )
-            color_inventory = Color.objects.get(
-                id=item["color_id"],
-            )
+            color_obj = Color.objects.get(id=item["color_id"])
+
+            color_inventory_obj = None
+            if item.get("color_inventory_id"):
+                try:
+                    color_inventory_obj = ProductColorInventory.objects.get(id=item["color_inventory_id"])
+                except ProductColorInventory.DoesNotExist:
+                    pass
 
             cart_item, _ = CartItemModel.objects.get_or_create(
                 cart=cart,
                 product=product_obj,
-                color=color_inventory
+                color=color_obj,
+                color_inventory=color_inventory_obj
             )
             cart_item.quantity = item["quantity"]
             cart_item.save()
 
         session_keys = [
-            (item["product_id"], item["color_id"]) for item in self._cart["items"]
+            (
+                item["product_id"],
+                item["color_id"],
+                str(item.get("color_inventory_id", ""))
+            )
+            for item in self._cart["items"]
         ]
+
         CartItemModel.objects.filter(cart=cart).exclude(
-            product__id__in=[pid for pid, _ in session_keys],
-            color__id__in=[cid for _, cid in session_keys]
+            product__id__in=[pid for pid, _, _ in session_keys],
+            color__id__in=[cid for _, cid, _ in session_keys],
+            color_inventory__id__in=[inv_id for _, _, inv_id in session_keys if inv_id]
         ).delete()
+

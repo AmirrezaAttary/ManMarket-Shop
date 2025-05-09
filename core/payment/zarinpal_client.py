@@ -17,6 +17,7 @@ class ZarinPalSandbox:
             "amount": str(amount),
             "callback_url": self._callback_url,
             "description": description,
+            'currency':'IRT'
         }
         headers = {
             'Content-Type': 'application/json'

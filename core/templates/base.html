@@ -808,7 +808,7 @@
 
 
 <script>
-    function addToCart(product_id,color_id) {
+    function addToCart(product_id,color_id,color_inventory_id) {
         console.log(product_id)
         $.ajax({
             url: "{%  url 'cart:session-add-product' %}",
@@ -816,6 +816,7 @@
             data: {
                 product_id: product_id,
                 color_id: color_id,
+                color_inventory_id:color_inventory_id,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
     
             },

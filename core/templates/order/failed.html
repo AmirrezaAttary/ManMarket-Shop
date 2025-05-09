@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+    
+{% block content %}
+
+<!-- Content -->
+<div style="margin-top: 120px; margin-bottom: 120px;" class="container content-space-6 content-space-lg-5">
+    <div class="w-md-75 w-lg-50 text-center mx-md-auto">
+        <center>
+            <div class="mb-5">
+                <img class="img-fluid" src="{% static 'img/oc-error.svg' %}" alt="Image Description"
+                    style="width: 15rem;">
+            </div>
+        </center>
+        <div class="mb-5">
+            <h1 class="h2">سفارش شما با شکست مواجه شد!</h1>
+
+        </div>
+
+        <a class="btn btn-tv btn-transition rounded-pill px-6" href="{% url 'shop:product-list' %}">به خرید ادامه
+            دهید</a>
+    </div>
+</div>
+<!-- End Content -->
+
+
+
+{% endblock content %}

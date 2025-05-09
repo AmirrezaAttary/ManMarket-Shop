@@ -73,11 +73,13 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
     def create_order_items(self, order, cart):
         for item in cart.cart_items.all():
+            print(item.color)
             OrderItemModel.objects.create(
                 order=order,
                 product=item.product,
                 quantity=item.quantity,
-                price=item.product.get_price(),
+                price=item.color_inventory.get_price(),
+                color = item.color,
             )
 
     def clear_cart(self, cart):

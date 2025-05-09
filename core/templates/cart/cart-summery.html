@@ -98,7 +98,7 @@
                 <span>جمع سبد خرید</span>
                 <span id="total-payable">{{cart.get_total_payment_amount|intcomma}}<span class="currency">تومان</span></span>
             </div>
-            <button class="checkout-btn more-shop">ادامه فرآیند خرید</button>
+            <a href="{% url 'order:checkout' %}"><button class="checkout-btn more-shop">ادامه فرآیند خرید</button></a>
         </div>
     </div>
 </div>

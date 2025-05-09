@@ -66,7 +66,7 @@
             <div class="my-2 d-flex row w-100">
 
                 {% for color in colors %}
-                <button value="{{color.color.id}}" data-price="{{color.get_price|intcomma}}" data-color-id="{{color.color.id}}"
+                <button value="{{color.color.id}}" data-price="{{color.get_price|intcomma}}" data-color-inventory-id="{{color.id}}" data-color-id="{{color.color.id}}"
                     class="color-option {% if color.color.id == default_color.color.id %}active-cs{% endif %} col-md-3 bg-custom mx-1 px-3 cs-space col-sm-4 col-3 rounded-3"
                     onclick="selectColor(this)">{{color.color}}</button>
 
@@ -77,7 +77,7 @@
 
             <!--like and add to shop button :: start-->
             <div class="d-flex justify-content-center text-end flex-column">
-                <div class=""><button id="add-to-cart-btn" onclick="addToCart('{{object.id}}','{{ default_color.color.id }}')"
+                <div class=""><button id="add-to-cart-btn" onclick="addToCart('{{object.id}}','{{ default_color.color.id }}','{{default_color.color.id}}')"
                         class="btn-tv add-to-cart rounded-3">افزودن به سبد خرید</button></div>
                 <div class=""><button class="btn-tv like rounded-3">اضافه کردن به علاقه مندی ها</button></div>
             </div>
@@ -384,6 +384,8 @@
 <script src="{% static 'js/single.product.js' %}"></script>
 <script>
     let selectedColorId = null;
+    let selectedColorInventoryId = null;
+    
 
     // گرفتن تمام دکمه‌های رنگ
     const colorButtons = document.querySelectorAll('button.bg-custom');
@@ -392,12 +394,13 @@
         button.addEventListener('click', () => {
             // گرفتن مقدار color id از دکمه کلیک شده
             selectedColorId = button.value;
-
+            selectedColorInventoryId = button.getAttribute('data-color-inventory-id');
+            console.log(selectedColorInventoryId)
             // انتخاب دکمه افزودن به سبد خرید
             const addToCartBtn = document.getElementById('add-to-cart-btn');
 
             // تنظیم onclick جدید با color id انتخاب شده
-            addToCartBtn.setAttribute('onclick', `addToCart('{{object.id}}', '${selectedColorId}')`);
+            addToCartBtn.setAttribute('onclick', `addToCart('{{object.id}}', '${selectedColorId}','${selectedColorInventoryId}')`);
 
             // (اختیاری) نمایش بصری انتخاب
             colorButtons.forEach(btn => btn.classList.remove('selected-color'));
@@ -420,8 +423,8 @@
 </script>
 <script>
     function selectColor(element) {
-        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('active'));
-        element.classList.add('active');
+        document.querySelectorAll('.color-option').forEach(el => el.classList.remove('active-cs'));
+        element.classList.add('active-cs');
 
         const price = element.getAttribute('data-price');
         
