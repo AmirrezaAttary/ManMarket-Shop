@@ -192,10 +192,18 @@
         $("#page-size-filter").val(current_url_params.get("page_size") || "10")
         $("#order-by-filter").val(current_url_params.get("order_by") || "")
         $("#search-query-filter").val(current_url_params.get("q") || "")
+        $("#category-id-filter").val(current_url_params.get("category_id") || "")
         $("#min-price-filter").val(current_url_params.get("min_price") || "")
         $("#max-price-filter").val(current_url_params.get("max_price") || "")
-        $("#category-id-filter").val(current_url_params.get("category_id") || "")
+        
 
+    });
+    $('#category-id-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("category_id", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
     });
     $('#page-size-filter').change(function () {
         let current_url_params = new URLSearchParams(window.location.search)

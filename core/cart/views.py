@@ -12,6 +12,8 @@ class SessionAddProduct(View):
         color_id = request.POST.get("color_id")
         if product_id:
             cart.add_product(product_id,color_id)
+        if request.user.is_authenticated:
+            cart.merge_session_cart_in_db(request.user)
         return JsonResponse({'cart':cart.get_cart_dict()})
     
 
@@ -42,6 +44,9 @@ class SessionRemoveProductView(View):
         color_id = request.POST.get("color_id")
         if product_id:
             cart.remove_product(product_id,color_id)
+            
+        if request.user.is_authenticated:
+            cart.merge_session_cart_in_db(request.user)
         return JsonResponse({"cart":cart.get_cart_dict(),"total_quantity":cart.get_total_quantity()})
     
 class SessionUpdateProductQuantityView(View):
@@ -77,6 +82,8 @@ class SessionCartProductRemoveOneQuantityView(View):
         product_id = request.POST.get("product_id")
         color_id = request.POST.get("color_id")
         cart.decrease_product_quantity(product_id,color_id)
+        if request.user.is_authenticated:
+            cart.merge_session_cart_in_db(request.user)
 
         return JsonResponse({"cart":cart.get_cart_dict()})
 
@@ -88,5 +95,7 @@ class SessionCartProductAddOneQuantityView(View):
         product_id = request.POST.get("product_id")
         color_id = request.POST.get("color_id")
         cart.increase_product_quantity(product_id,color_id)
+        if request.user.is_authenticated:
+            cart.merge_session_cart_in_db(request.user)
 
         return JsonResponse({"cart":cart.get_cart_dict()})

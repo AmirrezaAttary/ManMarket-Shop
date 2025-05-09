@@ -65,3 +65,12 @@ class AdminProductEditColorView(LoginRequiredMixin, HasAdminAccessPermission, Su
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:product-edit", kwargs={"pk": self.kwargs['prduct_pk']})
 
+
+
+class AdminProductColorDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    template_name = "dashboard/admin/products-color/product-color-delete.html"
+    queryset = ProductColorInventory.objects.all()
+    success_message = "حذف رنگ با موفقیت انجام شد"
+    
+    def get_success_url(self):
+        return reverse_lazy('dashboard:admin:product-edit', kwargs={'pk': self.kwargs['prduct_pk']})
