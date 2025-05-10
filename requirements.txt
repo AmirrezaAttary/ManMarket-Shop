@@ -11,3 +11,9 @@ pillow==10.2.0
 
 # psycopg-binary==3.1.12
 python-decouple==3.8
+
+
+# api for models
+bs4==0.0.2
+selenium==4.32.0
+webdriver-manager==4.0.2
