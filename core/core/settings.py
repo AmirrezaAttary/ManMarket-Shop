@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'order',
     'dashboard',
     'payment',
+    'pricegethamrh',
     # other app for internet
     'django.contrib.humanize',
 ]
