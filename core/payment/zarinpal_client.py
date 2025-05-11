@@ -6,16 +6,16 @@ class ZarinPalSandbox:
     _payment_request_url = "https://sandbox.zarinpal.com/pg/v4/payment/request.json"
     _payment_verify_url = "https://sandbox.zarinpal.com/pg/v4/payment/verify.json"
     _payment_page_url = "https://sandbox.zarinpal.com/pg/StartPay/"
-    _callback_url = "http://127.0.0.1:8282/payment/verify"
+    
 
     def __init__(self, merchant_id=settings.MERCHANT_ID):
         self.merchant_id = merchant_id
 
-    def payment_request(self, amount, description="پرداختی کاربر"):
+    def payment_request(self,callback_url, amount, description="پرداختی کاربر"):
         payload = {
             "merchant_id": self.merchant_id,
             "amount": str(amount),
-            "callback_url": self._callback_url,
+            "callback_url": callback_url,
             "description": description,
             'currency':'IRT'
         }

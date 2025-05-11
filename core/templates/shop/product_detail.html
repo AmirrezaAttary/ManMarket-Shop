@@ -13,10 +13,10 @@
         <div class="tr-z-slider-container col-md-6 col-sm-12 align-items-center px-5 my-1">
 
             <div class="tr-z-slider" id="tr-z-slider-for">
-                <div class="tr-z-slide tr-z-active"><img src="{{object.image.url}}" alt="گوشی سامسونگ گلسی a15" /></div>
+                <div class="tr-z-slide tr-z-active"><img src="{{object.image.url}}" alt="{{object.title}}" /></div>
                 
                 {% for product_image in object.product_images.all %}
-                <div class="tr-z-slide"><img src="{{product_image.file.url}}" alt="گوشی سامسونگ گلسی a15" /></div>
+                <div class="tr-z-slide"><img src="{{product_image.file.url}}" alt="{{object.title}}" /></div>
                 {% endfor %}
                     
                 

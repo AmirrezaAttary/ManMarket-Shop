@@ -53,8 +53,8 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         zarinpal = ZarinPalSandbox()
         total_tax = round((order.total_price * 10)/100)
         order.total_price += total_tax
-        print(order.total_price)
-        response = zarinpal.payment_request(order.total_price)
+        callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+        response = zarinpal.payment_request(amount=order.total_price,callback_url=callback_url)
         print(response)
         payment_obj = PaymentModel.objects.create(
             authority_id = response['data']['authority'],
@@ -154,5 +154,5 @@ class ValidateCouponView(LoginRequiredMixin, HasCustomerAccessPermission, View):
                 total_price = cart.calculate_total_price()
                 total_price = round(
                     total_price - (total_price * (coupon.discount_percent/100)))
-                total_tax = round((total_price * 9)/100)
+                total_tax = round((total_price * 10)/100)
         return JsonResponse({"message": message, "total_tax": total_tax, "total_price": total_price}, status=status_code)
