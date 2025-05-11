@@ -51,6 +51,8 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
     def create_payment_url(self,order):
         zarinpal = ZarinPalSandbox()
+        total_tax = round((order.total_price * 10)/100)
+        order.total_price += total_tax
         print(order.total_price)
         response = zarinpal.payment_request(order.total_price)
         print(response)
@@ -107,8 +109,10 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         context["addresses"] = UserAddressModel.objects.filter(
             user=self.request.user)
         total_price = cart.calculate_total_price()
+        total_tax = round((total_price * 10)/100)
         context["total_price"] = total_price
-        context["total_tax"] = round((total_price * 9)/100)
+        context["total_tax"] = total_tax
+        context['total_price_with_tax'] = total_price + total_tax
         return context
 
 
