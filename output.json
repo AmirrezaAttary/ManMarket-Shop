@@ -1,0 +1,20 @@
+{
+  "بنفش": {
+    "color": "بنفش",
+    "price": 9799000,
+    "old_price": 9869000,
+    "discount_persent": 1
+  },
+  "سبز": {
+    "color": "سبز",
+    "price": 9799000,
+    "old_price": 10019000,
+    "discount_persent": 3
+  },
+  "مشکی": {
+    "color": "مشکی",
+    "price": null,
+    "old_price": null,
+    "discount_persent": null
+  }
+}

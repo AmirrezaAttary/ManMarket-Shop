@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+{% for key, extra in extras.items %}
+    <div class="product-variant">
+        <p>{{ extra.color }}</p>
+        <p>{{ extra.price }} </p>
+        <p>{{ extra.old_price }} </p>
+        <p>{{ extra.discount_persent }}</p>
+    </div>
+{% endfor %}
+        
+<br><br><hr>
+{% for pro in products %}
+    {{pro.url}}
+{% endfor %}
+    
+<br><br><hr>
+{% for color in colors %}
+    {{ color }}
+{% endfor %}
+    
+ <br><br><hr>   
+
+{% for color_in in color_inventory %}
+    {{color_in.color}}
+    
+{% endfor %}
+    
+</body>
+</html>

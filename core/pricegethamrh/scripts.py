@@ -7,7 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import json
 
-def extract_product_data(url: str, output_file: str = "output.json") -> dict:
+def extract_product_data(url):
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
@@ -70,23 +70,13 @@ def extract_product_data(url: str, output_file: str = "output.json") -> dict:
                 discount = None
 
             result[color] = {
-                "قیمت": cleaned_price,
-                "قیمت بدون تخفیف": cleaned_old_price,
-                "تخفیف": discount
+                "color": color,
+                "price": cleaned_price,
+                "old_price": cleaned_old_price,
+                "discount_persent": discount
             }
-
-
-        with open(output_file, "w", encoding="utf-8") as f:
-            json.dump(result, f, ensure_ascii=False, indent=2)
-
-        print("✅ success")
-        return result
-
+       
     finally:
         driver.quit()
 
-if __name__ == "__main__":
-    url = "https://hamrahtel.com/products/honor-x6b-256gb-ram-6gb-insurance"
-    data = extract_product_data(url)
-    
-amir = '12,34,5'
+    return result

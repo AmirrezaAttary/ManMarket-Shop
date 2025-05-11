@@ -29,6 +29,7 @@ urlpatterns = [
     path("dashboard/", include('dashboard.urls')),
     path('order/', include('order.urls')),
     path('payment/', include('payment.urls')),
+    path('pricegethamrh/', include('pricegethamrh.urls')),
 ]
 
 if settings.DEBUG:
