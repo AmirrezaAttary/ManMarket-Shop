@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'dashboard',
     'payment',
     'pricegethamrh',
+    'getspecification',
     # other app for internet
     'django.contrib.humanize',
 ]

@@ -110,6 +110,13 @@
                                         </a>
                                         {% endif %}
 
+                                        {% if object.id in specification_get_color_product_ids %}
+                                        <a class="btn btn-sm btn-icon btn-ghost-primary"
+                                            href="{% url 'getspecification:specification' pk=object.id %}">
+                                            <i class="bi-eye">get specification</i>
+                                        </a>
+                                        {% endif %}
+
 
                                     </td>
                                 </tr>

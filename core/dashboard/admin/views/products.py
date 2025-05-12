@@ -16,6 +16,7 @@ from django.contrib import messages
 from shop.models import ProductModel, ProductCategoryModel, ProductImageModel
 from django.core.exceptions import FieldError
 from pricegethamrh.models import PriceGetHamrh
+from getspecification.models import PriceSpecification
 
 
 class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
@@ -47,6 +48,7 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         context["total_items"] = self.get_queryset().count()
         context["categories"] = ProductCategoryModel.objects.all()
         context["price_get_color_product_ids"] = PriceGetHamrh.objects.values_list('product_id', flat=True)
+        context["specification_get_color_product_ids"] = PriceSpecification.objects.values_list('product_id', flat=True)
         return context
 
 
