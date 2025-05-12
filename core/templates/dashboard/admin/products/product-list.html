@@ -102,6 +102,15 @@
                                             href="{% url 'shop:product-detail' slug=object.slug %}"><i
                                                 class="bi-eye">show</i></a>
                                         {% endif %}
+
+                                        {% if object.id in price_get_color_product_ids %}
+                                        <a class="btn btn-sm btn-icon btn-ghost-primary"
+                                            href="{% url 'pricegethamrh:getcolor' pk=object.id %}">
+                                            <i class="bi-eye">get color</i>
+                                        </a>
+                                        {% endif %}
+
+
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -195,7 +204,7 @@
         $("#category-id-filter").val(current_url_params.get("category_id") || "")
         $("#min-price-filter").val(current_url_params.get("min_price") || "")
         $("#max-price-filter").val(current_url_params.get("max_price") || "")
-        
+
 
     });
     $('#category-id-filter').change(function () {

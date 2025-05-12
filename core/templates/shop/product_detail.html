@@ -66,10 +66,14 @@
             <div class="my-2 d-flex row w-100">
 
                 {% for color in colors %}
+                {% if color.get_price == 0 %}
+                    
+                {% else %}
+                    
                 <button value="{{color.color.id}}" data-price="{{color.get_price|intcomma}}" data-color-inventory-id="{{color.id}}" data-color-id="{{color.color.id}}"
                     class="color-option {% if color.color.id == default_color.color.id %}active-cs{% endif %} col-md-3 bg-custom mx-1 px-3 cs-space col-sm-4 col-3 rounded-3"
                     onclick="selectColor(this)">{{color.color}}</button>
-
+                {% endif %}
                 {% endfor %}
 
             </div>

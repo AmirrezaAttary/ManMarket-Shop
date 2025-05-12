@@ -1,18 +1,28 @@
-from django.views.generic import View,TemplateView
-from shop.models import ProductModel,ProductColorInventory,Color
+from django.views import View
+from django.http import HttpResponseRedirect
+from shop.models import ProductModel, ProductColorInventory, Color
 from .scripts import extract_product_data
 from pricegethamrh.models import PriceGetHamrh
+from django.urls import reverse
 
-# Create your views here.
-class GetColorAndPrice(TemplateView):
-    template_name = "pricegethamrh/getcolor.html"
-    
-    def get_context_data(self, **kwargs):
-        products = PriceGetHamrh.objects.filter(product__id=167)
+class GetColorAndPrice(View):
+
+    def post(self, request, *args, **kwargs):
+        return self.handle_request(request)
+
+    def get(self, request, *args, **kwargs):
+        return self.handle_request(request)
+
+    def handle_request(self, request):
+        product_id = self.kwargs.get("pk")
+        products = PriceGetHamrh.objects.filter(product__id=product_id)
+        if not products.exists():
+            # اگر محصول پیدا نشد، مثلاً به صفحه خطا یا لیست محصولات برگرد
+            return HttpResponseRedirect(reverse("product_list"))
+
         product = products.first().product
         extra = extract_product_data(products.first().url)
-        
-        colors = []
+
         for key, value in extra.items():
             color_title = value.get('color')
             if not color_title:
@@ -20,20 +30,15 @@ class GetColorAndPrice(TemplateView):
 
             color, _ = Color.objects.get_or_create(title=color_title)
 
-            # قیمت با اولویت price → old_price → 0
             try:
                 raw_price = int(value.get('price') or value.get('old_price') or 0)
             except (TypeError, ValueError):
                 raw_price = 0
 
-            # کم کردن 9.090909٪
             discounted_price = int(raw_price * 10 / 11)
-            discounted_price = discounted_price+((discounted_price * 2.999) / 100)
+            discounted_price += (discounted_price * 2.999) / 100
 
-            try:
-                discount = int(0)
-            except (TypeError, ValueError):
-                discount = 0
+            discount = 0
 
             pci, created = ProductColorInventory.objects.get_or_create(
                 product=product,
@@ -49,12 +54,9 @@ class GetColorAndPrice(TemplateView):
                 pci.discount_percent = discount
                 pci.save()
 
-            colors.append(color)
+        # ✅ ریدایرکت به صفحه‌ای که می‌خوای
+        return HttpResponseRedirect(self.get_success_url())
 
-        context = super().get_context_data(**kwargs)
-        context['extras'] = extra
-        context['products'] = products
-        context['colors'] = colors
-        return context
-
-    
+    def get_success_url(self):
+        # مسیر دلخواه خودت رو جایگزین کن
+        return reverse("dashboard:admin:product-edit", kwargs={"pk": self.kwargs.get("pk")})

@@ -15,6 +15,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from shop.models import ProductModel, ProductCategoryModel, ProductImageModel
 from django.core.exceptions import FieldError
+from pricegethamrh.models import PriceGetHamrh
 
 
 class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
@@ -45,6 +46,7 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         context = super().get_context_data(**kwargs)
         context["total_items"] = self.get_queryset().count()
         context["categories"] = ProductCategoryModel.objects.all()
+        context["price_get_color_product_ids"] = PriceGetHamrh.objects.values_list('product_id', flat=True)
         return context
 
 

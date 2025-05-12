@@ -51,11 +51,13 @@ class ShopListProductView(ListView):
             output_field=DecimalField()
         )
 
-        # زیرکوئری گرفتن کمترین قیمت تخفیف خورده
+        # فقط موجودی‌هایی که قیمت تخفیف‌خورده‌شان بزرگ‌تر از 0 است
         discounted_inventory = ProductColorInventory.objects.filter(
             product=OuterRef('pk')
         ).annotate(
             discounted_price=discounted_price_expr
+        ).filter(
+            discounted_price__gt=0
         ).order_by('discounted_price')
 
         min_discounted_price_subquery = Subquery(
@@ -104,11 +106,13 @@ class ShopDetailProductView(DetailView):
         for color in colors:
             color.discounted_price = color.price - (color.price * color.discount_percent / 100)
 
-        # پیدا کردن رنگ با کمترین قیمت تخفیف‌خورده
-        default_color = min(colors, key=lambda c: c.discounted_price, default=None)
+        # فیلتر رنگ‌هایی که قیمت تخفیف‌خورده آن‌ها بزرگ‌تر از صفر است
+        valid_colors = [color for color in colors if color.discounted_price > 0]
+
+        # پیدا کردن رنگ با کمترین قیمت تخفیف‌خورده (بزرگ‌تر از صفر)
+        default_color = min(valid_colors, key=lambda c: c.discounted_price, default=None)
 
         context['colors'] = colors
         context['default_color'] = default_color
         context['specifications'] = ProductSpecification.objects.filter(product=product)
-
         return context
