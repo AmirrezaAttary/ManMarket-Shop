@@ -5,10 +5,12 @@ app_name = "admin"
 urlpatterns = [
     path("",include("dashboard.admin.urls.generals")),
     path("",include("dashboard.admin.urls.profiles")),
+    path("",include("dashboard.admin.urls.colors")),
     path("",include("dashboard.admin.urls.products")),
     path("",include("dashboard.admin.urls.products_color")),
     path("",include("dashboard.admin.urls.products_category")),
     path("",include("dashboard.admin.urls.products_brand")),
+    path("",include("dashboard.admin.urls.product_specification")),
     path("",include("dashboard.admin.urls.coupons")),
     path("",include("dashboard.admin.urls.orders")),
 ]

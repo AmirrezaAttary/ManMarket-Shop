@@ -1,0 +1,49 @@
+{% extends 'dashboard/admin/base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="row">
+    {% include 'dashboard/admin/sidebar.html' %}
+    <!-- Card -->
+    <div class="col-md-9 mb-9">
+        <!-- Card -->
+        <div class="card mb-3">
+            <div class="card-header border-bottom">
+                <h4 class="card-header-title">ایجاد رنگ </h4>
+            </div>
+
+            <form action="." method="post">
+                <!-- Body -->
+                <div class="card-body">
+                    <!-- Form -->
+
+                    {% csrf_token %}
+
+
+                    <!-- Form -->
+                    <div class="row">
+                        <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                            <label>نام رنگ</label>
+                            {{form.title}}
+                        </div>
+                    </div>
+
+                    <!-- End Body -->
+
+                    <!-- Footer -->
+                    <div class="card-footer pt-0">
+                        <div class="d-flex justify-content-end gap-3">
+                            <a class="btn btn-secondary" href="{% url 'dashboard:admin:color-list' %}">بازگشت</a>
+                            <button class="btn btn-primary" type="submit">ذخیره تغییرات</button>
+                        </div>
+                    </div>
+            </form>
+            <!-- End Footer -->
+        </div>
+        <!-- End Card -->
+    </div>
+</div>
+{% endblock %}
+

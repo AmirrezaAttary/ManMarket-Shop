@@ -30,7 +30,7 @@
             <div class="card mb-5">
                 <!-- Header -->
                 <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="card-header-title">ویرایش دسته بندی</h5>
+                    <h5 class="card-header-title">ویرایش رنگ </h5>
                 </div>
                 <!-- End Header -->
 
@@ -43,22 +43,14 @@
                                 <label>نام دسته بندی</label>
                                 {{form.title}}
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label>slug دسته بندی - <button class="small-primary-button" type="button"
-                                        onclick="generateSlug()">ساخت
-                                        slug</button> </label>
-                                {{form.slug}}
-                            </div>
-
-                            
 
                         </div>
                         <div class="card-footer">
                             <div class=" d-flex pt-5 justify-content-end">
                                 <a class="btn btn-danger ms-3"
-                                    href="{% url 'dashboard:admin:category-delete' pk=object.pk %}">حذف</a>
+                                    href="{% url 'dashboard:admin:color-delete' pk=object.pk %}">حذف</a>
                                 <a class="btn btn-secondary ms-3"
-                                    href="{% url 'dashboard:admin:category-list' %}">بازگشت</a>
+                                    href="{% url 'dashboard:admin:color-list' %}">بازگشت</a>
                                 <button class="btn btn-primary ms-3" type="submit">ثبت تغییرات</button>
                             </div>
                         </div>
@@ -69,27 +61,5 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
 
-    function generateSlug() {
-        const title = $("#id_title").val();
-        const slug = slugify(title);
-        $("#id_slug").val(slug)
-    }
-
-    function slugify(titleStr) {
-        titleStr = titleStr.replace(/^\s+|\s+$/g, '');
-        titleStr = titleStr.toLowerCase();
-        //persian support
-        titleStr = titleStr.replace(/[^a-z0-9_\s-ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]#u/, '')
-            // Collapse whitespace and replace by -
-            .replace(/\s+/g, '-')
-            // Collapse dashes
-            .replace(/-+/g, '-');
-        slugStr = titleStr;
-        return slugStr;
-    }
-</script>
-{% endblock %}
 
