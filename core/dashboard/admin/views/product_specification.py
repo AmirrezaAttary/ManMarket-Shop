@@ -8,13 +8,15 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
-from dashboard.admin.forms import SpecificationForm
+from dashboard.admin.forms import SpecificationForm,SpecificationCreateForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.core.exceptions import FieldError
 from getspecification.models import PriceSpecification
+from shop.models import ProductSpecification
+from django.shortcuts import get_object_or_404
 
 
 
@@ -62,6 +64,55 @@ class AdminGetSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission
     queryset = PriceSpecification.objects.all()
     form_class = SpecificationForm
     success_message = "ویرایش رنگ با موفقیت انجام شد"
+    
+    
 
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:specification-edit", kwargs={"pk": self.kwargs['pk']})
+    
+    
+    
+#############################################################################################################
+
+class AdminSpecificationAddView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
+    template_name = "dashboard/admin/products-specification/specification-create.html"
+    form_class = SpecificationCreateForm
+    model = ProductSpecification
+    queryset = ProductSpecification.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['spec'] = get_object_or_404(PriceSpecification, product__id=self.kwargs['pk'])
+        return context
+
+    def form_valid(self, form):
+        spec = get_object_or_404(PriceSpecification, product__id=self.kwargs['pk'])
+        form.instance.product = spec.product
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        spec = get_object_or_404(PriceSpecification, product__id=self.kwargs['pk'])
+        return reverse_lazy('dashboard:admin:specification-edit', kwargs={
+            'pk': spec.id,
+        })
+    
+    
+
+class AdminSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
+    template_name = "dashboard/admin/products-specification/specification-edit.html"
+    queryset = ProductSpecification.objects.all()
+    form_class = SpecificationCreateForm
+    success_message = "ویرایش رنگ با موفقیت انجام شد"
+
+
+    def get_success_url(self):
+        return reverse_lazy("dashboard:admin:specification-edit", kwargs={"pk": self.kwargs['prduct_pk']})
+
+
+class AdminSpecificationDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    template_name = "dashboard/admin/products-specification/specification-delete.html"
+    queryset = ProductSpecification.objects.all()
+    success_message = "حذف رنگ با موفقیت انجام شد"
+    
+    def get_success_url(self):
+        return reverse_lazy('dashboard:admin:specification-edit-one', kwargs={'pk': self.kwargs['prduct_pk']})
