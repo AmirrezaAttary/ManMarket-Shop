@@ -74,14 +74,22 @@
                                 <tr>
                                     <th scope="row">{{object.id}}</th>
                                     <td>{{object.product}}</td>
-                                    
+
                                     <td class="d-flex">
                                         <a class="btn btn-sm btn-icon btn-ghost-secondary"
                                             href="{% url 'dashboard:admin:specification-edit' pk=object.id %}"><i
                                                 class="bi-pencil-square">eidt</i></a>
+                                        <a class="btn btn-sm btn-icon btn-ghost-primary"
+                                            href="{% url 'getspecification:specification' pk=object.id %}">
+                                            <i class="bi-eye">get specification</i>
+                                        </a>
                                     </td>
                                 </tr>
+
                                 {% endfor %}
+
+
+
 
                             </tbody>
                         </table>
@@ -158,6 +166,7 @@
         <!-- End Card -->
     </div>
 </div>
+
 {% endblock %}
 
 

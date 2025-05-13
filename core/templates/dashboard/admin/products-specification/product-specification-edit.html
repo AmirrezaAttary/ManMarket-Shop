@@ -65,7 +65,46 @@
             </div>
         </div>
     </div>
+    <div class="">
+            <div class="card mb-5">
+                <!-- Header -->
+                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="card-header-title">رنگ های محصول</h5>
+                    <a class="btn btn-primary" href="{% url 'dashboard:admin:product-add-color' pk=object.pk %}">افزودن
+                        رنگ</a>
+                </div>
+                <!-- End Header -->
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">مشخصات </th>
+                                <th scope="col">مقدار</th>
+                                <th scope="col">عملیات</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sep in specifications %}
+                            <tr>
+                                <th scope="row">{{sep.name}}</th>
+                                <td>{{sep.value}}</td>
+
+
+                                <td class="d-flex">
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
 </div>
+
 {% endblock %}
 
 

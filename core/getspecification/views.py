@@ -34,4 +34,4 @@ class GetSpecification(View):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse("dashboard:admin:product-edit", kwargs={"pk": self.kwargs.get("pk")})
+        return reverse("dashboard:admin:specification-edit", kwargs={"pk": self.kwargs.get("pk")})
