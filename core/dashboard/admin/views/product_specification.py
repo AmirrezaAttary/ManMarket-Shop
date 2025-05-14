@@ -104,9 +104,16 @@ class AdminSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission, S
     form_class = SpecificationCreateForm
     success_message = "ویرایش رنگ با موفقیت انجام شد"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['spec'] = get_object_or_404(PriceSpecification, product__id=self.kwargs['prduct_pk'])
+        
+        return context
 
+    
     def get_success_url(self):
-        return reverse_lazy("dashboard:admin:specification-edit", kwargs={"pk": self.kwargs['prduct_pk']})
+        spec = get_object_or_404(PriceSpecification, product__id=self.kwargs['prduct_pk'])
+        return reverse_lazy("dashboard:admin:specification-edit", kwargs={"pk": spec.id})
 
 
 class AdminSpecificationDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
