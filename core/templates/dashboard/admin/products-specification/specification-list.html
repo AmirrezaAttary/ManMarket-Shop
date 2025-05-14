@@ -80,7 +80,7 @@
                                             href="{% url 'dashboard:admin:specification-edit' pk=object.id %}"><i
                                                 class="bi-pencil-square">eidt</i></a>
                                         <a class="btn btn-sm btn-icon btn-ghost-primary"
-                                            href="{% url 'getspecification:specification' pk=object.id %}">
+                                            href="{% url 'getspecification:specification' pk=object.product.id %}">
                                             <i class="bi-eye">get specification</i>
                                         </a>
                                     </td>

@@ -15,13 +15,14 @@ class GetSpecification(View):
 
     def handle_request(self, request):
         product_id = self.kwargs.get("pk")
-        products = PriceSpecification.objects.filter(product__id=product_id)
+        self.products = PriceSpecification.objects.filter(product__id=product_id)
 
-        if not products.exists():
+
+        if not self.products.exists():
             return HttpResponseRedirect(self.get_success_url())
 
-        product = products.first().product
-        extra = getspecificationDigikala(products.first().url)
+        product = self.products.first().product
+        extra = getspecificationDigikala(self.products.first().url)
 
         if extra:
             for key, value in extra.items():
@@ -34,4 +35,4 @@ class GetSpecification(View):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse("dashboard:admin:specification-edit", kwargs={"pk": self.kwargs.get("pk")})
+        return reverse("dashboard:admin:specification-edit", kwargs={"pk": self.products.first().id})
