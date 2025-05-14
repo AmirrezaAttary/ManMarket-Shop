@@ -1,6 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Min
 
 # Create your models here.
 
@@ -35,6 +36,9 @@ class ProductModel(models.Model):
     
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    
+    def get_min_price(self):
+        return self.color_inventories.aggregate(min_price=Min('price'))['min_price']
     
     class Meta:
         ordering = ["-created_date"]
@@ -90,7 +94,7 @@ class ProductImageModel(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ["-created_date"]
+        ordering = ["created_date"]
         
         
 class ProductColorInventory(models.Model):

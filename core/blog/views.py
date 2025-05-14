@@ -2,11 +2,18 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from blog.models import Post, Category
 from django.db.models import Count
+from taggit.models import Tag
 # Create your views here.
 
 class BlogListView(ListView):
     template_name = 'blog/blog.html'
     queryset = Post.objects.filter(status=True)  # This should be replaced with actual queryset logic
+    paginate_by = 1
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tags'] = Tag.objects.all()
+        return context
     
 
 class BlogDetailView(DetailView):

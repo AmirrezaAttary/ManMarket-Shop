@@ -1,7 +1,5 @@
 from django import template
 from blog.models import Post,Category
-from django.shortcuts import render,get_object_or_404
-from django.utils import timezone
 
 register = template.Library()
 

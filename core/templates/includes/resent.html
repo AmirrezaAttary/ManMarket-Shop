@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="blog mt-5">
+
+    <h5 class="text-center">
+
+        <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
+        <span class="px-2">وبلاگ </span>
+        <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
+    </h5>
+
+    <div class="container">
+        <div class="blog-container has-scrollbar">
+
+            {% for post in posts %}
+            <div class="blog-card" style="max-width: 20px; max-height: 227px;">
+                <a href="{% url 'blog:blog-detail' slug=post.slug %}">
+                    <img src="{{post.image.url}}" style="max-height: 163px;" alt="Clothes Retail KPIs 2023 Guide for Clothes Executives"
+                        class="blog-banner" width="300">
+                </a>
+
+                <div class="blog-content">
+                    <a href="{% url 'blog:blog-detail' slug=post.slug %}" class="blog-category">{{post.title}}</a>
+                    <a href="{% url 'blog:blog-detail' slug=post.slug %}">
+                        <h3 class="blog-title">{{post.content|truncatechars:30}}</h3>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            
+
+
+
+
+        </div>
+    </div>
+</div>
