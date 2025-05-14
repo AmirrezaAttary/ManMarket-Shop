@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from accounts.utils import send_password_reset_email
 from django.contrib.auth import login
 from django.shortcuts import redirect
-
+from django.contrib import messages  
 
 
 class LoginView(auth_views.LoginView):
@@ -26,6 +26,7 @@ class RegisterView(TemplateView):
         return self.render_to_response({'form': RegisterForm()})
 
     def post(self, request, *args, **kwargs):
+        messages.add_message(request, messages.SUCCESS, 'You have successfully logged')
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()

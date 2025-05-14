@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
 
 </head>
 <body>
@@ -124,6 +125,7 @@
                 <li class="menu-category">
                 <a href="{% url 'shop:product-list' %}" class="menu-title">فروشگاه</a>
                 <div class="dropdown-panel">
+                    <ul></ul>
                     <ul class="dropdown-panel-list">
                         <li class="menu-title"><a href="#">من پلاس </a></li>
                         <li class="panel-list-item"><a href="#">خرید اکانت</a></li>
@@ -136,10 +138,10 @@
 
                     <ul class="dropdown-panel-list">
                         <li class="menu-title"><a href="#">کالای دیجیتال </a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">موبایل</a></li>
+                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}?categry=1">موبایل</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">تبلت</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">دایرکت</a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">لپ تاپ</a></li>
+                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}?categry=3">لپ تاپ</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">مانیتور</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">لوازم جانبی</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">کنسول بازی</a></li>
@@ -148,25 +150,7 @@
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">دوربین مدار بسته</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">ماشین های اداری</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">بیمه تجهیزات دیجیتال</a></li>
-                        <li class="panel-list-item">
-                        </li>
-                    </ul>
-
-                    <ul class="dropdown-panel-list">
-                        <li class="menu-title"><a href="#">خانه و آشپز خانه </a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">مبلمان</a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">تلویزیون</a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">لوازم برقی</a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">دزدگیر اماکن</a></li>
                         <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">اندروید باکس</a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">یخچال و فریزر</a></li>
-                        <li class="panel-list-item"><a href="{% url 'shop:product-list' %}">سرمایش و گرمایش</a></li>
-                        <li class="panel-list-item">
-                        </li>
-                    </ul>
-
-                    <ul class="dropdown-panel-list">
-                        <li class="menu-title"><a href="#">من تریپ</a></li>
                         <li class="panel-list-item">
                         </li>
                     </ul>
@@ -181,9 +165,9 @@
                 <li class="menu-category">
                     <a href="{% url 'blog:blog-list' %}" class="menu-title">بلاگ</a>
                 </li>
-                <li class="menu-category">
+                <!-- <li class="menu-category">
                     <a href="#" class="menu-title">اعتبار من</a>
-                </li>
+                </li> -->
             </ul>
         </div>
         <!--menu -- : end---->
@@ -806,7 +790,7 @@
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script  src="{% static 'js/script.js' %}"></script>
 <script  src="{% static 'js/custom.js' %}"></script>
-
+<script src="{% static 'vendor/toastify/toastify.js' %}"></script>
 
 <script>
     function addToCart(product_id,color_id,color_inventory_id) {
@@ -841,6 +825,8 @@
 {% endblock extra_js %}
     
 
+    
+{% include 'messages.html' %}
 </body>
 <!-- partial -->
 </html>
