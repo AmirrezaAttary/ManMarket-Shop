@@ -6,3 +6,4 @@ from . products_category import *
 from . products_brand import *
 from . colors import *
 from . product_specification import *
+from . products_get_color import *
