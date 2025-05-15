@@ -9,8 +9,6 @@ from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import ColorModelForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from shop.models import Color
 

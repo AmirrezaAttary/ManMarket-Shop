@@ -9,3 +9,4 @@ from .products_brand import *
 from .colors import *
 from .products_specification import *
 from .products_get_color import *
+from .blog import *

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
 
 </head>
 <body>
@@ -805,7 +806,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script  src="{% static 'js/script.js' %}"></script>
-
+<script src="{% static 'vendor/toastify/toastify.js' %}"></script>
 
 <script>
     function addToCart(product_id,color_id) {
@@ -839,6 +840,8 @@
 {% endblock extra_js %}
     
 
+
+{% include 'messages.html' %}
 </body>
 <!-- partial -->
 </html>

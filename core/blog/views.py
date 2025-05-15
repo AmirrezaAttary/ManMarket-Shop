@@ -8,7 +8,7 @@ from taggit.models import Tag
 class BlogListView(ListView):
     template_name = 'blog/blog.html'
     queryset = Post.objects.filter(status=True)  # This should be replaced with actual queryset logic
-    paginate_by = 1
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
