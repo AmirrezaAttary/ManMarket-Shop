@@ -14,6 +14,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
+    {% block extra_css %}
+        
+    {% endblock extra_css %}
 
 </head>
 <body>
@@ -726,20 +729,19 @@
             <ul class="footer-nav-list">
                 <li class="footer-nav-item"><h2 class="nav-title">لینک های مفید</h2></li>
 
-                <li class="footer-nav-item mt-2"><a href="faq.html" class="footer-nav-link">سوالات متداول</a></li>
-                <li class="footer-nav-item mt-2"><a href="#" class="footer-nav-link">پیگیری سفارشات</a></li>
-                <li class="footer-nav-item mt-2"><a href="#" class="footer-nav-link">راهنمای خرید اقساطی</a></li>
-                <li class="footer-nav-item mt-2"><a href="#" class="footer-nav-link">پلتفرم مالی اعتبار من</a></li>
-                <li class="footer-nav-item mt-2"><a href="#" class="footer-nav-link">مفاد ضمانت هفت روزه برگشت وجه</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:faq' %}" class="footer-nav-link">سوالات متداول</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:faq' %}#content-shipping" class="footer-nav-link">پیگیری سفارشات</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:faq' %}#content-order-process" class="footer-nav-link">راهنمای خرید اقساطی</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:faq' %}#content-order-tracking" class="footer-nav-link">پلتفرم مالی اعتبار من</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:faq' %}#content-returns" class="footer-nav-link">مفاد ضمانت هفت روزه برگشت وجه</a></li>
             </ul>
             <ul class="footer-nav-list">
                 <li class="footer-nav-item"><h2 class="nav-title">درباره ما</h2></li>
 
-                <li class="footer-nav-item mt-2"><a href="man.market.call.we.html" class="footer-nav-link">تماس با ما</a></li>
-                <li class="footer-nav-item mt-2"><a href="man.market.target.t.html" class="footer-nav-link">قوانین و مقررات</a></li>
-                <li class="footer-nav-item mt-2"><a href="man.market.Rules.html" class="footer-nav-link">اهداف و تعهدات ما</a></li>
-                <li class="footer-nav-item mt-2"><a href="#" class="footer-nav-link">فروشگاه های حضوری</a></li>
-                <li class="footer-nav-item mt-2"><a href="man.market.one.seen.html" class="footer-nav-link">من مارکت در یک نگاه</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:call-we' %}" class="footer-nav-link">تماس با ما</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:rules' %}" class="footer-nav-link">قوانین و مقررات</a></li>
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:target' %}" class="footer-nav-link">اهداف و تعهدات ما</a></li>     
+                <li class="footer-nav-item mt-2"><a href="{% url 'faq:man-one-seen' %}" class="footer-nav-link">من مارکت در یک نگاه</a></li>
             </ul>
             <ul class="footer-nav-list d-flex flex-wrap flex-column w-50">
                 <li class="footer-nav-item"><h2 class="nav-title">من مارکت</h2></li>
