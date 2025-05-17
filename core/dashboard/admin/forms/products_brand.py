@@ -13,6 +13,6 @@ class BrandModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs['class'] = 'form-control'
-        self.fields['title'].widget.attrs['class'] = 'form-control'
+        self.fields['slug'].widget.attrs['class'] = 'form-control'
 
             
