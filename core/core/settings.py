@@ -28,11 +28,18 @@ SECRET_KEY = config("SECRET_KEY",default='django-insecure-jc35qo)gv(idt+zlq=2&!y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS =['127.0.0.1','manmarket.ir','www.manmarket.ir']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'manmarket.ir',
+    'www.manmarket.ir',
+    'mail.manmarket.ir',  # ← این خط را اضافه کن
+]
+
 
 CSRF_TRUSTED_ORIGINS = [
     "https://manmarket.ir",
-    "https://www.manmarket.ir",  # اگر از www هم استفاده می‌کنی
+    "https://www.manmarket.ir",
+    "https://mail.manmarket.ir",# اگر از www هم استفاده می‌کنی
 ]
 """https://api.digikala.com/v1/rate-review/products/18132558/"""
 
