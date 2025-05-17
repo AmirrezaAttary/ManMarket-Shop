@@ -26,9 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY",default='django-insecure-jc35qo)gv(idt+zlq=2&!yq%y)twxum-$8@s^#3dj^7n^!yn_e')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG",default=True)
+DEBUG = False
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast= lambda v: [item.strip() for item in v.split(',')] ,default="*")
+ALLOWED_HOSTS =['127.0.0.1','manmarket.ir','www.manmarket.ir']
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://manmarket.ir",
+    "https://www.manmarket.ir",  # اگر از www هم استفاده می‌کنی
+]
 
 
 # Application definition
@@ -189,3 +194,7 @@ SANDBOX_MODE = config("SANDBOX_MODE", cast=bool, default=True)
 # change time for active token password-reset 
 
 PASSWORD_RESET_TIMEOUT_DAYS = 2
+
+
+
+CSRF_COOKIE_SECURE = True

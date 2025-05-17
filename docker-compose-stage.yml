@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    restart: always
+    
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dev/django/dockerfile-stage
+    command: gunicorn core.wsgi --bind 0.0.0.0:8000
+
+    volumes:
+      - ./core:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    environment:
+      - ALLOWED_HOSTS=127.0.0.1,nsrholding.com,www.nsrholding.com
+      - DEBUG=False
+      - SECRET_KEY=d6#04t6&scr&0%$q)k#wi6xf05&x7_k200umlwikk=!t_)9vgw
+    expose:
+      - "8000"
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+      - static_volume:/home/app/static
+      - media_volume:/home/app/media
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    depends_on:
+      - nginx
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 6h & wait $${!}; certbot renew --webroot -w /var/www/certbot --quiet --deploy-hook \"nginx -s reload\"; done'"
+
+  certbot_init:
+    image: certbot/certbot
+    container_name: certbot_init
+    depends_on:
+      - nginx
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email programmer.amirrezaattary@gmail.com -d nsrholding.com --agree-tos --no-eff-email
+
+volumes:
+  static_volume:
+  media_volume:
+  postgres_data:
+  certbot_conf:
+  certbot_www:

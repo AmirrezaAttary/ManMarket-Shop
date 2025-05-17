@@ -1,7 +1,9 @@
 # main modules
 Django>4.2,<4.3
 
+gunicorn
 
+django-taggit
 # database modules
 psycopg==3.1.12
 
