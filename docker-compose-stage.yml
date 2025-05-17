@@ -29,7 +29,6 @@ services:
     environment:
       - ALLOWED_HOSTS=127.0.0.1,manmarket.ir,www.manmarket.ir
       - DEBUG=False
-      - SECRET_KEY=d6#04t6&scr&0%$q)k#wi6xf05&x7_k200umlwikk=!t_)9vgw
     expose:
       - "8000"
 
