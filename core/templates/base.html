@@ -14,6 +14,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/main.logo.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/main.logo.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/main.logo.png' %}">
     {% block extra_css %}
         
     {% endblock extra_css %}
@@ -176,7 +180,7 @@
         <!--menu -- : end---->
 
         <!--logo in header -- : start-->
-        <div class="mx-1"><img class="cs-w" alt="من مارکت" src="{% static 'img/main.logo.jpg' %}"></div>
+        <div class="mx-1"><img class="cs-w" alt="من مارکت" src="{% static 'img/main.logo.png' %}"></div>
         <!--logo in header -- : end---->
 
     </nav>
@@ -244,7 +248,7 @@
             </svg></a>
         </button>
 
-        <button class="action-btn">
+        <a href="{% url 'cart:cart-summery' %}" class="action-btn">
             <svg class="shop-icon"
                  xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 14 14"
@@ -259,7 +263,7 @@
                         d="M12.182 7.5h-8.18l-1-5h10a.5.5 0 0 1 .49.59l-.82 4a.49.49 0 0 1-.49.41m-9.18-5L2.582.9a.5.5 0 0 0-.49-.4H.502m3.5 7l.42 2.1a.5.5 0 0 0 .49.4h6.09m-.5 3.5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1m-5 0a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1"
                 ></path>
             </svg>
-        </button>
+        </a >
     </div>
 
     <nav class="mobile-navigation-menu has-scrollbar " data-mobile-menu>
@@ -333,53 +337,18 @@
                 </button>
 
                 <ul class="submenu-category-list " data-accordion>
-                    <li class="submenu-category"><a href="#" class="submenu-title">موبایل</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">تبلت</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">دایرکت</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">لپ تاپ</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">مانیتور</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">لوازم جانبی</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">کنسول بازی</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">دوربین عکاسی</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">کامپیوتر همه کاره</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">دوربین مدار بسته</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">ماشین های اداری</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">بیمه تجهیزات دیجیتال</a></li>
-                </ul>
-            </li>
-            <li class="menu-category">
-                <button class="accordion-menu" data-accordion-btn>
-                    <p class="menu-title">خانه و آشپز خانه </p>
-                    <div>
-                        <ion-icon name="add-outline" class="add-icon">
-                            <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    width="1.5em"
-                                    height="1.5em"
-                            >
-                                <path
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="1.5"
-                                        d="M6 12h6m6 0h-6m0 0V6m0 6v6"
-                                ></path>
-                            </svg>
-                        </ion-icon>
-                        <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
-                    </div>
-                </button>
-
-                <ul class="submenu-category-list " data-accordion>
-                    <li class="submenu-category"><a href="#" class="submenu-title">مبلمان</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">تلویزیون</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">لوازم برقی</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">دزدگیر اماکن</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">اندروید باکس</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">یخچال و فریزر</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">سرمایش و گرمایش</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">موبایل</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">تبلت</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">دایرکت</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">لپ تاپ</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">مانیتور</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">لوازم جانبی</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">کنسول بازی</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">دوربین عکاسی</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">کامپیوتر همه کاره</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">دوربین مدار بسته</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">ماشین های اداری</a></li>
+                    <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">بیمه تجهیزات دیجیتال</a></li>
                 </ul>
             </li>
             <li class="menu-category"><a href="{% url 'website:index' %}" class="menu-title">من تریپ</a></li>

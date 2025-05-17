@@ -34,7 +34,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://manmarket.ir",
     "https://www.manmarket.ir",  # اگر از www هم استفاده می‌کنی
 ]
-
+"""https://api.digikala.com/v1/rate-review/products/18132558/"""
 
 # Application definition
 
