@@ -68,7 +68,7 @@ services:
     volumes:
       - certbot_conf:/etc/letsencrypt
       - certbot_www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email programmer.amirrezaattary@gmail.com -d nsrholding.com --agree-tos --no-eff-email
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email programmer.amirrezaattary@gmail.com -d manmarket.ir --agree-tos --no-eff-email
 
 volumes:
   static_volume:
