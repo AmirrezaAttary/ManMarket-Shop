@@ -68,9 +68,33 @@ services:
   #     - certbot_www:/var/www/certbot
   #   command: certonly --webroot -w /var/www/certbot --force-renewal --email programmer.amirrezaattary@gmail.com -d manmarket.ir --agree-tos --no-eff-email
 
+  mail:
+    image: mailu/mailu:1.9
+    env_file: mailu.env
+    restart: always
+    volumes:
+      - maildata:/data
+      - mailstate:/state
+      - mailcerts:/certs
+      - certbot_conf:/etc/letsencrypt
+    ports:
+      - "25:25"       # SMTP
+      - "587:587"     # SMTP با TLS
+      - "993:993"     # IMAP
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    restart: always
+
+
 volumes:
   static_volume:
   media_volume:
   postgres_data:
   certbot_conf:
   certbot_www:
+  maildata:
+  mailstate:
+  mailcerts:
