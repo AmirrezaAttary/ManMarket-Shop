@@ -102,7 +102,7 @@ services:
       - redis
 
   mail_imap:
-    image: mailu/dovecot:1.9
+    image: mailu/imap:1.9
     env_file: mailu.env
     restart: always
     volumes:
