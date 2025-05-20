@@ -19,7 +19,7 @@
               </svg>
               پروفایل
           </a>
-          <a href="{% url 'dashboard:admin:product-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:product-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:product-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"
@@ -38,7 +38,7 @@
               </svg>
               محصولات
           </a>
-          <a href="{% url 'dashboard:admin:order-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:order-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:order-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"
@@ -57,7 +57,7 @@
               </svg>
               پیگیری سفارشات
           </a>
-          <a href="{% url 'dashboard:admin:category-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:category-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:category-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"
@@ -76,7 +76,7 @@
               </svg>
               افزودن دسته بندی
           </a>
-          <a href="{% url 'dashboard:admin:brand-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:brand-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:brand-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"
@@ -95,7 +95,7 @@
               </svg>
               افزودن برند 
           </a>
-          <a href="{% url 'dashboard:admin:color-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:color-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:color-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"
@@ -114,7 +114,7 @@
               </svg>
               افزودن رنگ 
           </a>
-          <a href="{% url 'dashboard:admin:specification-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:specification-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:specification-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"
@@ -133,7 +133,7 @@
               </svg>
                ثبت مشخصات محصول 
           </a>
-          <a href="{% url 'dashboard:admin:colors-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:colors-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:colors-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"
@@ -153,7 +153,7 @@
                ثبت رنگ برای قیمت 
           </a>
           </a>
-          <a href="{% url 'dashboard:admin:blog-list' %}" class="custom-text">
+          <a href="{% url 'dashboard:admin:blog-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:admin:blog-list' %}active {% endif %} custom-text">
 
               <svg
                       fill="none"

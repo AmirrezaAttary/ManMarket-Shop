@@ -19,7 +19,7 @@
                 </svg>
                 پروفایل
             </a>
-            <a href="{% url 'dashboard:customer:order-list' %}" class="custom-text">
+            <a href="{% url 'dashboard:customer:order-list' %}" class=" {% if request.resolver_match.view_name == 'dashboard:customer:order-list' %}active {% endif %}custom-text">
 
                 <svg
                         fill="none"

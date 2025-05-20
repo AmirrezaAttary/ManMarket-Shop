@@ -95,27 +95,29 @@
                                     <td class="d-flex">
                                         <a class="btn btn-sm btn-icon btn-ghost-secondary"
                                             href="{% url 'dashboard:admin:product-edit' pk=object.pk %}"><i
-                                                class="bi-pencil-square">eidt</i></a>
+                                                class="bi-pencil-square">ویرایش</i></a>
 
                                         {% if object.is_published %}
                                         <a class="btn btn-sm btn-icon btn-ghost-primary" target="_blank"
                                             href="{% url 'shop:product-detail' slug=object.slug %}"><i
-                                                class="bi-eye">show</i></a>
-                                        {% endif %}
-
-                                        {% if object.id in price_get_color_product_ids %}
-                                        <a class="btn btn-sm btn-icon btn-ghost-primary"
-                                            href="{% url 'pricegethamrh:getcolor' pk=object.id %}">
-                                            <i class="bi-eye">get color</i>
-                                        </a>
+                                                class="bi-eye">نمایش</i></a>
                                         {% endif %}
 
                                         {% if object.id in specification_get_color_product_ids %}
                                         <a class="btn btn-sm btn-icon btn-ghost-primary"
                                             href="{% url 'getspecification:specification' pk=object.id %}">
-                                            <i class="bi-eye">get specification</i>
+                                            <i class="bi-eye">گرفتن مشخصات</i>
                                         </a>
                                         {% endif %}
+
+                                        {% if object.id in price_get_color_product_ids %}
+                                        <a class="btn btn-sm btn-icon btn-ghost-primary"
+                                            href="{% url 'pricegethamrh:getcolor' pk=object.id %}">
+                                            <i class="bi-eye">گرفتن رنگ وقیمت</i>
+                                        </a>
+                                        {% endif %}
+
+                                        
 
 
                                     </td>
