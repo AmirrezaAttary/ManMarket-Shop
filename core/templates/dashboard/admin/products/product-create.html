@@ -102,16 +102,31 @@
         document.getElementById("id_slug").value = slug;
     }
 
-    function slugify(titleStr) {
-        titleStr = titleStr.replace(/^\s+|\s+$/g, '');
-        titleStr = titleStr.toLowerCase();
-        titleStr = titleStr.replace(/\u200C/g, '');     // حذف نیم‌فاصله
-        titleStr = titleStr.replace(/\./g, '/');        // نقطه به اسلش
-        titleStr = titleStr.replace(/[^a-z0-9_\s/ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى-]/gu, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
-        return titleStr;
-    }
+function slugify(titleStr) {
+    titleStr = titleStr.trim();
+
+    // حذف نیم‌فاصله
+    titleStr = titleStr.replace(/\u200C/g, '');
+
+    // تبدیل نقطه به /
+    titleStr = titleStr.replace(/\./g, '/');
+
+    // حذف کاراکترهای غیرمجاز (فقط حروف فارسی، انگلیسی، اعداد، فاصله، /، -)
+    titleStr = titleStr.replace(/[^a-zA-Z0-9ءاأإآؤئبپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیيةى\s/-]/g, '');
+
+    // تبدیل فاصله به -
+    titleStr = titleStr.replace(/\s+/g, '-');
+
+    // حذف - های تکراری
+    titleStr = titleStr.replace(/-+/g, '-');
+
+    // حذف - های ابتدا و انتها
+    titleStr = titleStr.replace(/^-+|-+$/g, '');
+
+    return titleStr;
+}
+
+
 </script>
 
 {% endblock %}
