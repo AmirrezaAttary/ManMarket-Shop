@@ -97,33 +97,23 @@
 {% block extra_js %}
 <script>
     function generateSlug() {
-        const title = $("#id_title").val();
+        const title = document.getElementById("id_title").value;
         const slug = slugify(title);
-        $("#id_slug").val(slug);
+        document.getElementById("id_slug").value = slug;
     }
 
     function slugify(titleStr) {
         titleStr = titleStr.replace(/^\s+|\s+$/g, '');
         titleStr = titleStr.toLowerCase();
-
-        // حذف نیم‌فاصله (Zero-width non-joiner)
-        titleStr = titleStr.replace(/\u200C/g, '');
-
-        // تبدیل نقطه به /
-        titleStr = titleStr.replace(/\./g, '/');
-
-        // پشتیبانی از فارسی و حذف کاراکترهای غیرمجاز
-        titleStr = titleStr.replace(/[^a-z0-9_\s-/ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]/gu, '')
-
-            // تبدیل فاصله به خط تیره
+        titleStr = titleStr.replace(/\u200C/g, '');     // حذف نیم‌فاصله
+        titleStr = titleStr.replace(/\./g, '/');        // نقطه به اسلش
+        titleStr = titleStr.replace(/[^a-z0-9_\s/ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى-]/gu, '')
             .replace(/\s+/g, '-')
-
-            // حذف خط تیره‌های تکراری
             .replace(/-+/g, '-');
-
         return titleStr;
     }
 </script>
+
 {% endblock %}
 
 {% block extra_js_no_compress %}
