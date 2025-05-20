@@ -16,13 +16,16 @@
                             {% csrf_token %}
                             <div class="row profile-input">
                                 <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="first_name" value="{{request.user.user_profile.first_name}}" placeholder="نام">
+                                    <input type="text" class="form-control" name="first_name"
+                                        value="{{request.user.user_profile.first_name}}" placeholder="نام">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="last_name" value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
+                                    <input type="text" class="form-control" name="last_name"
+                                        value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="phone_number" value="{{request.user.user_profile.phone_number}}" placeholder="شماره همراه">
+                                    <input type="text" class="form-control" name="phone_number"
+                                        value="{{request.user.user_profile.phone_number}}" placeholder="شماره همراه">
                                 </div>
 
                                 <div class="col-12 text-start">
@@ -33,6 +36,13 @@
                                 </div>
                             </div>
                         </form>
+                        <form action="{% url 'dashboard:admin:download_database' %}" method="get">
+                            <button type="submit">📥 دانلود بک‌آپ دیتابیس</button>
+                        </form>
+                        <br>
+                        <form action="{% url 'dashboard:admin:download_media' %}" method="get">
+                            <button type="submit">📥 دانلود بک‌آپ فایل ها مدیا</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -40,4 +50,3 @@
     </div>
 </main>
 {% endblock content %}
-    
