@@ -96,24 +96,32 @@
 
 {% block extra_js %}
 <script>
-
     function generateSlug() {
         const title = $("#id_title").val();
         const slug = slugify(title);
-        $("#id_slug").val(slug)
+        $("#id_slug").val(slug);
     }
 
     function slugify(titleStr) {
         titleStr = titleStr.replace(/^\s+|\s+$/g, '');
         titleStr = titleStr.toLowerCase();
-        //persian support
-        titleStr = titleStr.replace(/[^a-z0-9_\s-ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]#u/, '')
-            // Collapse whitespace and replace by -
+
+        // حذف نیم‌فاصله (Zero-width non-joiner)
+        titleStr = titleStr.replace(/\u200C/g, '');
+
+        // تبدیل نقطه به /
+        titleStr = titleStr.replace(/\./g, '/');
+
+        // پشتیبانی از فارسی و حذف کاراکترهای غیرمجاز
+        titleStr = titleStr.replace(/[^a-z0-9_\s-/ءاأإآؤئبتثجحخدذرزسشصضطظعغفقكلمنهويةى]/gu, '')
+
+            // تبدیل فاصله به خط تیره
             .replace(/\s+/g, '-')
-            // Collapse dashes
+
+            // حذف خط تیره‌های تکراری
             .replace(/-+/g, '-');
-        slugStr = titleStr;
-        return slugStr;
+
+        return titleStr;
     }
 </script>
 {% endblock %}
