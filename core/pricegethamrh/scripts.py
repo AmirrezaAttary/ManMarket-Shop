@@ -19,7 +19,7 @@ def extract_product_data(url):
     try:
         driver.get(url)
 
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".mantine-ll7qhg"))
         )
 
