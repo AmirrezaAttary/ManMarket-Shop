@@ -694,6 +694,9 @@
                                                 
                                                     
                                                     {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 2 %}
+   
                                                         <div class="mega-menu-sub-column">
                                                             <h6 class="px-2">
                                                                 <a class="d-flex justify-content-start"
@@ -702,6 +705,7 @@
                                                                 </a>
                                                             </h6>
                                                         </div>
+                                                        {% endif %}
                                                     {% endfor %}
                                                 
                                             {% endfor %}
@@ -725,48 +729,27 @@
                                         </div>
                                         <!-- Tablet in mega-menu -->
                                         <div class="mega-menu-pane" id="pane-home-desktop">
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        اپل
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        سامسونگ
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        شیائومی
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        اچ پی
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        ال جی
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        متفرقه
-                                                    </a>
-                                                </h6>
-                                            </div>
+                                            <div class="d-flex justify-content-end flex-column">
+                                            {% for category, brands in category_brand_map.items %}
+                                                
+                                                    
+                                                    {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 12 %}
+   
+                                                        <div class="mega-menu-sub-column">
+                                                            <h6 class="px-2">
+                                                                <a class="d-flex justify-content-start"
+                                                                href="{% url 'shop:product-list' %}?category_id={{ category.id }}&brand_id={{ brand.id }}">
+                                                                    {{ brand.title }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                
+                                            {% endfor %}
+                                        </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
                                                     <a href="" class="w-right a-cl">
@@ -777,48 +760,27 @@
                                         </div>
                                         <!-- LapTop in mega-menu -->
                                         <div class="mega-menu-pane" id="pane-fashion-desktop">
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        اپل
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        ایسوس
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        ایسر
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        لنوو
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        اچ پی
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        متفرقه
-                                                    </a>
-                                                </h6>
-                                            </div>
+                                            <div class="d-flex justify-content-end flex-column">
+                                            {% for category, brands in category_brand_map.items %}
+                                                
+                                                    
+                                                    {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 3 %}
+   
+                                                        <div class="mega-menu-sub-column">
+                                                            <h6 class="px-2">
+                                                                <a class="d-flex justify-content-start"
+                                                                href="{% url 'shop:product-list' %}?category_id={{ category.id }}&brand_id={{ brand.id }}">
+                                                                    {{ brand.title }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                
+                                            {% endfor %}
+                                        </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
                                                     <a href="" class="w-right a-cl">
@@ -829,48 +791,27 @@
                                         </div>
                                         <!-- Monitor in mega-menu -->
                                         <div class="mega-menu-pane" id="pane-beauty-desktop">
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        ال جی
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        سامسونگ
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        ام اس ای
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        جی پلاس
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        شیائومی
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        متفرقه
-                                                    </a>
-                                                </h6>
-                                            </div>
+                                            <div class="d-flex justify-content-end flex-column">
+                                            {% for category, brands in category_brand_map.items %}
+                                                
+                                                    
+                                                    {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 10 %}
+   
+                                                        <div class="mega-menu-sub-column">
+                                                            <h6 class="px-2">
+                                                                <a class="d-flex justify-content-start"
+                                                                href="{% url 'shop:product-list' %}?category_id={{ category.id }}&brand_id={{ brand.id }}">
+                                                                    {{ brand.title }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                
+                                            {% endfor %}
+                                        </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
                                                     <a href="" class="w-right a-cl">
@@ -881,34 +822,26 @@
                                         </div>
                                         <!-- Console in mega-menu -->
                                         <div class="mega-menu-pane" id="pane-sports-desktop">
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        پلی استیشن
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        ایکس باکس
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        نینتندو
-                                                    </a>
-                                                </h6>
-                                            </div>
-
-                                            <div class="mega-menu-sub-column">
-                                                <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start" href="#">
-                                                        متفرقه
-                                                    </a>
-                                                </h6>
+                                            <div class="d-flex justify-content-end flex-column">
+                                            {% for category, brands in category_brand_map.items %}
+                                                
+                                                    
+                                                    {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 9 %}
+   
+                                                        <div class="mega-menu-sub-column">
+                                                            <h6 class="px-2">
+                                                                <a class="d-flex justify-content-start"
+                                                                href="{% url 'shop:product-list' %}?category_id={{ category.id }}&brand_id={{ brand.id }}">
+                                                                    {{ brand.title }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                
+                                            {% endfor %}
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
@@ -922,41 +855,25 @@
                                         <div class="mega-menu-pane" id="pane-books-desktop">
                                             <div class="d-flex justify-content-end flex-column">
 
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            جی بی ال
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            سونی
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            شیائومی
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            آنر
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            متفرقه
-                                                        </a>
-                                                    </h6>
-                                                </div>
+                                            {% for category, brands in category_brand_map.items %}
+                                                
+                                                    
+                                                    {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 13 %}
+   
+                                                        <div class="mega-menu-sub-column">
+                                                            <h6 class="px-2">
+                                                                <a class="d-flex justify-content-start"
+                                                                href="{% url 'shop:product-list' %}?category_id={{ category.id }}&brand_id={{ brand.id }}">
+                                                                    {{ brand.title }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                
+                                            {% endfor %}
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2 w-right justify-content-end">
                                                         <a href="" class="w-right a-cl">
@@ -969,41 +886,25 @@
                                         <!-- HeadPhone in mega-menu -->
                                         <div class="mega-menu-pane" id="pane-toys-desktop">
                                             <div class="d-flex justify-content-end flex-column">
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            اپل
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            سامسونگ
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            شیائومی
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            انکر
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            متفرقه
-                                                        </a>
-                                                    </h6>
-                                                </div>
+                                            {% for category, brands in category_brand_map.items %}
+                                                
+                                                    
+                                                    {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 14 %}
+   
+                                                        <div class="mega-menu-sub-column">
+                                                            <h6 class="px-2">
+                                                                <a class="d-flex justify-content-start"
+                                                                href="{% url 'shop:product-list' %}?category_id={{ category.id }}&brand_id={{ brand.id }}">
+                                                                    {{ brand.title }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                
+                                            {% endfor %}
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2 w-right justify-content-end">
                                                         <a href="" class="w-right a-cl">
@@ -1016,41 +917,25 @@
                                         <!-- AplleWatch in mega-menu -->
                                         <div class="mega-menu-pane" id="pane-tools-desktop">
                                             <div class="d-flex justify-content-end flex-column">
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            اپل
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            سامسونگ
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            شیائومی
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            آنر
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            متفرقه
-                                                        </a>
-                                                    </h6>
-                                                </div>
+                                            {% for category, brands in category_brand_map.items %}
+                                                
+                                                    
+                                                    {% for brand in brands %}
+                                                        
+                                                        {% if category.id == 15 %}
+   
+                                                        <div class="mega-menu-sub-column">
+                                                            <h6 class="px-2">
+                                                                <a class="d-flex justify-content-start"
+                                                                href="{% url 'shop:product-list' %}?category_id={{ category.id }}&brand_id={{ brand.id }}">
+                                                                    {{ brand.title }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                
+                                            {% endfor %}
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2 w-right justify-content-end">
                                                         <a href="" class="w-right a-cl">
@@ -1061,52 +946,7 @@
                                             </div>
                                         </div>
                                         <!-- Accessory in mega-menu -->
-                                        <div class="mega-menu-pane" id="pane-supermarket-desktop">
-                                            <div class="d-flex justify-content-end flex-column">
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            پاور بانک
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            فلش
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            هارد اکسترنال
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            گجت
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start" href="#">
-                                                            متفرقه
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2 w-right justify-content-end">
-                                                        <a href="" class="w-right a-cl">
-                                                            دیدن همه ی برند های تبلت ...
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
