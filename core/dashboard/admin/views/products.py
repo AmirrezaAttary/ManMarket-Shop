@@ -82,7 +82,9 @@ class AdminProductEditView(LoginRequiredMixin, HasAdminAccessPermission, Success
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["image_form"] = ProductImageForm()
+        product = self.object  # محصولی که در حال ویرایش آن هستیم
+
+        context["image_form"] = ProductImageForm(product=product)  # این خط اصلاح شد
         context["color_inventory_form"] = ProductColorInventoryForm()
         return context
 

@@ -31,7 +31,6 @@ class ProductForm(forms.ModelForm):
         
 class ProductImageForm(forms.ModelForm):
 
-
     class Meta:
         model = ProductImageModel
         fields = [
