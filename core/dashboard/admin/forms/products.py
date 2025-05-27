@@ -1,5 +1,5 @@
 from django import forms
-from shop.models import ProductModel, ProductImageModel
+from shop.models import ProductModel, ProductImageModel,Color
 
 
 class ProductForm(forms.ModelForm):
@@ -36,12 +36,25 @@ class ProductImageForm(forms.ModelForm):
         model = ProductImageModel
         fields = [
             "file",
+            'color',
         ]
         
     def __init__(self, *args, **kwargs):
+        product = kwargs.pop('product', None)
         super().__init__(*args, **kwargs)
         self.fields['file'].widget.attrs['class'] = 'form-control'
-        self.fields['file'].widget.attrs['accept'] = 'image/png, image/jpg, image/jpeg'
+        self.fields['color'].widget.attrs['class'] = 'form-control'
+        self.fields['file'].widget.attrs['accept'] = 'image/png, image/webp, image/jpg, image/jpeg'
 
-
+        if product:
+            # استخراج رنگ‌هایی که از طریق موجودی رنگ تعریف شده‌اند
+            colors = Color.objects.filter(product_inventories__product=product).distinct()
+            if colors.exists():
+                self.fields['color'].queryset = colors
+            else:
+                self.fields['color'].queryset = Color.objects.none()
+                self.fields['color'].empty_label = 'بدون رنگ'
+        else:
+            self.fields['color'].queryset = Color.objects.none()
+            self.fields['color'].empty_label = 'بدون رنگ'
 

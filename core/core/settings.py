@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY",default='django-insecure-jc35qo)gv(idt+zlq=2&!yq%y)twxum-$8@s^#3dj^7n^!yn_e')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -94,7 +94,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.cart_processor'
+                'cart.context_processors.cart_processor',
+                'shop.context_processors.category_brand_menu',
             ],
         },
     },
