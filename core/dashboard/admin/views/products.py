@@ -32,6 +32,8 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
             queryset = queryset.filter(title__icontains=search_q)
         if category_id := self.request.GET.get("category_id"):
             queryset = queryset.filter(category__id=category_id)
+        if brand_id := self.request.GET.get("brand_id"):
+            queryset = queryset.filter(brand__id=brand_id)
         if min_price := self.request.GET.get("min_price"):
             queryset = queryset.filter(price__gte=min_price)
         if max_price := self.request.GET.get("max_price"):
@@ -47,6 +49,7 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         context = super().get_context_data(**kwargs)
         context["total_items"] = self.get_queryset().count()
         context["categories"] = ProductCategoryModel.objects.all()
+        context["brands"] = Brand.objects.all()
         context["price_get_color_product_ids"] = PriceGetHamrh.objects.values_list('product_id', flat=True)
         context["specification_get_color_product_ids"] = PriceSpecification.objects.values_list('product_id', flat=True)
         return context

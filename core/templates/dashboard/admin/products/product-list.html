@@ -39,6 +39,14 @@
                             </select>
                         </div>
                         <div class="col-md-3 py-1">
+                            <select class="form-select form-select-sm" name="brand_id" id="brand-id-filter">
+                                <option value="" selected>برند</option>
+                                {% for brand in brands %}
+                                <option value="{{brand.id}}">{{brand.title}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3 py-1">
                             <select class="form-select form-select-sm" id="order-by-filter">
                                 <option value="" selected>مرتب سازی</option>
                                 <option value="-created_date">جدیدترین</option>
@@ -211,6 +219,7 @@
         $("#order-by-filter").val(current_url_params.get("order_by") || "")
         $("#search-query-filter").val(current_url_params.get("q") || "")
         $("#category-id-filter").val(current_url_params.get("category_id") || "")
+        $("#brand-id-filter").val(current_url_params.get("category_id") || "")
         $("#min-price-filter").val(current_url_params.get("min_price") || "")
         $("#max-price-filter").val(current_url_params.get("max_price") || "")
 
@@ -220,6 +229,13 @@
         let current_url_params = new URLSearchParams(window.location.search)
         var selectedOption = $(this).val();
         current_url_params.set("category_id", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#brand-id-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("brand_id", selectedOption)
         let new_url = window.location.pathname + "?" + current_url_params.toString()
         window.location.href = new_url
     });
