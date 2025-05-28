@@ -129,48 +129,48 @@
 <!--category top banners :: start------>
     <section class="w-center">
             <div class="d-flex justify-content-center flex-wrap">
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="موبایل">
+                <a href="{% url 'shop:product-list' %}?category_id=2" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/phone.webp'%}" style="top: 12px;width: 73px;left: 49px;" alt="موبایل">   
                     <div class="category-circle"></div>
                     <p class="category-name">موبایل</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="تبلت">
+                <a href="{% url 'shop:product-list' %}?category_id=12" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/laptop.webp'%}" style="top: 5px;width: 82px;left: 46px;" alt="تبلت">
                     <div class="category-circle"></div>
                     <p class="category-name">تبلت</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="لپ تاپ">
+                <a href="{% url 'shop:product-list' %}?category_id=3" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/laptop.webp'%}" style="top: 5px;width: 82px;left: 46px;" alt="لپ تاپ">
                     <div class="category-circle"></div>
                     <p class="category-name">لپ تاپ</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="مانیتور">
+                <a href="{% url 'shop:product-list' %}?category_id=10" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/monitor.webp'%}" style="top: 0px;width: 70px; margin-top: 12px;" alt="مانیتور">
                     <div class="category-circle"></div>
                     <p class="category-name">مانیتور</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="کنسول بازی">
+                <a href="{% url 'shop:product-list' %}?category_id=9" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/console.webp'%}" style="top: 0px;" alt="کنسول بازی">
                     <div class="category-circle"></div>
                     <p class="category-name">کنسول بازی</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="اسپیکر">
+                <a href="{% url 'shop:product-list' %}?category_id=13" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/speeker.webp'%}" style="top: 0px;" alt="اسپیکر">
                     <div class="category-circle"></div>
                     <p class="category-name">اسپیکر</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="هدست هدفون">
+                <a href="{% url 'shop:product-list' %}?category_id=14" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/hedset.webp'%}" style="top: 0px;margin-top: 4px;width: 81px;" alt="هدست هدفون">
                     <div class="category-circle"></div>
                     <p class="category-name">هدست هدفون</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="ساعت هوشمند">
+                <a href="{% url 'shop:product-list' %}?category_id=15" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/acssesory.webp'%}" style="top: 0px;" alt="ساعت هوشمند">
                     <div class="category-circle"></div>
                     <p class="category-name">ساعت هوشمند</p>
                 </a>
-                <a href="{% url 'shop:product-list' %}" class="slide-item my-2 mx-2">
-                    <img src="{% static 'img/main.logo.png'%}" alt="لوازم جانبی">
+                <a href="{% url 'shop:product-list' %}?category_id=5" class="slide-item my-2 mx-2">
+                    <img src="{% static 'img/img-index/acssesory2.webp'%}" style="top: 0px; width: 83px;" alt="لوازم جانبی">
                     <div class="category-circle"></div>
                     <p class="category-name">لوازم جانبی</p>
                 </a>
@@ -214,64 +214,99 @@
             <div class="ow-container container col-12">
                 <div class="owl-carousel owl-theme">
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=12">
                         <img class="w-100" src="{% static 'img/category/acer.png'%}" alt="لوگوی برند Acer">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=9">
                         <img class="w-100" src="{% static 'img/category/Anker.png'%}" alt="لوگوی برند Anker">
+                    </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=7">
                         <img class="w-100" src="{% static 'img/category/Apple.png'%}" alt="لوگوی برند Apple">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=1">
                         <img class="w-100" src="{% static 'img/category/samsung.png'%}" alt="لوگوی برند Samsung">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=5">
                         <img class="w-100" src="{% static 'img/category/xiaomi.png'%}" alt="لوگوی برند Xiaomi">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=13">
                         <img class="w-100" src="{% static 'img/category/Asus.png'%}" alt="لوگوی برند Asus">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=">
                         <img class="w-100" src="{% static 'img/category/Canon.png'%}" alt="لوگوی برند Canon">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=">
                         <img class="w-100" src="{% static 'img/category/Dell.b.png'%}" alt="لوگوی برند Dell">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=">
                         <img class="w-100" src="{% static 'img/category/epson.png'%}" alt="لوگوی برند Epson">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=14">
                         <img class="w-100" src="{% static 'img/category/hp.png'%}" alt="لوگوی برند Hp">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=11">
                         <img class="w-100" src="{% static 'img/category/JBL.png'%}" alt="لوگوی برند JBL">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=15">
                         <img class="w-100" src="{% static 'img/category/lenovo.png'%}" alt="لوگوی برند Lenovo">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=19">
                         <img class="w-100" src="{% static 'img/category/Lg.png'%}" alt="لوگوی برند LG">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=18">
                         <img class="w-100" src="{% static 'img/category/msi.png'%}" alt="لوگوی برند Msi">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=6">
                         <img class="w-100" src="{% static 'img/category/nokia.png'%}" alt="لوگوی برند Nokia">
+                        </a>
                     </div>
                     <div class="ow-item">
-                        <img class="w-100" src="{% static 'img/category/acer.png'%}" alt="اییومن">
-                    </div>
-                    <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=16">
                         <img class="w-100" src="{% static 'img/category/playstation.png'%}" alt="لوگوی برند PlayStation">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=24">
                         <img class="w-100" src="{% static 'img/category/QCY.png'%}" alt="لوگوی برند QYC">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=17">
                         <img class="w-100" src="{% static 'img/category/xbox.png'%}" alt="لوگوی برند xbox">
+                        </a>
                     </div>
                     <div class="ow-item">
+                        <a href="{% url 'shop:product-list' %}?brand_id=16">
                         <img class="w-100" src="{% static 'img/category/barnd.png'%}" alt="برند">
+                        </a>
                     </div>
                 </div>
             </div>
