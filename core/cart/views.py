@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View, TemplateView
 from django.http import JsonResponse
 from cart.cart import CartSession
+from django.contrib import messages
 # Create your views here.
 
 class SessionAddProduct(View):
@@ -12,6 +13,7 @@ class SessionAddProduct(View):
         color_id = request.POST.get("color_id")
         color_inventory_id = request.POST.get("color_inventory_id")
         if product_id:
+            messages.success(request,message='محصول با موفقیت به سبد خرید اضافه شد.')
             cart.add_product(product_id,color_id,color_inventory_id)
         if request.user.is_authenticated:
             cart.merge_session_cart_in_db(request.user)
