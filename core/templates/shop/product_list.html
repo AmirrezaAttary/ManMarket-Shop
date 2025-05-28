@@ -241,7 +241,11 @@
                                                             href="{% url 'shop:product-detail' slug=object.slug %}">{{object.title|truncatewords:7}}</a>
                                                     </div>
                                                     <div class="price">
+                                                        {% if object.min_discounted_price == None %}
+                                                        <span class="amount">ناموجود
+                                                        {% else %}
                                                         <span class="amount">{{object.min_discounted_price|intcomma}}
+                                                        {% endif %}
                                                             <span><svg class="ms-3" width="25" height="25"
                                                                     viewBox="0 0 14 16" fill="none"
                                                                     xmlns="http://www.w3.org/2000/svg">
@@ -278,9 +282,10 @@
                                                     </div>
                                                     <div class="price">
 
-                                                        <span
-                                                            class="amount">{{object.min_discounted_price|intcomma}}</span>
-
+                                                        {% if object.min_discounted_price == None %}
+                                                        <span class="amount">ناموجود</span>
+                                                        {% else %}
+                                                        <span class="amount">{{object.min_discounted_price|intcomma}}</span>
                                                         <span><svg class="ms-3" width="25" height="25"
                                                                 viewBox="0 0 14 16" fill="none"
                                                                 xmlns="http://www.w3.org/2000/svg">
@@ -289,6 +294,10 @@
                                                                     fill="currentColor"></path>
                                                             </svg></span>
                                                         </span>
+                                                        {% endif %}
+                                                        
+
+
                                                     </div>
                                                 </section>
                                             </div>
