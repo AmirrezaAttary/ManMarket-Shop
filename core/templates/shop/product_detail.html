@@ -1254,6 +1254,11 @@
 
 
                 <div class="action-buttons mb-4">
+                    
+                    {% if default_color.discounted_price == None %}
+                        
+                    <h5>ناموجود</h5>
+                    {% else %}    
                     <button type="button" class="rounded-3 fs-cs-s btn-add-to-cart"
                         onclick="addToCart('{{object.id}}','{{ default_color.color.id }}','{{default_color.id}}')">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="1em" height="1em">
@@ -1263,6 +1268,7 @@
                         </svg>
                         افزودن به سبد خرید
                     </button>
+                    {% endif %}
                     <button type="button" class="rounded-3 fs-cs-s btn-add-to-wishlist">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="1em" height="1em">
                             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
