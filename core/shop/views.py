@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
                          ProductSpecification,Brand,WishlistProductModel)
+from review.models import ReviewModel,ReviewStatusType
 # Create your views here.
 
 class ShopListProductView(ListView):
@@ -119,6 +120,10 @@ class ShopDetailProductView(DetailView):
         context['specifications'] = ProductSpecification.objects.filter(product=product)
         context["is_wished"] = WishlistProductModel.objects.filter(
             user=self.request.user, product__id=self.get_object().id).exists() if self.request.user.is_authenticated else False
+        reviews = ReviewModel.objects.filter(product=product,status=ReviewStatusType.accepted.value)
+        context["reviews"] = reviews
+        total_reviews_count =reviews.count()
+        context["total_reviews_count"] = total_reviews_count
         return context
     
     

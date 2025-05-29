@@ -1356,60 +1356,41 @@
                     <div class="tab-pane fade" id="reviewsPane" role="tabpanel" aria-labelledby="reviews-tab">
                         <div class="row">
                             <div class="col-lg-7 mb-4 mb-lg-0">
-                                <h6>دیدگاه‌های کاربران (3 دیدگاه)</h6>
+                                <h6>دیدگاه‌های کاربران ({{total_reviews_count}} دیدگاه)</h6>
                                 <div class="comments-list">
+                                    {% for review in reviews %}
                                     <div class="comment-item">
-                                        <img src="{% static 'img/product/Samsung/A-15/A-15-yellow/Samsung-A-15-1.png' %}"
+                                        <img src="{{review.user.user_profile.image.url}}"
                                             alt="آواتار کاربر محمد کرابی" class="user-avatar">
                                         <div class="comment-content">
                                             <div class="comment-header">
-                                                <span class="user-name">محمد کرابی</span>
-                                                <span class="comment-date">۲ روز پیش</span>
+                                                <span class="user-name">{{review.user.user_profile.get_fullname}}</span>
+                                                <span class="comment-date">{{review.created_date|date:"Y-m-d h:i"}} روز پیش</span>
                                             </div>
-                                            <p class="comment-text">محصول عالی بود، کیفیت ساخت خوبی داره و دوربینش هم
-                                                راضی‌کننده‌ست. صفحه نمایش هم روشنایی قابل قبولی داره.</p>
+                                            <p class="comment-text">{{review.description}}</p>
                                         </div>
                                     </div>
-                                    <div class="comment-item">
-                                        <img src="YOUR_PATH/{% static 'img/avatar2.png' %}"
-                                            alt="آواتار کاربر سارا احمدی" class="user-avatar">
-                                        <div class="comment-content">
-                                            <div class="comment-header">
-                                                <span class="user-name">سارا احمدی</span>
-                                                <span class="comment-date">۵ روز پیش</span>
-                                            </div>
-                                            <p class="comment-text">رنگ سرمه‌ای که سفارش دادم خیلی شیکه. ممنون از ارسال
-                                                سریع و بسته‌بندی خوبتون. تجربه خرید خوبی بود.</p>
-                                        </div>
-                                    </div>
-                                    <div class="comment-item">
-                                        <img src="YOUR_PATH/{% static 'img/avatar3.png' %}" alt="آواتار کاربر علی رضایی"
-                                            class="user-avatar">
-                                        <div class="comment-content">
-                                            <div class="comment-header">
-                                                <span class="user-name">علی رضایی</span>
-                                                <span class="comment-date">۱ هفته پیش</span>
-                                            </div>
-                                            <p class="comment-text">کیفیت ساخت خوبه و گوشی خوش‌دستی هست. باتریش هم خوب
-                                                دوام میاره، برای استفاده روزمره کاملاً مناسبه.</p>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                     <!-- در صورت نیاز نظرات بیشتری برای تست اسکرول اضافه کنید -->
                                 </div>
                             </div>
                             <div class="col-lg-5">
-                                <form class="review-form" id="productReviewForm">
+                                <form class="review-form" method="post" action="{% url 'review:submit-review' %}">
+                                    {% csrf_token %}
                                     <h6>دیدگاه خود را بنویسید</h6>
+                                    <input hidden name="product" value="{{object.id}}">
                                     <div class="mb-3">
-                                        <label for="reviewerName" class="form-label">نام شما:</label>
-                                        <input type="text" id="reviewerName" name="reviewerName" class="form-control"
-                                            placeholder="مثال: علی محمدی" required>
+                                        <label class="form-label" for="rateModalInput">امتیاز</label>
+                                        <select class="form-select form-select-sm" name="rate" required>
+                                            <option value="1">1 ستاره</option>
+                                            <option value="2">2 ستاره</option>
+                                            <option value="3">3 ستاره</option>
+                                            <option value="4">4 ستاره</option>
+                                            <option value="5" selected>5 ستاره</option>
+
+                                        </select>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="reviewerEmail" class="form-label">ایمیل شما (اختیاری):</label>
-                                        <input type="email" id="reviewerEmail" name="reviewerEmail" class="form-control"
-                                            placeholder="example@domain.com">
-                                    </div>
+
                                     <!-- مثال برای امتیازدهی ستاره ای (نیاز به JS/CSS بیشتر برای عملکرد)
                                 <div class="mb-3">
                                     <label class="form-label">امتیاز شما:</label>
@@ -1418,7 +1399,7 @@
                                 -->
                                     <div class="mb-3">
                                         <label for="reviewText" class="form-label">متن دیدگاه شما:</label>
-                                        <textarea id="reviewText" name="reviewText" class="form-control" rows="5"
+                                        <textarea id="reviewText" name="description" class="form-control" rows="5"
                                             placeholder="تجربه خود را از این محصول بنویسید..." required></textarea>
                                     </div>
                                     <button type="submit" class=" btn-submit-review">ارسال دیدگاه</button>
