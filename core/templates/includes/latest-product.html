@@ -67,7 +67,7 @@
             
             <div class="product d-flex justify-content-center align-items-center py-5">
                 <a href="{% url 'shop:product-detail' slug=product.slug %}">
-                <img class="one-img" src="{{product.image.url}}" alt=">
+                <img class="one-img" src="{{product.image.url}}" alt="{{product.title}}">
                 {% with product.product_images.all.first as first_image %}
                 {% if first_image %}
                 <img class="two-img" src="{{ first_image.file.url }}" alt="">
