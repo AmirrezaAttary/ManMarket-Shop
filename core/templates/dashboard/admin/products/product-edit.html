@@ -108,25 +108,23 @@
                 <!-- Body -->
                 <form action="{% url 'dashboard:admin:product-add-image' pk=object.pk %}" method="post"
                     enctype="multipart/form-data">
-
                     {% csrf_token %}
                     <div class="card-body">
                         <div class="row d-flex align-items-center">
                             <div class="col-md-9 mb-3 d-flex align-items-center">
-                                <label>تصویر محصول</label>
-                                {{image_form.file}}
+                                <label>تصاویر محصول</label>
+                                <input type="file" name="files" multiple class="form-control"
+                                    accept="image/png, image/webp, image/jpg, image/jpeg">
                             </div>
                             <div class="col-md-9 mb-3 d-flex align-items-center">
-                                <label>تصویر محصول</label>
-                                {{image_form.color}}
+                                <label>رنگ</label>
+                                {{ image_form.color }}
                             </div>
                             <div class="col-md-3 mb-3">
-                                <button class="btn btn-primary ms-3" type="submit">ثبت تصویر</button>
+                                <button class="btn btn-primary ms-3" type="submit">ثبت تصاویر</button>
                             </div>
                         </div>
                     </div>
-
-
                 </form>
 
                 <div class="card-body">

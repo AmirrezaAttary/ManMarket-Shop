@@ -11,7 +11,7 @@ from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect,get_object_or_404
 from django.contrib import messages
 from shop.models import ProductModel, ProductCategoryModel, ProductImageModel
 from django.core.exceptions import FieldError
@@ -102,29 +102,28 @@ class AdminProductDeleteView(LoginRequiredMixin, HasAdminAccessPermission, Succe
     
     
     
-class AdminProductAddImageView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
-    http_method_names = ['post']
-    form_class = ProductImageForm
+class AdminProductAddImageView(LoginRequiredMixin, HasAdminAccessPermission, View):
+    def post(self, request, *args, **kwargs):
+        product = get_object_or_404(ProductModel, pk=self.kwargs.get('pk'))
+        color_id = request.POST.get('color')  # فیلد رنگ
+        files = request.FILES.getlist('files')  # گرفتن همه فایل‌ها
+
+        if not files:
+            messages.error(request, 'لطفاً حداقل یک تصویر انتخاب کنید.')
+            return redirect(self.get_success_url())
+
+        for file in files:
+            ProductImageModel.objects.create(
+                product=product,
+                color_id=color_id,
+                file=file
+            )
+
+        messages.success(request, 'تصاویر با موفقیت آپلود شدند.')
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:product-edit', kwargs={'pk': self.kwargs.get('pk')})
-
-    def get_queryset(self):
-        return ProductImageModel.objects.filter(product__id=self.kwargs.get('pk'))
-
-    def form_valid(self, form):
-        form.instance.product = ProductModel.objects.get(
-            pk=self.kwargs.get('pk'))
-        # handle successful form submission
-        messages.success(
-            self.request, 'تصویر مورد نظر با موفقیت ثبت شد')
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        # handle unsuccessful form submission
-        messages.error(
-            self.request, 'اشکالی در ارسال تصویر رخ داد لطفا مجدد امتحان نمایید')
-        return redirect(reverse_lazy('dashboard:admin:product-edit', kwargs={'pk': self.kwargs.get('pk')}))
 
 
 class AdminProductRemoveImageView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
