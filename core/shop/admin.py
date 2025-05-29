@@ -1,6 +1,15 @@
 from django.contrib import admin
-from .models import ProductModel, ProductCategoryModel, ProductImageModel, Color, ProductColorInventory, ProductSpecification , Brand
 from django.utils.html import format_html
+
+from .models import (ProductModel,
+                    ProductCategoryModel,
+                    ProductImageModel,
+                    Color,
+                    ProductColorInventory,
+                    ProductSpecification ,
+                    Brand,
+                    WishlistProductModel
+                    )
 
 # ثبت رنگ‌ها به صورت مستقل
 @admin.register(Color)
@@ -57,3 +66,10 @@ class ProductImageModelAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" width="20" height="20" style="object-fit: cover; border-radius: 6px;" />', obj.file.url)
         return "-"
     thumbnail_preview.short_description = "Preview"  # عنوان ستون
+    
+    
+    
+
+@admin.register(WishlistProductModel)
+class WishlistProductModelAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "product")

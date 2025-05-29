@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     # other app for internet
     'django.contrib.humanize',
     "taggit",
+    "django_jalali",
 ]
 
 
@@ -181,7 +182,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "tarya0039@gmail.com"
 EMAIL_HOST_PASSWORD = "alzw ugjy kdzu yurh"
-
 
 
 SHOW_DEBUGGER_TOOLBAR = config("SHOW_DEBUGGER_TOOLBAR", cast=bool, default=True)

@@ -996,7 +996,7 @@
                 </div>
                 <div class="cs-mx btn position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="مورد علاقه ها">
-                    <a class="text-dark" href="#">
+                    <a class="text-dark" href="{% url 'dashboard:customer:wishlist-list' %}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1.2em" height="1.2em">
                             <path fill="currentColor"
                                 d="M223 57a58.07 58.07 0 0 0-81.92-.1L128 69.05l-13.09-12.19A58 58 0 0 0 33 139l89.35 90.66a8 8 0 0 0 11.4 0L223 139a58 58 0 0 0 0-82m-11.35 70.76L128 212.6l-83.7-84.92a42 42 0 0 1 59.4-59.4l.2.2l18.65 17.35a8 8 0 0 0 10.9 0l18.65-17.35l.2-.2a42 42 0 1 1 59.36 59.44Z">
@@ -1269,13 +1269,17 @@
                         افزودن به سبد خرید
                     </button>
                     {% endif %}
-                    <button type="button" class="rounded-3 fs-cs-s btn-add-to-wishlist">
+                    {% if request.user.is_authenticated %}
+                    <button type="button" class="rounded-3 fs-cs-s btn-add-to-wishlist" 
+                    {% if is_wished %} style="color: #ef4056;border-color: #ef4056;" {% endif %}
+                    onclick="addToWishlist(this,`{{object.id}}`)">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="1em" height="1em">
                             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                 d="m7 12.45l-5.52-5c-3-3 1.41-8.76 5.52-4.1c4.11-4.66 8.5 1.12 5.52 4.1Z"></path>
                         </svg>
                         افزودن به علاقه‌مندی
                     </button>
+                    {% endif %}
                 </div>
 
                 <div class="product-meta">
@@ -1813,7 +1817,7 @@
             });
         }
     </script>
-        <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // --- DESKTOP MEGA TAB MENU ---
             const megaMenuTriggerDesktop = document.getElementById('mega-menu-trigger-btn-desktop');
@@ -2068,6 +2072,40 @@
                 }
             });
         });
+    </script>
+    <script>
+        function addToWishlist(element,product_id) {
+     
+            //console.log(product_id)
+            $.ajax({
+                url: "{%  url 'shop:add-or-remove-wishlist' %}",
+                method: 'POST',
+                data: {
+                    product_id: product_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+                },
+                success: function (response) {
+
+                    Toastify({
+                        text:response.message,
+                        className: `info`,
+                        style: {
+                          background: "#f96747",
+                        }
+                      }).showToast();
+                    $(element).toggleClass('active');
+                    location.reload();
+                    
+
+                    // do something with the response data
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    // handle the error case
+                }
+            });
+        }
     </script>
 
     {% include 'messages.html' %}

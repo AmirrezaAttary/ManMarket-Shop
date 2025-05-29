@@ -2,6 +2,7 @@
 Django>4.2,<4.3
 
 gunicorn
+django-jalali
 
 django-taggit
 # database modules

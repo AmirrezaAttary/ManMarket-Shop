@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jformat %}
+
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+<main class="w-sc-wishlist-container w-sc-container w-sc-my-4">
+
+  <!-- Wishlist Header Section -->
+  <section class="w-sc-wishlist-header-section">
+    <div class="w-sc-wishlist-header">
+      <div class="w-sc-wishlist-title-group align-items-center">
+        <h5 class="w-sc-wishlist-title">لیست علاقه‌مندی‌ها</h5>
+        <span class="w-sc-wishlist-count">(<span id="w-sc-wishlist-item-count">3</span> کالا)</span>
+      </div>
+      <div class="w-sc-wishlist-actions">
+        <!-- Custom Sorting Dropdown -->
+        <div class="w-sc-sort-filter">
+          <label for="w-sc-sort-select">مرتب‌سازی:</label>
+          <div class="w-sc-custom-select-wrapper">
+            <select id="w-sc-sort-select" name="sort">
+              <option value="newest">جدیدترین</option>
+              <option value="price_asc">ارزان‌ترین</option>
+              <option value="price_desc">گران‌ترین</option>
+              <option value="most_visited">پیش‌فرض</option> <!-- Changed label -->
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wishlist Content Grid -->
+  <section class="w-sc-wishlist-content" aria-label="لیست محصولات مورد علاقه">
+
+    <!-- Empty Wishlist State -->
+    <div id="w-sc-empty-wishlist" class="w-sc-empty-wishlist">
+      <!-- SVG Heart Icon -->
+      <svg class="w-sc-empty-wishlist__icon" viewBox="0 0 24 24">
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+        </path>
+      </svg>
+      <p class="w-sc-empty-wishlist__message">لیست علاقه‌مندی شما خالی است.</p>
+      <p class="w-sc-empty-wishlist__submessage">محصولات شگفت‌انگیز منتظر شما هستند!</p>
+      <a href="{% url 'shop:product-list' %}" class="w-sc-button w-sc-button--primary w-sc-empty-wishlist__action">
+        <!-- SVG Shop Icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        رفتن به فروشگاه
+      </a>
+    </div>
+
+    <!-- Wishlist Items Grid -->
+    <ul id="w-sc-items-list" class="w-sc-items-list">
+      {% for object in object_list %}
+      <li class="w-sc-wishlist-item" data-id="product-123" data-price="62500000" data-added-date="2024-03-01">
+        <article class="w-sc-product-card">
+          <a href="{% url 'shop:product-detail' slug=object.product.slug %}" class="w-sc-product-card__image-link">
+            <img src="{{object.product.image.url}}" alt="گوشی موبایل اپل آیفون ۱۵ پرو مکس"
+              class="w-sc-product-card__image">
+          </a>
+          <div class="w-sc-product-card__body">
+            <a href="{% url 'shop:product-detail' slug=object.product.slug %}" class="w-sc-product-card__title-link">
+              <h6 class="w-sc-product-card__title">گوشی موبایل اپل مدل iPhone 15 Pro Max ظرفیت 256 گیگابایت</h6>
+            </a>
+            <div class="w-sc-product-card__rating">
+              <!-- SVG Star Icon -->
+              <svg class="w-sc-icon-star" viewBox="0 0 24 24">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <span class="w-sc-product-card__rating-value">{{object.product.avg_rate}}</span>
+            </div>
+            <div class="w-sc-product-card__meta">
+              <span class="w-sc-product-card__seller">
+                <!-- SVG Location Icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                فروشنده: فروشگاه من مارکت
+              </span>
+              <span class="w-sc-product-card__added-date">
+                <!-- SVG Calendar Icon -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                اضافه شده در: {{ object.product.created_date|jformat:"%Y/%m/%d" }} <!-- Display date -->
+              </span>
+            </div>
+            {% if object.product.get_min_price == None %}
+            <div class="w-sc-product-card__availability w-sc-product-card__availability--out-of-stock">
+              ناموجود
+            </div>
+            {% else %}
+            <div class="w-sc-product-card__availability w-sc-product-card__availability--in-stock">
+              موجود
+            </div>
+            {% endif %}
+          </div>
+          <div class="w-sc-product-card__footer">
+            <div class="w-sc-product-card__pricing">
+
+              {% if object.product.get_min_price == None %}
+              <span class="w-sc-product-card__price">ناموجود</span>
+              {% else %}
+              <span class="w-sc-product-card__price">{{object.product.get_min_price}}</span>
+              <span class="w-sc-product-card__currency">تومان</span>
+              {% endif %}
+
+            </div>
+            <div class="w-sc-product-card__buttons">
+              <form action="{% url 'dashboard:customer:wishlist-delete' pk=object.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit"
+                  class="w-sc-button w-sc-button--danger-outline w-sc-button--icon w-sc-remove-wishlist-btn"
+                  aria-label="حذف از لیست علاقه‌مندی" data-product-id="product-123" title="حذف">
+                  <!-- SVG Trash Icon -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </form>
+              <button type="button" class="w-sc-button w-sc-button--primary w-sc-add-to-cart-btn add-to-cart"
+                data-product-id="product-123">
+                <a href="{% url 'shop:product-detail' slug=object.product.slug %}" style="color: white;">
+                <!-- SVG Cart Icon -->
+                مشاهده محصول
+                </a>
+              </button>
+            </div>
+          </div>
+        </article>
+      </li>
+      {% endfor %}
+    </ul>
+
+  </section>
+</main>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/whilist.js' %}"></script>
+{% endblock extra_js %}

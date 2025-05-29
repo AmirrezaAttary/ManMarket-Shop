@@ -1,8 +1,10 @@
 from django.db.models import OuterRef, Subquery, DecimalField, ExpressionWrapper, F, Min, Max
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView,View
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
-                         ProductSpecification,Brand)
+                         ProductSpecification,Brand,WishlistProductModel)
 # Create your views here.
 
 class ShopListProductView(ListView):
@@ -115,4 +117,27 @@ class ShopDetailProductView(DetailView):
         context['colors'] = colors
         context['default_color'] = default_color
         context['specifications'] = ProductSpecification.objects.filter(product=product)
+        context["is_wished"] = WishlistProductModel.objects.filter(
+            user=self.request.user, product__id=self.get_object().id).exists() if self.request.user.is_authenticated else False
         return context
+    
+    
+    
+class AddOrRemoveWishlistView(LoginRequiredMixin, View):
+
+
+    def post(self, request, *args, **kwargs):
+        product_id = request.POST.get("product_id")
+        message = ""
+        if product_id:
+            try:
+                wishlist_item = WishlistProductModel.objects.get(
+                    user=request.user, product__id=product_id)
+                wishlist_item.delete()
+                message = "محصول از لیست علایق حذف شد"
+            except WishlistProductModel.DoesNotExist:
+                WishlistProductModel.objects.create(
+                    user=request.user, product_id=product_id)
+                message = "محصول به لیست علایق اضافه شد"
+
+        return JsonResponse({"message": message})
