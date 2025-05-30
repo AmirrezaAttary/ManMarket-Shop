@@ -16,4 +16,6 @@ urlpatterns = [
     path("",include("dashboard.admin.urls.products_get_color")),
     path("",include("dashboard.admin.urls.blog")),
     path("",include("dashboard.admin.urls.db_media")),
+    path("",include("dashboard.admin.urls.reviews")),
+    path("",include("dashboard.admin.urls.blog_category")),
 ]

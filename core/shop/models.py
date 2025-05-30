@@ -38,7 +38,8 @@ class ProductModel(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     
     def get_min_price(self):
-        return self.color_inventories.aggregate(min_price=Min('price'))['min_price']
+        prices = self.color_inventories.filter(price__gt=0).order_by('price').values_list('price', flat=True)
+        return prices[0] if prices else None
     
     class Meta:
         ordering = ["-created_date"]

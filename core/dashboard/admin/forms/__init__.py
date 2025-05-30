@@ -8,3 +8,5 @@ from . colors import *
 from . product_specification import *
 from . products_get_color import *
 from . blog import *
+from . reviews import *
+from . blog_category import *

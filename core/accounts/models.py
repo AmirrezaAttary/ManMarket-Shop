@@ -81,8 +81,10 @@ class Profile(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+    def get_fullname(self):
+        if self.first_name or self.last_name:
+            return self.first_name + " " + self.last_name
+        return "کاربر جدید"
 
 
     

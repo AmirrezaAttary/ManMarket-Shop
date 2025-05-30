@@ -11,3 +11,5 @@ from .products_specification import *
 from .products_get_color import *
 from .blog import *
 from .db_media import *
+from .reviews import *
+from .blog_category import *
