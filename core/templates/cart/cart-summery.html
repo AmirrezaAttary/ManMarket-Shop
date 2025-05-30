@@ -11,6 +11,39 @@
     
 
 
+{% block extra_css %}
+    <style>
+        .tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  width: 180px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* بالای دکمه */
+  left: 50%;
+  margin-left: -90px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+    </style>
+{% endblock extra_css %}
+    
 
 {% block content %}
 <div class="shopping-cart-container">
@@ -98,7 +131,24 @@
                 <span>جمع سبد خرید</span>
                 <span id="total-payable">{{cart.get_total_payment_amount|intcomma}}<span class="currency">تومان</span></span>
             </div>
-            <a href="{% url 'order:checkout' %}"><button class="checkout-btn more-shop">ادامه فرآیند خرید</button></a>
+            
+            {% if cart.get_total_quantity == 0 %}
+            <div class="tooltip-container">
+            <a href="{% url 'order:checkout' %}">
+                <button style="background-color: gray; width: 290px;" class="checkout-btn more-shop" disabled>
+                ادامه فرآیند خرید
+                </button>
+            </a>
+            <span class="tooltip-text">ابتدا محصولی به سبد خرید اضافه کنید</span>
+            </div>
+            {% else %}
+            <a href="{% url 'order:checkout' %}">
+            <button class="checkout-btn more-shop">
+                ادامه فرآیند خرید
+            </button>
+            </a>
+            {% endif %}
+
         </div>
     </div>
 </div>

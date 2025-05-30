@@ -1178,11 +1178,17 @@
                             </path>
                         </svg>
                     </a>
+                    
+                    {% if wishlist_total_items == 0 %}
+                        
+                    {% else %}
+                        
                     <!--like and shop number start-->
-                    <!-- <span class="number-top-icon num-like" id="total-likes">
-                        0
-                    </span> -->
+                    <span class="number-top-icon num-like" id="total-likes">
+                        {{wishlist_total_items}}
+                    </span>
                     <!--like and shop number end---->
+                    {% endif %}
                 </div>
                 <div class="cs-mx btn position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="سبد خرید">

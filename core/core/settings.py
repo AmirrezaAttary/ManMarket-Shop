@@ -78,8 +78,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'accounts.middleware.restrict_admin.RestrictAdminMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -96,7 +98,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart_processor',
-                'shop.context_processors.category_brand_menu',
+                'shop.context_processors.wishlist_total_items',
             ],
         },
     },
@@ -177,11 +179,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD",default="")
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = "smtp.zoho.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "tarya0039@gmail.com"
-EMAIL_HOST_PASSWORD = "alzw ugjy kdzu yurh"
+EMAIL_HOST_USER = "info@manmarket.ir"
+EMAIL_HOST_PASSWORD = "Amir1383.com"
+DEFAULT_FROM_EMAIL = "info@manmarket.ir"
+
 
 
 SHOW_DEBUGGER_TOOLBAR = config("SHOW_DEBUGGER_TOOLBAR", cast=bool, default=True)

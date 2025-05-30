@@ -1,15 +1,10 @@
-from .models import ProductCategoryModel, Brand, ProductModel
+from .models import WishlistProductModel
 
-def category_brand_menu(request):
-    category_brand_map = {}
-    categories = ProductCategoryModel.objects.all()
-
-    for category in categories:
-        brands = Brand.objects.filter(
-            id__in=ProductModel.objects.filter(category=category)
-                                      .values_list('brand', flat=True)
-                                      .distinct()
-        )
-        category_brand_map[category] = brands
-
-    return {'category_brand_map': category_brand_map}
+def wishlist_total_items(request):
+    if request.user.is_authenticated:
+        total_items = WishlistProductModel.objects.filter(user=request.user).count()
+    else:
+        total_items = 0
+    return {
+        'wishlist_total_items': total_items
+    }
