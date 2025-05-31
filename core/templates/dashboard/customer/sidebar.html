@@ -1,36 +1,50 @@
+{% load static %}
 <div class="col-md-3 mb-3">
     <aside class="user-panel-aside">
         <div class="aside-header d-flex align-items-center flex-column">
-            <img class="profile-img" src="{{request.user.user_profile.image.url}}" alt="">
+            <form method="post" action="{% url 'dashboard:customer:profile-image-edit' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <label for="imageUpload" class="profile-container">
+                    {% if request.user.user_profile.image %}
+                    <img class="profile-img" src="{{ request.user.user_profile.image.url }}" alt="Your profile photo">
+                    {% else %}
+                    <img class="profile-img" src="{% static 'img/default/default.webp' %}" alt="Default profile photo">
+                    {% endif %}
+                    <span class="change-text">برای تغییر تصویر کلیک کنید</span>
+                </label>
+
+                <input id="imageUpload" type="file" name="image" accept="image/*" style="display: none;"
+                    onchange="this.form.submit()">
+            </form>
             <div class="me-2 flex-column d-flex mx-3 mt-3">
-                <span class="mb-1 d-inline-block custom-text text-wrap text-center">{{request.user.user_profile.get_full_name}}</span>
+                <span
+                    class="mb-1 d-inline-block custom-text text-wrap text-center">{{request.user.user_profile.get_full_name}}</span>
                 <span class="text-muted fw-lighter">{{request.user.email}}</span>
             </div>
         </div>
         <div class="aside-menu">
-            <a href="{% url 'dashboard:customer:profile-edit' %}" class="{% if request.resolver_match.view_name == 'dashboard:customer:profile-edit' %}active {% endif %}custom-text">
-                <svg
-                        viewBox="0 0 448 512"
-                        fill="currentColor"
-                        height="1.4em"
-                        width="1.4em"
-                >
-                    <path d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32 0-97.2-78.8-176-176-176zM48.99 464c7.9-63.1 61.81-112 127.01-112h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128S294.69 0 224 0 96 57.31 96 128c0 70.7 57.3 128 128 128zm0-208c44.11 0 80 35.89 80 80s-35.89 80-80 80-80-35.9-80-80c0-44.11 35.9-80 80-80z" />
+            <a href="{% url 'dashboard:customer:profile-edit' %}"
+                class="{% if request.resolver_match.view_name == 'dashboard:customer:profile-edit' %}active {% endif %}custom-text">
+                <svg viewBox="0 0 448 512" fill="currentColor" height="1.4em" width="1.4em">
+                    <path
+                        d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32 0-97.2-78.8-176-176-176zM48.99 464c7.9-63.1 61.81-112 127.01-112h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128S294.69 0 224 0 96 57.31 96 128c0 70.7 57.3 128 128 128zm0-208c44.11 0 80 35.89 80 80s-35.89 80-80 80-80-35.9-80-80c0-44.11 35.9-80 80-80z" />
                 </svg>
                 پروفایل
             </a>
-            <a href="{% url 'dashboard:customer:order-list' %}" class=" {% if request.resolver_match.view_name == 'dashboard:customer:order-list' %}active {% endif %}custom-text">
+            <a href="{% url 'dashboard:customer:security-edit' %}"
+                class="{% if request.resolver_match.view_name == 'dashboard:customer:security-edit' %}active {% endif %}custom-text">
+                <svg viewBox="0 0 448 512" fill="currentColor" height="1.4em" width="1.4em">
+                    <path
+                        d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32 0-97.2-78.8-176-176-176zM48.99 464c7.9-63.1 61.81-112 127.01-112h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128S294.69 0 224 0 96 57.31 96 128c0 70.7 57.3 128 128 128zm0-208c44.11 0 80 35.89 80 80s-35.89 80-80 80-80-35.9-80-80c0-44.11 35.9-80 80-80z" />
+                </svg>
+                امنیت
+            </a>
+            <a href="{% url 'dashboard:customer:order-list' %}"
+                class=" {% if request.resolver_match.view_name == 'dashboard:customer:order-list' %}active {% endif %}custom-text">
 
-                <svg
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="{2}"
-                        viewBox="0 0 24 24"
-                        height="1.4em"
-                        width="1.4em"
-                >
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
+                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
                     <path stroke="none" d="M0 0h24v24H0z" />
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
                     <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
@@ -39,36 +53,25 @@
                 پیگیری سفارشات
             </a>
             <a href="{% url 'dashboard:customer:wishlist-list' %}" class="custom-text">
-                <svg
-                        viewBox="0 0 1024 1024"
-                        fill="currentColor"
-                        height="1.4em"
-                        width="1.4em"
-                >
-                    <path d="M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z" />
+                <svg viewBox="0 0 1024 1024" fill="currentColor" height="1.4em" width="1.4em">
+                    <path
+                        d="M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9zM512 814.8S156 586.7 156 385.5C156 283.6 240.3 201 344.3 201c73.1 0 136.5 40.8 167.7 100.4C543.2 241.8 606.6 201 679.7 201c104 0 188.3 82.6 188.3 184.5 0 201.2-356 429.3-356 429.3z" />
                 </svg>
                 علاقه مندی ها
             </a>
-            <a href="{% url 'dashboard:customer:address-list' %}" class="{% if request.resolver_match.view_name == 'dashboard:customer:address-list' %}active {% endif %}custom-text">
-                <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        height="1.4em"
-                        width="1.4em"
-                >
-                    <path d="M20.46 9.63A8.5 8.5 0 007.3 3.36a8.56 8.56 0 00-3.76 6.27A8.46 8.46 0 006 16.46l5.3 5.31a1 1 0 001.42 0L18 16.46a8.46 8.46 0 002.46-6.83zm-3.86 5.42l-4.6 4.6-4.6-4.6a6.49 6.49 0 01-1.87-5.22A6.57 6.57 0 018.42 5a6.47 6.47 0 017.16 0 6.57 6.57 0 012.89 4.81 6.49 6.49 0 01-1.87 5.24zM12 6a4.5 4.5 0 104.5 4.5A4.51 4.51 0 0012 6zm0 7a2.5 2.5 0 112.5-2.5A2.5 2.5 0 0112 13z" />
+            <a href="{% url 'dashboard:customer:address-list' %}"
+                class="{% if request.resolver_match.view_name == 'dashboard:customer:address-list' %}active {% endif %}custom-text">
+                <svg viewBox="0 0 24 24" fill="currentColor" height="1.4em" width="1.4em">
+                    <path
+                        d="M20.46 9.63A8.5 8.5 0 007.3 3.36a8.56 8.56 0 00-3.76 6.27A8.46 8.46 0 006 16.46l5.3 5.31a1 1 0 001.42 0L18 16.46a8.46 8.46 0 002.46-6.83zm-3.86 5.42l-4.6 4.6-4.6-4.6a6.49 6.49 0 01-1.87-5.22A6.57 6.57 0 018.42 5a6.47 6.47 0 017.16 0 6.57 6.57 0 012.89 4.81 6.49 6.49 0 01-1.87 5.24zM12 6a4.5 4.5 0 104.5 4.5A4.51 4.51 0 0012 6zm0 7a2.5 2.5 0 112.5-2.5A2.5 2.5 0 0112 13z" />
                 </svg>
                 آدرس های من
             </a>
             <a href="{% url 'accounts:logout' %}" class="custom-text">
-                <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        height="1.4em"
-                        width="1.4em"
-                >
+                <svg viewBox="0 0 24 24" fill="currentColor" height="1.4em" width="1.4em">
                     <path fill="none" d="M0 0h24v24H0z" />
-                    <path d="M5 11h8v2H5v3l-5-4 5-4v3zm-1 7h2.708a8 8 0 100-12H4a9.985 9.985 0 018-4c5.523 0 10 4.477 10 10s-4.477 10-10 10a9.985 9.985 0 01-8-4z" />
+                    <path
+                        d="M5 11h8v2H5v3l-5-4 5-4v3zm-1 7h2.708a8 8 0 100-12H4a9.985 9.985 0 018-4c5.523 0 10 4.477 10 10s-4.477 10-10 10a9.985 9.985 0 01-8-4z" />
                 </svg>
                 خروج
             </a>
