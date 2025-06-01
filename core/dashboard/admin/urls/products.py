@@ -11,4 +11,5 @@ urlpatterns = [
     path("product/<int:pk>/image/<int:image_id>/remove/",views.AdminProductRemoveImageView.as_view(),name="product-remove-image"),
     path("product/<int:pk>/add-color/",views.AdminProductAddColorView.as_view(),name="product-add-color"),
     path("product/<int:pk>/edit-color/<int:prduct_pk>",views.AdminProductEditColorView.as_view(),name="product-edit-color"),
+    path('product/<int:pk>/image/<int:image_id>/update-color/',views.AdminProductChangeColorImageView.as_view(),name='product-update-image-color'),
 ]

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="row">
+    {% include 'dashboard/admin/sidebar.html' %}
+    <!-- Card -->
+    <div class="col-md-9 mb-9">
+        <div class="container mt-5">
+            <div class="card shadow rounded">
+                <div class="card-header  text-white">
+                    <h5 class="mb-0">جزئیات پیام دریافتی</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="fw-bold">نام:</label>
+                            <p class="form-control-plaintext">{{ contact.name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">ایمیل:</label>
+                            <p class="form-control-plaintext">{{ contact.email }}</p>
+                        </div>
+                    </div>
+
+                    {% if contact.subject %}
+                    <div class="mb-3">
+                        <label class="fw-bold">موضوع:</label>
+                        <p class="form-control-plaintext">{{ contact.subject }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="fw-bold">متن پیام:</label>
+                        <div class="border rounded p-3 bg-light" style="white-space: pre-line;">
+                            {{ contact.message }}
+                        </div>
+                    </div>
+
+                    <div class="text-muted text-end">
+                        <small>تاریخ ارسال: {{ contact.created_date|date:"Y-m-d H:i" }}</small>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="{% url 'dashboard:admin:contact-list' %}" class="btn btn-secondary">بازگشت به لیست</a>
+                    <a href="{% url 'dashboard:admin:contact-delete' contact.pk %}" class="btn btn-danger"
+                        >حذف پیام</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

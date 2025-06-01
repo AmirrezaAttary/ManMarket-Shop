@@ -147,3 +147,21 @@ class AdminProductRemoveImageView(LoginRequiredMixin, HasAdminAccessPermission, 
 
 
 
+class AdminProductChangeColorImageView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
+    model = ProductImageModel
+    form_class = ProductImageColorForm
+    http_method_names = ["post"]
+    success_message = "رنگ تصویر با موفقیت تغییر کرد"
+
+    def get_queryset(self):
+        return ProductImageModel.objects.filter(product__id=self.kwargs.get('pk'))
+    
+    def get_object(self, queryset=None):
+        return self.get_queryset().get(pk=self.kwargs.get('image_id'))
+
+    def get_success_url(self):
+        return reverse_lazy('dashboard:admin:product-edit', kwargs={'pk': self.kwargs.get('pk')})
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'اشکالی در تغییر رنگ تصویر رخ داد. لطفا مجدد امتحان کنید.')
+        return redirect(self.get_success_url())

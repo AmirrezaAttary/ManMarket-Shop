@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="row">
+    {% include 'dashboard/admin/sidebar.html' %}
+    <!-- Card -->
+    <div class="col-md-9 mb-9">
+        <h2>حذف پیام</h2>
+        <p>آیا مطمئن هستید که می‌خواهید پیام "{{ object.name }}" را حذف کنید؟</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger" type="submit">بله، حذف کن</button>
+            <a href="{% url 'dashboard:admin:contact-list' %}" class="btn btn-secondary">انصراف</a>
+        </form>
+
+    </div>
+</div>
+
+{% endblock content %}

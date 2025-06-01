@@ -13,3 +13,4 @@ from .blog import *
 from .db_media import *
 from .reviews import *
 from .blog_category import *
+from .contact import *

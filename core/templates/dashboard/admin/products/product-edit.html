@@ -125,20 +125,31 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                </form> 
 
-                <div class="card-body">
+                <div class="card-body"> 
                     <div class="row d-flex ">
                         {% for product_image in object.product_images.all %}
                         <div class="col-md-2">
-                            <img class="img-fluid" style="width:100px; height:100px" src="{{product_image.file.url}}"
-                                alt="Image Description">
-                            <form
-                                action="{% url 'dashboard:admin:product-remove-image' pk=object.pk image_id=product_image.pk %}"
-                                method="post">
+                            <img class="img-fluid" style="width:100px; height:100px" src="{{product_image.file.url}}" alt="Image Description">
+                            <h5>{{product_image.color}}</h5>
+
+                            <!-- فرم حذف -->
+                            <form action="{% url 'dashboard:admin:product-remove-image' pk=object.pk image_id=product_image.pk %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-sm">حذف تصویر</button>
                             </form>
+
+                            <!-- فرم تغییر رنگ -->
+                        <form action="{% url 'dashboard:admin:product-update-image-color' pk=object.pk image_id=product_image.pk %}" method="post">
+                            {% csrf_token %}
+                            <select name="color" class="form-control">
+                                {% for val, label in image_form.fields.color.choices %}
+                                    <option value="{{ val }}" {% if val == product_image.color_id %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-warning btn-sm mt-1">تغییر رنگ</button>
+                        </form>
                         </div>
                         {% endfor %}
                     </div>

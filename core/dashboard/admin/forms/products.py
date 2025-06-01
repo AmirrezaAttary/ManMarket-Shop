@@ -57,3 +57,8 @@ class ProductImageForm(forms.ModelForm):
             self.fields['color'].queryset = Color.objects.none()
             self.fields['color'].empty_label = 'بدون رنگ'
 
+
+class ProductImageColorForm(forms.ModelForm):
+    class Meta:
+        model = ProductImageModel
+        fields = ['color']
