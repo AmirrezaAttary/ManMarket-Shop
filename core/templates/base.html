@@ -1732,7 +1732,11 @@
                         }
                     }).showToast();
                     $(element).toggleClass('active');
-                    window.location.reload();
+                    setTimeout(
+                        ()=>{
+                          window.location.reload();
+                        }
+                    ,2000)
 
                     // do something with the response data
                 },
