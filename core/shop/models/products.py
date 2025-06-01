@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class ProductStatusType(models.IntegerChoices):
     publish = 1 ,("نمایش")
@@ -36,4 +37,5 @@ class ProductModel(models.Model):
     def is_published(self):
         return self.status == ProductStatusType.publish.value
     
-    
+    def get_absolute_url(self):
+        return reverse("shop:product-detail", kwargs={"slug": self.slug})

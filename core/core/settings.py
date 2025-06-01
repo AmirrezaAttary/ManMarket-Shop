@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'django.contrib.sites',
     
     
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     "taggit",
     "django_jalali",
+    'robots',
     
     # add sigin up with google
     'allauth',
@@ -155,6 +157,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization

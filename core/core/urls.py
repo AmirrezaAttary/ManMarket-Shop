@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
+from core.sitemaps import sitemaps_dict
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,7 +36,10 @@ urlpatterns = [
     path('getspecification/', include('getspecification.urls')),
     path('faq/', include('faq.urls')),
     path('accounts_c/', include('allauth.urls')),
-
+    
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps_dict},
+          name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', include('robots.urls')),
 ]
 
 if settings.DEBUG:

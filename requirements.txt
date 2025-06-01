@@ -27,3 +27,7 @@ django-jalali
 django-allauth
 PyJWT
 cryptography
+
+
+# seo
+django-robots
