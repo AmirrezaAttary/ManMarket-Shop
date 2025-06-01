@@ -1726,10 +1726,11 @@
                         text: response.message,
                         className: `info`,
                         style: {
-                            background: "blue",
+                            background: "#f96747",
                         }
                     }).showToast();
                     $(element).toggleClass('active');
+                    window.location.reload();
 
                     // do something with the response data
                 },
