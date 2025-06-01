@@ -73,7 +73,10 @@
     </form>
     <!------------    login form :::::: end----------->
 
+    <form action="{% provider_login_url 'google' %}" method="post" hidden id="google">
+        {% csrf_token %}
 
+    </form>
 </main>
 
 
