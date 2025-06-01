@@ -33,6 +33,8 @@ urlpatterns = [
     path('pricegethamrh/', include('pricegethamrh.urls')),
     path('getspecification/', include('getspecification.urls')),
     path('faq/', include('faq.urls')),
+    path('accounts_c/', include('allauth.urls')),
+
 ]
 
 if settings.DEBUG:

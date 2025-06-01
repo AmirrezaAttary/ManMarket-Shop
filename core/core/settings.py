@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    
+    
 
     # created my app
     'website',
@@ -70,8 +73,22 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     "taggit",
     "django_jalali",
+    
+    # add sigin up with google
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    'allauth.socialaccount.providers.google',
 ]
 
+
+SITE_ID = 2
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 
 MIDDLEWARE = [
@@ -83,6 +100,7 @@ MIDDLEWARE = [
     'accounts.middleware.restrict_admin.RestrictAdminMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     
 ]
 
@@ -207,6 +225,32 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL= '/'
 
+
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # چون username نداریم
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+SOCIALACCOUNT_QUERY_EMAIL = True
+# SOCIALACCOUNT_ADAPTER = 'accounts.adapter.MySocialAccountAdapter'  # اگر تعریفش کردی
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_SIGNUP_REDIRECT_URL = '/dashboard/home/'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+
+
 # payment gateway settings
 MERCHANT_ID = config("MERCHANT_ID",default="4ced0a1e-4ad8-4309-9668-3ea3ae8e8897")
 SANDBOX_MODE = config("SANDBOX_MODE", cast=bool, default=True)
@@ -220,3 +264,4 @@ PASSWORD_RESET_TIMEOUT_DAYS = 2
 
 
 CSRF_COOKIE_SECURE = True
+
