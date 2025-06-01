@@ -1,0 +1,21 @@
+{% load allauth %}
+<div class="containersss">
+    <form method="{{ attrs.method }}" action="{{ attrs.action }}">
+        <h1>ثبت نام/ورود با گوگل</h1>
+        <p>You are about to sign in using your Google account.</p>
+
+        {% slot body %}
+        {% endslot %}
+        <center>
+            <button style="margin-top: 26px;text-align: -webkit-right;display: flex;gap: 20px;" type="submit"
+                class="google-button">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google"
+                    width="20" class="google-icon">
+                ادامه با گوگل
+            </button>
+        </center>
+        {% slot actions %}
+
+        {% endslot %}
+    </form>
+</div>
