@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     "taggit",
     "django_jalali",
     'robots',
+    'django_celery_beat',
     
     # add sigin up with google
     'allauth',
@@ -269,3 +270,17 @@ PASSWORD_RESET_TIMEOUT_DAYS = 2
 
 CSRF_COOKIE_SECURE = True
 
+# celery settings
+
+# settings.py
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}

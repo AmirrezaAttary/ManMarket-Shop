@@ -12,7 +12,8 @@
             <div class="card-header border-bottom">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="">لیست محصول ها </h5>
-                    <a class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;" href="{% url 'dashboard:admin:colors-add' %}">ثبت محصول </a>
+                    <a class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;"
+                        href="{% url 'dashboard:admin:colors-add' %}">ثبت محصول </a>
                 </div>
             </div>
             <!-- End Header -->
@@ -50,9 +51,19 @@
                         </div>
 
                         <div class="col-md-1 py-1">
-                            <button type="submit" class="btn btn-sm btn-icon btn-primary btn-search" style="background-color: #f96747;border-color: #f96747;"><i
-                                    class="bi-search" >اعمال</i></button>
+                            <button type="submit" class="btn btn-sm btn-icon btn-primary btn-search"
+                                style="background-color: #f96747;border-color: #f96747;"><i
+                                    class="bi-search">اعمال</i></button>
                         </div>
+
+                        <div class="col-md-1 py-1">
+                            <button form="get_color" type="submit" class="btn btn-sm btn-icon btn-primary btn-search"
+                                style="background-color: #f96747;border-color: #f96747;"><i class="bi-search">آپدیت کردن
+                                    همه</i></button>
+                        </div>
+                    </form>
+                    <form hidden id="get_color" method="post" action="{% url 'pricegethamrh:update-all-hamrah' %}">
+                        {% csrf_token %}
                     </form>
 
                 </div>
@@ -83,6 +94,13 @@
                                             href="{% url 'pricegethamrh:getcolor' pk=object.product.id %}">
                                             <i class="bi-eye">get color</i>
                                         </a>
+                                        <a target="_blank" class="btn btn-sm btn-icon btn-ghost-primary"
+                                            href="{% url 'dashboard:admin:product-edit' pk=object.product.id %}">
+                                            <i class="bi-eye">show in admin</i>
+                                        </a>
+                                        <a class="btn btn-sm btn-icon btn-ghost-primary" target="_blank"
+                                            href="{% url 'shop:product-detail' slug=object.product.slug %}"><i
+                                                class="bi-eye">نمایش</i></a>
 
 
                                     </td>
@@ -199,4 +217,28 @@
     });
 
 </script>
+<script>
+    let checkInterval = setInterval(() => {
+        fetch("{% url 'dashboard:admin:check_hamrah_status' %}")
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "done") {
+                    Toastify({
+                        text: "✅ قیمت و رنگ محصولات با موفقیت آپدیت شد.",
+                        className: "success",
+                        style: { background: "green" }
+                    }).showToast();
+                    clearInterval(checkInterval);
+                } else if (data.status === "error") {
+                    Toastify({
+                        text: `❌ خطا: ${data.message}`,
+                        className: "error",
+                        style: { background: "red" }
+                    }).showToast();
+                    clearInterval(checkInterval);
+                }
+            });
+    }, 3000);  // هر 3 ثانیه چک کنه
+</script>
+
 {% endblock %}

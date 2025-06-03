@@ -4,6 +4,10 @@ from shop.models import ProductModel, ProductColorInventory, Color
 from .scripts import extract_product_data
 from pricegethamrh.models import PriceGetHamrh
 from django.urls import reverse
+from django.http import JsonResponse
+from .tasks import update_all_hamrah_products
+from django.contrib import messages  
+from django.shortcuts import redirect
 
 class GetColorAndPrice(View):
 
@@ -60,3 +64,10 @@ class GetColorAndPrice(View):
     def get_success_url(self):
         # مسیر دلخواه خودت رو جایگزین کن
         return reverse("dashboard:admin:product-edit", kwargs={"pk": self.kwargs.get("pk")})
+    
+    
+class UpdateAllHamrahProductsView(View):
+    def post(self, request, *args, **kwargs):
+        update_all_hamrah_products.delay()
+        messages.add_message(request, messages.INFO, 'در حال آپدیت رنگ وقیمت محصولات ...')
+        return redirect(reverse("dashboard:admin:colors-list"))

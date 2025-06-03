@@ -16,3 +16,7 @@ django-allauth
 PyJWT
 cryptography
 django-robots
+celery
+Redis
+django-celery-beat
+django-redis

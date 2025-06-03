@@ -15,14 +15,40 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.core.exceptions import FieldError
 from pricegethamrh.models import PriceGetHamrh
-from django.shortcuts import get_object_or_404
+import redis
+from django.http import JsonResponse
 
-
+def check_hamrah_status(request):
+    r = redis.Redis(host='localhost', port=6379, db=2)
+    status = r.get("hamrah_update_status")
+    if status:
+        status = status.decode()
+        if status == "done":
+            r.delete("hamrah_update_status")
+            return JsonResponse({"status": "done"})
+        elif status.startswith("error:"):
+            r.delete("hamrah_update_status")
+            return JsonResponse({"status": "error", "message": status})
+    return JsonResponse({"status": "pending"})
 
 class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/products-get-color/color-list.html"
     paginate_by = 10
     model = PriceGetHamrh.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        r = redis.Redis(host='localhost', port=6379, db=2)
+        status = r.get("hamrah_update_status")
+
+        if status:
+            status = status.decode()
+            if status == "done":
+                messages.success(request, "✅ قیمت و رنگ محصولات با موفقیت آپدیت شد.")
+            elif status.startswith("error:"):
+                messages.error(request, f"❌ خطا در آپدیت: {status}")
+            r.delete("hamrah_update_status")
+
+        return super().get(request, *args, **kwargs)  # ✅ بسیار مهم!
 
     def get_paginate_by(self, queryset):
         return self.request.GET.get('page_size', self.paginate_by)
@@ -37,6 +63,7 @@ class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListVi
             except FieldError:
                 pass
         return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["total_items"] = self.get_queryset().count()
