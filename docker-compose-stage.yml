@@ -48,7 +48,6 @@ services:
     command: celery -A core worker -l info --pool=solo
     volumes:
       - ./core:/usr/src/app
-      - ./core/.wdm:/usr/src/app/.wdm
     depends_on:
       - redis
       - backend
