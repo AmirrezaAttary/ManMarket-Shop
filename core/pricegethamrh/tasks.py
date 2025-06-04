@@ -16,8 +16,11 @@ def update_all_hamrah_products():
             if not product:
                 continue
 
+            print(f"🔄 پردازش: {product.id} | {item.url}")
+
             extra = extract_product_data(item.url)
             if not extra:
+                print(f"⚠️ هیچ اطلاعاتی برای {item.url} دریافت نشد.")
                 continue
 
             for key, value in extra.items():
@@ -28,31 +31,30 @@ def update_all_hamrah_products():
                 color, _ = Color.objects.get_or_create(title=color_title)
 
                 try:
-                    raw_price = int(value.get('price') or value.get('old_price') or 0)
+                    raw_price = int(value.get('price') or 0)
                 except (TypeError, ValueError):
                     raw_price = 0
 
                 discounted_price = int(raw_price * 10 / 11)
                 discounted_price += (discounted_price * 2.999) / 100
 
-                discount = 0
-
                 pci, created = ProductColorInventory.objects.get_or_create(
                     product=product,
                     color=color,
                     defaults={
                         'price': discounted_price,
-                        'discount_percent': discount
+                        'discount_percent': 0
                     }
                 )
 
                 if not created:
                     pci.price = discounted_price
-                    pci.discount_percent = discount
+                    pci.discount_percent = 0
                     pci.save()
 
-        # فقط اگر همه چیز بدون خطا انجام شد:
         r.set("hamrah_update_status", "done", ex=300)
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()  # چاپ ارور کامل در لاگ
         r.set("hamrah_update_status", f"error: {str(e)}", ex=300)

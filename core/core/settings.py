@@ -28,6 +28,7 @@ SECRET_KEY = config("SECRET_KEY",default='django-insecure-jc35qo)gv(idt+zlq=2&!y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'manmarket.ir',

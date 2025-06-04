@@ -1,89 +1,91 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
+import requests
+import re
 
 def extract_product_data(url):
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument("--disable-extensions")
-    options.add_argument("--disable-infobars")
-    options.add_argument("--remote-debugging-port=9222")
-    options.add_argument("--log-level=3")
+    graphql_url = "https://core-api.hamrahtel.com/graphql/"
+    
+    query = """
+    query productDetail($slug: String!) {
+      publicProduct(slug: $slug) {
+        variants {
+          name
+          quantityAvailable
+          pricing {
+            price {
+              gross {
+                amount
+              }
+            }
+          }
+          attributes {
+            attribute {
+              slug
+              name
+            }
+            values {
+              name
+              value
+            }
+          }
+        }
+      }
+    }
+    """
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    match = re.search(r'/products/([^/]+)', url)
+    if not match:
+        return "Slug not found in URL."
 
-    try:
-        driver.get(url)
+    slug = match.group(1)
 
-        try:
-            WebDriverWait(driver, 100).until(
-                EC.visibility_of_element_located((By.CSS_SELECTOR, ".mantine-ll7qhg"))
-            )
-        except TimeoutException:
-            driver.save_screenshot("timeout_error.png")
-            print("❌ Timeout: عنصر مورد نظر ظاهر نشد.")
-            return {}
+    payload = {
+        "query": query,
+        "variables": {"slug": slug}
+    }
 
-        container = driver.find_element(By.CSS_SELECTOR, ".mantine-ll7qhg")
-        html = container.get_attribute("innerHTML")
+    headers = {
+        "Content-Type": "application/json"
+    }
 
-        soup = BeautifulSoup(html, "html.parser")
-        result = {}
+    response = requests.post(graphql_url, json=payload, headers=headers)
 
-        blocks = soup.select(".mantine-1meq30c")
-        for block in blocks:
-            color_tag = block.select_one(".mantine-rj9ps7")
-            color = color_tag.text.strip() if color_tag else "نامشخص"
+    if response.status_code != 200:
+        return f"Error: {response.status_code}"
 
-            price_tag = block.select_one(".mantine-1erraa9")
-            price = price_tag.text.strip() if price_tag else None
-            if price:
-                price = price.replace(",", "").replace("٬", "").strip()
-                try:
-                    cleaned_price = int(price)
-                except ValueError:
-                    cleaned_price = None
-            else:
-                cleaned_price = None
+    data = response.json()
+    variants = data.get('data', {}).get('publicProduct', {}).get('variants', [])
 
-            old_price_tag = block.select_one(".mantine-vpcnae")
-            old_price = old_price_tag.text.strip() if old_price_tag else None
-            if old_price:
-                old_price = old_price.replace(",", "").replace("٬", "").strip()
-                try:
-                    cleaned_old_price = int(old_price)
-                except ValueError:
-                    cleaned_old_price = None
-            else:
-                cleaned_old_price = None
+    result = {}
 
-            discount_tag = block.select_one(".mantine-1fdpe25")
-            if discount_tag:
-                discount_text = discount_tag.text.strip().replace("٪", "").replace("%", "").strip()
-                try:
-                    discount = int(discount_text)
-                except ValueError:
-                    discount = None
-            else:
-                discount = None
+    for variant in variants:
+        color_name = None
+        for attr in variant.get('attributes', []):
+            if attr.get('attribute', {}).get('slug') == 'color':
+                values = attr.get('values', [])
+                if values:
+                    color_name = values[0].get('name')
 
-            result[color] = {
-                "color": color,
-                "price": cleaned_price,
-                "old_price": cleaned_old_price,
-                "discount_persent": discount
+        quantity = variant.get("quantityAvailable", 0)
+
+        pricing = variant.get('pricing')
+        price = 0
+
+        if pricing and pricing.get('price') and pricing['price'].get('gross'):
+            price = pricing['price']['gross'].get('amount', 0)
+
+        if quantity == 0:
+            price = 0
+
+        if color_name:
+            result[color_name] = {
+                "color": color_name,
+                "price": int(price)
             }
 
-    finally:
-        driver.quit()
-
     return result
+
+
+
+
+
+# print(extract_product_data('https://hamrahtel.com/products/nothing-phone-2a-plus-256gb-ram-12gb'))
