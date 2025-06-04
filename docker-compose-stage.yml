@@ -28,7 +28,7 @@ services:
     build:
       context: .
       dockerfile: ./dockerfiles/dev/django/dockerfile-stage
-    command: gunicorn core.wsgi --bind 0.0.0.0:8000
+    command: gunicorn core.wsgi --bind 0.0.0.0:8000 --timeout 300
 
     volumes:
       - ./core:/app
