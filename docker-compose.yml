@@ -28,3 +28,14 @@ services:
     restart: always
     depends_on:
       - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dev/django/Dockerfile
+    command: celery -A core worker -l info --pool=solo
+    volumes:
+      - ./core:/usr/src/app
+    depends_on:
+      - redis
+      - backend

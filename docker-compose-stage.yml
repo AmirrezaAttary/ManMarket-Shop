@@ -1,5 +1,13 @@
 
 services:
+
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
   db:
     container_name: db
     image: postgres:15-alpine
@@ -31,6 +39,20 @@ services:
       - DEBUG=False
     expose:
       - "8000"
+
+
+  worker:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dev/django/dockerfile-stage
+    command: celery -A core worker -l info --pool=solo
+    volumes:
+      - ./core:/usr/src/app
+    depends_on:
+      - redis
+      - backend
+
+
 
   nginx:
     image: nginx

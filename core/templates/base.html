@@ -544,40 +544,40 @@
     </style>
 
     <style>
-    .profile-container {
-        position: relative;
-        display: inline-block;
-        cursor: pointer;
-    }
+        .profile-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
 
-    .profile-img {
-        display: block;
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 50%;
-    }
+        .profile-img {
+            display: block;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
 
-    .change-text {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.6);
-        color: #fff;
-        text-align: center;
-        padding: 8px;
-        border-bottom-left-radius: 50%;
-        border-bottom-right-radius: 50%;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        font-size: 14px;
-    }
+        .change-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            text-align: center;
+            padding: 8px;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 14px;
+        }
 
-    .profile-container:hover .change-text {
-        opacity: 1;
-    }
-</style>
+        .profile-container:hover .change-text {
+            opacity: 1;
+        }
+    </style>
 
 </head>
 
@@ -590,7 +590,8 @@
     <header class="mb-3">
         <nav class="desktop-navigation-menu d-flex justify-content-center mt-3 px-5 text-center align-items-center">
             <!--logo in header -- : start-->
-            <div class="mx-1"><a href="{% url 'website:index' %}"><img class="cs-w" alt="من مارکت" src="{% static 'img/main.logo.jpg' %}"></a></div>
+            <div class="mx-1"><a href="{% url 'website:index' %}"><img class="cs-w" alt="من مارکت"
+                        src="{% static 'img/main.logo.jpg' %}"></a></div>
             <!--logo in header -- : end---->
 
             <!--menu -- : start-->
@@ -1674,7 +1675,7 @@
 
 
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-        {% block extra_js %}
+    {% block extra_js %}
 
     {% endblock extra_js %}
 
@@ -1733,10 +1734,10 @@
                     }).showToast();
                     $(element).toggleClass('active');
                     setTimeout(
-                        ()=>{
-                          window.location.reload();
+                        () => {
+                            window.location.reload();
                         }
-                    ,2000)
+                        , 2000)
 
                     // do something with the response data
                 },
@@ -1747,7 +1748,29 @@
             });
         }
     </script>
-
+    <script>
+        let checkInterval = setInterval(() => {
+            fetch("{% url 'dashboard:admin:check_hamrah_status' %}")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "done") {
+                        Toastify({
+                            text: "✅ قیمت و رنگ محصولات با موفقیت آپدیت شد.",
+                            className: "success",
+                            style: { background: "green" }
+                        }).showToast();
+                        clearInterval(checkInterval);
+                    } else if (data.status === "error") {
+                        Toastify({
+                            text: `❌ خطا: ${data.message}`,
+                            className: "error",
+                            style: { background: "red" }
+                        }).showToast();
+                        clearInterval(checkInterval);
+                    }
+                });
+        }, 3000);  // هر 3 ثانیه چک کنه
+    </script>
 
 
     {% include 'messages.html' %}

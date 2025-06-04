@@ -217,28 +217,6 @@
     });
 
 </script>
-<script>
-    let checkInterval = setInterval(() => {
-        fetch("{% url 'dashboard:admin:check_hamrah_status' %}")
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === "done") {
-                    Toastify({
-                        text: "✅ قیمت و رنگ محصولات با موفقیت آپدیت شد.",
-                        className: "success",
-                        style: { background: "green" }
-                    }).showToast();
-                    clearInterval(checkInterval);
-                } else if (data.status === "error") {
-                    Toastify({
-                        text: `❌ خطا: ${data.message}`,
-                        className: "error",
-                        style: { background: "red" }
-                    }).showToast();
-                    clearInterval(checkInterval);
-                }
-            });
-    }, 3000);  // هر 3 ثانیه چک کنه
-</script>
+
 
 {% endblock %}

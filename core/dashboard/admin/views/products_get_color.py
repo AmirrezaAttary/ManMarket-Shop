@@ -19,7 +19,7 @@ import redis
 from django.http import JsonResponse
 
 def check_hamrah_status(request):
-    r = redis.Redis(host='localhost', port=6379, db=2)
+    r = redis.Redis(host='redis', port=6379, db=2)
     status = r.get("hamrah_update_status")
     if status:
         status = status.decode()
@@ -37,7 +37,7 @@ class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListVi
     model = PriceGetHamrh.objects.all()
 
     def get(self, request, *args, **kwargs):
-        r = redis.Redis(host='localhost', port=6379, db=2)
+        r = redis.Redis(host='redis', port=6379, db=2)
         status = r.get("hamrah_update_status")
 
         if status:

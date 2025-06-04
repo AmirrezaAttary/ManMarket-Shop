@@ -7,7 +7,7 @@ from .scripts import extract_product_data
 
 @shared_task
 def update_all_hamrah_products():
-    r = redis.Redis(host='localhost', port=6379, db=2)
+    r = redis.Redis(host='redis', port=6379, db=2)
     try:
         products = PriceGetHamrh.objects.select_related('product').all()
 
