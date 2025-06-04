@@ -6,15 +6,23 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import json
+import os
 
 def extract_product_data(url):
+    # تغییر مسیر کش WebDriver به مسیر امن و قابل‌دسترس
+    wdm_cache_path = "/usr/src/app/.wdm"
+    os.makedirs(wdm_cache_path, exist_ok=True)
+
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--log-level=3")
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager(path=wdm_cache_path).install()),
+        options=options
+    )
 
     try:
         driver.get(url)
@@ -34,7 +42,6 @@ def extract_product_data(url):
             color_tag = block.select_one(".mantine-rj9ps7")
             color = color_tag.text.strip() if color_tag else "نامشخص"
 
-            # قیمت با تخفیف
             price_tag = block.select_one(".mantine-1erraa9")
             price = price_tag.text.strip() if price_tag else None
             if price:
@@ -46,7 +53,6 @@ def extract_product_data(url):
             else:
                 cleaned_price = None
 
-            # قیمت بدون تخفیف
             old_price_tag = block.select_one(".mantine-vpcnae")
             old_price = old_price_tag.text.strip() if old_price_tag else None
             if old_price:
@@ -58,7 +64,6 @@ def extract_product_data(url):
             else:
                 cleaned_old_price = None
 
-            # تخفیف به صورت عدد صحیح
             discount_tag = block.select_one(".mantine-1fdpe25")
             if discount_tag:
                 discount_text = discount_tag.text.strip().replace("٪", "").replace("%", "").strip()
@@ -75,7 +80,7 @@ def extract_product_data(url):
                 "old_price": cleaned_old_price,
                 "discount_persent": discount
             }
-       
+
     finally:
         driver.quit()
 
