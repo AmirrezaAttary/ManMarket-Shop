@@ -10,8 +10,8 @@ import os
 
 def extract_product_data(url):
     # تغییر مسیر کش WebDriver به مسیر امن و قابل‌دسترس
-    wdm_cache_path = "/usr/src/app/.wdm"
-    os.makedirs(wdm_cache_path, exist_ok=True)
+    os.environ["WDM_LOCAL"] = "1"
+    os.environ["WDM_CACHE_DIR"] = "/usr/src/app/.wdm"
 
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
@@ -20,7 +20,7 @@ def extract_product_data(url):
     options.add_argument("--log-level=3")
 
     driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager(path=wdm_cache_path).install()),
+        service=Service(ChromeDriverManager().install()),
         options=options
     )
 
