@@ -273,7 +273,6 @@ CSRF_COOKIE_SECURE = True
 
 # celery settings
 
-# settings.py
 CELERY_BROKER_URL = "redis://redis:6379/0"
 
 CACHES = {

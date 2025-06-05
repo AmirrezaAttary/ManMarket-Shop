@@ -68,6 +68,6 @@ class GetColorAndPrice(View):
     
 class UpdateAllHamrahProductsView(View):
     def post(self, request, *args, **kwargs):
-        update_all_hamrah_products.delay()
         messages.add_message(request, messages.INFO, 'در حال آپدیت رنگ وقیمت محصولات ...')
+        update_all_hamrah_products.delay()
         return redirect(reverse("dashboard:admin:colors-list"))

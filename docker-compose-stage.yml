@@ -45,9 +45,8 @@ services:
     build:
       context: .
       dockerfile: ./dockerfiles/dev/django/dockerfile-stage
-    command: celery -A core worker -l info --pool=solo
-    volumes:
-      - ./core:/usr/src/app
+    command: celery -A core worker -l info --pool=prefork
+    volumes: []
     depends_on:
       - redis
       - backend
