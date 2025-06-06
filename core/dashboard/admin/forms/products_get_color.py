@@ -1,6 +1,6 @@
 from django import forms
 from pricegethamrh.models import PriceGetHamrh
-from shop.models import ProductModel
+from shop.models import ProductModel, ProductStatusType
 
 
 class PriceGetHamrhForm(forms.ModelForm):
@@ -21,9 +21,9 @@ class PriceGetHamrhForm(forms.ModelForm):
         if not self.instance.pk:
             # فقط محصولاتی که هنوز PriceSpecification ندارند
             used_products = PriceGetHamrh.objects.values_list('product_id', flat=True)
-            self.fields['product'].queryset = ProductModel.objects.exclude(id__in=used_products)
+            self.fields['product'].queryset = ProductModel.objects.exclude(id__in=used_products,status=ProductStatusType.publish.value)
         else:
             # در حالت ویرایش، فقط همان محصول مربوط به این نمونه
-            self.fields['product'].queryset = ProductModel.objects.filter(id=self.instance.product_id)
+            self.fields['product'].queryset = ProductModel.objects.filter(id=self.instance.product_id,status=ProductStatusType.publish.value)
 
         
