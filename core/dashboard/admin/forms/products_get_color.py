@@ -19,11 +19,14 @@ class PriceGetHamrhForm(forms.ModelForm):
         self.fields['url'].widget.attrs['class'] = 'form-control'
 
         if not self.instance.pk:
-            # فقط محصولاتی که هنوز PriceSpecification ندارند
             used_products = PriceGetHamrh.objects.values_list('product_id', flat=True)
-            self.fields['product'].queryset = ProductModel.objects.exclude(id__in=used_products,status=ProductStatusType.publish.value)
+            self.fields['product'].queryset = ProductModel.objects.filter(
+                status=ProductStatusType.publish.value
+            ).exclude(id__in=used_products)
         else:
-            # در حالت ویرایش، فقط همان محصول مربوط به این نمونه
-            self.fields['product'].queryset = ProductModel.objects.filter(id=self.instance.product_id,status=ProductStatusType.publish.value)
+            self.fields['product'].queryset = ProductModel.objects.filter(
+                id=self.instance.product_id,
+                status=ProductStatusType.publish.value
+            )
 
         
