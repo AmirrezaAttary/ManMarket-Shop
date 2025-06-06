@@ -39,6 +39,16 @@
                             </select>
                         </div>
                         <div class="col-md-3 py-1">
+                            <select class="form-select form-select-sm" name="status" id="status-filter">
+                                <option value="" {% if not current_status_filter %}selected{% endif %}>وضعیت نمایش</option>
+                                {% for key, label in status_choices %}
+                                    <option value="{{ key }}" {% if key|stringformat:"s" == current_status_filter %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3 py-1">
                             <select class="form-select form-select-sm" name="brand_id" id="brand-id-filter">
                                 <option value="" selected>برند</option>
                                 {% for brand in brands %}
@@ -220,6 +230,7 @@
         $("#search-query-filter").val(current_url_params.get("q") || "")
         $("#category-id-filter").val(current_url_params.get("category_id") || "")
         $("#brand-id-filter").val(current_url_params.get("brand_id") || "")
+        $("#status-filter").val(current_url_params.get("status") || "")
         $("#min-price-filter").val(current_url_params.get("min_price") || "")
         $("#max-price-filter").val(current_url_params.get("max_price") || "")
 
@@ -250,6 +261,13 @@
         let current_url_params = new URLSearchParams(window.location.search)
         var selectedOption = $(this).val();
         current_url_params.set("order_by", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#status-filter').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("status", selectedOption)
         let new_url = window.location.pathname + "?" + current_url_params.toString()
         window.location.href = new_url
     });
