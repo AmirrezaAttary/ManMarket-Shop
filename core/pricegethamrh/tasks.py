@@ -10,9 +10,8 @@ def update_all_hamrah_products():
     r = redis.Redis(host='redis', port=6379, db=2)
     try:
         products = PriceGetHamrh.objects.select_related('product').all()
-        
+
         for item in products:
-            print(f"✅ شروع پردازش محصول: {item.product.id} - URL: {item.url}")
             product = item.product
             if not product:
                 continue
@@ -20,14 +19,11 @@ def update_all_hamrah_products():
             print(f"🔄 پردازش: {product.id} | {item.url}")
 
             extra = extract_product_data(item.url)
-            print(f"📦 نتیجه extra: {extra}")
             if not extra:
-                print(f"❌ extra خالی است: {item.url}")
                 print(f"⚠️ هیچ اطلاعاتی برای {item.url} دریافت نشد.")
                 continue
 
             for key, value in extra.items():
-                print(f"🎨 پردازش رنگ: {value.get('color')}, قیمت: {value.get('price')}")
                 color_title = value.get('color')
                 if not color_title:
                     continue
@@ -41,7 +37,6 @@ def update_all_hamrah_products():
 
                 discounted_price = int(raw_price * 10 / 11)
                 discounted_price += (discounted_price * 2.999) / 100
-                color = color.strip()
 
                 pci, created = ProductColorInventory.objects.get_or_create(
                     product=product,
