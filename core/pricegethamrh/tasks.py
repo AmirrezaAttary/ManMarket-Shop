@@ -41,6 +41,7 @@ def update_all_hamrah_products():
 
                 discounted_price = int(raw_price * 10 / 11)
                 discounted_price += (discounted_price * 2.999) / 100
+                color = color.strip()
 
                 pci, created = ProductColorInventory.objects.get_or_create(
                     product=product,
