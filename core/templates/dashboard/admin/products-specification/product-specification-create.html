@@ -24,29 +24,31 @@
 
                     <!-- Form -->
                     <div class="row">
-                      <div style="margin-top: 28px;" class="col-md-6 mb-3">
-                                <label>نام محصول </label>
-                                {{form.product}}
-                            </div>
-                            <div style="margin-top: 28px;" class="col-md-6 mb-3">
-                                <label>آدرس محصول دیجیکالا </label>
-                                {{form.url}}
-                            </div>
-
-                    <!-- End Body -->
-
-                    <!-- Footer -->
-                    <div class="card-footer pt-0">
-                        <div class="d-flex justify-content-end gap-3">
-                            <a class="btn btn-secondary" href="{% url 'dashboard:admin:specification-list' %}">بازگشت</a>
-                            <button class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;" type="submit">ذخیره تغییرات</button>
+                        <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                            <label>نام محصول </label>
+                            {{form.product}}
                         </div>
-                    </div>
+                        <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                            <label>آدرس محصول دیجیکالا </label>
+                            {{form.url}}
+                        </div>
+
+                        <!-- End Body -->
+
+                        <!-- Footer -->
+                        <div class="card-footer pt-0">
+                            <div class="d-flex justify-content-end gap-3">
+                                <a class="btn btn-secondary"
+                                    href="{% url 'dashboard:admin:specification-list' %}">بازگشت</a>
+                                <button class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;"
+                                    type="submit">ذخیره تغییرات</button>
+                            </div>
+                        </div>
             </form>
             <!-- End Footer -->
         </div>
         <!-- End Card -->
     </div>
 </div>
+</div>
 {% endblock %}
-

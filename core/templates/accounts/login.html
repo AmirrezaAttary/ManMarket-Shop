@@ -65,9 +65,10 @@ login
             <a class="custom-text my-1" href="{% url 'accounts:register' %}">تشکیل اکانت؟</a>
         </div>
         <!--more in login form end------->
-        
-        <button style="margin-top: 26px;text-align: -webkit-right;display: flex;gap: 20px;background-color: rgb(218, 230, 230);border-radius: 18px; margin-top: -5px;" type="submit"
-            class="google-button" form="google">
+
+        <button
+            style="margin-top: 26px;text-align: -webkit-right;display: flex;gap: 20px;background-color: rgb(218, 230, 230);border-radius: 18px; margin-top: -5px;"
+            type="submit" class="google-button" form="google">
             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google"
                 width="20" class="google-icon">
             ادامه با گوگل
@@ -75,7 +76,10 @@ login
     </form>
     <!------------    login form :::::: end----------->
 
+    <form action="{% provider_login_url 'google' %}" method="post" hidden id="google">
+        {% csrf_token %}
 
+    </form>
 
 
 </main>
