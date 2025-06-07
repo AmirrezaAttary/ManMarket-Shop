@@ -285,7 +285,6 @@ Product {{object.title}}
         // Use descriptive 'alt' text for SEO and accessibility.
         // Add a 'color' property if you want to link images to color selection.
         const productImages = [
-            { main: '{{object.image.url}}', thumb: '{{object.image.url}}', alt: '{{object.title}}', color: 'navy' },
             {% for product_image in object.product_images.all %}
             { main: '{{product_image.file.url}}', thumb: '{{product_image.file.url}}', alt: '{{object.title}}', color: 'navy' },
         {% endfor %}
