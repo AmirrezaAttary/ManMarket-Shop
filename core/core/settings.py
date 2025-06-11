@@ -218,8 +218,10 @@ EMAIL_HOST = 'smtp.c1.liara.email'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'fervent_feistel_3t4mtv'
 EMAIL_HOST_PASSWORD = 'efb1e7b5-d4e6-4c88-bc10-b473da168442'
-EMAIL_USE_TLS = True  
-EMAIL_FROM_ADDRESS = 'info@manmarket.ir'
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = 'info@manmarket.ir'
+SERVER_EMAIL = 'info@manmarket.ir'
 
 SHOW_DEBUGGER_TOOLBAR = config("SHOW_DEBUGGER_TOOLBAR", cast=bool, default=True)
 if SHOW_DEBUGGER_TOOLBAR:
