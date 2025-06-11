@@ -43,7 +43,8 @@ def update_all_hamrah_products():
                     color=color,
                     defaults={
                         'price': discounted_price,
-                        'discount_percent': 0
+                        'discount_percent': 0,
+                        'hex_color': value.get('color_code', '#ffffff')  # پیش‌فرض سفید
                     }
                 )
 

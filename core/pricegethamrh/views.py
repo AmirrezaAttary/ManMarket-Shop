@@ -29,6 +29,8 @@ class GetColorAndPrice(View):
 
         for key, value in extra.items():
             color_title = value.get('color')
+            color_code = value.get('color_code', '#ffffff')  # پیش‌فرض سفید
+
             if not color_title:
                 continue
 
@@ -49,14 +51,17 @@ class GetColorAndPrice(View):
                 color=color,
                 defaults={
                     'price': discounted_price,
-                    'discount_percent': discount
+                    'discount_percent': discount,
+                    'hex_color': color_code
                 }
             )
 
             if not created:
                 pci.price = discounted_price
                 pci.discount_percent = discount
+                pci.hex_color = color_code  # ← اضافه کردن مقدار کد رنگ
                 pci.save()
+
 
         # ✅ ریدایرکت به صفحه‌ای که می‌خوای
         return HttpResponseRedirect(self.get_success_url())

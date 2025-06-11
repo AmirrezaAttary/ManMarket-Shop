@@ -59,11 +59,13 @@ def extract_product_data(url):
 
     for variant in variants:
         color_name = None
+        color_code = None
         for attr in variant.get('attributes', []):
             if attr.get('attribute', {}).get('slug') == 'color':
                 values = attr.get('values', [])
                 if values:
                     color_name = values[0].get('name')
+                    color_code = values[0].get('value')
 
         quantity = variant.get("quantityAvailable", 0)
 
@@ -79,6 +81,7 @@ def extract_product_data(url):
         if color_name:
             result[color_name] = {
                 "color": color_name,
+                "color_code": color_code,
                 "price": int(price)
             }
 

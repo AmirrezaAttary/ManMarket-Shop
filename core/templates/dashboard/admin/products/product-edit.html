@@ -171,6 +171,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">رنگ </th>
+                                <th scope="col">کد رنگ </th>
                                 <th scope="col">قیمت</th>
                                 <th scope="col">تخفیف</th>
                                 <th scope="col">تعداد</th>
@@ -182,6 +183,7 @@
                             {% for color_inventor in object.color_inventories.all %}
                             <tr>
                                 <th scope="row">{{color_inventor.color}}</th>
+                                <td>{{color_inventor.hex_color}}</td>
                                 <td>{{color_inventor.price|intcomma}}</td>
                                 <td>{{color_inventor.discount_percent}}%</td>
                                 <td>{{color_inventor.stock}}</td>
