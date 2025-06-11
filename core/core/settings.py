@@ -205,15 +205,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # EMAIL_HOST_USER = config("EMAIL_HOST_USER",default="")
 # EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD",default="")
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.zoho.com"
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.c1.liara.email"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "info@manmarket.ir"
+# EMAIL_HOST_PASSWORD = "Amir1383.com"
+# DEFAULT_FROM_EMAIL = "info@manmarket.ir"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.c1.liara.email'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "info@manmarket.ir"
-EMAIL_HOST_PASSWORD = "Amir1383.com"
-DEFAULT_FROM_EMAIL = "info@manmarket.ir"
-
-
+EMAIL_HOST_USER = 'fervent_feistel_3t4mtv'
+EMAIL_HOST_PASSWORD = 'efb1e7b5-d4e6-4c88-bc10-b473da168442'
+EMAIL_USE_TLS = True  
+EMAIL_FROM_ADDRESS = 'info@manmarket.ir'
 
 SHOW_DEBUGGER_TOOLBAR = config("SHOW_DEBUGGER_TOOLBAR", cast=bool, default=True)
 if SHOW_DEBUGGER_TOOLBAR:
