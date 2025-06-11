@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load shop_tags %}
 {% load website_blog_res %}
 
 {% block title %}
@@ -166,7 +166,7 @@
 
     <!--product slider :: start---------->
     <section class="slider container" id="slider">
-        
+        {% show_latest_products %}
     </section>
     <!--product slider :: end------------>
 
