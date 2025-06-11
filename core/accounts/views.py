@@ -30,6 +30,7 @@ class RegisterView(TemplateView):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)  # ورود خودکار پس از ثبت‌نام
             return redirect(self.get_success_url())
         return self.render_to_response({'form': form})
