@@ -27,7 +27,7 @@ class ProductColorInventoryInline(admin.TabularInline):
     model = ProductColorInventory
     extra = 1
     autocomplete_fields = ("color",)
-    fields = ("color", "price", "stock", "discount_percent")
+    fields = ("color", "price", "stock", "discount_percent",'hex_color')
     readonly_fields = ()
 
 # مدیریت محصولات
