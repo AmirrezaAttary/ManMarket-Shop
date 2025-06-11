@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'getspecification',
     'faq',
     'review',
+    'wallets',
     # other app for internet
     'django.contrib.humanize',
     "taggit",
