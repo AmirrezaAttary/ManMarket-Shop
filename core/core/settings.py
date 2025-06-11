@@ -223,6 +223,8 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'info@manmarket.ir'
 SERVER_EMAIL = 'info@manmarket.ir'
 
+
+
 SHOW_DEBUGGER_TOOLBAR = config("SHOW_DEBUGGER_TOOLBAR", cast=bool, default=True)
 if SHOW_DEBUGGER_TOOLBAR:
     INSTALLED_APPS += [
