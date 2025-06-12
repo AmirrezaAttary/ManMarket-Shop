@@ -52,27 +52,27 @@ services:
       - redis
       - backend
       
-  worker2:
-    build:
-      context: .
-      dockerfile: ./dockerfiles/dev/django/dockerfile-stage
-    command: celery -A core worker -l info --pool=prefork
-    volumes:
-      - ./core:/app
-    depends_on:
-      - redis
-      - backend
+  # worker2:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfiles/dev/django/dockerfile-stage
+  #   command: celery -A core worker -l info --pool=prefork
+  #   volumes:
+  #     - ./core:/app
+  #   depends_on:
+  #     - redis
+  #     - backend
 
-  worker3:
-    build:
-      context: .
-      dockerfile: ./dockerfiles/dev/django/dockerfile-stage
-    command: celery -A core worker -l info --pool=prefork
-    volumes:
-      - ./core:/app
-    depends_on:
-      - redis
-      - backend
+  # worker3:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfiles/dev/django/dockerfile-stage
+  #   command: celery -A core worker -l info --pool=prefork
+  #   volumes:
+  #     - ./core:/app
+  #   depends_on:
+  #     - redis
+  #     - backend
 
 
 
