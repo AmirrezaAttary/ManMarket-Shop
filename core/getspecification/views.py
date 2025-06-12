@@ -1,9 +1,9 @@
 from django.views import View
 from django.http import HttpResponseRedirect
-from shop.models import ProductSpecification
-from .scripts import getspecificationDigikala
-from .models import PriceSpecification
 from django.urls import reverse
+from .tasks import fetch_and_save_specifications, all_specifications_updated
+from .models import PriceSpecification
+from celery import chord
 
 class GetSpecification(View):
 
@@ -15,24 +15,38 @@ class GetSpecification(View):
 
     def handle_request(self, request):
         product_id = self.kwargs.get("pk")
-        self.products = PriceSpecification.objects.filter(product__id=product_id)
+
+        # بررسی وجود محصول قبل از اجرای تسک
+        products = PriceSpecification.objects.filter(product__id=product_id)
+        if not products.exists():
+            return HttpResponseRedirect(self.get_success_url(None))
+
+        # اجرای تسک به صورت async
+        fetch_and_save_specifications.delay(product_id)
+
+        return HttpResponseRedirect(self.get_success_url(products.first().id))
+
+    def get_success_url(self, product_spec_id):
+        if product_spec_id:
+            return reverse("dashboard:admin:specification-edit", kwargs={"pk": product_spec_id})
+        return reverse("dashboard:admin:product-list")  # یا هر آدرس دیگری
 
 
-        if not self.products.exists():
-            return HttpResponseRedirect(self.get_success_url())
+class GetAllSpecifications(View):
+    def get(self, request, *args, **kwargs):
+        all_products = PriceSpecification.objects.select_related("product").all()
 
-        product = self.products.first().product
-        extra = getspecificationDigikala(self.products.first().url)
+        if not all_products.exists():
+            # می‌تونی یک پیغام فیدبک به یوزر بدی مثلاً با messages
+            return HttpResponseRedirect(reverse("dashboard:admin:product-list"))
 
-        if extra:
-            for key, value in extra.items():
-                ProductSpecification.objects.update_or_create(
-                    product=product,
-                    name=str(key),
-                    defaults={"value": str(value)}
-                )
+        # ساخت header (همه تسک‌ها)
+        header = [
+            fetch_and_save_specifications.s(price.product.id)
+            for price in all_products
+        ]
 
-        return HttpResponseRedirect(self.get_success_url())
+        # اجرای همزمان همه تسک‌ها و سپس اجرای callback نهایی
+        chord(header)(all_specifications_updated.s())
 
-    def get_success_url(self):
-        return reverse("dashboard:admin:specification-edit", kwargs={"pk": self.products.first().id})
+        return HttpResponseRedirect(reverse("dashboard:admin:product-list"))
