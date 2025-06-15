@@ -8,9 +8,6 @@ psycopg-binary==3.1.12
 python-decouple==3.8
 sqlparse==0.5.3
 typing_extensions==4.13.0
-bs4==0.0.2
-selenium==4.32.0
-webdriver-manager==4.0.2
 django-jalali
 django-allauth
 PyJWT
@@ -20,3 +17,4 @@ celery
 Redis
 django-celery-beat
 django-redis
+requests

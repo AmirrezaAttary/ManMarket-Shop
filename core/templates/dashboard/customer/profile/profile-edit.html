@@ -1,43 +1,149 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
-<main>
-    <div class="container">
-        <section class="user-panel">
-            <div class="row">
-                {% include 'dashboard/customer/sidebar.html' %}
-                <div class="col-md-9">
-                    <div class="user-panel-content">
-                        <h6 class="">
-                            ویرایش پروفایل
-                        </h6>
-                        <form action="." method="post" class="mt-3">
-                            {% csrf_token %}
-                            <div class="row profile-input">
-                                <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="first_name" value="{{request.user.user_profile.first_name}}" placeholder="نام">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="last_name" value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="phone_number" value="{{request.user.user_profile.phone_number}}" placeholder="شماره همراه">
-                                </div>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="icon-user-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+    </symbol>
+    <symbol id="icon-receipt-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+    </symbol>
+    <symbol id="icon-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+        <circle cx="12" cy="10" r="3"></circle>
+    </symbol>
+    <symbol id="icon-heart-solid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </symbol>
+    <symbol id="icon-comment-dots" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </symbol>
+    <symbol id="icon-lock-password" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </symbol>
+    <symbol id="icon-logout-door" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+    </symbol>
+    <symbol id="icon-edit-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    </symbol>
+    <symbol id="icon-save-disk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+        <polyline points="7 3 7 8 15 8"></polyline>
+    </symbol>
+    <symbol id="icon-cancel-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+    </symbol>
+    <symbol id="icon-check-circle-fill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="9 12 11 14 15 10"></polyline>
+    </symbol>
+    <symbol id="icon-alert-triangle-fill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    </symbol>
+    <symbol id="icon-info-circle-fill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+    </symbol>
+    <symbol id="icon-trash-can" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <polyline points="3 6 5 6 21 6"></polyline>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    </symbol>
+</svg>
 
-                                <div class="col-12 text-start">
-                                    <button class="btn bg-light theme-color rounded-1 text-dark">
-                                        انصراف</button>
-                                    <button class="btn theme-color rounded-1 text-light">
-                                        ذخیره اطلاعات</button>
+<div class="main-container mt-5 py-5">
+    <div class="profile-layout-grid">
+        {% include 'dashboard/customer/sidebar.html' %}
+        <main class="profile-content-area-new">
+            <form method="post" action="."  class="profile-section-new">
+                {% csrf_token %}
+                <header class="section-header-new border-0">
+                    <h2><svg><use xlink:href="#icon-user-circle"></use></svg>اطلاعات حساب</h2>
+                </header>
+                <div id="accountDetailsContainer">
+                    <div class="account-detail-row is-editable">
+                        <div class="account-detail-label">نام</div>
+                        <div class="account-detail-value-wrapper">
+                            <span class="account-detail-value">{{request.user.user_profile.first_name}}</span>
+                            <div class="account-detail-input-wrapper">
+                                <input type="text" class="form-control-custom" value="{{request.user.user_profile.first_name}}" name="first_name">
+                            </div>
+                            <div class="account-detail-actions">
+                                <button type="button" class="edit-trigger-btn" title="ویرایش"><svg><use xlink:href="#icon-edit-pencil"></use></svg></button>
+                                <div class="save-cancel-btns">
+                                    <button type="submit" class="save-btn" title="ذخیره"><svg><use xlink:href="#icon-save-disk"></use></svg></button>
+                                    <button type="button" class="cancel-btn" title="لغو"><svg><use xlink:href="#icon-cancel-circle"></use></svg></button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+
+                    <div class="account-detail-row is-editable">
+                        <div class="account-detail-label">نام خانوادگی</div>
+                        <div class="account-detail-value-wrapper">
+                            <span class="account-detail-value">{{request.user.user_profile.last_name}}</span>
+                            <div class="account-detail-input-wrapper">
+                                <input type="text" class="form-control-custom" value="{{request.user.user_profile.last_name}}" name="last_name">
+                            </div>
+                            <div class="account-detail-actions">
+                                <button type="button" class="edit-trigger-btn" title="ویرایش"><svg><use xlink:href="#icon-edit-pencil"></use></svg></button>
+                                <div class="save-cancel-btns">
+                                    <button type="submit" class="save-btn" title="ذخیره"><svg><use xlink:href="#icon-save-disk"></use></svg></button>
+                                    <button type="button" class="cancel-btn" title="لغو"><svg><use xlink:href="#icon-cancel-circle"></use></svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="account-detail-row">
+                        <div class="account-detail-label">ایمیل</div>
+                        <div class="account-detail-value-wrapper">
+                            <span class="account-detail-value">{{request.user.email}}</span>
+                        </div>
+                    </div>
+
+                    <div class="account-detail-row is-editable">
+                        <div class="account-detail-label">موبایل</div>
+                        <div class="account-detail-value-wrapper">
+                            <span class="account-detail-value">{{request.user.user_profile.phone_number}}</span>
+                            <div class="account-detail-input-wrapper">
+                                <input type="tel" class="form-control-custom" value="{{request.user.user_profile.phone_number}}" name="phone_number">
+                            </div>
+                            <div class="account-detail-actions">
+                                <button type="button" class="edit-trigger-btn" title="ویرایش"><svg><use xlink:href="#icon-edit-pencil"></use></svg></button>
+                                <div class="save-cancel-btns">
+                                    <button type="submit" class="save-btn" title="ذخیره"><svg><use xlink:href="#icon-save-disk"></use></svg></button>
+                                    <button type="button" class="cancel-btn" title="لغو"><svg><use xlink:href="#icon-cancel-circle"></use></svg></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </form >
+        </main>
     </div>
-</main>
+</div>
+
+{% include 'dashboard/customer/sidebar_2.html' %}
+
+<div class="wow-notification-container-new" id="notificationToastContainer"></div>
+
+<div class="custom-overlay"></div>
 {% endblock content %}
-    
+
+{% block extra_js %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock extra_js %}

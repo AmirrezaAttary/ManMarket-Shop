@@ -6,7 +6,7 @@ class HasCustomerAccessPermission(UserPassesTestMixin):
 
     def test_func(self):
         if self.request.user.is_authenticated:
-            return self.request.user.type == UserType.customer.value
+            return self.request.user.type == UserType.customer.value or self.request.user.type == UserType.superuser.value
         return False
     
 

@@ -10,10 +10,6 @@ login
 {% block content %}
 
 
-
-
-
-
 <main class="login d-flex justify-content-center align-items-center">
 
 
@@ -76,10 +72,7 @@ login
     </form>
     <!------------    login form :::::: end----------->
 
-    <form action="{% provider_login_url 'google' %}" method="post" hidden id="google">
-        {% csrf_token %}
 
-    </form>
 
 
 </main>

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<main>
+    <div class="container">
+        <section class="user-panel">
+            <div class="row">
+                {% include 'dashboard/customer/sidebar.html' %}
+                <div class="col-md-9">
+                    <div class="user-panel-content">
+                        <h6 class="">
+                            ویرایش پروفایل
+                        </h6>
+                        <form action="." method="post" class="mt-3">
+                            {% csrf_token %}
+                            <div class="row profile-input">
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" name="first_name" value="{{request.user.user_profile.first_name}}" placeholder="نام">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" name="last_name" value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" name="phone_number" value="{{request.user.user_profile.phone_number}}" placeholder="شماره همراه">
+                                </div>
+
+                                <div class="col-12 text-start">
+                                    <button class="btn bg-light theme-color rounded-1 text-dark">
+                                        انصراف</button>
+                                    <button class="btn theme-color rounded-1 text-light">
+                                        ذخیره اطلاعات</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock content %}
+    
