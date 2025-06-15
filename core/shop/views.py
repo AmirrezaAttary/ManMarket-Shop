@@ -1,4 +1,4 @@
-from django.db.models import OuterRef, Subquery, DecimalField, ExpressionWrapper, F, Min, Max
+from django.db.models import OuterRef, Subquery, DecimalField, ExpressionWrapper, F, Min, Max, Prefetch
 from django.views.generic import ListView, DetailView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
@@ -20,13 +20,13 @@ class ShopListProductView(ListView):
         if search_q:
             queryset = queryset.filter(title__icontains=search_q)
 
-        category_ids = self.request.GET.getlist('category_id')
+        category_ids = self.request.GET.getlist('category')
         if category_ids:
-            queryset = queryset.filter(category__id__in=category_ids)
+            queryset = queryset.filter(category__slug__in=category_ids)
 
-        brand_ids = self.request.GET.getlist('brand_id')
+        brand_ids = self.request.GET.getlist('brand')
         if brand_ids:
-            queryset = queryset.filter(brand__id__in=brand_ids)
+            queryset = queryset.filter(brand__slug__in=brand_ids)
 
         min_price = self.request.GET.get('min_price')
         if min_price:
@@ -74,6 +74,8 @@ class ShopListProductView(ListView):
         queryset = queryset.annotate(
             min_discounted_price=min_discounted_price_subquery,
             min_discount_percent=min_discount_percent_subquery
+        ).prefetch_related(
+            Prefetch('color_inventories', queryset=ProductColorInventory.objects.select_related('color'))
         )
         return queryset.distinct()
     

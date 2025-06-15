@@ -8,7 +8,20 @@ services:
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning
-
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+    restart: always
     
   backend:
     container_name: backend
@@ -39,6 +52,27 @@ services:
       - redis
       - backend
       
+  # worker2:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfiles/dev/django/dockerfile-stage
+  #   command: celery -A core worker -l info --pool=prefork
+  #   volumes:
+  #     - ./core:/app
+  #   depends_on:
+  #     - redis
+  #     - backend
+
+  # worker3:
+  #   build:
+  #     context: .
+  #     dockerfile: ./dockerfiles/dev/django/dockerfile-stage
+  #   command: celery -A core worker -l info --pool=prefork
+  #   volumes:
+  #     - ./core:/app
+  #   depends_on:
+  #     - redis
+  #     - backend
 
 
 

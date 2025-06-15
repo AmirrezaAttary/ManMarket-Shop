@@ -13,14 +13,10 @@ input{
 }
 
 
-
-*{
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
+* :focus{
+  border: none !important;
+  outline: none !important;
 }
-
 
 :root{
 
@@ -207,6 +203,26 @@ main{
     white-space: normal !important;
   }
 }
+
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
 
 
 

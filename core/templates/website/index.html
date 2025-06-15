@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 {% endblock extra_css %}
@@ -18,75 +19,16 @@
 {% block content %}
 
 <!--    main slider :: start------------>
-<section class="swiper mySwiper px-3">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide one-bg">
-            <img alt="product-slider" src="{% static 'img/1.slider.png'%}" />
-            <div class="slide-text2">مجموعه جدید کنسول بازی</div>
-            <h6 class="slide-text">زمان بازی است</h6>
-            <button class="shop-now">اکنون خرید کنید</button>
-        </div>
-        <div class="swiper-slide two-bg">
-            <img alt="product-slider" src="{% static 'img/2.slider.png'%}" />
-            <div class="slide-text2">مجموعه جدید لپ تاپ</div>
-            <h6 class="slide-text">استعداد شما علاقه ما</h6>
-            <button class="shop-now">اکنون خرید کنید</button>
-        </div>
-        <div class="swiper-slide three-bg">
-            <img alt="product-slider" src="{% static 'img/3.slider.png'%}" />
-            <div class="slide-text2">مجموعه جدید موبایل</div>
-            <h6 class="slide-text">متفاوت فکر کن</h6>
-            <button class="shop-now">اکنون خرید کنید</button>
-        </div>
-    </div>
-    <div class="swiper-button-next next"></div>
-    <div class="swiper-button-prev prev"></div>
-    <div class="swiper-pagination"></div>
-</section>
+{% include 'index_temp/slider_index.html' %}
 <!--    main slider :: end-------------->
 
-<main class="d-flex justify-content-center flex-column container position-relative px-5 w-center">
+<main class="d-flex justify-content-center flex-column container position-relative px-5 w-center mt-0">
 
-    <section class="w-center">
+    <section class="w-center p-0 copen-cs mb-2">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6 col-12 w-right np-wr my-2  ">
                 <span class="align-items-center">
-                    کوپن هدیه
-                    <svg class="theme-c mx-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1.5em"
-                        height="1.5em">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 14v16h24V14M2 9v5h28V9Zm14 0s-2-9-8-6s8 6 8 6s2-9 8-6s-8 6-8 6m0 0v21"></path>
-                    </svg>
-                </span>
-            </div>
-            <div class="col-md-3">
-                <span class="align-items-center">
-                    بهترین کیفیت
-                    <svg class="theme-c mx-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em"
-                        height="1.5em">
-                        <path fill="currentColor" fill-rule="evenodd"
-                            d="M12 1.25c-1.828 0-3.339.161-4.502.357l-.134.023c-1.01.169-1.85.31-2.507 1.118c-.42.519-.557 1.08-.588 1.705l-.492.164c-.463.154-.87.29-1.191.44c-.348.162-.667.37-.911.709s-.341.707-.385 1.088c-.04.353-.04.78-.04 1.269v.145c0 .402 0 .757.03 1.054c.032.321.103.634.28.936c.179.303.417.517.683.701c.245.17.555.343.907.538l2.64 1.467c.54 1.061 1.281 2.007 2.3 2.69c.887.596 1.952.97 3.213 1.069a.8.8 0 0 0-.053.277v1.75H9.82a1.75 1.75 0 0 0-1.716 1.407l-.219 1.093H6a.75.75 0 0 0 0 1.5h12a.75.75 0 0 0 0-1.5h-1.885l-.219-1.093a1.75 1.75 0 0 0-1.716-1.407h-1.43V17a.8.8 0 0 0-.053-.277c1.261-.1 2.326-.473 3.213-1.068c1.02-.684 1.76-1.63 2.3-2.691l2.64-1.467c.352-.195.662-.368.907-.538c.265-.184.504-.398.682-.7c.178-.303.25-.616.281-.937c.03-.297.03-.652.03-1.054v-.145c0-.488 0-.916-.04-1.269c-.044-.381-.14-.75-.385-1.088c-.244-.339-.563-.547-.91-.71c-.323-.15-.729-.285-1.192-.439l-.492-.164c-.03-.626-.167-1.186-.588-1.705c-.656-.809-1.496-.95-2.506-1.118l-.135-.023A27 27 0 0 0 12 1.25m2.585 20l-.16-.799a.25.25 0 0 0-.245-.201H9.82a.25.25 0 0 0-.245.201l-.16.799zM4.288 6.028l.014-.005c.072 1.52.243 3.2.671 4.77l-1.066-.591c-.389-.217-.633-.353-.809-.475c-.162-.113-.215-.18-.244-.23c-.03-.05-.062-.128-.082-.324a11 11 0 0 1-.022-.938v-.073c0-.539.001-.88.03-1.138c.028-.238.072-.327.112-.381c.039-.055.109-.125.326-.226c.236-.11.56-.219 1.07-.39m15.41-.005c-.071 1.52-.243 3.2-.67 4.77l1.065-.591c.389-.217.633-.353.809-.475c.162-.113.215-.18.244-.23c.03-.05.062-.128.082-.324c.021-.214.022-.493.022-.938v-.073c0-.539-.001-.88-.03-1.138c-.028-.238-.072-.327-.112-.381c-.039-.055-.109-.125-.326-.226c-.236-.11-.56-.219-1.07-.39zM7.748 3.086A25.6 25.6 0 0 1 12 2.75c1.74 0 3.167.153 4.252.336c1.207.204 1.46.28 1.727.608c.262.322.287.628.233 1.983c-.09 2.258-.388 4.696-1.31 6.55c-.456.914-1.052 1.662-1.827 2.182c-.771.517-1.766.841-3.075.841s-2.303-.324-3.074-.841c-.776-.52-1.372-1.268-1.827-2.183c-.923-1.853-1.22-4.29-1.31-6.55c-.054-1.354-.03-1.66.233-1.982c.266-.328.519-.404 1.726-.608"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </span>
-            </div>
-            <div class="col-md-3">
-                <span class="align-items-center">
-                    پشتیبانی 7 روزه و 24 ساعته
-                    <svg class="theme-c mx-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em"
-                        height="1.5em">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="1.5"
-                            d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193c-.34.027-.68.052-1.02.072v3.091l-3-3a49.5 49.5 0 0 1-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095a48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402c-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235c.577.075 1.157.14 1.74.194V21l4.155-4.155">
-                        </path>
-                    </svg>
-                </span>
-            </div>
-            <div class="col-md-3">
-                <span class="align-items-center">
-                    تحویل سریع و رایگان
-                    <svg class="theme-c mx-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="1.5em"
+                    <svg class="theme-c mx-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="1.5em"
                         height="1.5em">
                         <g fill="currentColor">
                             <path fill-rule="evenodd"
@@ -100,363 +42,69 @@
                             </path>
                         </g>
                     </svg>
+                    تحویل اکسپرس
+                </span>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12 w-right np-wr my-2  ">
+                <span class="align-items-center">
+                    <svg class="theme-c mx-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em"
+                        height="1.5em">
+                        <path fill="currentColor" fill-rule="evenodd"
+                            d="M12 1.25c-1.828 0-3.339.161-4.502.357l-.134.023c-1.01.169-1.85.31-2.507 1.118c-.42.519-.557 1.08-.588 1.705l-.492.164c-.463.154-.87.29-1.191.44c-.348.162-.667.37-.911.709s-.341.707-.385 1.088c-.04.353-.04.78-.04 1.269v.145c0 .402 0 .757.03 1.054c.032.321.103.634.28.936c.179.303.417.517.683.701c.245.17.555.343.907.538l2.64 1.467c.54 1.061 1.281 2.007 2.3 2.69c.887.596 1.952.97 3.213 1.069a.8.8 0 0 0-.053.277v1.75H9.82a1.75 1.75 0 0 0-1.716 1.407l-.219 1.093H6a.75.75 0 0 0 0 1.5h12a.75.75 0 0 0 0-1.5h-1.885l-.219-1.093a1.75 1.75 0 0 0-1.716-1.407h-1.43V17a.8.8 0 0 0-.053-.277c1.261-.1 2.326-.473 3.213-1.068c1.02-.684 1.76-1.63 2.3-2.691l2.64-1.467c.352-.195.662-.368.907-.538c.265-.184.504-.398.682-.7c.178-.303.25-.616.281-.937c.03-.297.03-.652.03-1.054v-.145c0-.488 0-.916-.04-1.269c-.044-.381-.14-.75-.385-1.088c-.244-.339-.563-.547-.91-.71c-.323-.15-.729-.285-1.192-.439l-.492-.164c-.03-.626-.167-1.186-.588-1.705c-.656-.809-1.496-.95-2.506-1.118l-.135-.023A27 27 0 0 0 12 1.25m2.585 20l-.16-.799a.25.25 0 0 0-.245-.201H9.82a.25.25 0 0 0-.245.201l-.16.799zM4.288 6.028l.014-.005c.072 1.52.243 3.2.671 4.77l-1.066-.591c-.389-.217-.633-.353-.809-.475c-.162-.113-.215-.18-.244-.23c-.03-.05-.062-.128-.082-.324a11 11 0 0 1-.022-.938v-.073c0-.539.001-.88.03-1.138c.028-.238.072-.327.112-.381c.039-.055.109-.125.326-.226c.236-.11.56-.219 1.07-.39m15.41-.005c-.071 1.52-.243 3.2-.67 4.77l1.065-.591c.389-.217.633-.353.809-.475c.162-.113.215-.18.244-.23c.03-.05.062-.128.082-.324c.021-.214.022-.493.022-.938v-.073c0-.539-.001-.88-.03-1.138c-.028-.238-.072-.327-.112-.381c-.039-.055-.109-.125-.326-.226c-.236-.11-.56-.219-1.07-.39zM7.748 3.086A25.6 25.6 0 0 1 12 2.75c1.74 0 3.167.153 4.252.336c1.207.204 1.46.28 1.727.608c.262.322.287.628.233 1.983c-.09 2.258-.388 4.696-1.31 6.55c-.456.914-1.052 1.662-1.827 2.182c-.771.517-1.766.841-3.075.841s-2.303-.324-3.074-.841c-.776-.52-1.372-1.268-1.827-2.183c-.923-1.853-1.22-4.29-1.31-6.55c-.054-1.354-.03-1.66.233-1.982c.266-.328.519-.404 1.726-.608"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    ضمانت اصل بودن کالا
+                </span>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12 w-right np-wr my-2  ">
+                <span class="align-items-center">
+                    <svg class="theme-c mx-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1.5em"
+                        height="1.5em">
+                        <path fill="currentColor"
+                            d="M771.776 794.88A384 384 0 0 1 128 512h64a320 320 0 0 0 555.712 216.448H654.72a32 32 0 1 1 0-64h149.056a32 32 0 0 1 32 32v148.928a32 32 0 1 1-64 0v-50.56zM276.288 295.616h92.992a32 32 0 0 1 0 64H220.16a32 32 0 0 1-32-32V178.56a32 32 0 0 1 64 0v50.56A384 384 0 0 1 896.128 512h-64a320 320 0 0 0-555.776-216.384z">
+                        </path>
+                    </svg>
+                    7 روز ضمانت بازگشت کالا
+                </span>
+            </div>
+            <div class="col-md-3 col-sm-6 col-12 w-right np-wr my-2  ">
+                <span class="align-items-center">
+                    <svg class="theme-c mx-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em"
+                        height="1.5em">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="1.5"
+                            d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193c-.34.027-.68.052-1.02.072v3.091l-3-3a49.5 49.5 0 0 1-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095a48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402c-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235c.577.075 1.157.14 1.74.194V21l4.155-4.155">
+                        </path>
+                    </svg>
+                    پشتیبانی 7 روزه ، 24 ساعته
                 </span>
             </div>
         </div>
     </section>
 
     <!--category top banners :: start------>
-    <section class="w-center">
-        <div class="d-flex justify-content-center flex-wrap">
-            <a href="{% url 'shop:product-list' %}?category_id=2" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/phone.webp'%}" style="top: 12px;width: 73px;left: 49px;"
-                    alt="موبایل">
-                <div class="category-circle"></div>
-                <p class="category-name">موبایل</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=12" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/laptop.webp'%}" style="top: 5px;width: 82px;left: 46px;" alt="تبلت">
-                <div class="category-circle"></div>
-                <p class="category-name">تبلت</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=3" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/laptop.webp'%}" style="top: 5px;width: 82px;left: 46px;"
-                    alt="لپ تاپ">
-                <div class="category-circle"></div>
-                <p class="category-name">لپ تاپ</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=10" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/monitor.webp'%}" style="top: 0px;width: 70px; margin-top: 12px;"
-                    alt="مانیتور">
-                <div class="category-circle"></div>
-                <p class="category-name">مانیتور</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=9" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/console.webp'%}" style="top: 0px;" alt="کنسول بازی">
-                <div class="category-circle"></div>
-                <p class="category-name">کنسول بازی</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=13" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/speeker.webp'%}" style="top: 0px;" alt="اسپیکر">
-                <div class="category-circle"></div>
-                <p class="category-name">اسپیکر</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=14" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/hedset.webp'%}" style="top: 0px;margin-top: 4px;width: 81px;"
-                    alt="هدست هدفون">
-                <div class="category-circle"></div>
-                <p class="category-name">هدست هدفون</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=15" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/acssesory.webp'%}" style="top: 0px;" alt="ساعت هوشمند">
-                <div class="category-circle"></div>
-                <p class="category-name">ساعت هوشمند</p>
-            </a>
-            <a href="{% url 'shop:product-list' %}?category_id=5" class="slide-item my-2 mx-2">
-                <img src="{% static 'img/img-index/acssesory2.webp'%}" style="top: 0px; width: 83px;" alt="لوازم جانبی">
-                <div class="category-circle"></div>
-                <p class="category-name">لوازم جانبی</p>
-            </a>
-        </div>
-    </section>
+    {% include 'index_temp/category_index.html' %}
     <!--category top banners :: end-------->
 
 
-
-
-    <!--product slider :: start---------->
-    <section class="slider container" id="slider">
-        
-    </section>
-    <!--product slider :: end------------>
-
-
-    <br><br><br><br>
-
-
+    <!---------Main product in index start-------->
+    {% include 'index_temp/tag_index.html' %}
+    <!---------Main product in index end-------->
 
     <!-- blog img :: start----->
-    <div class="blog mt-5">
-
-        {% latestpost %}
-    </div>
+    {% include 'index_temp/blog_index.html' %}
     <!-- blog img :: end------->
 
-
-
     <!--gray scale logo :: start-->
-    <section>
-        <h5 class="text-center">
-
-            <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
-            <span class="px-2">محبوب ترین برند ها</span>
-            <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
-        </h5>
-
-        <div class="row">
-            <div class="ow-container container col-12">
-                <div class="owl-carousel owl-theme">
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=12">
-                            <img class="w-100" src="{% static 'img/category/acer.png'%}" alt="لوگوی برند Acer">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=9">
-                            <img class="w-100" src="{% static 'img/category/Anker.png'%}" alt="لوگوی برند Anker">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=7">
-                            <img class="w-100" src="{% static 'img/category/Apple.png'%}" alt="لوگوی برند Apple">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=1">
-                            <img class="w-100" src="{% static 'img/category/samsung.png'%}" alt="لوگوی برند Samsung">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=5">
-                            <img class="w-100" src="{% static 'img/category/xiaomi.png'%}" alt="لوگوی برند Xiaomi">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=13">
-                            <img class="w-100" src="{% static 'img/category/Asus.png'%}" alt="لوگوی برند Asus">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=">
-                            <img class="w-100" src="{% static 'img/category/Canon.png'%}" alt="لوگوی برند Canon">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=">
-                            <img class="w-100" src="{% static 'img/category/Dell.b.png'%}" alt="لوگوی برند Dell">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=">
-                            <img class="w-100" src="{% static 'img/category/epson.png'%}" alt="لوگوی برند Epson">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=14">
-                            <img class="w-100" src="{% static 'img/category/hp.png'%}" alt="لوگوی برند Hp">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=11">
-                            <img class="w-100" src="{% static 'img/category/JBL.png'%}" alt="لوگوی برند JBL">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=15">
-                            <img class="w-100" src="{% static 'img/category/lenovo.png'%}" alt="لوگوی برند Lenovo">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=19">
-                            <img class="w-100" src="{% static 'img/category/Lg.png'%}" alt="لوگوی برند LG">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=18">
-                            <img class="w-100" src="{% static 'img/category/msi.png'%}" alt="لوگوی برند Msi">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=6">
-                            <img class="w-100" src="{% static 'img/category/nokia.png'%}" alt="لوگوی برند Nokia">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=16">
-                            <img class="w-100" src="{% static 'img/category/playstation.png'%}"
-                                alt="لوگوی برند PlayStation">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=24">
-                            <img class="w-100" src="{% static 'img/category/QCY.png'%}" alt="لوگوی برند QYC">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=17">
-                            <img class="w-100" src="{% static 'img/category/xbox.png'%}" alt="لوگوی برند xbox">
-                        </a>
-                    </div>
-                    <div class="ow-item">
-                        <a href="{% url 'shop:product-list' %}?brand_id=16">
-                            <img class="w-100" src="{% static 'img/category/barnd.png'%}" alt="برند">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </section>
+    {% include 'index_temp/brand_index.html' %}
     <!--gray scale logo :: end---->
 
-
 </main>
-
 
 {% endblock content %}
 
 {% block extra_js %}
-<script src="{% static 'js/slider.in.index.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{% static 'js/slider.in.index.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // --- ساختار HTML مودال ---
-        // این مودال یک بار به صفحه اضافه میشه و برای همه محصولات استفاده میشه.
-        const modalHTML = `
-        <div id="productQuickViewModal" class="modal">
-            <div class="modal-content">
-                <span class="close-button">×</span>
-                <div class="modal-body">
-                    <div class="modal-image-container">
-                         <img id="modalProductImage" src="" alt="تصویر محصول">
-                    </div>
-                    <div class="modal-details-container">
-                        <h3 id="modalProductName"></h3>
-                        <div id="modalProductPriceContainer">
-                            <!-- قیمت محصول اینجا قرار میگیره -->
-                        </div>
-                        <div id="modalProductColors">
-                            <h4>رنگ‌های موجود:</h4>
-                            <p id="modalColorInfo">برای نمایش رنگ‌ها، داده مربوطه را به محصول اضافه کنید.</p>
-                        </div>
-                        <a href="single.product.html" id="modalViewDetailsLink" class="view-details-button bg-danger">مشاهده جزئیات کامل محصول</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-        // اضافه کردن مودال به انتهای body
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-
-        // --- انتخاب اِلِمان‌های مودال ---
-        const quickViewModal = document.getElementById('productQuickViewModal');
-        const closeModalButton = quickViewModal.querySelector('.close-button');
-        const modalProductImage = document.getElementById('modalProductImage');
-        const modalProductName = document.getElementById('modalProductName');
-        const modalProductPriceContainer = document.getElementById('modalProductPriceContainer');
-        const modalViewDetailsLink = document.getElementById('modalViewDetailsLink');
-        const modalColorInfo = document.getElementById('modalColorInfo');
-
-        // --- انتخاب همه دکمه‌های "view" ---
-        const viewButtons = document.querySelectorAll('.slider .slide article .icons button.view');
-
-        viewButtons.forEach(button => {
-            // وظیفه اول: تغییر ساختار دکمه "view" برای حذف تگ <a>
-            const linkTag = button.querySelector('a');
-            if (linkTag) {
-                const svgIcon = linkTag.querySelector('svg');
-                if (svgIcon) {
-                    // خالی کردن محتوای فعلی دکمه
-                    button.innerHTML = '';
-                    // اضافه کردن خود SVG به عنوان فرزند مستقیم دکمه
-                    button.appendChild(svgIcon.cloneNode(true));
-                }
-            }
-
-            // اضافه کردن event listener برای کلیک
-            button.addEventListener('click', function (event) {
-                const currentButton = event.currentTarget; // دکمه‌ای که کلیک شده
-                // currentButton.disabled = true; // می توانید برای تست فعال/غیرفعال کردن دکمه استفاده کنید
-
-                const productArticle = currentButton.closest('article');
-                if (!productArticle) {
-                    // currentButton.disabled = false;
-                    return; // اگر article پیدا نشد، کاری نکن
-                }
-
-                // استخراج اطلاعات محصول از article
-                const productImageElement = productArticle.querySelector('.product img.one-img');
-                const productNameElement = productArticle.querySelector('h3.Specifications');
-                const productPriceElement = productArticle.querySelector('span.price');
-
-                const productDetailHref = "single.product.html"; // اگر لینک‌ها داینامیک هستند، باید از محصول گرفته شود
-
-                // --- پر کردن مودال با اطلاعات محصول ---
-                if (productImageElement) {
-                    modalProductImage.src = productImageElement.src;
-                    modalProductImage.alt = productImageElement.alt;
-                }
-
-                if (productNameElement) {
-                    modalProductName.textContent = productNameElement.textContent.trim();
-                }
-
-                if (productPriceElement) {
-                    modalProductPriceContainer.innerHTML = ''; // پاک کردن محتوای قبلی
-                    const priceClone = productPriceElement.cloneNode(true);
-                    priceClone.classList.remove('position-absolute'); // حذف کلاس موقعیت‌دهی از قیمت
-                    modalProductPriceContainer.appendChild(priceClone);
-                }
-
-                // --- اطلاعات رنگ‌ها (مثال ساده) ---
-                modalColorInfo.innerHTML = "<p>برای نمایش رنگ‌های موجود، لطفاً داده‌های مربوط به رنگ را (مثلاً با data-attribute) به هر محصول در HTML خود اضافه کنید.</p>";
-
-                // تنظیم لینک دکمه "مشاهده جزئیات کامل" در مودال
-                modalViewDetailsLink.href = productDetailHref;
-
-
-                // --- نمایش مودال ---
-                quickViewModal.style.display = 'block';
-
-                // currentButton.disabled = false;
-            });
-        });
-
-        // --- بستن مودال ---
-        if (closeModalButton) {
-            closeModalButton.addEventListener('click', function () {
-                quickViewModal.style.display = 'none';
-            });
-        }
-
-        window.addEventListener('click', function (event) {
-            if (event.target === quickViewModal) {
-                quickViewModal.style.display = 'none';
-            }
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        // کلاس .owl-carousel کلاس اصلی کتابخانه است و نباید تغییر کند
-        $(".owl-carousel").owlCarousel({
-            rtl: true,
-            loop: true,
-            margin: 20,
-            nav: true,
-            dots: true,
-            autoplay: true,
-            autoplayTimeout: 1000,
-            autoplayHoverPause: true,
-            responsiveClass: true,
-            responsive: {
-                0: {
-                    items: 1,
-                    nav: false
-                },
-                600: {
-                    items: 3,
-                    nav: true
-                },
-                1000: {
-                    items: 4
-                },
-                1200: {
-                    items: 5
-                }
-            }
-        });
-    });
-</script>
 {% endblock extra_js %}

@@ -8,541 +8,15 @@
     <title>{% block title %}
 
         {% endblock title %}</title>
+
     {% block extra_css %}
 
     {% endblock extra_css %}
+    <!--    این دوتا همه جا هست -->
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-
     <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
-
-    <style>
-        :root {
-            --base-text-color: #1f1f1f;
-            --secondary-text-color: #5f5f5f;
-            --accent-color-hover: hsl(353, 80%, 60%);
-            --accent-color-hover-rgb: 240, 78, 106;
-            --accent-color-active: hsl(353, 85%, 55%);
-            --accent-primary-static: #ef4056;
-            --border-color: #ededed;
-            --background-light: #ffffff;
-            --background-section: #fafafa;
-            --border-radius-base: 8px;
-            --transition-base: all 0.3s ease-in-out;
-            --transition-fast: all 0.2s ease-out;
-            --shadow-sm: 0 3px 6px rgba(0, 0, 0, 0.04);
-            --shadow-base: 0 6px 15px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        /* --- STYLES FOR THE MEGA MENU TRIGGER (Adapted from .navbar-nav .nav-link) --- */
-        .mega-menu-trigger-wrapper {
-            margin-bottom: 5px;
-            /* Space before panel if it's directly below */
-            position: relative;
-            /* Important for panel positioning */
-            z-index: 99999999999;
-            /* Above panel when not shown, but panel needs higher when shown */
-        }
-
-        .nav-link-mega-trigger {
-            color: var(--secondary-text-color);
-            position: relative;
-            border-radius: var(--border-radius-base);
-            font-size: 0.9rem;
-            display: inline-block;
-            background-color: var(--background-light);
-        }
-
-
-
-        /* --- DESKTOP MEGA TAB MENU STYLES --- */
-        .mega-menu-panel.mega-tab-menu {
-            display: block;
-            position: absolute;
-            /* Positioned relative to .mega-menu-trigger-wrapper or a similar parent */
-            top: 100%;
-            /* Directly below the trigger wrapper */
-            right: 0;
-            left: 0;
-            width: 100vh;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--border-color);
-            /* Added border to match original header structure */
-            border-top: none;
-            /* No top border if it's attached below a header bar */
-            z-index: 1000;
-            padding: 0;
-            border-bottom-left-radius: 7px;
-            border-bottom-right-radius: 7px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
-            pointer-events: none;
-            background-color: white;
-            max-height: 520px;
-            /* Original max-height */
-            /* overflow: hidden; */
-            /* Original: overflow: hidden; Changed to auto when shown */
-        }
-
-        .mega-menu-panel.mega-tab-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition-delay: 0s;
-            pointer-events: auto;
-            overflow: visible;
-        }
-
-        .mega-menu-panel.mega-tab-menu .row {
-            /* height: 100%; */
-            /* Removed, let content dictate height up to max-height of panel */
-            margin-right: 0;
-            /* Bootstrap override for g-0 */
-            margin-left: 0;
-            /* Bootstrap override for g-0 */
-        }
-
-        .mega-menu-categories {
-            background-color: var(--background-section);
-            padding: 0 0;
-            border-left: 1px solid var(--border-color);
-            /* RTL: border on the left */
-            /* height: 100%; */
-            /* Let it take height of content */
-            overflow-y: auto;
-            max-height: calc(520px - 2rem);
-            /* Adjust for padding if panel has fixed height */
-        }
-
-        .mega-category-list {
-            margin: 0;
-            /* Space at the bottom */
-            padding: 0;
-        }
-
-        .mega-category-item {
-            list-style: none;
-        }
-
-        .mega-category-item a {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1.2rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--secondary-text-color);
-            border-right: 3px solid transparent;
-            /* RTL: border on the right */
-            transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-            white-space: nowrap;
-        }
-
-        .mega-category-item a svg {
-            width: 1.4em;
-            font-size: 1.1em;
-            color: var(--secondary-text-color);
-            transition: color 0.15s ease;
-            margin-left: 0.5rem;
-        }
-
-        .mega-category-item:hover a,
-        .mega-category-item.active a {
-            background-color: #FFEEF1F9;
-            color: #ff4f29 !important;
-            border-right-color: #f96747;
-        }
-
-        .mega-category-item:hover a i,
-        .mega-category-item.active a i {
-            color: var(--accent-primary-static);
-        }
-
-        .mega-menu-content-area {
-            padding: 1.5rem 2rem;
-            position: relative;
-            /* height: 100%; */
-            /* Let it take height of content */
-            overflow-y: auto;
-            max-height: calc(520px - 3rem);
-            /* Adjust for padding if panel has fixed height */
-        }
-
-        .mega-menu-pane {
-            display: none;
-            padding-bottom: 1rem;
-        }
-
-        .mega-menu-pane.active {
-            display: block;
-            animation: fadeInMegaMenu 0.3s ease-out;
-        }
-
-        @keyframes fadeInMegaMenu {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .mega-menu-sub-column h6 {
-            margin-bottom: 0.8rem;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .mega-menu-sub-column h6 a {
-            color: var(--base-text-color);
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .mega-menu-sub-column h6 a i {
-            /* Chevron icon */
-            font-size: 0.7em;
-            color: var(--secondary-text-color);
-            transition: transform 0.2s ease;
-        }
-
-        .mega-menu-sub-column h6 a:hover {
-            color: #ff4f29 !important;
-        }
-
-        .mega-menu-sub-column h6 a svg {
-            transition: 0.3s;
-        }
-
-        .mega-menu-sub-column h6 a:hover svg {
-            transform: translateX(-3px);
-            /* RTL: moves left */
-            color: var(--accent-color-hover);
-        }
-
-        .mega-menu-sub-column ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .mega-menu-sub-column ul li a {
-            display: block;
-            padding: 0.3rem 1rem;
-            font-size: 0.8rem;
-            color: var(--secondary-text-color);
-            transition: color 0.2s ease, padding-right 0.2s ease;
-            margin: 5px auto;
-            white-space: nowrap;
-        }
-
-        .mega-menu-sub-column ul li a:hover {
-            color: #ff4f29 !important;
-            padding-right: 2px;
-            /* RTL: indent on hover */
-        }
-
-        .mega-menu-banner img {
-            border-radius: calc(var(--border-radius-base) / 2);
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* --- Brand Logo Slider --- */
-        .brand-sl-container {
-            width: 100%;
-            /* یا هر عرضی که برای کانتینر اصلی در نظر دارید */
-            overflow: hidden;
-            /* این خیلی مهمه! */
-            padding: 20px 0;
-            position: relative;
-            /* برای کنترل بهتر */
-            box-sizing: border-box;
-        }
-
-        .brand-sl-wrapper {
-            display: flex;
-            /* برای چیدن افقی آیتم‌ها */
-            /* عرض wrapper توسط جاوااسکریپت تنظیم می‌شود */
-            /* transition برای انیمیشن نرم */
-            transition: transform 0.5s ease-in-out;
-            /* سرعت انیمیشن حرکت اسلاید */
-        }
-
-        .brand-sl-item {
-            /* هر آیتم 20% عرض کانتینر رو می‌گیره تا 5 تا نمایش داده بشه */
-            flex: 0 0 20%;
-            box-sizing: border-box;
-            padding: 0 15px;
-            /* فاصله بین لوگوها */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ow-container {
-            /* تغییر نام کلاس */
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #007bff;
-            margin-bottom: 30px;
-        }
-
-        .ow-item {
-            /* تغییر نام کلاس */
-            padding: 20px 60px;
-            margin: 10px;
-            color: white;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 200px;
-        }
-
-        .ow-item h4 {
-            margin: 0;
-        }
-
-        .owl-nav button.owl-prev,
-        .owl-nav button.owl-next {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        .owl-dots .owl-dot span {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        .owl-dots .owl-dot.active span,
-        .owl-dots .owl-dot:hover span {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-
-
-
-
-
-        /* استایل‌های پایه مودال */
-        .modal {
-            display: none;
-            /* به صورت پیش‌فرض مخفی */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            /* اسکرول در صورت نیاز */
-            background-color: rgba(0, 0, 0, 0.6);
-            /* پس‌زمینه نیمه‌شفاف */
-            -webkit-overflow-scrolling: touch;
-            direction: rtl;
-            /* برای محتوای فارسی */
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 25px;
-            border: 1px solid #ccc;
-            width: 90%;
-            max-width: 750px;
-            border-radius: 8px;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            /*
-            animation-name: fadeInModal;
-            animation-duration: 0.3s;
-            animation-timing-function: ease-out;
-            */
-            text-align: right;
-        }
-
-        /*
-        @keyframes fadeInModal {
-            from { opacity: 0; transform: translateY(-20px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        */
-
-        .modal-body {
-            display: flex;
-            flex-direction: row;
-            gap: 25px;
-        }
-
-        .modal-image-container {
-            flex: 1;
-            max-width: 40%;
-        }
-
-        .modal-image-container img#modalProductImage {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            border: 1px solid #eee;
-            object-fit: contain;
-            max-height: 400px;
-        }
-
-        .modal-details-container {
-            flex: 1.5;
-        }
-
-        #modalProductName {
-            margin-top: 0;
-            font-size: 1.6em;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        #modalProductPriceContainer .price {
-            /* استایل برای span.price داخل مودال */
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #28a745;
-            margin: 10px 0 20px 0;
-            display: block;
-        }
-
-        #modalProductPriceContainer .price svg {
-            /* استایل برای SVG داخل span.price در مودال */
-            vertical-align: middle;
-            margin-right: 5px;
-        }
-
-
-        #modalProductColors h4 {
-            font-size: 1.1em;
-            margin-top: 15px;
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        #modalProductColors p {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .color-swatch {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            margin-left: 8px;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .color-swatch:hover {
-            transform: scale(1.1);
-        }
-
-        .view-details-button {
-            /* کلاس bg-danger از بوت استرپ رنگ را تعیین می کند */
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 25px;
-            color: white !important;
-            /* برای اطمینان از سفید بودن متن روی bg-danger */
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1em;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            /* برای هاور بوت استرپ */
-        }
-
-        /* اگر از کلاس bg-danger بوت استرپ استفاده می‌کنید، نیازی به هاور جدا نیست */
-
-
-        .close-button {
-            color: #888;
-            position: absolute;
-            top: 10px;
-            left: 20px;
-            /* برای زبان فارسی، دکمه بستن سمت چپ */
-            font-size: 30px;
-            font-weight: bold;
-            line-height: 1;
-            padding: 0 5px;
-            /* کمی فضا برای کلیک راحت تر */
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: #333;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        button.view:disabled {
-            /* استایل برای دکمه view وقتی غیرفعاله (اگر ازش استفاده کردید) */
-            cursor: wait;
-            opacity: 0.7;
-        }
-
-
-        @media (max-width: 768px) {
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-                /* فاصله بیشتر از بالا در موبایل */
-                padding: 15px;
-            }
-
-            .modal-body {
-                flex-direction: column;
-                /* چیدمان عمودی */
-            }
-
-            .modal-image-container {
-                max-width: 100%;
-                margin-bottom: 20px;
-            }
-
-            .modal-image-container img#modalProductImage {
-                max-height: 300px;
-                /* ارتفاع تصویر در موبایل */
-            }
-
-            .modal-details-container {
-                text-align: center;
-                /* وسط‌چین کردن متن در موبایل */
-            }
-
-            #modalProductName {
-                font-size: 1.3em;
-            }
-
-            .close-button {
-                top: 8px;
-                left: 15px;
-                font-size: 24px;
-            }
-        }
-    </style>
-
+    <!--    این دوتا همه جا هست -->
     <style>
         .profile-container {
             position: relative;
@@ -578,16 +52,17 @@
             opacity: 1;
         }
     </style>
-
 </head>
 
 <body>
+
     <!--Shadow Overly start-->
     <div class="overlay" data-overlay></div>
     <!--Shadow Overly start-->
 
+
     <!--Header Start-->
-    <header class="mb-3">
+    <header class="mb-3 position-fixed py-2">
         <nav class="desktop-navigation-menu d-flex justify-content-center mt-3 px-5 text-center align-items-center">
             <!--logo in header -- : start-->
             <div class="mx-1"><a href="{% url 'website:index' %}"><img class="cs-w" alt="من مارکت"
@@ -595,23 +70,19 @@
             <!--logo in header -- : end---->
 
             <!--menu -- : start-->
-
-            <div class="container w-center mr-cs">
-
-                <ul class="desktop-menu-category-list mb-2 w-center" style="margin-right:180px ;">
+            <div class="container w-center mr-cs mt-2">
+                <ul class="desktop-menu-category-list mb-2 w-center">
                     <li class="menu-category">
                         <div class="mega-menu-trigger-wrapper">
-                            <a id="mega-menu-trigger-btn-desktop" class="nav-link-mega-trigger" href="#">
-                                <i class="fas fa-bars mx-2"></i>دسته‌بندی کالاها
+                            <a id="mega-menu-trigger-btn-desktop" class="nav-link-mega-trigger mt-1" href="#">
+                                دسته‌بندی کالاها
                             </a>
-
-                            <!-- Mega Tab Menu -->
                             <div class="mega-menu-panel mega-tab-menu" id="mega-menu-panel-content-desktop">
                                 <div class="row g-0"> <!-- g-0 removes gutters -->
-                                    <div class="col-lg-3 mega-menu-categories">
+                                    <div class="col-lg-4 mega-menu-categories">
                                         <ul class="list-unstyled mega-category-list">
                                             <li class="mega-category-item active" data-target="#pane-digital-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=2">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                         width="1em" height="1em">
                                                         <path fill="none" stroke="currentColor" stroke-linecap="round"
@@ -623,7 +94,7 @@
                                                 </a>
                                             </li>
                                             <li class="mega-category-item" data-target="#pane-home-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=12">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"
                                                         width="1em" height="1em">
                                                         <path fill="currentColor"
@@ -634,7 +105,7 @@
                                                 </a>
                                             </li>
                                             <li class="mega-category-item" data-target="#pane-fashion-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=3">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                         width="1em" height="1em">
                                                         <path fill="currentColor" fill-rule="evenodd"
@@ -645,7 +116,7 @@
                                                 </a>
                                             </li>
                                             <li class="mega-category-item" data-target="#pane-beauty-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=10">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
                                                         width="1em" height="1em">
                                                         <g fill="none" stroke="currentColor" stroke-linecap="round"
@@ -658,7 +129,7 @@
                                                 </a>
                                             </li>
                                             <li class="mega-category-item" data-target="#pane-sports-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=9">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
                                                         width="1em" height="1em">
                                                         <path fill="none" stroke="currentColor" stroke-miterlimit="10"
@@ -678,8 +149,28 @@
                                                     کنسول بازی
                                                 </a>
                                             </li>
+                                            <li class="mega-category-item" data-target="#pc-all">
+                                                <a href="#">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
+                                                        width="1.2em" height="1.2em">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round">
+                                                            <path
+                                                                d="M.5 6.5v4a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1m2.5 7h3m-1.5 0v-2">
+                                                            </path>
+                                                            <path
+                                                                d="M7.5 3.5V3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H9">
+                                                            </path>
+                                                            <path
+                                                                d="M11.375 4.875a.125.125 0 1 1 0-.25m0 .25a.125.125 0 1 0 0-.25M10.5 7h3">
+                                                            </path>
+                                                        </g>
+                                                    </svg>
+                                                    کامپیوتر همه کاره
+                                                </a>
+                                            </li>
                                             <li class="mega-category-item" data-target="#pane-books-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=13">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
                                                         width="1em" height="1em">
                                                         <g fill="currentColor">
@@ -695,9 +186,9 @@
                                                 </a>
                                             </li>
                                             <li class="mega-category-item" data-target="#pane-toys-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=14">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                                                        width="1em" height="1em">
+                                                        width="2em" height="2em">
                                                         <path fill="currentColor"
                                                             d="M8 3a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a6 6 0 1 1 12 0v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V8a5 5 0 0 0-5-5">
                                                         </path>
@@ -705,8 +196,8 @@
                                                     هدست و هدفون
                                                 </a>
                                             </li>
-                                            <li class="mega-category-item" data-target="#pane-tools-desktop">
-                                                <a href="{% url 'shop:product-list' %}?category_id=15">
+                                            <li class="mega-category-item" data-target="#apple-watch">
+                                                <a href="#">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                                         width="1em" height="1em">
                                                         <path fill="currentColor"
@@ -716,63 +207,147 @@
                                                     ساعت هوشمند
                                                 </a>
                                             </li>
+                                            <li class="mega-category-item" data-target="#gadget">
+                                                <a href="#">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        width="1.3em" height="1.3em">
+                                                        <path fill="currentColor"
+                                                            d="M5.5 4q-.213 0-.356-.144T5 3.499t.144-.356T5.5 3h13.885q.69 0 1.153.463T21 4.615V6.64q0 .244-.155.36t-.341.115t-.345-.12T20 6.621V4.615q0-.23-.192-.423T19.385 4zM3.779 17q-.338 0-.559-.221Q3 16.558 3 16.23V8.384q0-.326.22-.547t.559-.221h3.98q.339 0 .56.22q.22.222.22.549v7.846q0 .327-.22.548q-.221.221-.56.221zm12.779 2.327v-4.5q-.225-.123-.363-.347t-.137-.48q0-.396.281-.669t.657-.273q.395 0 .67.273q.276.273.276.669q0 .256-.122.473q-.122.218-.378.354v4.5q0 .191-.125.317q-.125.125-.316.125t-.317-.125t-.126-.317M17 11.192q-1.165 0-1.986.815q-.822.814-.822 1.993q0 .492.194.937t.497.834q.111.16.128.338q.016.177-.132.325t-.326.136t-.314-.166q-.447-.52-.689-1.133T13.308 14q0-1.546 1.083-2.62q1.084-1.072 2.605-1.072q1.545 0 2.62 1.073T20.692 14q0 .671-.239 1.294q-.24.623-.686 1.123q-.136.154-.315.167q-.18.012-.314-.136q-.134-.123-.13-.301t.115-.337q.323-.371.504-.835t.18-.975q0-1.18-.813-1.993T17 11.192m-.005-2.5q-2.205 0-3.754 1.54Q11.692 11.77 11.692 14q0 .994.369 1.926q.368.932 1.035 1.659q.123.16.137.337q.013.178-.116.307q-.14.148-.329.123q-.188-.025-.33-.179q-.785-.856-1.217-1.93q-.433-1.075-.433-2.243q0-2.596 1.809-4.394t4.379-1.798q2.595 0 4.395 1.798q1.801 1.798 1.801 4.394q0 1.175-.417 2.256t-1.246 1.917q-.142.135-.32.144q-.178.01-.307-.128q-.129-.139-.11-.304q.02-.166.143-.325q.667-.708 1.02-1.638T22.308 14q0-2.23-1.541-3.768q-1.54-1.54-3.772-1.54M4 16h3.539V8.616H4zm0 0h3.539z">
+                                                        </path>
+                                                    </svg>
+                                                    گجت خانگی
+                                                </a>
+                                            </li>
+                                            <li class="mega-category-item" data-target="#power">
+                                                <a href="#">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
+                                                        width="1em" height="1em">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round">
+                                                            <path d="M10.5 13.5a3 3 0 0 0 0-6h-7a3 3 0 0 0 0 6Z"></path>
+                                                            <path
+                                                                d="M.58 9.79L2.17 2.1a2 2 0 0 1 2-1.6h5.7a2 2 0 0 1 2 1.6l1.59 7.69m-9.96.71h3">
+                                                            </path>
+                                                            <circle cx="10.5" cy="10.5" r=".5"></circle>
+                                                        </g>
+                                                    </svg>
+                                                    پاور بانک
+                                                </a>
+                                            </li>
+                                            <li class="mega-category-item" data-target="#memory">
+                                                <a href="#">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        width="1em" height="1em">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="1.5"
+                                                            color="currentColor">
+                                                            <path
+                                                                d="m4.038 12.539l5.938-5.94c1.4-1.4 2.1-2.099 2.97-2.099s1.57.7 2.97 2.1L17.4 8.085c1.4 1.4 2.1 2.1 2.1 2.969c0 .87-.7 1.57-2.1 2.97l-5.939 5.938a5.25 5.25 0 0 1-7.423-7.423">
+                                                            </path>
+                                                            <path
+                                                                d="M8.5 17a1.5 1.5 0 1 0-3 0a1.5 1.5 0 0 0 3 0m6-11.65l1.383-1.383C16.861 2.99 17.35 2.5 17.958 2.5s1.097.489 2.075 1.467S21.5 5.434 21.5 6.042s-.489 1.097-1.467 2.075L18.65 9.5">
+                                                            </path>
+                                                        </g>
+                                                    </svg>
+                                                    ذخیره ساز اطلاعات
+                                                </a>
+                                            </li>
+                                            <li class="mega-category-item" data-target="#mouse">
+                                                <a href="#">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        width="1em" height="1em">
+                                                        <g fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="1.5"
+                                                            color="currentColor">
+                                                            <path
+                                                                d="M13.5 5.5V2m0 10V9m0 13c6 0 7.5-4.51 7.5-10S19.5 2 13.5 2S6 6.51 6 12s1.5 10 7.5 10">
+                                                            </path>
+                                                            <path
+                                                                d="M15 7c0-.466 0-.699-.076-.883a1 1 0 0 0-.541-.54c-.184-.077-.417-.077-.883-.077s-.699 0-.883.076a1 1 0 0 0-.54.541C12 6.301 12 6.534 12 7v.5c0 .466 0 .699.076.883a1 1 0 0 0 .541.54c.184.077.417.077.883.077s.699 0 .883-.076a1 1 0 0 0 .54-.541C15 8.199 15 7.966 15 7.5zm-9 5h15M5 3.167L4.619 2m-.59 3.567L3 6">
+                                                            </path>
+                                                        </g>
+                                                    </svg>
+                                                    موس و کیبورد
+                                                </a>
+                                            </li>
+                                            <li class="mega-category-item" data-target="#charger">
+                                                <a href="#">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        width="1.3em" height="1.3em">
+                                                        <path fill="currentColor"
+                                                            d="m12.195 18.083l2.436-6.84q.073-.21-.042-.371q-.115-.16-.325-.16H12.3V5.876q0-.185-.168-.204t-.227.13L9.47 12.679q-.074.212.041.373q.115.16.326.16H11.8v4.8q0 .183.168.202t.227-.13M12.003 21q-1.866 0-3.51-.708q-1.643-.709-2.859-1.924t-1.925-2.856T3 12.003t.709-3.51Q4.417 6.85 5.63 5.634t2.857-1.925T11.997 3t3.51.709q1.643.708 2.859 1.922t1.925 2.857t.709 3.509t-.708 3.51t-1.924 2.859t-2.856 1.925t-3.509.709M12 20q3.325 0 5.663-2.337T20 12t-2.337-5.663T12 4T6.337 6.338T4 12t2.338 5.663T12 20">
+                                                        </path>
+                                                    </svg>
+                                                    شارژر و مبدل موبایل
+                                                </a>
+                                            </li>
+                                            <li class="mega-category-item" data-target="#frame">
+                                                <a href="#">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                                                        width="1em" height="1em">
+                                                        <rect width="256" height="480" x="128" y="16" fill="none"
+                                                            stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="32" rx="48" ry="48"
+                                                            transform="rotate(-90 256 256)"></rect>
+                                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="32"
+                                                            d="M16 336v-24a8 8 0 0 1 8-8h0a16 16 0 0 0 16-16v-64a16 16 0 0 0-16-16h0a8 8 0 0 1-8-8v-24">
+                                                        </path>
+                                                    </svg>
+                                                    قاب و گلس
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
-                                    <div class="col-lg-9 mega-menu-content-area">
+                                    <div class="col-lg-8 mega-menu-content-area">
+                                        <!-- Phone in mega-menu -->
                                         <div class="mega-menu-pane active" id="pane-digital-desktop">
                                             <div class="d-flex justify-content-end flex-column">
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=2&brand_id=7">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             اپل
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=2&brand_id=1">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             سامسونگ
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=2&brand_id=5">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             شیائومی
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=2&brand_id=6">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             نوکیا
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=2&brand_id=3">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             آنر
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=2">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             متفرقه
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2 w-right justify-content-end">
-                                                        <a href="{% url 'shop:product-list' %}?category_id=2"
-                                                            class="w-right a-cl">
+                                                        <a href="" class="w-right a-cl">
                                                             دیدن همه ی برند های موبایل ...
                                                         </a>
                                                     </h6>
@@ -783,56 +358,49 @@
                                         <div class="mega-menu-pane" id="pane-home-desktop">
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=12&brand_id=7">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         اپل
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=12&brand_id=1">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         سامسونگ
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=12&brand_id=5">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         شیائومی
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=12&brand_id=14">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         اچ پی
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=12&brand_id=19">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         ال جی
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=12">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         متفرقه
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
-                                                    <a href="{% url 'shop:product-list' %}?category_id=12"
-                                                        class="w-right a-cl">
+                                                    <a href="" class="w-right a-cl">
                                                         دیدن همه ی برند های تبلت ...
                                                     </a>
                                                 </h6>
@@ -842,56 +410,49 @@
                                         <div class="mega-menu-pane" id="pane-fashion-desktop">
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=3&brand_id=7">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         اپل
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=3&brand_id=13">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         ایسوس
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=3&brand_id=12">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         ایسر
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=3&brand_id=15">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         لنوو
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=3&brand_id=14">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         اچ پی
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=3">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         متفرقه
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
-                                                    <a href="{% url 'shop:product-list' %}?category_id=3"
-                                                        class="w-right a-cl">
+                                                    <a href="" class="w-right a-cl">
                                                         دیدن همه ی برند های لپ تاپ ...
                                                     </a>
                                                 </h6>
@@ -901,56 +462,49 @@
                                         <div class="mega-menu-pane" id="pane-beauty-desktop">
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=10&brand_id=19">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         ال جی
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=10&brand_id=1">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         سامسونگ
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=10&brand_id=18">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         ام اس ای
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=10&brand_id=20">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         جی پلاس
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=10&brand_id=5">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         شیائومی
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=10">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         متفرقه
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
-                                                    <a href="{% url 'shop:product-list' %}?category_id=10"
-                                                        class="w-right a-cl">
+                                                    <a href="" class="w-right a-cl">
                                                         دیدن همه ی برند های مانیتور ...
                                                     </a>
                                                 </h6>
@@ -960,24 +514,21 @@
                                         <div class="mega-menu-pane" id="pane-sports-desktop">
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=9&brand_id=16">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         پلی استیشن
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=9&brand_id=17">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         ایکس باکس
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=9&brand_id=29">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         نینتندو
                                                     </a>
                                                 </h6>
@@ -985,16 +536,14 @@
 
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2">
-                                                    <a class=" d-flex justify-content-start"
-                                                        href="{% url 'shop:product-list' %}?category_id=9">
+                                                    <a class=" d-flex justify-content-start" href="#">
                                                         متفرقه
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div class="mega-menu-sub-column">
                                                 <h6 class="px-2 w-right justify-content-end">
-                                                    <a href="{% url 'shop:product-list' %}?category_id=9"
-                                                        class="w-right a-cl">
+                                                    <a href="" class="w-right a-cl">
                                                         دیدن همه ی برند های کنسول بازی ...
                                                     </a>
                                                 </h6>
@@ -1006,48 +555,42 @@
 
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=13&brand_id=11">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             جی بی ال
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=13&brand_id=16">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             سونی
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=13&brand_id=5">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             شیائومی
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=13&brand_id=3">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             آنر
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=13">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             متفرقه
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2 w-right justify-content-end">
-                                                        <a href="{% url 'shop:product-list' %}?category_id=13"
-                                                            class="w-right a-cl">
+                                                        <a href="" class="w-right a-cl">
                                                             دیدن همه ی برند های اسپیکر ...
                                                         </a>
                                                     </h6>
@@ -1059,48 +602,42 @@
                                             <div class="d-flex justify-content-end flex-column">
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=14&brand_id=7">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             اپل
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=14&brand_id=1">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             سامسونگ
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=14&brand_id=5">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             شیائومی
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=14&brand_id=9">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             انکر
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=14">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             متفرقه
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2 w-right justify-content-end">
-                                                        <a href="{% url 'shop:product-list' %}?category_id=14"
-                                                            class="w-right a-cl">
+                                                        <a href="" class="w-right a-cl">
                                                             دیدن همه ی برند های هدفون و هدست ...
                                                         </a>
                                                     </h6>
@@ -1108,52 +645,46 @@
                                             </div>
                                         </div>
                                         <!-- AplleWatch in mega-menu -->
-                                        <div class="mega-menu-pane" id="pane-tools-desktop">
+                                        <div class="mega-menu-pane" id="apple-watch">
                                             <div class="d-flex justify-content-end flex-column">
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=15&brand_id=7">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             اپل
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=15&brand_id=1">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             سامسونگ
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=15&brand_id=5">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             شیائومی
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=15&brand_id=3">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             آنر
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=15">
+                                                        <a class=" d-flex justify-content-start" href="#">
                                                             متفرقه
                                                         </a>
                                                     </h6>
                                                 </div>
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2 w-right justify-content-end">
-                                                        <a href="{% url 'shop:product-list' %}?category_id=15"
-                                                            class="w-right a-cl">
+                                                        <a href="" class="w-right a-cl">
                                                             دیدن همه ی برند های ساعت هوشمند ...
                                                         </a>
                                                     </h6>
@@ -1161,45 +692,12 @@
                                             </div>
                                         </div>
                                         <!-- Accessory in mega-menu -->
-                                        <div class="mega-menu-pane" id="pane-supermarket-desktop">
+                                        <div class="mega-menu-pane" id="gadget">
                                             <div class="d-flex justify-content-end flex-column">
                                                 <div class="mega-menu-sub-column">
                                                     <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=&brand_id=">
-                                                            پاور بانک
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=&brand_id=">
-                                                            فلش
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=&brand_id=">
-                                                            هارد اکسترنال
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=&brand_id=">
-                                                            گجت
-                                                        </a>
-                                                    </h6>
-                                                </div>
-                                                <div class="mega-menu-sub-column">
-                                                    <h6 class="px-2">
-                                                        <a class=" d-flex justify-content-start"
-                                                            href="{% url 'shop:product-list' %}?category_id=&brand_id=">
-                                                            متفرقه
+                                                        <a class=" d-flex justify-content-start" href="#">
+                                                            نمونه ی گجت برای عطفارکس
                                                         </a>
                                                     </h6>
                                                 </div>
@@ -1212,7 +710,120 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <!-- Accessory in mega-menu -->
+                                        <div class="mega-menu-pane" id="power">
+                                            <div class="d-flex justify-content-end flex-column">
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2">
+                                                        <a class=" d-flex justify-content-start" href="#">
+                                                            نمونه ی پاور بانک برای عطفارکس
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2 w-right justify-content-end">
+                                                        <a href="" class="w-right a-cl">
+                                                            دیدن همه ی برند های تبلت ...
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Accessory in mega-menu -->
+                                        <div class="mega-menu-pane" id="memory">
+                                            <div class="d-flex justify-content-end flex-column">
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2">
+                                                        <a class=" d-flex justify-content-start" href="#">
+                                                            نمونه ی فلش و اینا برای عطفارکس
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2 w-right justify-content-end">
+                                                        <a href="" class="w-right a-cl">
+                                                            دیدن همه ی برند های تبلت ...
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Accessory in mega-menu -->
+                                        <div class="mega-menu-pane" id="mouse">
+                                            <div class="d-flex justify-content-end flex-column">
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2">
+                                                        <a class=" d-flex justify-content-start" href="#">
+                                                            نمونه ی موس برای عطفارکس
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2 w-right justify-content-end">
+                                                        <a href="" class="w-right a-cl">
+                                                            دیدن همه ی برند های تبلت ...
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Accessory in mega-menu -->
+                                        <div class="mega-menu-pane" id="charger">
+                                            <div class="d-flex justify-content-end flex-column">
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2">
+                                                        <a class=" d-flex justify-content-start" href="#">
+                                                            نمونه ی چارجر برای عطفارکس
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2 w-right justify-content-end">
+                                                        <a href="" class="w-right a-cl">
+                                                            دیدن همه ی برند های تبلت ...
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Accessory in mega-menu -->
+                                        <div class="mega-menu-pane" id="frame">
+                                            <div class="d-flex justify-content-end flex-column">
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2">
+                                                        <a class=" d-flex justify-content-start" href="#">
+                                                            نمونه ی غاغ برای عطفارکس
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2 w-right justify-content-end">
+                                                        <a href="" class="w-right a-cl">
+                                                            دیدن همه ی برند های تبلت ...
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Accessory in mega-menu -->
+                                        <div class="mega-menu-pane" id="pc-all">
+                                            <div class="d-flex justify-content-end flex-column">
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2">
+                                                        <a class=" d-flex justify-content-start" href="#">
+                                                            نمونه ی کامپیوتر همه کاره برای عطفارکس
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                                <div class="mega-menu-sub-column">
+                                                    <h6 class="px-2 w-right justify-content-end">
+                                                        <a href="" class="w-right a-cl">
+                                                            دیدن همه ی برند های تبلت ...
+                                                        </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1231,15 +842,14 @@
                         <a href="{% url 'blog:blog-list' %}" class="menu-title">بلاگ</a>
                     </li>
                 </ul>
-
             </div>
             <!--menu -- : end---->
 
             <!--icons in header -- :: start-->
-            <div class="d-flex justify-content-between icons-in-header">
-                <div class="cs-mx show-search-modal btn" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            <div class="d-flex justify-content-between icons-in-header mb-1">
+                <div class="cs-mx show-search-modal" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="جست و جو ">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.3em" height="1.3em">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.4em" height="1.4em">
                         <path fill="currentColor"
                             d="M10.77 18.3a7.53 7.53 0 1 1 7.53-7.53a7.53 7.53 0 0 1-7.53 7.53m0-13.55a6 6 0 1 0 6 6a6 6 0 0 0-6-6">
                         </path>
@@ -1250,25 +860,23 @@
                 </div>
                 <div class="cs-mx btn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="حساب کاربری">
                     <a class="login-a text-dark" href="{% url 'dashboard:home' %}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.1em" height="1.1em">
-                            <g fill="none" stroke="currentColor">
-                                <circle cx="8" cy="8" r="7.5"></circle>
-                                <circle cx="8" cy="5.5" r="2"></circle>
-                                <path stroke-linecap="round" d="M11.5 12c-.6-1.5-1.8-2.5-3.5-2.5s-2.9 1-3.5 2.5"></path>
-                            </g>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.2em" height="1.2em">
+                            <path fill="currentColor"
+                                d="M8 7.83c-3.08 0-5.59 2.17-5.59 4.84V16h1.27v-3.33c0-2 1.94-3.57 4.32-3.57s4.32 1.6 4.32 3.57V16h1.27v-3.33c0-2.67-2.51-4.84-5.59-4.84m.1-1.22a3.22 3.22 0 0 0 3.1-3.31A3.21 3.21 0 0 0 8.1 0A3.21 3.21 0 0 0 5 3.3a3.22 3.22 0 0 0 3.1 3.31m0-5.32a1.92 1.92 0 0 1 1.81 2a1.93 1.93 0 0 1-1.81 2a1.93 1.93 0 0 1-1.8-2a1.92 1.92 0 0 1 1.8-2">
+                            </path>
                         </svg>
                     </a>
                 </div>
                 <div class="cs-mx btn position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="مورد علاقه ها">
                     <a class="text-dark" href="{% url 'dashboard:customer:wishlist-list' %}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1.2em" height="1.2em">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1.3em" height="1.3em">
                             <path fill="currentColor"
                                 d="M223 57a58.07 58.07 0 0 0-81.92-.1L128 69.05l-13.09-12.19A58 58 0 0 0 33 139l89.35 90.66a8 8 0 0 0 11.4 0L223 139a58 58 0 0 0 0-82m-11.35 70.76L128 212.6l-83.7-84.92a42 42 0 0 1 59.4-59.4l.2.2l18.65 17.35a8 8 0 0 0 10.9 0l18.65-17.35l.2-.2a42 42 0 1 1 59.36 59.44Z">
                             </path>
                         </svg>
                     </a>
-
+                    <!--like and shop number start-->
                     {% if wishlist_total_items == 0 %}
 
                     {% else %}
@@ -1279,7 +887,9 @@
                     </span>
                     <!--like and shop number end---->
                     {% endif %}
+                    <!--like and shop number end---->
                 </div>
+
                 <div class="cs-mx btn position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="سبد خرید">
                     <a class="login-a text-dark" href="{% url 'cart:cart-summery' %}">
@@ -1308,40 +918,66 @@
         </nav>
 
         <div class="mobile-bottom-navigation align-items-center">
-            <button class="action-btn" data-mobile-menu-open-btn>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="0.8em" height="0.8em">
-                    <path fill="none" stroke="currentColor" d="M2 12.5h12M2 8h12M2 3.5h12"></path>
-                </svg>
-            </button>
-
             <button class="action-btn">
-                <div class="show-search-modal btn p-0 m-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1.4em" height="1.4em">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" d="m28 27l-7.5-7.5M5 13a9 9 0 1 0 18 0a9 9 0 0 0-18 0"></path>
-                    </svg>
-                </div>
-            </button>
-            <button class="action-btn">
-                <a class="text-dark" href="{% url 'website:index' %}"><svg xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512" width="0.8em" height="0.8em">
+                <a class="login-a text-dark" href="{% url 'dashboard:home' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="0.9em" height="0.9em">
                         <path fill="currentColor"
-                            d="M469.666 216.45L271.078 33.749a34 34 0 0 0-47.062.98L41.373 217.373L32 226.745V496h176V328h96v168h176V225.958ZM248.038 56.771c.282 0 .108.061-.013.18c-.125-.119-.269-.18.013-.18M448 464H336V328a32 32 0 0 0-32-32h-96a32 32 0 0 0-32 32v136H64V240L248.038 57.356c.013-.012.014-.023.024-.035L448 240Z">
-                        </path>
-                    </svg></a>
-            </button>
-
-
-
-            <button class="action-btn">
-                <a class="text-dark" href="{% url 'cart:cart-summery' %}">
-                    <svg class="shop-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="0.8em"
-                        height="0.8em">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            d="M12.182 7.5h-8.18l-1-5h10a.5.5 0 0 1 .49.59l-.82 4a.49.49 0 0 1-.49.41m-9.18-5L2.582.9a.5.5 0 0 0-.49-.4H.502m3.5 7l.42 2.1a.5.5 0 0 0 .49.4h6.09m-.5 3.5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1m-5 0a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1">
+                            d="M8 7.83c-3.08 0-5.59 2.17-5.59 4.84V16h1.27v-3.33c0-2 1.94-3.57 4.32-3.57s4.32 1.6 4.32 3.57V16h1.27v-3.33c0-2.67-2.51-4.84-5.59-4.84m.1-1.22a3.22 3.22 0 0 0 3.1-3.31A3.21 3.21 0 0 0 8.1 0A3.21 3.21 0 0 0 5 3.3a3.22 3.22 0 0 0 3.1 3.31m0-5.32a1.92 1.92 0 0 1 1.81 2a1.93 1.93 0 0 1-1.81 2a1.93 1.93 0 0 1-1.8-2a1.92 1.92 0 0 1 1.8-2">
                         </path>
                     </svg>
                 </a>
+                <p class="tol-mb">
+                    حساب کاربری
+                </p>
+            </button>
+            <button class="action-btn">
+                <a class="text-dark" href="{% url 'shop:product-list' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
+                        <path fill="currentColor"
+                            d="M3.5 3.5h7v7h-7zm1 1v5zm9-1h7v7h-7zm1 1v5zm-11 9h7v7h-7zm1 1v5zm12-1h1v3h3v1h-3v3h-1v-3h-3v-1h3zm-2-9v5h5v-5zm-10 0v5h5v-5zm0 10v5h5v-5z">
+                        </path>
+                    </svg>
+                </a>
+                <p class="tol-mb">
+                    فروشگاه
+                </p>
+            </button>
+            <button class="action-btn">
+                <a class="text-dark" href="{% url 'dashboard:customer:wishlist-list' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="0.9em" height="0.9em">
+                        <path fill="currentColor"
+                            d="M223 57a58.07 58.07 0 0 0-81.92-.1L128 69.05l-13.09-12.19A58 58 0 0 0 33 139l89.35 90.66a8 8 0 0 0 11.4 0L223 139a58 58 0 0 0 0-82m-11.35 70.76L128 212.6l-83.7-84.92a42 42 0 0 1 59.4-59.4l.2.2l18.65 17.35a8 8 0 0 0 10.9 0l18.65-17.35l.2-.2a42 42 0 1 1 59.36 59.44Z">
+                        </path>
+                    </svg>
+                </a>
+                <p class="tol-mb">
+                    مورد علاقه
+                </p>
+            </button>
+            <button class="action-btn show-search-modal">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="0.9em" height="0.9em">
+                    <path fill="currentColor"
+                        d="M10.77 18.3a7.53 7.53 0 1 1 7.53-7.53a7.53 7.53 0 0 1-7.53 7.53m0-13.55a6 6 0 1 0 6 6a6 6 0 0 0-6-6">
+                    </path>
+                    <path fill="currentColor"
+                        d="M20 20.75a.74.74 0 0 1-.53-.22l-4.13-4.13a.75.75 0 0 1 1.06-1.06l4.13 4.13a.75.75 0 0 1 0 1.06a.74.74 0 0 1-.53.22">
+                    </path>
+                </svg>
+                <p class="tol-mb">
+                    جست و جو
+                </p>
+            </button>
+            <button class="action-btn">
+                <a class="text-dark" href="{% url 'website:index' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="0.8em" height="0.8em">
+                        <path fill="currentColor"
+                            d="M469.666 216.45L271.078 33.749a34 34 0 0 0-47.062.98L41.373 217.373L32 226.745V496h176V328h96v168h176V225.958ZM248.038 56.771c.282 0 .108.061-.013.18c-.125-.119-.269-.18.013-.18M448 464H336V328a32 32 0 0 0-32-32h-96a32 32 0 0 0-32 32v136H64V240L248.038 57.356c.013-.012.014-.023.024-.035L448 240Z">
+                        </path>
+                    </svg>
+                </a>
+                <p class="tol-mb">
+                    خانه
+                </p>
             </button>
         </div>
 
@@ -1353,102 +989,86 @@
                     <ion-icon name="close-outline"></ion-icon>
                 </button>
             </div>
-
             <ul class="mobile-menu-category-list">
-                <li class="menu-category"><a href="{% url 'website:index' %}" class="menu-title">خانه</a></li>
-
                 <li class="menu-category">
                     <button class="accordion-menu" data-accordion-btn>
-                        <p class="menu-title">فروشگاه</p>
+                        <p class="menu-title">دسته بندی</p>
                         <div>
-                            <ion-icon name="add-outline" class="add-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em"
-                                    height="1.5em">
-                                    <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-linejoin="round" stroke-width="1.5" d="M6 12h6m6 0h-6m0 0V6m0 6v6">
-                                    </path>
-                                </svg>
-                            </ion-icon>
-                            <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em" height="1.5em">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="1.5" d="M6 12h6m6 0h-6m0 0V6m0 6v6"></path>
+                            </svg>
                         </div>
                     </button>
-
                     <ul class="submenu-category-list " data-accordion>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">من
-                                پلاس </a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">خرید
-                                اکانت</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">انرژی
-                                مثبت</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">خرید
-                                بین الملل</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">خرید
-                                کالا به سفارش شما</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">موبایل</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">تبلت</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">لپ تاپ</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">مانیتور</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">کنسول بازی</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">کامپیوتر همه کاره</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">اسپیکر</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">هدست و هدفون</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">ساعت و مچ بند هوشمند</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">گجت خانگی</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">پاور بانک</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">ذخیره ساز اطلاعات</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">موس و کیبورد</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">شارژر و مبدل موبایل</a></li>
+                        <li class="submenu-category"><a href="#" class="submenu-title">قاب و گلس</a></li>
                     </ul>
                 </li>
-                <li class="menu-category">
-                    <button class="accordion-menu" data-accordion-btn>
-                        <p class="menu-title">کالای دیجیتال</p>
-                        <div>
-                            <ion-icon name="add-outline" class="add-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em"
-                                    height="1.5em">
-                                    <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                        stroke-linejoin="round" stroke-width="1.5" d="M6 12h6m6 0h-6m0 0V6m0 6v6">
-                                    </path>
-                                </svg>
-                            </ion-icon>
-                            <ion-icon name="remove-outline" class="remove-icon"></ion-icon>
-                        </div>
-                    </button>
-
-                    <ul class="submenu-category-list " data-accordion>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}"
-                                class="submenu-title">موبایل</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}"
-                                class="submenu-title">تبلت</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}"
-                                class="submenu-title">دایرکت</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">لپ
-                                تاپ</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}"
-                                class="submenu-title">مانیتور</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">لوازم
-                                جانبی</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">کنسول
-                                بازی</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}"
-                                class="submenu-title">دوربین عکاسی</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}"
-                                class="submenu-title">کامپیوتر همه کاره</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}"
-                                class="submenu-title">دوربین مدار بسته</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">ماشین
-                                های اداری</a></li>
-                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}" class="submenu-title">بیمه
-                                تجهیزات دیجیتال</a></li>
-                    </ul>
-                </li>
-
-
-
-
-                <li class="menu-category"><a href="{% url 'blog:blog-list' %}" class="menu-title">وبلاگ</a></li>
-
+                <li class="menu-category"><a href="{% url 'website:contact' %}" class="menu-title">تماس با ما</a></li>
+                <li class="menu-category"><a href="{% url 'website:about' %}" class="menu-title">درباره ما</a></li>
+                <li class="menu-category"><a href="{% url 'blog:blog-list' %}" class="menu-title">بلاگ</a></li>
             </ul>
-
             <div class="menu-bottom">
                 <ul class="menu-social-container">
-                    <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
-                    <li><a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a></li>
-                    <li><a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
-                    <li><a href="#" class="social-link"><ion-icon name="logo-linkedin"></ion-icon></a></li>
+                    <li>
+
+                    </li>
+                    <li>
+
+                    </li>
+                    <li>
+
+                    </li>
+                    <li>
+
+                    </li>
                 </ul>
             </div>
         </nav>
+
+        <nav class="d-flex flex-column justify-content-center w-center search-mb position-fixed bg-cs-2 py-2 px-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="cs-mx btn position-relative">
+                        <a href="{% url 'cart:cart-summery' %}">
+                            <svg class="shop-icon text-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
+                                width="1.4em" height="1.4em">
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12.182 7.5h-8.18l-1-5h10a.5.5 0 0 1 .49.59l-.82 4a.49.49 0 0 1-.49.41m-9.18-5L2.582.9a.5.5 0 0 0-.49-.4H.502m3.5 7l.42 2.1a.5.5 0 0 0 .49.4h6.09m-.5 3.5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1m-5 0a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="mx-1"><img class="cs-w-2" alt="من مارکت" src="{% static 'img/main.logo.jpg' %}"></div>
+                </div>
+
+                <button class="action-btn" data-mobile-menu-open-btn>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.5em" height="1.5em">
+                        <path fill="none" stroke="currentColor" d="M2 12.5h12M2 8h12M2 3.5h12"></path>
+                    </svg>
+                </button>
+
+            </div>
+        </nav>
+
     </header>
     <!--Header End---->
-
 
 
     <!--search modal __ :: start-->
@@ -1477,9 +1097,7 @@
 
     <!--Admin Icon start -->
     <div class="position-fixed ad-icon">
-        <a href="#">
-            <img class="w-25" alt="لگوی ادمین" src="{% static 'img/category/admin.logo.png' %}">
-        </a>
+        <img class="cus-wid" alt="لگوی ادمین" src="{% static 'img/category/admin.logo.png' %}">
     </div>
     <!--Admin Icon end -->
 
@@ -1488,10 +1106,10 @@
     <!-- endmian -->
 
     <!--footer :: start------>
-    <footer class="mt-5">
-        <div class="footer-nav">
+    <footer>
+        <div class="footer-nav d-flex justify-content-between">
             <div class="container align-items-baseline">
-                <ul style="margin-right: 10px !important; padding-right: 35px !important;" class="footer-nav-list">
+                <ul class="footer-nav-list">
                     <li class="footer-nav-item">
                         <h2 class="nav-title">لینک های مفید</h2>
                     </li>
@@ -1505,8 +1123,64 @@
                     <li class="footer-nav-item mt-2"><a href="{% url 'faq:faq' %}#content-returns"
                             class="footer-nav-link">مفاد ضمانت هفت روزه برگشت
                             وجه</a></li>
+                    <li
+                        class="footer-nav-item mt-2 d-flex justify-content-end mt-3 flex-column flex-wrap align-items-start">
+                        <p class="footer-nav-link">
+                            شبکه های اجتماعی
+                        </p>
+                        <div class="d-flex justify-content-center flex-wrap mt-3 w-right">
+                            <span class="footer-icons">
+                                <a class="p-2"
+                                    href="https://www.instagram.com/manmarket_ir?igsh=cHpmcXQzN3didHMx&utm_source=qr"
+                                    target="_blank">
+                                    <svg class="text-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"
+                                        width="1.55em" height="1.55em">
+                                        <path fill="none" stroke="currentColor"
+                                            d="M11 3.5h1M4.5.5h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-6a4 4 0 0 1-4-4v-6a4 4 0 0 1 4-4Zm3 10a3 3 0 1 1 0-6a3 3 0 0 1 0 6Z">
+                                        </path>
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="footer-icons">
+                                <a class="p-2" href="https://t.me/Manmarket_ir" target="_blank">
+                                    <svg class="text-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        width="1.55em" height="1.55em">
+                                        <path fill="currentor"
+                                            d="M21.945 2.765a1.55 1.55 0 0 0-1.572-.244L2.456 9.754a1.543 1.543 0 0 0 .078 2.884L6.4 13.98l2.095 6.926c.004.014.017.023.023.036a.5.5 0 0 0 .093.15a.5.5 0 0 0 .226.143c.01.004.017.013.027.015h.006l.003.001a.45.45 0 0 0 .233-.012l.025-.005a.5.5 0 0 0 .191-.122c.006-.007.016-.008.022-.014l3.013-3.326l4.397 3.405c.267.209.596.322.935.322c.734 0 1.367-.514 1.518-1.231L22.469 4.25a1.53 1.53 0 0 0-.524-1.486M9.588 15.295l-.707 3.437l-1.475-4.878l7.315-3.81l-4.997 4.998a.5.5 0 0 0-.136.253m8.639 4.772a.54.54 0 0 1-.347.399a.53.53 0 0 1-.514-.078l-4.763-3.689a.5.5 0 0 0-.676.06L9.83 19.07l.706-3.427l7.189-7.19a.5.5 0 0 0-.584-.797L6.778 13.054l-3.917-1.362A.53.53 0 0 1 2.5 11.2a.53.53 0 0 1 .334-.518l17.914-7.233a.54.54 0 0 1 .558.086a.52.52 0 0 1 .182.518z">
+                                        </path>
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="footer-icons">
+                                <a class="p-2" href="https://www.facebook.com/profile.php?id=61560598447246"
+                                    target="_blank">
+                                    <svg class="text-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        width="1.55em" height="1.55em">
+                                        <path fill="none" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="1.5"
+                                            d="M6.182 10.333c-.978 0-1.182.192-1.182 1.111v1.667c0 .92.204 1.111 1.182 1.111h2.363v6.667c0 .92.205 1.111 1.182 1.111h2.364c.978 0 1.182-.192 1.182-1.111v-6.667h2.654c.741 0 .932-.135 1.136-.806l.507-1.666c.349-1.149.133-1.417-1.137-1.417h-3.16V7.556c0-.614.529-1.112 1.181-1.112h3.364c.978 0 1.182-.191 1.182-1.11V3.11C19 2.191 18.796 2 17.818 2h-3.364c-3.263 0-5.909 2.487-5.909 5.556v2.777z"
+                                            color="currentColor"></path>
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="footer-icons">
+                                <a class="p-2" href="https://www.youtube.com/@ManMarket_ir" target="_blank">
+                                    <svg class="text-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        width="1.55em" height="1.55em">
+                                        <g fill="none" stroke="currentColor" strokeWidth="1.5">
+                                            <path fill="currentColor" strokeLinecap="round" strokeLinejoin="round"
+                                                d="m14 12l-3.5 2v-4z"></path>
+                                            <path
+                                                d="M2 12.708v-1.416c0-2.895 0-4.343.905-5.274c.906-.932 2.332-.972 5.183-1.053C9.438 4.927 10.818 4.9 12 4.9s2.561.027 3.912.065c2.851.081 4.277.121 5.182 1.053S22 8.398 22 11.292v1.415c0 2.896 0 4.343-.905 5.275c-.906.931-2.331.972-5.183 1.052c-1.35.039-2.73.066-3.912.066s-2.561-.027-3.912-.066c-2.851-.08-4.277-.12-5.183-1.052S2 15.602 2 12.708Z">
+                                            </path>
+                                        </g>
+                                    </svg>
+                                </a>
+                            </span>
+                        </div>
+                    </li>
                 </ul>
-                <ul style="margin-right: 10px !important; padding-right: 35px !important;" class="footer-nav-list">
+                <ul class="footer-nav-list">
                     <li class="footer-nav-item">
                         <h2 class="nav-title">درباره ما</h2>
                     </li>
@@ -1522,23 +1196,26 @@
                             مارکت
                             در یک نگاه</a></li>
                 </ul>
-                <ul style="margin-left: -130px !important;"
-                    class="footer-nav-list d-flex flex-wrap flex-column text-center w-50">
+                <ul class="footer-nav-list d-flex flex-wrap flex-column w-50 justify-content-end">
                     <li class="footer-nav-item">
-                        <h2 class="nav-title">من مارکت</h2>
+                        <h2 class="nav-title w-center mx-3">من مارکت</h2>
                     </li>
                     <div class="">
-                        <div class="d-flex flex-wrap justify-content-center">
+                        <div class="d-flex flex-wrap justify-content-end center-max-24">
                             <a referrerpolicy='origin' target='_blank'
                                 href="https://trustseal.enamad.ir/?id=527464&Code=pPrrLy886QxLMhLkgAStOwlJBtPaDni4"
                                 class="footer-nav-item b-x-s">
                                 <img referrerpolicy='origin' class="w-50 mt-2" alt="من مارکت"
                                     src="{% static 'img/E.namad.png' %}">
                             </a>
-                            <a href="" class="footer-nav-item b-x-s">
-                                <img class="w-50 mt-2" alt="من مارکت" src="{% static 'img/E.namad.t' %}">
+                            <a target="_blank" href="" class="footer-nav-item b-x-s">
+                                <img class="w-50 mt-2" referrerpolicy='origin' id='rgvjjzpenbqeapfunbqeesgt'
+                                    style='cursor:pointer'
+                                    onclick='window.open("https://logo.samandehi.ir/Verify.aspx?id=372520&p=xlaojyoeuiwkdshwuiwkobpd", "Popup","toolbar=no,scrollbars=no, location=no, statusbar=no, menubar=no, resizable=0, width=450, height=630, top=30")'
+                                    alt='logo-samandehi' src="{% static 'img/E.namad.t' %}">
                             </a>
-                            <a href="https://qr.mojavez.ir/track/11011459" class="footer-nav-item b-x-s">
+                            <a target="_blank" href="https://qr.mojavez.ir/track/11011459"
+                                class="footer-nav-item b-x-s">
                                 <img class="w-50" alt="من مارکت" src="{% static 'img/E.namad.3.png' %}">
                             </a>
                             <a target="_blank" href="https://www.irannsr.org/" class="footer-nav-item b-x-s">
@@ -1560,120 +1237,12 @@
     </footer>
     <!--footer :: end-------->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- DESKTOP MEGA TAB MENU ---
-            const megaMenuTriggerDesktop = document.getElementById('mega-menu-trigger-btn-desktop');
-            const megaMenuPanelDesktop = document.getElementById('mega-menu-panel-content-desktop');
-            let megaMenuTimeoutIdDesktop = null;
-            let isMouseInsidePanelOrTriggerDesktop = false;
-
-            if (megaMenuTriggerDesktop && megaMenuPanelDesktop) {
-                const hideDelay = 250; // Milliseconds to wait before hiding
-                const categoryItems = megaMenuPanelDesktop.querySelectorAll('.mega-category-item');
-                const contentPanes = megaMenuPanelDesktop.querySelectorAll('.mega-menu-pane');
-
-                const showMenu = () => {
-                    isMouseInsidePanelOrTriggerDesktop = true;
-                    clearTimeout(megaMenuTimeoutIdDesktop);
-                    megaMenuPanelDesktop.classList.add('show');
-                    // Activate first tab if no tab is active yet
-                    const firstCategory = categoryItems[0];
-                    if (firstCategory && !megaMenuPanelDesktop.querySelector('.mega-category-item.active')) {
-                        activateTab(firstCategory);
-                    }
-                };
-
-                const hideMenu = () => {
-                    isMouseInsidePanelOrTriggerDesktop = false;
-                    megaMenuTimeoutIdDesktop = setTimeout(() => {
-                        if (!isMouseInsidePanelOrTriggerDesktop) {
-                            megaMenuPanelDesktop.classList.remove('show');
-                            // Deactivate all categories and panes when hiding
-                            categoryItems.forEach(item => item.classList.remove('active'));
-                            contentPanes.forEach(pane => pane.classList.remove('active'));
-                        }
-                    }, hideDelay);
-                };
-
-                const activateTab = (categoryElement) => {
-                    const targetPaneId = categoryElement.dataset.target;
-                    if (!targetPaneId) return;
-
-                    const targetPane = megaMenuPanelDesktop.querySelector(targetPaneId);
-                    if (!targetPane) return;
-
-                    // Deactivate all other categories and panes
-                    categoryItems.forEach(item => item.classList.remove('active'));
-                    contentPanes.forEach(pane => pane.classList.remove('active'));
-
-                    // Activate the current one
-                    categoryElement.classList.add('active');
-                    targetPane.classList.add('active');
-                };
-
-                megaMenuTriggerDesktop.addEventListener('mouseenter', showMenu);
-                megaMenuTriggerDesktop.addEventListener('mouseleave', hideMenu);
-
-                megaMenuPanelDesktop.addEventListener('mouseenter', () => {
-                    isMouseInsidePanelOrTriggerDesktop = true;
-                    clearTimeout(megaMenuTimeoutIdDesktop); // Keep panel open if mouse enters panel
-                });
-                megaMenuPanelDesktop.addEventListener('mouseleave', hideMenu);
-
-                categoryItems.forEach(item => {
-                    item.addEventListener('mouseenter', () => {
-                        clearTimeout(megaMenuTimeoutIdDesktop); // Ensure panel stays open
-                        isMouseInsidePanelOrTriggerDesktop = true;
-                        activateTab(item);
-                    });
-                    // Optional: Handle click on category item to keep menu open or navigate
-                    // item.addEventListener('click', (e) => { e.preventDefault(); activateTab(item); });
-                });
-
-                // Close menu on Escape key
-                document.addEventListener('keydown', (event) => {
-                    if (event.key === 'Escape' && megaMenuPanelDesktop.classList.contains('show')) {
-                        clearTimeout(megaMenuTimeoutIdDesktop); // Clear any pending hide
-                        megaMenuPanelDesktop.classList.remove('show');
-                        isMouseInsidePanelOrTriggerDesktop = false; // Reset state
-                        categoryItems.forEach(item => item.classList.remove('active'));
-                        contentPanes.forEach(pane => pane.classList.remove('active'));
-                    }
-                });
-            }
-
-            // --- Minimal THEME TOGGLE for testing ---
-            const themeToggleButtonTest = document.getElementById('theme-toggle-btn-test');
-            const htmlElement = document.documentElement;
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    htmlElement.setAttribute('data-theme', 'dark');
-                } else {
-                    htmlElement.removeAttribute('data-theme');
-                }
-                localStorage.setItem('theme', theme);
-            }
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            applyTheme(savedTheme);
-
-            if (themeToggleButtonTest) {
-                themeToggleButtonTest.addEventListener('click', () => {
-                    const currentTheme = htmlElement.hasAttribute('data-theme') ? 'dark' : 'light';
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    applyTheme(newTheme);
-                });
-            }
-        });
-    </script>
-    <!-- 3. jQuery (مورد نیاز Owl Carousel) -->
-    <!-- 4. Owl Carousel JS -->
-
 
     <div class="custom-overlay"></div>
 
 
 
+    <!--این همه جا هست -->
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     {% block extra_js %}
 
@@ -1683,6 +1252,8 @@
     <script src="{% static 'js/script.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
     <script src="{% static 'vendor/toastify/toastify.js' %}"></script>
+    <!--این همه جا هست -->
+
 
 
     <script>
@@ -1774,7 +1345,7 @@
 
 
     {% include 'messages.html' %}
+
 </body>
-<!-- partial -->
 
 </html>
