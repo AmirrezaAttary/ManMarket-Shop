@@ -1,80 +1,66 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load humanize %}
+
+
 
 
 {% block content %}
 <div class="row">
-    {% include 'dashboard/customer/sidebar.html' %}
+  {% include 'dashboard/customer/sidebar.html' %}
+
+  <div class="col-md-9 mb-9">
     <!-- Card -->
-    <div class="col-md-9 mb-9">
-        <!-- Card -->
-        <div class="card mb-3">
-            <div class="card-header border-bottom">
-                <h5 class="card-header-title">رمزعبور</h5>
+    <div class="card">
+      <!-- Header -->
+      <div class="card-header border-bottom">
+        <h5 class="card-header-title">آدرس های من</h5>
+      </div>
+      <!-- End Header -->
+
+      <!-- Body -->
+      <div class="card-body">
+        <div class="row">
+          {% for object in object_list %}
+          <div class="col-sm-12 mb-5 mb-sm-7">
+            <!-- Radio Check -->
+            <div class=" w-100 h-100">
+              <label class="" for="billingRadio1">
+              
+                <span class="h5 d-block">آدرس شماره {{ forloop.counter }}</span>
+
+                <span class="d-block mb-2">{{object.state}},{{object.city}},{{object.address}}
+                  ,{{object.zip_code}}</span>
+                <a class="btn btn-white btn-xs" href="{% url 'dashboard:customer:address-edit' pk=object.pk %}">
+                  <i class="bi-pencil-fill me-1"></i> آدرس را ویرایش
+                  کنید
+                </a>
+              </label>
             </div>
+            <!-- End Radio Check -->
+          </div>
+          {% endfor %}
+          <!-- End Col -->
 
-            <!-- Body -->
-            <div class="card-body">
-                <!-- Form -->
-                <form action="." method="post">
-                    {% csrf_token %}
-                    <!-- Form -->
-                    <div class="row mb-4">
-                        <label for="currentPasswordLabel" class="col-sm-3 col-form-label form-label">رمز عبور
-                            فعلی</label>
 
-                        <div class="col-sm-9">
-                            {{form.old_password}}
-                        </div>
-                    </div>
-                    <!-- End Form -->
 
-                    <!-- Form -->
-                    <div class="row mb-4">
-                        <label for="newPassword" class="col-sm-3 col-form-label form-label">رمز عبور جدید</label>
-
-                        <div class="col-sm-9">
-                            {{form.new_password1}}
-                        </div>
-
-                    </div>
-                    <!-- End Form -->
-
-                    <!-- Form -->
-                    <div class="row mb-4">
-                        <label for="confirmNewPasswordLabel" class="col-sm-3 col-form-label form-label">رمز عبور جدید را
-                            تایید کنید</label>
-
-                        <div class="col-sm-9">
-                            <div class="mb-3">
-                                {{form.new_password2}}
-                            </div>
-
-                            <h5>الزامات رمز عبور:</h5>
-
-                            <p class="card-text small">اطمینان حاصل کنید که این الزامات برآورده شده است:</p>
-
-                            <ul class="small">
-                                <li>حداقل 8 کاراکتر - هر چه بیشتر باشد، بهتر است</li>
-                                <li>حداقل یک نویسه کوچک</li>
-                                <li>حداقل یک کاراکتر بزرگ</li>
-                                <li>حداقل یک عدد، نماد یا نویسه فضای خالی</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- End Form -->
-
-                    <div class="d-flex justify-content-end gap-3">
-                        <button type="submit" class="btn theme-color" style="color: white;">بروزرسانی</button>
-                    </div>
-                </form>
-                <!-- End Form -->
-            </div>
-            <!-- End Body -->
+          <div class="col-sm-12 mb-5 mb-sm-7">
+            <!-- Card -->
+            <a class="card card-dashed card-centered" href="{% url 'dashboard:customer:address-create' %}">
+              <div class="card-body card-dashed-body py-8">
+                <span class="d-block"><i class="bi-plus"></i> یک آدرس جدید اضافه کنید</span>
+              </div>
+            </a>
+            <!-- End Card -->
+          </div>
+          <!-- End Col -->
         </div>
-        <!-- End Card -->
+        <!-- End Row -->
+
+
+      </div>
+      <!-- End Body -->
     </div>
+    <!-- End Card -->
+  </div>
 </div>
-<!-- End Card -->
 {% endblock %}

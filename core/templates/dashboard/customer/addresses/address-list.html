@@ -1,66 +1,98 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
-
-
 {% block content %}
-<div class="row">
-  {% include 'dashboard/customer/sidebar.html' %}
 
-  <div class="col-md-9 mb-9">
-    <!-- Card -->
-    <div class="card">
-      <!-- Header -->
-      <div class="card-header border-bottom">
-        <h5 class="card-header-title">آدرس های من</h5>
-      </div>
-      <!-- End Header -->
+{% include 'dashboard/customer/sidebar.html' %}
 
-      <!-- Body -->
-      <div class="card-body">
-        <div class="row">
-          {% for object in object_list %}
-          <div class="col-sm-12 mb-5 mb-sm-7">
-            <!-- Radio Check -->
-            <div class=" w-100 h-100">
-              <label class="" for="billingRadio1">
-              
-                <span class="h5 d-block">آدرس شماره {{ forloop.counter }}</span>
+<!-- Main Content Area -->
+<main class="profile-content-area-new">
+  <section class="profile-section-new">
+    <header class="section-header-new border-0">
+      <h2><svg>
+          <use xlink:href="#icon-map-pin"></use>
+        </svg>آدرس‌های من</h2>
+      <button class="btn-custom btn-primary btn-sm" id="addNewAddressBtn">
+        <svg>
+          <use xlink:href="#icon-plus-circle-fill"></use>
+        </svg>افزودن آدرس
+      </button>
+    </header>
 
-                <span class="d-block mb-2">{{object.state}},{{object.city}},{{object.address}}
-                  ,{{object.zip_code}}</span>
-                <a class="btn btn-white btn-xs" href="{% url 'dashboard:customer:address-edit' pk=object.pk %}">
-                  <i class="bi-pencil-fill me-1"></i> آدرس را ویرایش
-                  کنید
-                </a>
-              </label>
-            </div>
-            <!-- End Radio Check -->
-          </div>
-          {% endfor %}
-          <!-- End Col -->
+    <div id="addressesListContainer" class="mt-4">
+      <!-- STATIC: Addresses are hardcoded. JS only handles visual toggles. -->
+      {% for object in object_list %}
+      <div class="address-card-new">
+        <div class="address-card-header">
+          <h4 class="address-card-title">
 
-
-
-          <div class="col-sm-12 mb-5 mb-sm-7">
-            <!-- Card -->
-            <a class="card card-dashed card-centered" href="{% url 'dashboard:customer:address-create' %}">
-              <div class="card-body card-dashed-body py-8">
-                <span class="d-block"><i class="bi-plus"></i> یک آدرس جدید اضافه کنید</span>
-              </div>
+            <span>{{object.city}}</span>
+          </h4>
+          <div class="address-card-actions">
+            <a href="{% url 'dashboard:customer:address-edit' pk=object.pk %}">
+              <button class="edit-address-btn" title="ویرایش"><svg>
+                  <use xlink:href="#icon-edit-pencil"></use>
+                </svg></button>
             </a>
-            <!-- End Card -->
+              <button type="submit" form="deleadress" class="delete-address-btn" title="حذف"><svg>
+                  <use xlink:href="#icon-trash-can"></use>
+                </svg></button>
           </div>
-          <!-- End Col -->
         </div>
-        <!-- End Row -->
-
-
+        <div class="address-card-details">
+          <p>{{object.state}},{{object.city}},{{object.address}}
+            ,{{object.zip_code}}</p>
+        </div>
       </div>
-      <!-- End Body -->
+  <form hidden method="post" id="deleadress" action="{% url 'dashboard:customer:address-delete' pk=object.pk %} ">{% csrf_token %}</form>
+      {% endfor %}
     </div>
-    <!-- End Card -->
+  </section>
+</main>
+</div>
+</div>
+
+
+{% include 'dashboard/customer/sidebar_2.html' %}
+
+<div class="modal-backdrop-new" id="addressModalBackdrop"></div>
+<div class="modal-dialog-new" id="addressModal">
+  <header class="modal-header-new">
+    <h3 class="modal-title-new" id="addressModalTitle"></h3>
+    <button class="modal-close-btn-new">×</button>
+  </header>
+  <div class="modal-body-new">
+    <form id="addressForm" method="post" action="{% url 'dashboard:customer:address-create' %}">
+      {% csrf_token %}
+      <div class="form-group-custom"><label for="addressTitleInput" class="form-label-custom">شهر</label><input
+          name="city" type="text" id="addressTitleInput" class="form-control-custom" placeholder="مثلا: تهران"></div>
+      <div class="row gx-3">
+        <div class="col-md-6">
+          <div class="form-group-custom"><label for="addressProvinceInput" class="form-label-custom">استان</label><input
+              name="state" type="text" id="addressProvinceInput" class="form-control-custom" placeholder="خراسان رضوی">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group-custom"><label for="addressCityInput" class="form-label-custom">کد پستی</label><input
+              name="zip_code" type="text" id="addressCityInput" class="form-control-custom" placeholder="9617....">
+          </div>
+        </div>
+      </div>
+      <div class="form-group-custom"><label for="addressLine1Input" class="form-label-custom">آدرس کامل</label><textarea
+          name="address" id="addressLine1Input" class="form-control-custom" rows="3"
+          placeholder="خیابان، کوچه، پلاک..."></textarea>
+      </div>
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="button" class="btn-custom btn-secondary cancel-form-btn">انصراف</button>
+        <button type="submit" class="btn-custom btn-primary" form="addressForm">ذخیره آدرس</button>
+      </div>
+    </form>
   </div>
 </div>
-{% endblock %}
+
+<div class="wow-notification-container-new" id="notificationToastContainer"></div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock extra_js %}

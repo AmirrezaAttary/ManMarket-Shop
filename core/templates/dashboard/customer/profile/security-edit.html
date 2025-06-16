@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'dashboard/customer/sidebar.html' %}
+
+
+        <!-- Main Content Area -->
+        <main class="profile-content-area-new">
+            <section class="profile-section-new">
+                <header class="section-header-new border-0">
+                    <h2><svg class="svg-icon"><use xlink:href="#icon-lock-password"></use></svg> تغییر رمز عبور</h2>
+                </header>
+                <form method="post" action="." id="changePasswordForm" class="mt-4" novalidate>
+                    {% csrf_token %}
+                    <div class="form-group-custom">
+                        <label for="currentPassword" class="form-label-custom">رمز عبور فعلی</label>
+                        <input type="password" id="currentPassword" class="form-control-custom" name="old_password" required>
+                        <button type="button" class="toggle-password-visibility" title="نمایش رمز"><svg class="svg-icon"><use xlink:href="#icon-eye"></use></svg></button>
+                        <div class="invalid-feedback">این فیلد الزامی است.</div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="newPassword" class="form-label-custom">رمز عبور جدید</label>
+                        <input type="password" id="newPassword" class="form-control-custom" name="new_password1" required>
+                        <button type="button" class="toggle-password-visibility" title="نمایش رمز"><svg class="svg-icon"><use xlink:href="#icon-eye"></use></svg></button>
+                        <div class="password-strength-meter"><div id="strengthBar" class="strength-bar"></div></div>
+                        <div class="invalid-feedback">رمز عبور باید حداقل ۸ کاراکتر باشد.</div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="confirmPassword" class="form-label-custom">تکرار رمز عبور جدید</label>
+                        <input type="password" id="confirmPassword" class="form-control-custom" name="new_password2" required>
+                        <button type="button" class="toggle-password-visibility" title="نمایش رمز"><svg class="svg-icon"><use xlink:href="#icon-eye"></use></svg></button>
+                        <div class="invalid-feedback">تکرار رمز عبور با رمز عبور جدید مطابقت ندارد.</div>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn-custom btn-primary">
+                            <svg class="svg-icon"><use xlink:href="#icon-lock-password"></use></svg>
+                            ذخیره رمز عبور
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+</div>
+
+{% include 'dashboard/customer/sidebar_2.html' %}
+
+<div class="wow-notification-container-new" id="notificationToastContainer"></div>
+
+<div class="custom-overlay"></div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock extra_js %}
