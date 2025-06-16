@@ -2,10 +2,13 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from decimal import Decimal
 
+
 class OrderStatusType(models.IntegerChoices):
     pending = 1 , "در انتظار پرداخت"
-    success = 2, "موفقیت آمیز"
-    failed = 3,"لغو شده"
+    success = 2, "در حال پردازش"
+    shipped = 3, "ارسال شده"
+    deliverd = 4, "تحویل شده"
+    failed = 5,"لغو شده"
 
 class UserAddressModel(models.Model):
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)
@@ -50,7 +53,7 @@ class OrderModel(models.Model):
     status = models.IntegerField(choices=OrderStatusType.choices,default=OrderStatusType.pending.value)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-
+    tracking_code = models.CharField(max_length=100, null=True, blank=True, verbose_name="کد رهگیری پستی")
     class Meta:
         ordering = ['-created_date']
     
@@ -79,6 +82,10 @@ class OrderModel(models.Model):
             return round(self.total_price - (self.total_price * Decimal( self.coupon.discount_percent /100)))
         else:
             return self.total_price
+    def get_tracking_url(self):
+        if self.tracking_code:
+            return f"https://mahex.com/tracking?consignmentId={self.tracking_code}"
+        return None
     
     
 class OrderItemModel(models.Model):
