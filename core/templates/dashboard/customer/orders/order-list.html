@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load jformat %}
 
 {% block content %}
 
@@ -24,18 +25,32 @@
         <div id="ordersListContainer">
             <!-- STATIC: Orders are hardcoded below. JS will only show/hide them. -->
             {% for object in object_list %}
-            
-            
-                
-            
+
+
+
+
             {% if object.status == 4 %}
             <div class="order-card-new" data-status="delivered">
                 <div class="order-card-header-new">
-                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span
-                            class="order-date-new">۱۴۰۳/۰۳/۱۸</span></div>
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new"></span>
+                            {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new delivered">تحویل شده</span>
                 </div>
-                <p class="order-items-preview">شامل: هدفون گیمینگ حرفه‌ای, موس بی‌سیم...</p>
+                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
+
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
                 <div class="order-footer-new">
                     <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
@@ -62,13 +77,27 @@
             {% elif object.status == 3 %}
             <div class="order-card-new " data-status="shipped">
                 <div class="order-card-header-new">
-                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span
-                            class="order-date-new">۱۴۰۳/۰۳/۰۱</span></div>
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new"></span>
+                        {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new shipped">ارسال شده</span>
                 </div>
-                <p class="order-items-preview">شامل: پاوربانک ۲۰۰۰۰ میلی‌آمپر شیائومی</p>
+                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
+
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
                 <div class="order-footer-new">
-                    <span class="order-total-new">{{object.get_price|intcomma}}  <small>تومان</small></span>
+                    <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
                         <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
                             <svg>
@@ -93,13 +122,27 @@
             {% elif object.status == 2 %}
             <div class="order-card-new" data-status="pending">
                 <div class="order-card-header-new">
-                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span
-                            class="order-date-new">۱۴۰۳/۰۴/۰۵</span></div>
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new">
+                            {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new pending">در حال پردازش</span>
                 </div>
-                <p class="order-items-preview">شامل: کیبورد مکانیکال, کابل HDMI نسخه 2.1</p>
+                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
+
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
                 <div class="order-footer-new">
-                    <span class="order-total-new">{{object.get_price|intcomma}}  <small>تومان</small></span>
+                    <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
                         <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
                             <svg>
@@ -124,13 +167,27 @@
             {% elif object.status == 5 %}
             <div class="order-card-new" data-status="cancelled">
                 <div class="order-card-header-new">
-                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span
-                            class="order-date-new">۱۴۰۳/۰۲/۱۵</span></div>
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new">
+                            {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new cancelled">لغو شده</span>
                 </div>
-                <p class="order-items-preview">شامل: هارد اکسترنال ۱ ترابایت</p>
+                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
+
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
                 <div class="order-footer-new">
-                    <span class="order-total-new">{{object.get_price|intcomma}}  <small>تومان</small></span>
+                    <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
                         <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
                             <svg>
@@ -164,39 +221,7 @@
 </div>
 </div>
 <div class="modal-backdrop-new" id="orderModalBackdrop"></div>
-<div class="modal-dialog-new" id="orderDetailsModal">
-    <header class="modal-header-new">
-        <h3 class="modal-title-new">جزئیات سفارش #DKC-1045</h3>
-        <button class="modal-close-btn-new">×</button>
-    </header>
-    <div class="modal-body-new">
-        <p><strong>آدرس تحویل:</strong> تهران، خیابان آزادی، پلاک ۱۲۳، واحد ۴</p>
-        <p><strong>روش پرداخت:</strong> پرداخت آنلاین (موفق)</p>
-        <h5 class="mt-4 mb-2">اقلام سفارش</h5>
-        <ul class="list-unstyled">
-            <li class="order-detail-list-item">
-                <div class="d-flex align-items-center">
-                    <img src="https://via.placeholder.com/80/FF6347/FFFFFF?text=Product1" alt=""
-                        class="order-detail-product-info">
-                    <span>هدفون گیمینگ حرفه‌ای (×۱)</span>
-                </div>
-                <strong>۲۵۰,۰۰۰ <small>تومان</small></strong>
-            </li>
-            <li class="order-detail-list-item">
-                <div class="d-flex align-items-center">
-                    <img src="https://via.placeholder.com/80/4682B4/FFFFFF?text=Product2" alt=""
-                        class="order-detail-product-info">
-                    <span>موس بی‌سیم (×۱)</span>
-                </div>
-                <strong>۱۳۰,۰۰۰ <small>تومان</small></strong>
-            </li>
-        </ul>
-        <hr>
-        <div class="d-flex justify-content-between"><span>هزینه ارسال:</span> <span>رایگان</span></div>
-        <div class="d-flex justify-content-between mt-2 fs-5 fw-bold"><span>مبلغ کل:</span> <span>۳۸۰,۰۰۰
-                <small>تومان</small></span></div>
-    </div>
-</div>
+
 
 {% include 'dashboard/customer/sidebar_2.html' %}
 

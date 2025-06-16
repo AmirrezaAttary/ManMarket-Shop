@@ -9,6 +9,12 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.core.exceptions import FieldError
 from order.models import OrderModel,OrderStatusType
+import jdatetime
+
+def to_jalali(date_obj):
+    if not date_obj:
+        return ""
+    return jdatetime.datetime.fromgregorian(datetime=date_obj).strftime('%Y/%m/%d')
 
 class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, ListView):
     template_name = "dashboard/customer/orders/order-list.html"
@@ -34,6 +40,11 @@ class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, Lis
         context = super().get_context_data(**kwargs)
         context["total_items"] = self.get_queryset().count()
         context["status_types"] = OrderStatusType.choices  
+
+        # تبدیل تاریخ به شمسی برای هر سفارش
+        for order in context['object_list']:
+            order.jalali_created_date = to_jalali(order.created_date)
+            order.jalali_updated_date = to_jalali(order.updated_date)
         return context
     
 class CustomerOrderDetailView(LoginRequiredMixin, HasCustomerAccessPermission, DetailView):
