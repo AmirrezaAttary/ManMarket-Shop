@@ -7,7 +7,7 @@
 <div class="row">
   {% include 'dashboard/customer/sidebar.html' %}
   <!-- Card -->
-  <div class="col-md-9 mb-9">
+  <div class="">
     <!-- Card -->
     <div class="card">
       <!-- Header -->
@@ -94,6 +94,8 @@
             <dl class="col-md-3">{{object.get_full_address}}</dl>
             <dt class="col-md-3"> کد پستی:</dt>
             <dl class="col-md-3">{{object.zip_code}}</dl>
+            <dt class="col-md-3"> کد رهگیری:</dt>
+            <dl class="col-md-3"><a target="_blank" href="{{object.get_tracking_url}}">رهگیری مرسوله</a></dl>
           </div>
           <div class=" d-flex pt-5 justify-content-end">
             <a class="btn btn-secondary ms-3" href="{% url 'dashboard:customer:order-list' %}">بازگشت</a>
@@ -104,6 +106,7 @@
       <!-- End Body -->
     </div>
   </div>
+</div>
 </div>
 <!-- End Card -->
 {% endblock %}

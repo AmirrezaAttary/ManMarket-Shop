@@ -33,7 +33,7 @@
             <div class="order-card-new" data-status="delivered">
                 <div class="order-card-header-new">
                     <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new"></span>
-                            {{ object.jalali_created_date }}</span></div>
+                        {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new delivered">تحویل شده</span>
                 </div>
                 <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
@@ -54,12 +54,14 @@
                 <div class="order-footer-new">
                     <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
-                        <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
-                            <svg>
-                                <use xlink:href="#icon-eye-open"></use>
-                            </svg> مشاهده جزئیات
-                        </button>
-                        <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
+                            </button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
                                 <g fill="currentColor">
                                     <path
@@ -70,7 +72,7 @@
                                         clip-rule="evenodd"></path>
                                 </g>
                             </svg>مشاهده فاکتور
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
@@ -99,12 +101,14 @@
                 <div class="order-footer-new">
                     <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
-                        <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
-                            <svg>
-                                <use xlink:href="#icon-eye-open"></use>
-                            </svg> مشاهده جزئیات
-                        </button>
-                        <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
+                            </button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
                                 <g fill="currentColor">
                                     <path
@@ -115,7 +119,7 @@
                                         clip-rule="evenodd"></path>
                                 </g>
                             </svg>مشاهده فاکتور
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
@@ -144,12 +148,14 @@
                 <div class="order-footer-new">
                     <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
-                        <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
-                            <svg>
-                                <use xlink:href="#icon-eye-open"></use>
-                            </svg> مشاهده جزئیات
-                        </button>
-                        <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
+                            </button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
                                 <g fill="currentColor">
                                     <path
@@ -160,7 +166,7 @@
                                         clip-rule="evenodd"></path>
                                 </g>
                             </svg>مشاهده فاکتور
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>
@@ -189,12 +195,14 @@
                 <div class="order-footer-new">
                     <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
                     <div class="mx-3">
-                        <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
-                            <svg>
-                                <use xlink:href="#icon-eye-open"></use>
-                            </svg> مشاهده جزئیات
-                        </button>
-                        <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
+                            </button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
                                 <g fill="currentColor">
                                     <path
@@ -205,7 +213,7 @@
                                         clip-rule="evenodd"></path>
                                 </g>
                             </svg>مشاهده فاکتور
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>

@@ -39,8 +39,10 @@
                                 </svg> {{address.state}},{{address.city}},{{address.address}} ,{{address.zip_code}}
                             </p>
                             <div class="dj-sh-address-card-actions">
-                                <input type="radio"name="address_id" value="{{address.id}}">
-                                <button  class="dj-sh-btn dj-sh-btn-select-address">انتخاب</button>
+                                <input type="radio" name="address_id" value="{{address.id}}"
+                                    id="address-{{address.id}}" hidden>
+                                <button class="dj-sh-btn dj-sh-btn-select-address" type="button"
+                                    onclick="selectAddress('{{address.id}}')">انتخاب</button>
                             </div>
                         </article>
                         {% endfor %}
@@ -83,7 +85,8 @@
                         پرداخت</span><span>{{total_price_with_tax|intcomma}}<span
                             class="dj-sh-currency">تومان</span></span></div>
             </div>
-            <button type="submit" form="checkout-form" class="dj-sh-btn dj-sh-btn-primary dj-sh-btn-block dj-sh-btn-continue">ادامه فرآیند خرید</button>
+            <button type="submit" form="checkout-form"
+                class="dj-sh-btn dj-sh-btn-primary dj-sh-btn-block dj-sh-btn-continue">ادامه فرآیند خرید</button>
             <p class="dj-sh-terms">ثبت سفارش به معنی موافقت با <a href="{% url 'faq:rules' %}">شرایط و قوانین من
                     مارکت</a> است.</p>
         </aside>
@@ -95,6 +98,13 @@
 {% endblock content %}
 
 {% block extra_js %}
+<script>
+    function selectAddress(addressId) {
+        // رادیو باتن مربوط به آدرس را انتخاب می‌کند
+        document.getElementById('address-' + addressId).checked = true;
+    }
+</script>
+
 <script>
     function applyDiscount(total_price, total_tax) {
         $("#total-price").html(total_price)
