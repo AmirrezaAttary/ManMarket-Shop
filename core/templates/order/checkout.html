@@ -10,103 +10,49 @@
     <div class="dj-sh-checkout-container dj-sh-container">
         <main class="dj-sh-checkout-main">
             <section class="dj-sh-checkout-section dj-sh-address-section">
-                <h2 class="dj-sh-section-title">
-                    <svg class="dj-sh-icon-svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
-                        </path>
-                    </svg>
-                    انتخاب آدرس تحویل سفارش
-                </h2>
-                <div class="dj-sh-address-list" id="address-list-container">
-                    <article class="dj-sh-address-card dj-sh-selectable" data-address-id="addr-1">
-                        <svg class="dj-sh-icon-svg dj-sh-selected-icon" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 15 15" width="1em" height="1em">
-                            <path fill="none" stroke="currentColor"
-                                d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"></path>
+                <form action="." method="post" id="checkout-form">
+                    {% csrf_token %}
+                    <h2 class="dj-sh-section-title">
+                        <svg class="dj-sh-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+                            </path>
                         </svg>
-                        <div class="dj-sh-address-card-header">
-                            <span><svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
+                        انتخاب آدرس تحویل سفارش
+                    </h2>
+                    <div class="dj-sh-address-list" id="address-list-container">
+                        {% for address in addresses %}
+                        <article class="dj-sh-address-card dj-sh-selectable" data-address-id="addr-{{address.id}}">
+                            <svg class="dj-sh-icon-svg dj-sh-selected-icon" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 15 15" width="1em" height="1em">
+                                <path fill="none" stroke="currentColor"
+                                    d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"></path>
+                            </svg>
+                            <div class="dj-sh-address-card-header">
+
+                            </div>
+                            <p class="dj-sh-address-text">
+                                <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
                                     <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z">
+                                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
                                     </path>
-                                </svg> کاربر نمونه ۱</span>
-                            <span><svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z">
-                                    </path>
-                                </svg> ۰۹۱۲۳۴۵۶۷۸۹</span>
-                        </div>
-                        <p class="dj-sh-address-text">
+                                </svg> {{address.state}},{{address.city}},{{address.address}} ,{{address.zip_code}}
+                            </p>
+                            <div class="dj-sh-address-card-actions">
+                                <input type="radio"name="address_id" value="{{address.id}}">
+                                <button  class="dj-sh-btn dj-sh-btn-select-address">انتخاب</button>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'dashboard:customer:address-list' %}">
+                        <button class="dj-sh-btn dj-sh-btn-add-address">
                             <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
-                                </path>
-                            </svg> استان تهران، شهر تهران، خیابان آزادی، پلاک ۱۲۳، واحد ۴
-                        </p>
-                        <div class="dj-sh-address-card-actions">
-                            <button class="dj-sh-btn dj-sh-btn-delete dj-sh-btn-delete-address" title="حذف آدرس"><svg
-                                    class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
-                                    </path>
-                                </svg></button>
-                            <button class="dj-sh-btn dj-sh-btn-edit" data-modal-target="#edit-address-modal"
-                                data-address-id="addr-1"><svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
-                                    </path>
-                                </svg> ویرایش</button>
-                            <button class="dj-sh-btn dj-sh-btn-select-address">انتخاب</button>
-                        </div>
-                    </article>
-                    <article class="dj-sh-address-card dj-sh-selectable" data-address-id="addr-2">
-                        <svg class="dj-sh-icon-svg dj-sh-selected-icon" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 15 15" width="1em" height="1em">
-                            <path fill="none" stroke="currentColor"
-                                d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"></path>
-                        </svg>
-                        <div class="dj-sh-address-card-header">
-                            <span><svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z">
-                                    </path>
-                                </svg> کاربر نمونه ۲</span>
-                            <span><svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z">
-                                    </path>
-                                </svg> ۰۹۳۵۱۲۳۴۵۶۷</span>
-                        </div>
-                        <p class="dj-sh-address-text">
-                            <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
-                                </path>
-                            </svg> استان البرز، شهر کرج، میدان کرج، ساختمان نمونه، طبقه ۵
-                        </p>
-                        <div class="dj-sh-address-card-actions">
-                            <button class="dj-sh-btn dj-sh-btn-delete dj-sh-btn-delete-address" title="حذف آدرس"><svg
-                                    class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z">
-                                    </path>
-                                </svg></button>
-                            <button class="dj-sh-btn dj-sh-btn-edit" data-modal-target="#edit-address-modal"
-                                data-address-id="addr-2"><svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
-                                    </path>
-                                </svg> ویرایش</button>
-                            <button class="dj-sh-btn dj-sh-btn-select-address">انتخاب</button>
-                        </div>
-                    </article>
-                </div>
-                <button class="dj-sh-btn dj-sh-btn-add-address" data-modal-target="#add-address-modal">
-                    <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-                    </svg> افزودن آدرس جدید
-                </button>
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                            </svg> مدیریت آدرس ها
+                        </button>
+                    </a>
+                </form>
             </section>
 
 
@@ -115,8 +61,9 @@
         <aside class="dj-sh-order-summary">
             <h3 class="dj-sh-summary-title">خلاصه سفارش</h3>
             <div class="dj-sh-summary-totals">
-                <div class="dj-sh-total-row" id="summary-items-total-row"><span>قیمت کالاها</span><span
-                        >۴٬۸۵۰٬۰۰۰ <span class="dj-sh-currency">تومان</span></span></div>
+                <div class="dj-sh-total-row" id="summary-items-total-row"><span>قیمت
+                        کالاها</span><span>{{total_price|intcomma}}<span class="dj-sh-currency">تومان</span></span>
+                </div>
                 <div class="dj-sh-total-row dj-sh-shipping-cost">
                     <span>هزینه ارسال <svg class="dj-sh-icon-svg" viewBox="0 0 24 24" fill="currentColor"
                             title="هزینه ارسال بر اساس آدرس، زمان و روش ارسال محاسبه می‌شود">
@@ -129,119 +76,19 @@
                 <div class="dj-sh-total-row" id="summary-discount-row"><span>تخفیف کالاها</span><span
                         class="dj-sh-discount" id="summary-discount-value">۰ <span
                             class="dj-sh-currency">تومان</span></span></div>
-                <div class="dj-sh-total-row dj-sh-final-total"><span>مبلغ قابل پرداخت</span><span
-                        >۴٬۸۵۰٬۰۰۰ <span class="dj-sh-currency">تومان</span></span></div>
+                <div class="dj-sh-total-row" id="summary-items-total-row">
+                    <span>مالیات(10%)</span><span>{{total_tax|intcomma}}<span class="dj-sh-currency">تومان</span></span>
+                </div>
+                <div class="dj-sh-total-row dj-sh-final-total"><span>مبلغ قابل
+                        پرداخت</span><span>{{total_price_with_tax|intcomma}}<span
+                            class="dj-sh-currency">تومان</span></span></div>
             </div>
-            <button  class="dj-sh-btn dj-sh-btn-primary dj-sh-btn-block dj-sh-btn-continue"
-                >ادامه فرآیند خرید</button>
-            <p class="dj-sh-terms">ثبت سفارش به معنی موافقت با <a href="#">شرایط و قوانین من مارکت</a> است.</p>
+            <button type="submit" form="checkout-form" class="dj-sh-btn dj-sh-btn-primary dj-sh-btn-block dj-sh-btn-continue">ادامه فرآیند خرید</button>
+            <p class="dj-sh-terms">ثبت سفارش به معنی موافقت با <a href="{% url 'faq:rules' %}">شرایط و قوانین من
+                    مارکت</a> است.</p>
         </aside>
     </div>
 
-    <div class="dj-sh-modal" id="add-address-modal">
-        <div class="dj-sh-modal-overlay" data-modal-close></div>
-        <div class="dj-sh-modal-dialog">
-            <div class="dj-sh-modal-content">
-                <div class="dj-sh-modal-header">
-                    <h5 class="dj-sh-modal-title" id="addAddressModalLabel">افزودن آدرس جدید</h5>
-                </div>
-                <div class="dj-sh-modal-body">
-                    <form id="add-address-form">
-                        <div class="dj-sh-form-group dj-sh-row">
-                            <div><label for="add-province-input" class="dj-sh-form-label">استان *</label><input
-                                    type="text" class="dj-sh-form-control" id="add-province-input" required
-                                    placeholder="استان"></div>
-                            <div><label for="add-city-input" class="dj-sh-form-label">شهر *</label><input type="text"
-                                    class="dj-sh-form-control" id="add-city-input" required placeholder="شهر"></div>
-                        </div>
-                        <div class="dj-sh-form-group"><label for="add-address-textarea" class="dj-sh-form-label">آدرس
-                                پستی *</label><textarea class="dj-sh-form-control" id="add-address-textarea" required
-                                placeholder="آدرس دقیق پستی"></textarea></div>
-                        <div class="dj-sh-form-group dj-sh-row">
-                            <div><label for="add-postal-code-input" class="dj-sh-form-label">کد پستی *</label><input
-                                    type="text" pattern="[0-9]{10}" class="dj-sh-form-control"
-                                    id="add-postal-code-input" required placeholder="مثال: ۱۲۳۴۵۶۷۸۹۰"></div>
-                            <div><label for="add-unit-input" class="dj-sh-form-label">پلاک / واحد</label><input
-                                    type="text" class="dj-sh-form-control" id="add-unit-input"
-                                    placeholder="پلاک و واحد"></div>
-                        </div>
-                        <div class="dj-sh-form-group dj-sh-row">
-                            <div><label for="add-recipient-name-input" class="dj-sh-form-label">نام گیرنده
-                                    *</label><input type="text" class="dj-sh-form-control" id="add-recipient-name-input"
-                                    required placeholder="نام و نام خانوادگی"></div>
-                            <div><label for="add-recipient-mobile-input" class="dj-sh-form-label">شماره موبایل
-                                    *</label><input type="tel" pattern="09[0-9]{9}" class="dj-sh-form-control"
-                                    id="add-recipient-mobile-input" required placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹"></div>
-                        </div>
-                        <p style="font-size: 0.8em; color: #767790;">* پر کردن فیلدهای ستاره‌دار الزامی است.</p>
-                    </form>
-                </div>
-                <div class="dj-sh-modal-footer"><button type="button" class="dj-sh-btn dj-sh-btn-cancel"
-                        data-modal-close>انصراف</button><button type="submit" form="add-address-form"
-                        class="dj-sh-btn dj-sh-btn-primary">ثبت آدرس</button></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="dj-sh-modal" id="edit-address-modal">
-        <div class="dj-sh-modal-overlay" data-modal-close></div>
-        <div class="dj-sh-modal-dialog">
-            <div class="dj-sh-modal-content">
-                <div class="dj-sh-modal-header">
-                    <h5 class="dj-sh-modal-title" id="editAddressModalLabel">ویرایش آدرس</h5>
-                </div>
-                <div class="dj-sh-modal-body">
-                    <form id="edit-address-form">
-                        <input type="hidden" id="edit-address-id-hidden">
-                        <div class="dj-sh-form-group dj-sh-row">
-                            <div><label for="edit-province-input" class="dj-sh-form-label">استان *</label><input
-                                    type="text" class="dj-sh-form-control" id="edit-province-input" required></div>
-                            <div><label for="edit-city-input" class="dj-sh-form-label">شهر *</label><input type="text"
-                                    class="dj-sh-form-control" id="edit-city-input" required></div>
-                        </div>
-                        <div class="dj-sh-form-group"><label for="edit-address-textarea" class="dj-sh-form-label">آدرس
-                                پستی *</label><textarea class="dj-sh-form-control" id="edit-address-textarea"
-                                required></textarea></div>
-                        <div class="dj-sh-form-group dj-sh-row">
-                            <div><label for="edit-postal-code-input" class="dj-sh-form-label">کد پستی *</label><input
-                                    type="text" pattern="[0-9]{10}" class="dj-sh-form-control"
-                                    id="edit-postal-code-input" required></div>
-                            <div><label for="edit-unit-input" class="dj-sh-form-label">پلاک / واحد</label><input
-                                    type="text" class="dj-sh-form-control" id="edit-unit-input"></div>
-                        </div>
-                        <div class="dj-sh-form-group dj-sh-row">
-                            <div><label for="edit-recipient-name-input" class="dj-sh-form-label">نام گیرنده
-                                    *</label><input type="text" class="dj-sh-form-control"
-                                    id="edit-recipient-name-input" required></div>
-                            <div><label for="edit-recipient-mobile-input" class="dj-sh-form-label">شماره موبایل
-                                    *</label><input type="tel" pattern="09[0-9]{9}" class="dj-sh-form-control"
-                                    id="edit-recipient-mobile-input" required></div>
-                        </div>
-                        <p style="font-size: 0.8em; color: #767790;">* پر کردن فیلدهای ستاره‌دار الزامی است.</p>
-                    </form>
-                </div>
-                <div class="dj-sh-modal-footer"><button type="button" class="dj-sh-btn dj-sh-btn-cancel"
-                        data-modal-close>انصراف</button><button type="submit" form="edit-address-form"
-                        class="dj-sh-btn dj-sh-btn-primary">ذخیره تغییرات</button></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="dj-sh-modal" id="confirmation-modal">
-        <div class="dj-sh-modal-overlay" data-modal-close></div>
-        <div class="dj-sh-modal-dialog dj-sh-confirmation-dialog">
-            <div class="dj-sh-modal-content">
-                <div class="dj-sh-modal-body">
-                    <p id="confirmation-message">آیا از حذف این مورد اطمینان دارید؟</p>
-                </div>
-                <div class="dj-sh-modal-footer">
-                    <button type="button" class="dj-sh-btn dj-sh-btn-cancel" id="cancel-delete-btn"
-                        data-modal-close>انصراف</button>
-                    <button type="button" class="dj-sh-btn" id="confirm-delete-btn">بله، حذف کن</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </section>
 

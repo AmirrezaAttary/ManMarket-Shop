@@ -112,7 +112,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         total_tax = round((total_price * 10)/100)
         context["total_price"] = total_price
         context["total_tax"] = total_tax
-        context['total_price_with_tax'] = total_price + total_tax
+        context['total_price_with_tax'] = total_price + total_tax + 100000
         return context
 
 
