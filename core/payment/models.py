@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models import JSONField
+from wallets.models import Wallet
+from order.models import OrderModel
 
 class PayemntStatusType(models.IntegerChoices):
     pending = 1, "در انتظار"
@@ -16,6 +18,8 @@ class PaymentModel(models.Model):
     response_code = models.IntegerField(null=True,blank=True)
     status = models.IntegerField(choices=PayemntStatusType.choices,default=PayemntStatusType.pending.value)
     
+    wallet = models.ForeignKey(Wallet, null=True, blank=True, on_delete=models.SET_NULL)
+    order = models.ForeignKey(OrderModel, null=True, blank=True, on_delete=models.SET_NULL)
     
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

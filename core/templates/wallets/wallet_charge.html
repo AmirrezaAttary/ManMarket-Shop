@@ -1,0 +1,9 @@
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-custom">ادامه به پرداخت</button>
+    {% if error %}
+    <p class="text-danger">{{ error }}</p>
+    {% endif %}
+</form>

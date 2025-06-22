@@ -59,6 +59,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         payment_obj = PaymentModel.objects.create(
             authority_id = response['data']['authority'],
             amount = order.total_price,
+            order=order,
         )
         order.payment = payment_obj
         order.save()

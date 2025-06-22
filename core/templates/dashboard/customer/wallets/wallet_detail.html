@@ -24,7 +24,7 @@
                     {{wallet.balance|floatformat:0|intcomma}} <span class="currency">تومان</span></p>
                 </div>
                 <button class="btn-custom z-x">
-                    <a class="text-light" href="">
+                    <a class="text-light" href="{% url 'wallets:charge' %}">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
                             fill="currentColor">
                             <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path>
