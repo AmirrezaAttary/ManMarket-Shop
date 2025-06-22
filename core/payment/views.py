@@ -5,12 +5,10 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from .zarinpal_client import ZarinPalSandbox
 from order.models import OrderModel, OrderStatusType
+from wallets.models import WalletTransaction
 
 # Create your views here.
 
-    
-
-# payment/views.py
 # payment/views.py
 
 class PaymentVerifyView(View):
@@ -39,6 +37,12 @@ class PaymentVerifyView(View):
             if wallet is not None:
                 wallet.balance += payment_obj.amount
                 wallet.save()
+                WalletTransaction.objects.create(
+                        wallet=wallet,
+                        amount=payment_obj.amount,
+                        description="شارژ کیف پول از طریق پرداخت آنلاین",
+                        transaction_type='charge'
+                    )
                 return redirect(reverse_lazy("wallets:charge_success"))
 
             return redirect("/")
