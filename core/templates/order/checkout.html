@@ -39,8 +39,8 @@
                                 </svg> {{address.state}},{{address.city}},{{address.address}} ,{{address.zip_code}}
                             </p>
                             <div class="dj-sh-address-card-actions">
-                                <input type="radio" name="address_id" value="{{address.id}}"
-                                    id="address-{{address.id}}" hidden>
+                                <input type="radio" name="address_id" value="{{address.id}}" id="address-{{address.id}}"
+                                    hidden>
                                 <button class="dj-sh-btn dj-sh-btn-select-address" type="button"
                                     onclick="selectAddress('{{address.id}}')">انتخاب</button>
                             </div>
@@ -48,19 +48,33 @@
                         {% endfor %}
                     </div>
                     <a href="{% url 'dashboard:customer:address-list' %}">
-                        <button class="dj-sh-btn dj-sh-btn-add-address">
+                        <button class="dj-sh-btn dj-sh-btn-add-address" type="button">
                             <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
                                 <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
                             </svg> مدیریت آدرس ها
                         </button>
                     </a>
+                    <div class="dj-payment-method-selection">
+                        <h3 class="dj-sh-summary-title">روش پرداخت</h3>
+                        <div class="dj-sh-radio-group">
+                            <label>
+                                <input type="radio" name="payment_method" value="wallet" checked>
+                                پرداخت با کیف پول
+                            </label>
+                            <label>
+                                <input type="radio" name="payment_method" value="zarinpal">
+                                پرداخت با کارت بانکی
+                            </label>
+                        </div>
+                    </div>
+                    <hr>
                 </form>
             </section>
-
-
-
         </main>
+
+
         <aside class="dj-sh-order-summary">
+
             <h3 class="dj-sh-summary-title">خلاصه سفارش</h3>
             <div class="dj-sh-summary-totals">
                 <div class="dj-sh-total-row" id="summary-items-total-row"><span>قیمت

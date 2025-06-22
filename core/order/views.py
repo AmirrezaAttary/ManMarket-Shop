@@ -19,7 +19,10 @@ from django.utils import timezone
 from django.shortcuts import redirect
 # Create your views here.
 from payment.zarinpal_client import ZarinPalSandbox
-from payment.models import PaymentModel
+from payment.models import PaymentModel,PayemntStatusType
+from wallets.models import Wallet,WalletTransaction
+from django.contrib import messages
+
 
 
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
@@ -33,6 +36,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         return kwargs
 
     def form_valid(self, form):
+        payment_method = self.request.POST.get("payment_method")
         user = self.request.user
         cleaned_data = form.cleaned_data
         address = cleaned_data['address_id']
@@ -49,21 +53,55 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         order.save()
         return redirect(self.create_payment_url(order))
 
-    def create_payment_url(self,order):
+    def create_payment_url(self, order):
+        payment_method = self.request.POST.get("payment_method")
+
+        if payment_method == "wallet":
+            wallet = Wallet.objects.get(user=self.request.user)
+            if wallet.balance >= order.total_price:
+                # کسر مبلغ از کیف پول
+                wallet.balance -= order.total_price
+                wallet.save()
+
+                # ثبت پرداخت موفق
+                payment_obj = PaymentModel.objects.create(
+                    authority_id="WALLET-" + timezone.now().strftime("%Y%m%d%H%M%S"),
+                    amount=order.total_price,
+                    status=PayemntStatusType.success,
+                    wallet=wallet,
+                    order=order,
+                )
+
+                # ثبت تراکنش کیف پول
+                WalletTransaction.objects.create(
+                    wallet=wallet,
+                    amount=order.total_price,
+                    description=f"پرداخت سفارش #{order.id}",
+                    transaction_type='payment'
+                )
+
+                order.payment = payment_obj
+                order.save()
+                return reverse_lazy("order:completed")
+            else:
+                messages.error(self.request, "موجودی کیف پول شما کافی نیست.")
+                return reverse_lazy("order:checkout")
+
+        # حالت پیش‌فرض: پرداخت زرین‌پال
         zarinpal = ZarinPalSandbox()
-        total_tax = round((order.total_price * 10)/100)
+        total_tax = round((order.total_price * 10) / 100)
         order.total_price += total_tax
         callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
-        response = zarinpal.payment_request(amount=order.total_price,callback_url=callback_url)
-        print(response)
+        response = zarinpal.payment_request(amount=order.total_price, callback_url=callback_url)
+
         payment_obj = PaymentModel.objects.create(
-            authority_id = response['data']['authority'],
-            amount = order.total_price,
-            order=order,
+            authority_id=response['data']['authority'],
+            amount=order.total_price,
         )
         order.payment = payment_obj
         order.save()
         return zarinpal.generate_payment_url(response['data']['authority'])
+
 
     def create_order(self, address):
         return OrderModel.objects.create(
