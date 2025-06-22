@@ -30,6 +30,7 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = [
+    '192.168.200.5',
     '127.0.0.1',
     'manmarket.ir',
     'www.manmarket.ir',
@@ -280,7 +281,7 @@ PASSWORD_RESET_TIMEOUT_DAYS = 2
 
 
 
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 # celery settings
 

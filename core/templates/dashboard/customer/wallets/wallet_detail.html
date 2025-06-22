@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+{% include 'dashboard/customer/sidebar.html' %}
+
+<main class="profile-content-area-new">
+    <section id="wallet-section" class="profile-section-new">
+        <header class="section-header-new border-0">
+            <h2><svg>
+                    <use xlink:href="#icon-wallet"></use>
+                </svg>کیف پول شما</h2>
+        </header>
+
+        <section class="w-center p-0">
+            <div class="wallet-balance-card w-50 w-right m-0">
+                <div>
+                    <p class="wallet-balance-label my-3">{{wallet.user.user_profile.get_fullname}}</p>
+                    <p class="wallet-balance-amount my-3">
+                    <p class="my-3"></p> موجودی فعلی
+                    :
+                    {{wallet.balance|floatformat:0|intcomma}} <span class="currency">تومان</span></p>
+                </div>
+                <button class="btn-custom z-x">
+                    <a class="text-light" href="">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"
+                            fill="currentColor">
+                            <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path>
+                        </svg>
+                        افزایش موجودی
+                    </a>
+                </button>
+
+                <img class="position-absolute w-25 brand-card" alt="من مارکت" src="{% static 'img/main-Bubble.webp' %}">
+                <img class="position-absolute w-25 brand-card-2" alt="من مارکت"
+                    src="{% static 'img/main-Bubble.webp' %}">
+                <img class="position-absolute w-25 brand-card-3" alt="من مارکت"
+                    src="{% static 'img/main-Bubble.webp' %}">
+                <img class="position-absolute w-25 brand-card-4" alt="من مارکت"
+                    src="{% static 'img/main-Bubble.webp' %}">
+                <img class="position-absolute w-25 brand-card-5" alt="من مارکت"
+                    src="{% static 'img/main-Bubble.webp' %}">
+            </div>
+        </section>
+
+        <div class="transaction-list-container">
+            <h3 class="transaction-list-header mt-5">تراکنش‌های اخیر</h3>
+            <div class="transaction-list">
+
+                {% for transaction in transactions %}
+                <div
+                    class="transaction-item {% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}deposit{% else %}withdrawal{% endif %}">
+                    <div class="transaction-icon">
+                        <svg>
+                            <use
+                                xlink:href="#icon-arrow-{% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}up{% else %}down{% endif %}-circle">
+                            </use>
+                        </svg>
+                    </div>
+                    <div class="transaction-details">
+                        <p class="transaction-title">
+                            {{ transaction.description }}
+                        </p>
+                        <p class="transaction-date">
+                            {{ transaction.created_at|date:"Y/m/d - ساعت H:i" }}
+                        </p>
+                    </div>
+                    <div
+                        class="transaction-amount {% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}deposit{% else %}withdrawal{% endif %}">
+                        {% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}
+                        +
+                        {% else %}
+                        -
+                        {% endif %}
+                        {{ transaction.amount|floatformat:0|intcomma }} تومان
+                    </div>
+                </div>
+                {% empty %}
+                <p>تراکنشی برای نمایش وجود ندارد.</p>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+</main>
+</div>
+</div>
+
+{% include 'dashboard/customer/sidebar_2.html' %}
+
+<!-- <div class="wow-notification-container-new" id="notificationToastContainer"></div> -->
+
+<div class="custom-overlay"></div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock extra_js %}
