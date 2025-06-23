@@ -107,18 +107,19 @@
         </div>
         <div class="col-md-6 col-sm-12 px-5">
             <h5 class="text-center">به ما پیام دهید</h5>
-            <form class="d-flex flex-column justify-content-center">
+            <form method="post" action="." class="d-flex flex-column justify-content-center">
+                {% csrf_token %}
                 <label class="my-3">
                     نام
-                    <input class="form-control my-2" type="text" placeholder="نام خود را وارد کنید">
+                    <input name="name" class="form-control my-2" type="text" placeholder="نام خود را وارد کنید">
                 </label>
                 <label class="my-3">
                     ایمیل
-                    <input class="form-control my-2" type="email" placeholder="ایمیل خود را وارد کنید">
+                    <input name="email" class="form-control my-2" type="email" placeholder="ایمیل خود را وارد کنید">
                 </label>
                 <label class="my-3">
                     پیام
-                    <textarea class="form-control my-2 cs-he" placeholder="پیام شما"></textarea>
+                    <textarea name="message" class="form-control my-2 cs-he" placeholder="پیام شما"></textarea>
                 </label>
                 <button type="submit" class="theme-color text-light rounded-3 custom-w">ارسال</button>
             </form>

@@ -15,7 +15,7 @@ class ContactView(SuccessMessageMixin,CreateView):
     form_class = ContatctForm
     model = Contact
     success_url = reverse_lazy('website:contact')
-    success_message = 'ثبت شد'
+    success_message = 'درخواست شما ثبت شد\nبزودی با شما تماس گرفته میشود'
     
     
     

@@ -1,6 +1,6 @@
 from django.db import models
 from taggit.managers import TaggableManager
-
+from django_jalali.db import models as jmodels
 # Create your models here.
 
 class BlogStatusType(models.IntegerChoices):
