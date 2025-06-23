@@ -13,7 +13,7 @@ from order.models import OrderModel, OrderItemModel
 from django.urls import reverse_lazy
 from cart.cart import CartSession
 from decimal import Decimal
-from order.models import CouponModel
+from order.models import CouponModel,OrderStatusType
 from django.http import JsonResponse
 from django.utils import timezone
 from django.shortcuts import redirect
@@ -57,7 +57,12 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
         if payment_method == "wallet":
             wallet = Wallet.objects.get(user=self.request.user)
+
+            # ✅ افزودن هزینه‌ی ثابت
+            order.total_price += 100000
+
             if wallet.balance >= order.total_price:
+                # پرداخت موفق
                 wallet.balance -= order.total_price
                 wallet.save()
 
@@ -76,7 +81,9 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                     transaction_type='payment'
                 )
 
+                # ✅ به‌روزرسانی وضعیت سفارش
                 order.payment = payment_obj
+                order.status = OrderStatusType.success.value  # 👈 این خط رو اضافه کن
                 order.save()
 
                 self.clear_cart(cart)
@@ -85,27 +92,9 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                 messages.error(self.request, "موجودی کیف پول شما کافی نیست.")
                 return reverse_lazy("order:checkout")
 
-        # ✅ حالت زرین‌پال (یا سایر روش‌ها)
-        zarinpal = ZarinPalSandbox()
-        total_tax = round((order.total_price * 10) / 100)
-        order.total_price += total_tax
-
-        callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
-        response = zarinpal.payment_request(amount=order.total_price, callback_url=callback_url)
-
-        if response.get("data") and "authority" in response["data"]:
-            payment_obj = PaymentModel.objects.create(
-                authority_id=response['data']['authority'],
-                amount=order.total_price,
-                order=order,
-            )
-            order.payment = payment_obj
-            order.save()
-
-            return zarinpal.generate_payment_url(response['data']['authority'])  # ✅ خروجی معتبر
-        else:
-            messages.error(self.request, "خطا در ارتباط با درگاه پرداخت.")
-            return reverse_lazy("order:checkout")
+        # برای روش‌های دیگر پرداخت (مثلاً زرین‌پال) باید else اضافه کنی
+        messages.error(self.request, "روش پرداخت نامعتبر است.")
+        return reverse_lazy("order:checkout")
 
     def create_order(self, address):
         return OrderModel.objects.create(
