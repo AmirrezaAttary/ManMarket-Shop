@@ -7,6 +7,7 @@ class PayemntStatusType(models.IntegerChoices):
     pending = 1, "در انتظار"
     success = 2, "پرداخت موفق"
     failed = 3, "پرداخت ناموفق"
+    partial = 4, "پرداخت جزئی"  # 👈 اضافه کن
 
 
 # Create your models here.

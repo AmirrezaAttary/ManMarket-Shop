@@ -65,13 +65,17 @@
                                 <input type="radio" name="payment_method" value="zarinpal">
                                 پرداخت با کارت بانکی
                             </label>
+                            <p class="wallet-info">
+                                موجودی کیف پول شما:
+                                <strong>{{wallet.balance|floatformat:0|intcomma}}</strong> تومان
+                            </p>
                         </div>
                     </div>
                     <hr>
                 </form>
             </section>
         </main>
-
+        
 
         <aside class="dj-sh-order-summary">
 

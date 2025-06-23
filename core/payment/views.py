@@ -6,6 +6,8 @@ from django.shortcuts import redirect, get_object_or_404
 from .zarinpal_client import ZarinPalSandbox
 from order.models import OrderModel, OrderStatusType
 from wallets.models import WalletTransaction
+from cart.cart import CartSession
+from cart.models import CartModel
 
 # Create your views here.
 
@@ -31,6 +33,11 @@ class PaymentVerifyView(View):
             if order is not None:
                 order.status = OrderStatusType.success.value
                 order.save()
+
+                cart = CartModel.objects.filter(user=order.user).first()
+                if cart:
+                    cart.cart_items.all().delete()
+                    CartSession(request.session).clear()
                 return redirect(reverse_lazy("order:completed"))
 
             wallet = getattr(payment_obj, "wallet", None)

@@ -46,24 +46,21 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         order = self.create_order(address)
 
         self.create_order_items(order, cart)
-        self.clear_cart(cart)
 
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
-        return redirect(self.create_payment_url(order))
+        return redirect(self.create_payment_url(order, cart)) 
 
-    def create_payment_url(self, order):
+    def create_payment_url(self, order, cart):
         payment_method = self.request.POST.get("payment_method")
 
         if payment_method == "wallet":
             wallet = Wallet.objects.get(user=self.request.user)
             if wallet.balance >= order.total_price:
-                # کسر مبلغ از کیف پول
                 wallet.balance -= order.total_price
                 wallet.save()
 
-                # ثبت پرداخت موفق
                 payment_obj = PaymentModel.objects.create(
                     authority_id="WALLET-" + timezone.now().strftime("%Y%m%d%H%M%S"),
                     amount=order.total_price,
@@ -72,7 +69,6 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                     order=order,
                 )
 
-                # ثبت تراکنش کیف پول
                 WalletTransaction.objects.create(
                     wallet=wallet,
                     amount=order.total_price,
@@ -82,26 +78,34 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
                 order.payment = payment_obj
                 order.save()
+
+                self.clear_cart(cart)
                 return reverse_lazy("order:completed")
             else:
                 messages.error(self.request, "موجودی کیف پول شما کافی نیست.")
                 return reverse_lazy("order:checkout")
 
-        # حالت پیش‌فرض: پرداخت زرین‌پال
+        # ✅ حالت زرین‌پال (یا سایر روش‌ها)
         zarinpal = ZarinPalSandbox()
         total_tax = round((order.total_price * 10) / 100)
         order.total_price += total_tax
+
         callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
         response = zarinpal.payment_request(amount=order.total_price, callback_url=callback_url)
 
-        payment_obj = PaymentModel.objects.create(
-            authority_id=response['data']['authority'],
-            amount=order.total_price,
-        )
-        order.payment = payment_obj
-        order.save()
-        return zarinpal.generate_payment_url(response['data']['authority'])
+        if response.get("data") and "authority" in response["data"]:
+            payment_obj = PaymentModel.objects.create(
+                authority_id=response['data']['authority'],
+                amount=order.total_price,
+                order=order,
+            )
+            order.payment = payment_obj
+            order.save()
 
+            return zarinpal.generate_payment_url(response['data']['authority'])  # ✅ خروجی معتبر
+        else:
+            messages.error(self.request, "خطا در ارتباط با درگاه پرداخت.")
+            return reverse_lazy("order:checkout")
 
     def create_order(self, address):
         return OrderModel.objects.create(
@@ -149,6 +153,8 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
             user=self.request.user)
         total_price = cart.calculate_total_price()
         total_tax = round((total_price * 10)/100)
+        wallet = Wallet.objects.get(user=self.request.user)
+        context['wallet'] = wallet
         context["total_price"] = total_price
         context["total_tax"] = total_tax
         context['total_price_with_tax'] = total_price + total_tax + 100000
