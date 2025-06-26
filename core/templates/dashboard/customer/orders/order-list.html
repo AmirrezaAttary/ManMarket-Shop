@@ -36,7 +36,7 @@
                         {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new delivered">تحویل شده</span>
                 </div>
-                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                <p class="order-items-preview">{% with items=object.order_items.all %}
                     {% with items_count=items|length %}
                     {% if items_count >= 2 %}
                 <p class="order-items-preview">
@@ -83,7 +83,7 @@
                         {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new shipped">ارسال شده</span>
                 </div>
-                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                <p class="order-items-preview">{% with items=object.order_items.all %}
                     {% with items_count=items|length %}
                     {% if items_count >= 2 %}
                 <p class="order-items-preview">
@@ -130,7 +130,7 @@
                             {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new pending">در حال پردازش</span>
                 </div>
-                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                <p class="order-items-preview">{% with items=object.order_items.all %}
                     {% with items_count=items|length %}
                     {% if items_count >= 2 %}
                 <p class="order-items-preview">
@@ -177,7 +177,7 @@
                             {{ object.jalali_created_date }}</span></div>
                     <span class="order-status-badge-new cancelled">لغو شده</span>
                 </div>
-                <p class="order-items-preview">شامل: {% with items=object.order_items.all %}
+                <p class="order-items-preview">{% with items=object.order_items.all %}
                     {% with items_count=items|length %}
                     {% if items_count >= 2 %}
                 <p class="order-items-preview">

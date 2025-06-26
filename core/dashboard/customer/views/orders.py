@@ -18,7 +18,7 @@ def to_jalali(date_obj):
 
 class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, ListView):
     template_name = "dashboard/customer/orders/order-list.html"
-    paginate_by = 5
+    # paginate_by = 5
     
     def get_paginate_by(self, queryset):
         return self.request.GET.get('page_size',self.paginate_by)
