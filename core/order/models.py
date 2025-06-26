@@ -37,7 +37,7 @@ class CouponModel(models.Model):
 
 # Create your models here.
 class OrderModel(models.Model):
-    user = models.ForeignKey('accounts.User',on_delete=models.PROTECT)
+    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)
     
     # order address information
     address = models.CharField(max_length=250)

@@ -57,9 +57,10 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
         if payment_method == "wallet":
             wallet = Wallet.objects.get(user=self.request.user)
+            total_tax = round((order.total_price * 10) / 100)
 
             # ✅ افزودن هزینه‌ی ثابت
-            order.total_price += 100000
+            order.total_price += 100000 + total_tax
 
             if wallet.balance >= order.total_price:
                 # پرداخت موفق
@@ -92,6 +93,22 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                 messages.error(self.request, "موجودی کیف پول شما کافی نیست.")
                 return reverse_lazy("order:checkout")
 
+        if payment_method == "zarinpal":
+            zarinpal = ZarinPalSandbox()
+            total_tax = round((order.total_price * 10) / 100)
+            order.total_price += total_tax + 100000
+            
+
+            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            response = zarinpal.payment_request(callback_url,order.total_price)
+            payment_obj = PaymentModel.objects.create(
+                authority_id = response['data']['authority'],
+                amount = order.total_price,
+                order=order
+            )
+            order.payment = payment_obj
+            order.save()
+            return zarinpal.generate_payment_url(response['data']['authority'])
         # برای روش‌های دیگر پرداخت (مثلاً زرین‌پال) باید else اضافه کنی
         messages.error(self.request, "روش پرداخت نامعتبر است.")
         return reverse_lazy("order:checkout")

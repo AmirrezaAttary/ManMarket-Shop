@@ -7,8 +7,10 @@ login
 {% endblock title %}
 
 
-{% block content %}
 
+
+{% block content %}
+<br><br><br>
 
 <main class="login d-flex justify-content-center align-items-center">
 
@@ -47,7 +49,8 @@ login
         <label class="w-100 px-3 my-1">
             رمز ورود
             <input type="password" name="password" class="form-control custom-text my-3 py-2"
-                placeholder="رمز خود را وارد کنید">
+                placeholder="رمز خود را وارد کنید" id="myPassword">
+            <button type="button" onclick="togglePasswordVisibility()">Show</button>
         </label>
         <!--email input end---------->
 
@@ -78,3 +81,21 @@ login
 </main>
 
 {% endblock content %}
+
+
+{% block extra_js %}
+<script>
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("myPassword");
+        const toggleButton = document.querySelector("button");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleButton.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            toggleButton.textContent = "Show";
+        }
+    }
+</script>
+{% endblock extra_js %}
