@@ -5,19 +5,22 @@
             <img alt="product-slider" src="{% static 'img/1.slider.png'%}" />
             <div class="slide-text2">مجموعه جدید کنسول بازی</div>
             <h6 class="slide-text">زمان بازی است</h6>
-            <button class="shop-now">اکنون خرید کنید</button>
+            <a href="{% url 'shop:product-list' %}?category=کنسول-بازی"><button class="shop-now">اکنون خرید
+                    کنید</button></a>
         </div>
         <div class="swiper-slide two-bg">
             <img alt="product-slider" src="{% static 'img/2.slider.png'%}" />
             <div class="slide-text2">مجموعه جدید لپ تاپ</div>
             <h6 class="slide-text">استعداد شما علاقه ما</h6>
-            <button class="shop-now">اکنون خرید کنید</button>
+            <a href="{% url 'shop:product-list' %}?category=لپ-تاپ"><button class="shop-now">اکنون خرید
+                    کنید</button></a>
         </div>
         <div class="swiper-slide three-bg">
             <img alt="product-slider" src="{% static 'img/ghoshi.webp'%}" />
             <div class="slide-text2">مجموعه جدید موبایل</div>
             <h6 class="slide-text">متفاوت فکر کن</h6>
-            <button class="shop-now">اکنون خرید کنید</button>
+            <a href="{% url 'shop:product-list' %}?category=گوشی-موبایل"><button class="shop-now">اکنون خرید
+                    کنید</button></a>
         </div>
     </div>
     <div class="swiper-button-next next"></div>

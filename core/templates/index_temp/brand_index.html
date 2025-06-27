@@ -11,66 +11,19 @@
     <div class="row">
         <div class="ow-container container col-12">
             <div class="owl-carousel owl-theme brand-logo-slider">
+
+                {% for brand in brands %}
+
+                {% if brand.image %}
+
                 <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/acer.png' %}" alt="لوگوی برند Acer">
+                    <a href="{% url 'shop:product-list' %}?brand={{brand.slug}}">
+                        <img class="w-100" src="{{brand.image.url}}" alt="لوگوی برند {{brand.title}}">
+                    </a>
                 </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/Anker.png' %}" alt="لوگوی برند Anker">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/Apple.png' %}" alt="لوگوی برند Apple">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/samsung.png' %}" alt="لوگوی برند Samsung">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/xiaomi.png' %}" alt="لوگوی برند Xiaomi">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/Asus.png' %}" alt="لوگوی برند Asus">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/Canon.png' %}" alt="لوگوی برند Canon">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/Dell.b.png' %}" alt="لوگوی برند Dell">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/epson.png' %}" alt="لوگوی برند Epson">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/hp.png' %}" alt="لوگوی برند Hp">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/JBL.png' %}" alt="لوگوی برند JBL">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/lenovo.png' %}" alt="لوگوی برند Lenovo">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/Lg.png' %}" alt="لوگوی برند LG">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/msi.png' %}" alt="لوگوی برند Msi">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/nokia.png' %}" alt="لوگوی برند Nokia">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/acer.png' %}" alt="اییومن">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/playstation.png' %}" alt="لوگوی برند PlayStation">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/QCY.png' %}" alt="لوگوی برند QYC">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/xbox.png' %}" alt="لوگوی برند xbox">
-                </div>
-                <div class="ow-item h-50 w-center">
-                    <img class="w-100" src="{% static 'img/category/barnd.png' %}" alt="برند">
-                </div>
+                {% endif %}
+
+                {% endfor %}
             </div>
         </div>
     </div>

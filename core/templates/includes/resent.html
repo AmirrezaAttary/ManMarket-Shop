@@ -1,35 +1,34 @@
 {% load static %}
-
-<h5 class="text-center">
-
-    <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
-    <span class="px-2">وبلاگ </span>
-    <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
-</h5>
-
-<div class="container">
-    <div class="blog-container has-scrollbar" style="overflow-y: hidden;">
-        {% for post in posts %}
-        <div class="blog-card" style="max-width: 20px; max-height: 227px;">
-            <a href="{% url 'blog:blog-detail' slug=post.slug %}">
-                <img src="{{post.image.url}}" alt="{{post.title}}"
-                style="max-height: 163px;"
-                    class="blog-banner" width="300">
-            </a>
-
-            <div class="blog-content">
-                <a href="{% url 'blog:blog-detail' slug=post.slug %}" class="blog-category">{{post.title}}</a>
+<section class="blog ">
+    <h5 class="text-center mb-4">
+        <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
+        <span class="px-2">وبلاگ </span>
+        <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
+    </h5>
+    <div class="container">
+        <div class="blog-container has-scrollbar">
+            {% for post in posts %}
+            <div class="blog-card">
                 <a href="{% url 'blog:blog-detail' slug=post.slug %}">
-                    <h3 class="blog-title">{{post.content|truncatechars:30}}</h3>
+                    <img src="{{post.image.url}}" alt="{{post.title}}" class="blog-banner" width="300">
                 </a>
+                <div class="blog-content">
+                    <a href="{% url 'blog:blog-detail' slug=post.slug %}" class="blog-category">{{post.title}}</a>
+                    <a href="{% url 'blog:blog-detail' slug=post.slug %}">
+                        <h3 class="blog-title">{{post.content|truncatechars:30}}</h3>
+                    </a>
+                </div>
             </div>
+            {% empty %}
+            <h2 style="width: 100%; margin: 0 auto; text-align: center;">
+                هنوز بلاگی منتشر نشده
+            </h2>
+            {% endfor %}
         </div>
-        {% endfor %}
-
     </div>
-</div>
-<div class="d-flex justify-content-center mt-5">
-    <a href="{% url 'blog:blog-list' %}" class="btn rounded-3 theme-color text-light">
-        دیدن همه
-    </a>
-</div>
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{% url 'blog:blog-list' %}" class="btn rounded-3 theme-color text-light">
+            دیدن همه
+        </a>
+    </div>
+</section>
