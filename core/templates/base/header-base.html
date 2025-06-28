@@ -1,0 +1,236 @@
+{% load static %}
+<header class="mb-3 position-fixed py-2">
+    <nav class="desktop-navigation-menu d-flex justify-content-center mt-3 px-5 text-center align-items-center">
+        <!--logo in header -- : start-->
+        <div class="mx-1"><a href="{% url 'website:index' %}"><img class="cs-w" alt="من مارکت"
+                    src="{% static 'img/main.logo.jpg' %}"></a></div>
+        <!--logo in header -- : end---->
+
+        <!--menu -- : start-->
+        <div class="container w-center mr-cs mt-2">
+            {% include 'base/category-base.html' %}
+        </div>
+        <!--menu -- : end---->
+
+        <!--icons in header -- :: start-->
+        <div class="d-flex justify-content-between icons-in-header mb-1">
+            <div class="cs-mx show-search-modal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="جست و جو ">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.4em" height="1.4em">
+                    <path fill="currentColor"
+                        d="M10.77 18.3a7.53 7.53 0 1 1 7.53-7.53a7.53 7.53 0 0 1-7.53 7.53m0-13.55a6 6 0 1 0 6 6a6 6 0 0 0-6-6">
+                    </path>
+                    <path fill="currentColor"
+                        d="M20 20.75a.74.74 0 0 1-.53-.22l-4.13-4.13a.75.75 0 0 1 1.06-1.06l4.13 4.13a.75.75 0 0 1 0 1.06a.74.74 0 0 1-.53.22">
+                    </path>
+                </svg>
+            </div>
+            <div class="cs-mx btn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="حساب کاربری">
+                <a class="login-a text-dark" href="{% url 'dashboard:home' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.2em" height="1.2em">
+                        <path fill="currentColor"
+                            d="M8 7.83c-3.08 0-5.59 2.17-5.59 4.84V16h1.27v-3.33c0-2 1.94-3.57 4.32-3.57s4.32 1.6 4.32 3.57V16h1.27v-3.33c0-2.67-2.51-4.84-5.59-4.84m.1-1.22a3.22 3.22 0 0 0 3.1-3.31A3.21 3.21 0 0 0 8.1 0A3.21 3.21 0 0 0 5 3.3a3.22 3.22 0 0 0 3.1 3.31m0-5.32a1.92 1.92 0 0 1 1.81 2a1.93 1.93 0 0 1-1.81 2a1.93 1.93 0 0 1-1.8-2a1.92 1.92 0 0 1 1.8-2">
+                        </path>
+                    </svg>
+                </a>
+            </div>
+            <div class="cs-mx btn position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                title="مورد علاقه ها">
+                <a class="text-dark" href="{% url 'dashboard:customer:wishlist-list' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1.3em" height="1.3em">
+                        <path fill="currentColor"
+                            d="M223 57a58.07 58.07 0 0 0-81.92-.1L128 69.05l-13.09-12.19A58 58 0 0 0 33 139l89.35 90.66a8 8 0 0 0 11.4 0L223 139a58 58 0 0 0 0-82m-11.35 70.76L128 212.6l-83.7-84.92a42 42 0 0 1 59.4-59.4l.2.2l18.65 17.35a8 8 0 0 0 10.9 0l18.65-17.35l.2-.2a42 42 0 1 1 59.36 59.44Z">
+                        </path>
+                    </svg>
+                </a>
+                <!--like and shop number start-->
+                {% if wishlist_total_items == 0 %}
+
+                {% else %}
+
+                <!--like and shop number start-->
+                <span class="number-top-icon num-like">
+                    {{wishlist_total_items}}
+                </span>
+                <!--like and shop number end---->
+                {% endif %}
+                <!--like and shop number end---->
+            </div>
+
+            <div class="cs-mx btn position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                title="سبد خرید">
+                <a class="login-a text-dark" href="{% url 'cart:cart-summery' %}">
+                    <svg class="shop-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="1em"
+                        height="1em">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                            d="M12.182 7.5h-8.18l-1-5h10a.5.5 0 0 1 .49.59l-.82 4a.49.49 0 0 1-.49.41m-9.18-5L2.582.9a.5.5 0 0 0-.49-.4H.502m3.5 7l.42 2.1a.5.5 0 0 0 .49.4h6.09m-.5 3.5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1m-5 0a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1">
+                        </path>
+                    </svg>
+                </a>
+                <!--like and shop number start-->
+
+                {% if cart.get_total_quantity == 0 %}
+
+                {% else %}
+                <span class="number-top-icon number-top-icon-shop">
+                    {{cart.get_total_quantity}}
+                </span>
+                {% endif %}
+
+
+                <!--like and shop number end---->
+            </div>
+        </div>
+        <!--icons in header -- :: end---->
+    </nav>
+
+    <div class="mobile-bottom-navigation align-items-center">
+        <button class="action-btn">
+            <a class="login-a text-dark" href="{% url 'dashboard:home' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="0.9em" height="0.9em">
+                    <path fill="currentColor"
+                        d="M8 7.83c-3.08 0-5.59 2.17-5.59 4.84V16h1.27v-3.33c0-2 1.94-3.57 4.32-3.57s4.32 1.6 4.32 3.57V16h1.27v-3.33c0-2.67-2.51-4.84-5.59-4.84m.1-1.22a3.22 3.22 0 0 0 3.1-3.31A3.21 3.21 0 0 0 8.1 0A3.21 3.21 0 0 0 5 3.3a3.22 3.22 0 0 0 3.1 3.31m0-5.32a1.92 1.92 0 0 1 1.81 2a1.93 1.93 0 0 1-1.81 2a1.93 1.93 0 0 1-1.8-2a1.92 1.92 0 0 1 1.8-2">
+                    </path>
+                </svg>
+            </a>
+            <p class="tol-mb">
+                حساب کاربری
+            </p>
+        </button>
+        <button class="action-btn">
+            <a class="text-dark" href="{% url 'shop:product-list' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
+                    <path fill="currentColor"
+                        d="M3.5 3.5h7v7h-7zm1 1v5zm9-1h7v7h-7zm1 1v5zm-11 9h7v7h-7zm1 1v5zm12-1h1v3h3v1h-3v3h-1v-3h-3v-1h3zm-2-9v5h5v-5zm-10 0v5h5v-5zm0 10v5h5v-5z">
+                    </path>
+                </svg>
+            </a>
+            <p class="tol-mb">
+                فروشگاه
+            </p>
+        </button>
+        <button class="action-btn">
+            <a class="text-dark" href="{% url 'dashboard:customer:wishlist-list' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="0.9em" height="0.9em">
+                    <path fill="currentColor"
+                        d="M223 57a58.07 58.07 0 0 0-81.92-.1L128 69.05l-13.09-12.19A58 58 0 0 0 33 139l89.35 90.66a8 8 0 0 0 11.4 0L223 139a58 58 0 0 0 0-82m-11.35 70.76L128 212.6l-83.7-84.92a42 42 0 0 1 59.4-59.4l.2.2l18.65 17.35a8 8 0 0 0 10.9 0l18.65-17.35l.2-.2a42 42 0 1 1 59.36 59.44Z">
+                    </path>
+                </svg>
+            </a>
+            <p class="tol-mb">
+                مورد علاقه
+            </p>
+        </button>
+        <button class="action-btn show-search-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="0.9em" height="0.9em">
+                <path fill="currentColor"
+                    d="M10.77 18.3a7.53 7.53 0 1 1 7.53-7.53a7.53 7.53 0 0 1-7.53 7.53m0-13.55a6 6 0 1 0 6 6a6 6 0 0 0-6-6">
+                </path>
+                <path fill="currentColor"
+                    d="M20 20.75a.74.74 0 0 1-.53-.22l-4.13-4.13a.75.75 0 0 1 1.06-1.06l4.13 4.13a.75.75 0 0 1 0 1.06a.74.74 0 0 1-.53.22">
+                </path>
+            </svg>
+            <p class="tol-mb">
+                جست و جو
+            </p>
+        </button>
+        <button class="action-btn">
+            <a class="text-dark" href="{% url 'website:index' %}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="0.8em" height="0.8em">
+                    <path fill="currentColor"
+                        d="M469.666 216.45L271.078 33.749a34 34 0 0 0-47.062.98L41.373 217.373L32 226.745V496h176V328h96v168h176V225.958ZM248.038 56.771c.282 0 .108.061-.013.18c-.125-.119-.269-.18.013-.18M448 464H336V328a32 32 0 0 0-32-32h-96a32 32 0 0 0-32 32v136H64V240L248.038 57.356c.013-.012.014-.023.024-.035L448 240Z">
+                    </path>
+                </svg>
+            </a>
+            <p class="tol-mb">
+                خانه
+            </p>
+        </button>
+    </div>
+
+    <nav class="mobile-navigation-menu has-scrollbar " data-mobile-menu>
+        <div class="menu-top">
+            <h2 class="menu-title">منو</h2>
+
+            <button class="menu-close-btn" data-mobile-menu-close-btn>
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+        <ul class="mobile-menu-category-list">
+            <li class="menu-category">
+                <button class="accordion-menu" data-accordion-btn>
+                    <p class="menu-title">دسته بندی</p>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em" height="1.5em">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="1.5" d="M6 12h6m6 0h-6m0 0V6m0 6v6"></path>
+                        </svg>
+                    </div>
+                </button>
+                <ul class="submenu-category-list " data-accordion>
+                    <li class="submenu-category"><a href="#" class="submenu-title">موبایل</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">تبلت</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">لپ تاپ</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">مانیتور</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">کنسول بازی</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">کامپیوتر همه کاره</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">اسپیکر</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">هدست و هدفون</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">ساعت و مچ بند هوشمند</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">گجت خانگی</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">پاور بانک</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">ذخیره ساز اطلاعات</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">موس و کیبورد</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">شارژر و مبدل موبایل</a></li>
+                    <li class="submenu-category"><a href="#" class="submenu-title">قاب و گلس</a></li>
+                </ul>
+            </li>
+            <li class="menu-category"><a href="{% url 'website:contact' %}" class="menu-title">تماس با ما</a></li>
+            <li class="menu-category"><a href="{% url 'website:about' %}" class="menu-title">درباره ما</a></li>
+            <li class="menu-category"><a href="{% url 'blog:blog-list' %}" class="menu-title">بلاگ</a></li>
+        </ul>
+        <div class="menu-bottom">
+            <ul class="menu-social-container">
+                <li>
+
+                </li>
+                <li>
+
+                </li>
+                <li>
+
+                </li>
+                <li>
+
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <nav class="d-flex flex-column justify-content-center w-center search-mb position-fixed bg-cs-2 py-2 px-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <div class="cs-mx btn position-relative">
+                    <a href="{% url 'cart:cart-summery' %}">
+                        <svg class="shop-icon text-dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
+                            width="1.4em" height="1.4em">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                d="M12.182 7.5h-8.18l-1-5h10a.5.5 0 0 1 .49.59l-.82 4a.49.49 0 0 1-.49.41m-9.18-5L2.582.9a.5.5 0 0 0-.49-.4H.502m3.5 7l.42 2.1a.5.5 0 0 0 .49.4h6.09m-.5 3.5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1m-5 0a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1">
+                            </path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="mx-1"><img class="cs-w-2" alt="من مارکت" src="{% static 'img/main.logo.jpg' %}"></div>
+            </div>
+
+            <button class="action-btn" data-mobile-menu-open-btn>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.5em" height="1.5em">
+                    <path fill="none" stroke="currentColor" d="M2 12.5h12M2 8h12M2 3.5h12"></path>
+                </svg>
+            </button>
+
+        </div>
+    </nav>
+
+</header>

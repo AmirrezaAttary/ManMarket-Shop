@@ -1,0 +1,19 @@
+<section class="search-box">
+    <span class="close-modal mx-5">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
+            <path fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="round"
+                d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+    </span>
+    <h5 class="py-3 text-center">دنبال چی میگردی ؟</h5>
+    <form action="{% url 'shop:product-list' %}" class="text-center position-relative container">
+        <input class="form-control my-inp" name="q" type="search" placeholder="مثلا آیفون 16 ">
+        <div>
+            <button class="sub-btn" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" d="m28 27l-7.5-7.5M5 13a9 9 0 1 0 18 0a9 9 0 0 0-18 0"></path>
+                </svg></button>
+        </div>
+    </form>
+</section>
