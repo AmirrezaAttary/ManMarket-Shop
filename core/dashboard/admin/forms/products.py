@@ -14,19 +14,22 @@ class ProductForm(forms.ModelForm):
             "brief_description",
             "status",
             'brand',
-
+            'warranty',
+            'brief_title',
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['slug'].widget.attrs['class'] = 'form-control'
-        self.fields['category'].widget.attrs['class'] = 'form-control'
-        self.fields['brand'].widget.attrs['class'] = 'form-control'
+        self.fields['category'].widget.attrs['class'] = 'form-select'
+        self.fields['brand'].widget.attrs['class'] = 'form-select'
         self.fields['image'].widget.attrs['class'] = 'form-control'
         self.fields['brief_description'].widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-select'
+        self.fields['warranty'].widget.attrs['class'] = 'form-control'
+        self.fields['brief_title'].widget.attrs['class'] = 'form-control'
         
         
 class ProductImageForm(forms.ModelForm):

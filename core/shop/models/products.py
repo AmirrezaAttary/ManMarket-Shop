@@ -18,6 +18,7 @@ class ProductModel(models.Model):
     brief_description = models.TextField(null=True,blank=True)
     product_view = models.IntegerField(default=0)
     sales_count = models.PositiveIntegerField(default=0)
+    warranty = models.CharField(max_length=100, null=True, blank=True)
     
     status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.draft.value)
     
