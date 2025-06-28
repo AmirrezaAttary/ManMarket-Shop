@@ -127,6 +127,7 @@ TEMPLATES = [
                 'cart.context_processors.cart_processor',
                 'shop.context_processors.wishlist_total_items',
                 'shop.context_processors.brand_list_image',
+                'shop.context_processors.category_list_image',
             ],
         },
     },

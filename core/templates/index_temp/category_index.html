@@ -1,50 +1,18 @@
 {% load static %}
 <section class="w-center py-2">
     <div class="d-flex justify-content-center flex-wrap">
-        <a href="{% url 'shop:product-list' %}?category=گوشی-موبایل" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/phone.webp' %}" alt="موبایل">
+
+        {% for category in categorys %}
+
+        {% if category.image %}
+        <a href="{% url 'shop:product-list' %}?category={{category.slug}}" class="slide-item min-mr my-3 mx-3">
+            <img src="{{category.image.url}}" alt="{{category.title}}">
             <div class="category-circle"></div>
-            <p class="category-name">موبایل</p>
+            <p class="category-name">{{category.title}}</p>
         </a>
-        <a href="{% url 'shop:product-list' %}?category=تبلت" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/laptop.webp' %}" alt="تبلت">
-            <div class="category-circle"></div>
-            <p class="category-name">تبلت</p>
-        </a>
-        <a href="{% url 'shop:product-list' %}?category=لپ-تاپ" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/laptop.webp' %}" alt="لپ تاپ">
-            <div class="category-circle"></div>
-            <p class="category-name">لپ تاپ</p>
-        </a>
-        <a href="{% url 'shop:product-list' %}?category=مانیتور" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/monitor.webp' %}" alt="مانیتور">
-            <div class="category-circle"></div>
-            <p class="category-name">مانیتور</p>
-        </a>
-        <a href="{% url 'shop:product-list' %}?category=کنسول-بازی" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/console.webp' %}" alt="کنسول بازی">
-            <div class="category-circle"></div>
-            <p class="category-name">کنسول بازی</p>
-        </a>
-        <a href="{% url 'shop:product-list' %}?category=اسپیکر" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/speeker.webp' %}" alt="اسپیکر">
-            <div class="category-circle"></div>
-            <p class="category-name">اسپیکر</p>
-        </a>
-        <a href="{% url 'shop:product-list' %}?category=هدست-هدفون" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/hedset.webp' %}" alt="هدست هدفون">
-            <div class="category-circle"></div>
-            <p class="category-name">هدست هدفون</p>
-        </a>
-        <a href="{% url 'shop:product-list' %}?category=ساعت-هوشمند" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/acssesory.webp' %} " alt="ساعت هوشمند">
-            <div class="category-circle"></div>
-            <p class="category-name">ساعت هوشمند</p>
-        </a>
-        <a href="{% url 'shop:product-list' %}?category=لوازم-جانبی" class="slide-item min-mr my-3 mx-3">
-            <img src="{% static 'img/axe/acssesory2.webp' %}" alt="لوازم جانبی">
-            <div class="category-circle"></div>
-            <p class="category-name">لوازم جانبی</p>
-        </a>
+
+        {% endif %}
+
+        {% endfor %}
     </div>
 </section>

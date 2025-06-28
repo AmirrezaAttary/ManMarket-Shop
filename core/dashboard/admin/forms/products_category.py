@@ -8,12 +8,14 @@ class ProductCategoryModelForm(forms.ModelForm):
         fields = [
             'title',
             'slug',
+            'image'
         ] 
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['slug'].widget.attrs['class'] = 'form-control'
+        self.fields['image'].widget.attrs['class'] = 'form-control'
 
 
             

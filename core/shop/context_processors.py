@@ -1,4 +1,4 @@
-from .models import WishlistProductModel,Brand
+from .models import WishlistProductModel,Brand,ProductCategoryModel
 
 def wishlist_total_items(request):
     if request.user.is_authenticated:
@@ -14,4 +14,12 @@ def brand_list_image(request):
 
     return {
         'brands': brands
+    }
+
+
+def category_list_image(request):
+    category = ProductCategoryModel.objects.all()
+
+    return {
+        'categorys': category
     }

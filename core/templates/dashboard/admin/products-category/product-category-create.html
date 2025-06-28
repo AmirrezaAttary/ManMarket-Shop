@@ -35,6 +35,12 @@
                             {{form.slug}}
                         </div>
                     </div>
+                    <div class="row">
+                        <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                            <label>عکس دسته بندی</label>
+                            {{form.image}}
+                        </div>
+                    </div>ّ
 
                     <!-- End Body -->
 
@@ -42,7 +48,8 @@
                     <div class="card-footer pt-0">
                         <div class="d-flex justify-content-end gap-3">
                             <a class="btn btn-secondary" href="{% url 'dashboard:admin:category-list' %}">بازگشت</a>
-                            <button class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;" type="submit">ذخیره تغییرات</button>
+                            <button class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;"
+                                type="submit">ذخیره تغییرات</button>
                         </div>
                     </div>
             </form>
