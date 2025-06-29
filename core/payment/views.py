@@ -14,7 +14,7 @@ from django.views.decorators.cache import cache_page
 
 # payment/views.py
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class PaymentVerifyView(View):
     def get(self, request, *args, **kwargs):
         authority_id = request.GET.get("Authority")

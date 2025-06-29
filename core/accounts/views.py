@@ -16,13 +16,13 @@ from django.views.decorators.cache import cache_page
 
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch') 
+
 class LoginView(auth_views.LoginView):
     template_name = "accounts/login.html"
     form_class = AuthenticationForm
     redirect_authenticated_user = True
     
-@method_decorator(cache_page(60 * 15), name='dispatch') 
+
 class RegisterView(TemplateView):
     template_name = 'accounts/register.html'
 

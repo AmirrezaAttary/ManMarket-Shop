@@ -6,7 +6,7 @@ from taggit.models import Tag
 # Create your views here.
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch') 
+
 class BlogListView(ListView):
     template_name = 'blog/blog.html'
     queryset = Post.objects.filter(status=True)  # This should be replaced with actual queryset logic
@@ -17,7 +17,7 @@ class BlogListView(ListView):
         context['tags'] = Tag.objects.all()
         return context
     
-@method_decorator(cache_page(60 * 15), name='dispatch') 
+
 class BlogDetailView(DetailView):
     template_name = 'blog/blog_detail.html'
       # This should be replaced with actual queryset logic

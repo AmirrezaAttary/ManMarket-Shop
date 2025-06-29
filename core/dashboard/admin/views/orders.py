@@ -7,7 +7,7 @@ from dashboard.admin.forms import *
 from django.core.exceptions import FieldError
 from order.models import OrderModel,OrderStatusType
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminOrderListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/orders/order-list.html"
     paginate_by = 10
@@ -34,14 +34,14 @@ class AdminOrderListView(LoginRequiredMixin, HasAdminAccessPermission, ListView)
         context["status_types"] = OrderStatusType.choices
         return context
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminOrderDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):
     template_name = "dashboard/admin/orders/order-detail.html"
 
     def get_queryset(self):
         return OrderModel.objects.all()
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminOrderInvoiceView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):
     template_name = "dashboard/admin/orders/order-invoice.html"
 

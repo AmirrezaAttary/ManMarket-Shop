@@ -15,7 +15,7 @@ from django.core.exceptions import FieldError
 from shop.models import Brand
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductBrandListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/products-brand/brand-list.html"
     paginate_by = 10
@@ -39,7 +39,7 @@ class AdminProductBrandListView(LoginRequiredMixin, HasAdminAccessPermission, Li
         context["total_items"] = self.get_queryset().count()
         return context
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductBrandCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/products-brand/product-brand-create.html"
     form_class = BrandModelForm
@@ -49,7 +49,7 @@ class AdminProductBrandCreateView(LoginRequiredMixin, HasAdminAccessPermission, 
         return reverse_lazy('dashboard:admin:brand-list')
     
 
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminProductBrandDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-brand/product-brand-delete.html"
     queryset = Brand.objects.all()
@@ -59,7 +59,7 @@ class AdminProductBrandDeleteView(LoginRequiredMixin, HasAdminAccessPermission, 
         return reverse_lazy('dashboard:admin:brand-list')
     
 
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminProductBrandEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/products-brand/product-brand-edit.html"
     queryset = Brand.objects.all()

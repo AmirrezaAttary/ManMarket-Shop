@@ -13,7 +13,7 @@ def to_jalali(date_obj):
         return ""
     return jdatetime.datetime.fromgregorian(datetime=date_obj).strftime('%Y/%m/%d')
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, ListView):
     template_name = "dashboard/customer/orders/order-list.html"
     # paginate_by = 5
@@ -45,14 +45,14 @@ class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, Lis
             order.jalali_updated_date = to_jalali(order.updated_date)
         return context
  
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class CustomerOrderDetailView(LoginRequiredMixin, HasCustomerAccessPermission, DetailView):
     template_name = "dashboard/customer/orders/order-detail.html"
 
     def get_queryset(self):
         return OrderModel.objects.filter(user=self.request.user)
 
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class CustomerOrderInvoiceView(LoginRequiredMixin, HasCustomerAccessPermission, DetailView):
     template_name = "dashboard/customer/orders/order-invoice.html"
 

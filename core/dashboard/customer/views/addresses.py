@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.core.exceptions import FieldError
 from order.models import UserAddressModel
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class CustomerAddressListView(LoginRequiredMixin, HasCustomerAccessPermission, ListView):
     template_name = "dashboard/customer/addresses/address-list.html"
 
@@ -29,7 +29,7 @@ class CustomerAddressListView(LoginRequiredMixin, HasCustomerAccessPermission, L
         return queryset
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class CustomerAddressCreateView(LoginRequiredMixin, HasCustomerAccessPermission, SuccessMessageMixin, CreateView):
     template_name = "dashboard/customer/addresses/address-create.html"
     
@@ -49,7 +49,7 @@ class CustomerAddressCreateView(LoginRequiredMixin, HasCustomerAccessPermission,
         return reverse_lazy("dashboard:customer:address-list")
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class CustomerAddressEditView(LoginRequiredMixin, HasCustomerAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/customer/addresses/address-edit.html"
 
@@ -63,7 +63,7 @@ class CustomerAddressEditView(LoginRequiredMixin, HasCustomerAccessPermission, S
         return reverse_lazy("dashboard:customer:address-list")
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class CustomerAddressDeleteView(LoginRequiredMixin, HasCustomerAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/customer/addresses/address-delete.html"
     

@@ -12,17 +12,17 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class WalletChargeSuccessView(TemplateView):
     template_name = "wallets/charge_success.html"
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class WalletChargeFailedView(TemplateView):
     template_name = "wallets/charge_failed.html"
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class WalletChargeView(HasCustomerAccessPermission,View):
     def get(self, request):
         form = WalletChargeForm()
@@ -52,7 +52,7 @@ class WalletChargeView(HasCustomerAccessPermission,View):
                 })
         return render(request, "wallets/wallet_charge.html", {"form": form})
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class WalletChargeRequestView(View):
     def post(self, request):
         amount = int(request.POST.get("amount"))  # از فرم بگیر

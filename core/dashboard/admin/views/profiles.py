@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminSecurityEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin, auth_views.PasswordChangeView):
     template_name = "dashboard/admin/profile/security-edit.html"
     form_class = AdminPasswordChangeForm
@@ -20,7 +20,7 @@ class AdminSecurityEditView(LoginRequiredMixin, HasAdminAccessPermission,Success
     success_message = "بروز رسانی پسورد با موفقیت انجام شد"
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProfileEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin,UpdateView):
     template_name = "dashboard/admin/profile/profile-edit.html"
     form_class = AdminProfileEditForm

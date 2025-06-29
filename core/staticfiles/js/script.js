@@ -377,30 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (themeToggleButtonTest) { themeToggleButtonTest.addEventListener('click', () => { const currentTheme = htmlElement.hasAttribute('data-theme') ? 'dark' : 'light'; const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; applyTheme(newTheme); }); }
 
 
-    const quickViewModalHTML = `
-        <div id="productQuickViewModal" class="modal" style="display: none; opacity: 0; transition: opacity 0.3s ease-in-out;">
-            <div class="modal-content" style="transform: scale(0.95); transition: transform 0.3s ease-in-out;">
-                <button type="button" class="close-button" aria-label="Close">×</button>
-                <div class="modal-body">
-                    <div class="modal-image-container">
-                         <img id="modalProductImage" src="" alt="تصویر محصول">
-                    </div>
-                    <div class="modal-details-container">
-                        <h3 id="modalProductName"></h3>
-                        <div id="modalProductPriceContainer">
-                            <!-- Price will be dynamically set using a pre-created span -->
-                        </div>
-                        <div id="modalProductColors">
-                            <h4>رنگ‌های موجود:</h4>
-                            <p id="modalColorInfo">برای نمایش رنگ‌ها، داده مربوطه را به محصول اضافه کنید.</p>
-                        </div>
-                        <a href="single.product.html" id="modalViewDetailsLink" class="view-details-button bg-danger">مشاهده جزئیات کامل محصول</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', quickViewModalHTML);
+
 
     quickViewModalInstance = document.getElementById('productQuickViewModal');
     const quickViewCloseButton = quickViewModalInstance.querySelector('.close-button');

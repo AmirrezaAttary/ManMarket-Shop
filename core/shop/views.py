@@ -10,7 +10,7 @@ from shop.models import (ProductModel, ProductStatusType,
 from review.models import ReviewModel,ReviewStatusType
 # Create your views here.
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class ShopListProductView(ListView):
     template_name = 'shop/product_list.html'
     paginate_by = 12
@@ -91,7 +91,7 @@ class ShopListProductView(ListView):
         return context
     
 
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class ShopDetailProductView(DetailView):
     template_name = 'shop/product_detail.html'
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
@@ -133,7 +133,7 @@ class ShopDetailProductView(DetailView):
         return context
     
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AddOrRemoveWishlistView(LoginRequiredMixin, View):
 
 

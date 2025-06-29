@@ -7,21 +7,21 @@ from website.models import Contact
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class ContactListView(LoginRequiredMixin, ListView):
     model = Contact
     template_name = 'dashboard/admin/contact/contact_list.html'
     context_object_name = 'contacts'
     paginate_by = 12  # ← تعداد آیتم در هر صفحه
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class ContactDetailView(LoginRequiredMixin, DetailView):
     model = Contact
     template_name = 'dashboard/admin/contact/contact_detail.html'
     context_object_name = 'contact'
     
 
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class ContactDeleteView(LoginRequiredMixin, DeleteView):
     model = Contact
     template_name = 'dashboard/admin/contact/contact_confirm_delete.html'

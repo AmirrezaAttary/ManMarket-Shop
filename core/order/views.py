@@ -26,7 +26,7 @@ from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
     template_name = "order/checkout.html"
     form_class = CheckOutForm
@@ -169,16 +169,16 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         return context
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class OrderCompletedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):
     template_name = "order/completed.html"
     
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class OrderFailedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):
     template_name = "order/failed.html"
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class ValidateCouponView(LoginRequiredMixin, HasCustomerAccessPermission, View):
 
     def post(self, request, *args, **kwargs):

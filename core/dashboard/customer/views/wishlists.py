@@ -12,7 +12,7 @@ from django.core.exceptions import FieldError
 from shop.models import WishlistProductModel
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class CustomerWishlistListView(LoginRequiredMixin, HasCustomerAccessPermission, ListView):
     template_name = "dashboard/customer/wishlists/wishlist-list.html"
     paginate_by = 5
@@ -37,7 +37,7 @@ class CustomerWishlistListView(LoginRequiredMixin, HasCustomerAccessPermission, 
         return context
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class CustomerWishlistDeleteView(LoginRequiredMixin, HasCustomerAccessPermission, SuccessMessageMixin, DeleteView):
     http_method_names = ["post"]
     success_url = reverse_lazy('dashboard:customer:wishlist-list')

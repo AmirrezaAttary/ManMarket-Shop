@@ -17,7 +17,7 @@ from order.models import CouponModel
 from django.core.exceptions import FieldError
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminCouponListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/coupons/coupon-list.html"
     paginate_by = 10
@@ -42,7 +42,7 @@ class AdminCouponListView(LoginRequiredMixin, HasAdminAccessPermission, ListView
         return context
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminCouponCreateView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, CreateView):
     template_name = "dashboard/admin/coupons/coupon-create.html"
     queryset = CouponModel.objects.all()
@@ -58,7 +58,7 @@ class AdminCouponCreateView(LoginRequiredMixin, HasAdminAccessPermission, Succes
         return reverse_lazy("dashboard:admin:coupon-list")
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminCouponEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/coupons/coupon-edit.html"
     queryset = CouponModel.objects.all()
@@ -72,7 +72,7 @@ class AdminCouponEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessM
         context = super().get_context_data(**kwargs)
         return context
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminCouponDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/coupons/coupon-delete.html"
     queryset = CouponModel.objects.all()

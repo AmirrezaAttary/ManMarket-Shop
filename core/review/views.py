@@ -8,7 +8,7 @@ from .forms import SubmitReviewForm
 from .models import ReviewModel
 from django.contrib import messages
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class SubmitReviewView(LoginRequiredMixin, CreateView):
     http_method_names = ["post"]
     model = ReviewModel

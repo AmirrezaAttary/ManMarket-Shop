@@ -7,11 +7,11 @@ from website.models import Contact
 from django.urls import reverse_lazy
 # Create your views here.
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class IndexView(TemplateView):
     template_name = 'website/index.html'
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class ContactView(SuccessMessageMixin,CreateView):
     template_name = 'website/contact.html'
     form_class = ContatctForm
@@ -20,10 +20,10 @@ class ContactView(SuccessMessageMixin,CreateView):
     success_message = 'درخواست شما ثبت شد\nبزودی با شما تماس گرفته میشود'
     
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AboutView(TemplateView):
     template_name = 'website/about.html'
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class CollectionView(TemplateView):
     template_name = 'website/collection.html'

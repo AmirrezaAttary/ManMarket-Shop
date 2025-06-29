@@ -10,7 +10,7 @@ from .tasks import update_all_hamrah_products
 from django.contrib import messages  
 from django.shortcuts import redirect
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class GetColorAndPrice(View):
 
     def post(self, request, *args, **kwargs):

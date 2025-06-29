@@ -8,7 +8,7 @@ from .models import PriceSpecification
 from celery import chord
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class GetSpecification(View):
 
     def post(self, request, *args, **kwargs):
@@ -36,7 +36,7 @@ class GetSpecification(View):
         return reverse("dashboard:admin:product-list")  # یا هر آدرس دیگری
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class GetAllSpecifications(View):
     def get(self, request, *args, **kwargs):
         all_products = PriceSpecification.objects.select_related("product").all()

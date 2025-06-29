@@ -15,7 +15,7 @@ from django.core.exceptions import FieldError
 from blog.models import Post,Category
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminBlogListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/blog/blog-list.html"
     paginate_by = 10
@@ -42,7 +42,7 @@ class AdminBlogListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
         context["categories"] = Category.objects.all()
         return context
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminBlogCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/blog/blog-create.html"
     form_class = BlogPostForm
@@ -52,7 +52,7 @@ class AdminBlogCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateVi
         return reverse_lazy('dashboard:admin:blog-list')
     
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminBlogDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/blog/blog-delete.html"
     queryset = Post.objects.all()
@@ -61,7 +61,7 @@ class AdminBlogDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessM
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:blog-list')
     
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminBlogEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/blog/blog-edit.html"
     queryset = Post.objects.all()

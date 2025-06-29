@@ -20,7 +20,7 @@ from pricegethamrh.models import PriceGetHamrh
 from getspecification.models import PriceSpecification
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/products/product-list.html"
     paginate_by = 10
@@ -73,7 +73,7 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         return context
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductCreateView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, CreateView):
     template_name = "dashboard/admin/products/product-create.html"
     queryset = ProductModel.objects.all()
@@ -89,7 +89,7 @@ class AdminProductCreateView(LoginRequiredMixin, HasAdminAccessPermission, Succe
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:product-list")
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/products/product-edit.html"
     queryset = ProductModel.objects.all()
@@ -113,7 +113,7 @@ class AdminProductEditView(LoginRequiredMixin, HasAdminAccessPermission, Success
         return obj
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products/product-delete.html"
     queryset = ProductModel.objects.all()

@@ -15,7 +15,7 @@ from django.contrib import messages
 from shop.models import ProductModel,ProductColorInventory
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductAddColorView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/products-color/product-color-create.html"
     form_class = ProductColorInventoryForm
@@ -55,7 +55,7 @@ class AdminProductAddColorView(LoginRequiredMixin, HasAdminAccessPermission, Cre
         return redirect(self.get_success_url())
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductEditColorView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/products-color/product-color-edit.html"
     queryset = ProductColorInventory.objects.all()
@@ -66,7 +66,7 @@ class AdminProductEditColorView(LoginRequiredMixin, HasAdminAccessPermission, Su
         return reverse_lazy("dashboard:admin:product-edit", kwargs={"pk": self.kwargs['prduct_pk']})
 
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminProductColorDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-color/product-color-delete.html"
     queryset = ProductColorInventory.objects.all()

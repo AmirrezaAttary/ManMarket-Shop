@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.core.exceptions import FieldError
 from review.models import ReviewModel,ReviewStatusType
 
-@method_decorator(cache_page(60 * 15), name='dispatch')
+
 class AdminReviewListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/reviews/review-list.html"
     paginate_by = 10
@@ -36,7 +36,7 @@ class AdminReviewListView(LoginRequiredMixin, HasAdminAccessPermission, ListView
         context["status_types"] = ReviewStatusType.choices
         return context
 
-@method_decorator(cache_page(60 * 15), name='dispatch')    
+  
 class AdminReviewEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/reviews/review-edit.html"
     queryset = ReviewModel.objects.all()
