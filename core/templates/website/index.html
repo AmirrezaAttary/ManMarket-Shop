@@ -8,12 +8,12 @@
 {% endblock title %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="{% static 'cdn/swiper-bundle.min.css' %}" />
+<link rel="stylesheet" href="{% static 'cdn/sweetalert2.min.css' %}">
+
+<link rel="stylesheet" href="{% static 'cdn/owl.carousel.min.css' %}">
 <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    href="{% static 'cdn/owl.theme.default.min.css' %}">
 {% endblock extra_css %}
 
 {% block content %}
@@ -142,7 +142,8 @@
 {% endblock content %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{% static 'cdn/sweetalert2@11.js' %}"></script>
+<script src="{% static 'cdn/swiper-bundle.min.js' %}"></script>
 <script src="{% static 'js/slider.in.index.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="{% static 'cdn/owl.carousel.min.js' %}"></script>
 {% endblock extra_js %}
