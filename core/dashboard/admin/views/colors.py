@@ -4,6 +4,8 @@ from django.views.generic import (
     DeleteView,
     CreateView
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import ColorModelForm
@@ -13,7 +15,7 @@ from django.core.exceptions import FieldError
 from shop.models import Color
 
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/color/color-list.html"
     paginate_by = 10
@@ -37,6 +39,7 @@ class AdminColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListView)
         context["total_items"] = self.get_queryset().count()
         return context
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminColorCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/color/color-create.html"
     form_class = ColorModelForm
@@ -45,6 +48,7 @@ class AdminColorCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateV
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:color-list')
     
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminColorDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/color/color-delete.html"
     queryset = Color.objects.all()
@@ -52,7 +56,8 @@ class AdminColorDeleteView(LoginRequiredMixin, HasAdminAccessPermission, Success
     
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:color-list')
-    
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminColorEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/color/color-edit.html"
     queryset = Color.objects.all()

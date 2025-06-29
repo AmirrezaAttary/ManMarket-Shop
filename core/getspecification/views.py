@@ -1,10 +1,14 @@
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from .tasks import fetch_and_save_specifications, all_specifications_updated
 from .models import PriceSpecification
 from celery import chord
 
+
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class GetSpecification(View):
 
     def post(self, request, *args, **kwargs):
@@ -32,6 +36,7 @@ class GetSpecification(View):
         return reverse("dashboard:admin:product-list")  # یا هر آدرس دیگری
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class GetAllSpecifications(View):
     def get(self, request, *args, **kwargs):
         all_products = PriceSpecification.objects.select_related("product").all()

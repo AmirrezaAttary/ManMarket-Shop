@@ -1,23 +1,21 @@
 from django.views.generic import (
-    View,
-    TemplateView,
     UpdateView,
     ListView,
     DeleteView,
     CreateView
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import BlogCategoryModelForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from blog.models import Category
 
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminBlogCategoryListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/blog-category/category-list.html"
     paginate_by = 10
@@ -41,6 +39,7 @@ class AdminBlogCategoryListView(LoginRequiredMixin, HasAdminAccessPermission, Li
         context["total_items"] = self.get_queryset().count()
         return context
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminBlogCategoryCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/blog-category/blog-category-create.html"
     form_class = BlogCategoryModelForm
@@ -48,7 +47,9 @@ class AdminBlogCategoryCreateView(LoginRequiredMixin, HasAdminAccessPermission, 
 
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:blog-category-list')
-    
+
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminBlogCategoryDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/blog-category/blog-category-delete.html"
     queryset = Category.objects.all()
@@ -57,6 +58,7 @@ class AdminBlogCategoryDeleteView(LoginRequiredMixin, HasAdminAccessPermission, 
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:blog-category-list')
     
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminBlogCategoryEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/blog-category/blog-category-edit.html"
     queryset = Category.objects.all()

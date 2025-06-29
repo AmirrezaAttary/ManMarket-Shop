@@ -1,15 +1,13 @@
-from django.views.generic import UpdateView,DeleteView,CreateView,ListView,DetailView
+from django.views.generic import ListView,DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from dashboard.admin.forms import *
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from order.models import OrderModel,OrderStatusType
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminOrderListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/orders/order-list.html"
     paginate_by = 10
@@ -36,12 +34,14 @@ class AdminOrderListView(LoginRequiredMixin, HasAdminAccessPermission, ListView)
         context["status_types"] = OrderStatusType.choices
         return context
     
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminOrderDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):
     template_name = "dashboard/admin/orders/order-detail.html"
 
     def get_queryset(self):
         return OrderModel.objects.all()
     
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminOrderInvoiceView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):
     template_name = "dashboard/admin/orders/order-invoice.html"
 

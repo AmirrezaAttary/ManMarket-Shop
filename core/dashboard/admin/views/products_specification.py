@@ -1,25 +1,23 @@
 from django.views.generic import (
-    View,
-    TemplateView,
     UpdateView,
     ListView,
     DeleteView,
     CreateView
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import SpecificationForm,SpecificationCreateForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from getspecification.models import PriceSpecification
 from shop.models import ProductSpecification
 from django.shortcuts import get_object_or_404
 
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminGetSpecificationListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/products-specification/specification-list.html"
     paginate_by = 10
@@ -43,6 +41,7 @@ class AdminGetSpecificationListView(LoginRequiredMixin, HasAdminAccessPermission
         context["total_items"] = self.get_queryset().count()
         return context
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminGetSpecificationCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/products-specification/product-specification-create.html"
     form_class = SpecificationForm
@@ -50,7 +49,8 @@ class AdminGetSpecificationCreateView(LoginRequiredMixin, HasAdminAccessPermissi
 
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:specification-list')
-    
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminGetSpecificationDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-specification/product-specification-delete.html"
     queryset = PriceSpecification.objects.all()
@@ -58,7 +58,8 @@ class AdminGetSpecificationDeleteView(LoginRequiredMixin, HasAdminAccessPermissi
     
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:specification-list')
-    
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminGetSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/products-specification/product-specification-edit.html"
     queryset = PriceSpecification.objects.all()
@@ -74,6 +75,7 @@ class AdminGetSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission
     
 #############################################################################################################
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminSpecificationAddView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/products-specification/specification-create.html"
     form_class = SpecificationCreateForm
@@ -97,7 +99,7 @@ class AdminSpecificationAddView(LoginRequiredMixin, HasAdminAccessPermission, Cr
         })
     
     
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/products-specification/specification-edit.html"
     queryset = ProductSpecification.objects.all()
@@ -116,6 +118,7 @@ class AdminSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission, S
         return reverse_lazy("dashboard:admin:specification-edit", kwargs={"pk": spec.id})
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminSpecificationDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-specification/specification-delete.html"
     queryset = ProductSpecification.objects.all()

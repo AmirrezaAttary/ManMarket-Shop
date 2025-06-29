@@ -3,6 +3,9 @@ from django.views.generic import View, TemplateView
 from django.http import JsonResponse
 from cart.cart import CartSession
 from django.contrib import messages
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 # Create your views here.
 
 class SessionAddProduct(View):
@@ -19,7 +22,7 @@ class SessionAddProduct(View):
             cart.merge_session_cart_in_db(request.user)
         return JsonResponse({'cart':cart.get_cart_dict()})
     
-
+@method_decorator(cache_page(60 * 15), name='dispatch') 
 class SessionCartSummry(TemplateView):
     template_name = 'cart/cart-summery.html'
     
@@ -63,7 +66,7 @@ class SessionUpdateProductQuantityView(View):
             cart.update_product_quantity(product_id,color_id,quantity)
         return JsonResponse({"cart":cart.get_cart_dict(),"total_quantity":cart.get_total_quantity()})
     
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class SessionCartSummryView(TemplateView):
     template_name = "cart/cart-summary.html"
     

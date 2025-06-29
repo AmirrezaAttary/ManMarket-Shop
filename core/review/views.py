@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms.models import BaseModelForm
-from django.http import HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView
@@ -8,6 +8,7 @@ from .forms import SubmitReviewForm
 from .models import ReviewModel
 from django.contrib import messages
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class SubmitReviewView(LoginRequiredMixin, CreateView):
     http_method_names = ["post"]
     model = ReviewModel

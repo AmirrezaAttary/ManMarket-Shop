@@ -1,23 +1,21 @@
 from django.views.generic import (
-    View,
-    TemplateView,
     UpdateView,
     ListView,
     DeleteView,
     CreateView
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import BrandModelForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from shop.models import Brand
 
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminProductBrandListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/products-brand/brand-list.html"
     paginate_by = 10
@@ -41,6 +39,7 @@ class AdminProductBrandListView(LoginRequiredMixin, HasAdminAccessPermission, Li
         context["total_items"] = self.get_queryset().count()
         return context
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminProductBrandCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/products-brand/product-brand-create.html"
     form_class = BrandModelForm
@@ -49,6 +48,8 @@ class AdminProductBrandCreateView(LoginRequiredMixin, HasAdminAccessPermission, 
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:brand-list')
     
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminProductBrandDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-brand/product-brand-delete.html"
     queryset = Brand.objects.all()
@@ -57,6 +58,8 @@ class AdminProductBrandDeleteView(LoginRequiredMixin, HasAdminAccessPermission, 
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:brand-list')
     
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminProductBrandEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/products-brand/product-brand-edit.html"
     queryset = Brand.objects.all()

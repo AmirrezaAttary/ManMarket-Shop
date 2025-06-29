@@ -1,12 +1,9 @@
-from django.views.generic import UpdateView,DeleteView,CreateView,ListView,DetailView
+from django.views.generic import ListView,DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasCustomerAccessPermission
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from dashboard.customer.forms import *
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from order.models import OrderModel,OrderStatusType
 import jdatetime
@@ -16,6 +13,7 @@ def to_jalali(date_obj):
         return ""
     return jdatetime.datetime.fromgregorian(datetime=date_obj).strftime('%Y/%m/%d')
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, ListView):
     template_name = "dashboard/customer/orders/order-list.html"
     # paginate_by = 5
@@ -46,13 +44,15 @@ class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, Lis
             order.jalali_created_date = to_jalali(order.created_date)
             order.jalali_updated_date = to_jalali(order.updated_date)
         return context
-    
+ 
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class CustomerOrderDetailView(LoginRequiredMixin, HasCustomerAccessPermission, DetailView):
     template_name = "dashboard/customer/orders/order-detail.html"
 
     def get_queryset(self):
         return OrderModel.objects.filter(user=self.request.user)
-    
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class CustomerOrderInvoiceView(LoginRequiredMixin, HasCustomerAccessPermission, DetailView):
     template_name = "dashboard/customer/orders/order-invoice.html"
 

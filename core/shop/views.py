@@ -1,6 +1,8 @@
 from django.db.models import OuterRef, Subquery, DecimalField, ExpressionWrapper, F, Min, Max, Prefetch
 from django.views.generic import ListView, DetailView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
 from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
@@ -8,6 +10,7 @@ from shop.models import (ProductModel, ProductStatusType,
 from review.models import ReviewModel,ReviewStatusType
 # Create your views here.
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ShopListProductView(ListView):
     template_name = 'shop/product_list.html'
     paginate_by = 12
@@ -87,7 +90,8 @@ class ShopListProductView(ListView):
         context["brands"] = Brand.objects.all()
         return context
     
-    
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class ShopDetailProductView(DetailView):
     template_name = 'shop/product_detail.html'
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
@@ -129,7 +133,7 @@ class ShopDetailProductView(DetailView):
         return context
     
     
-    
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AddOrRemoveWishlistView(LoginRequiredMixin, View):
 
 

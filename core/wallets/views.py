@@ -2,26 +2,28 @@
 from django.views import View
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy,reverse
+from wallets.permissions import HasCustomerAccessPermission
 from wallets.forms import WalletChargeForm
 from payment.models import PaymentModel
 from payment.zarinpal_client import ZarinPalSandbox
-from payment.models import PayemntStatusType
 from django.views.generic import TemplateView
 from wallets.models import Wallet
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class WalletChargeSuccessView(TemplateView):
     template_name = "wallets/charge_success.html"
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class WalletChargeFailedView(TemplateView):
     template_name = "wallets/charge_failed.html"
 
 
-@method_decorator(login_required, name='dispatch')
-class WalletChargeView(View):
+@method_decorator(cache_page(60 * 15), name='dispatch')
+class WalletChargeView(HasCustomerAccessPermission,View):
     def get(self, request):
         form = WalletChargeForm()
         return render(request, "wallets/wallet_charge.html", {"form": form})
@@ -50,7 +52,7 @@ class WalletChargeView(View):
                 })
         return render(request, "wallets/wallet_charge.html", {"form": form})
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class WalletChargeRequestView(View):
     def post(self, request):
         amount = int(request.POST.get("amount"))  # از فرم بگیر

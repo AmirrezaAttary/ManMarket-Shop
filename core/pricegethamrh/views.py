@@ -1,14 +1,16 @@
 from django.views import View
 from django.http import HttpResponseRedirect
-from shop.models import ProductModel, ProductColorInventory, Color
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from shop.models import  ProductColorInventory, Color
 from .scripts import extract_product_data
 from pricegethamrh.models import PriceGetHamrh
 from django.urls import reverse
-from django.http import JsonResponse
 from .tasks import update_all_hamrah_products
 from django.contrib import messages  
 from django.shortcuts import redirect
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class GetColorAndPrice(View):
 
     def post(self, request, *args, **kwargs):

@@ -11,14 +11,18 @@ from accounts.utils import send_password_reset_email
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib import messages  
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
+
+@method_decorator(cache_page(60 * 15), name='dispatch') 
 class LoginView(auth_views.LoginView):
     template_name = "accounts/login.html"
     form_class = AuthenticationForm
     redirect_authenticated_user = True
     
-    
+@method_decorator(cache_page(60 * 15), name='dispatch') 
 class RegisterView(TemplateView):
     template_name = 'accounts/register.html'
 

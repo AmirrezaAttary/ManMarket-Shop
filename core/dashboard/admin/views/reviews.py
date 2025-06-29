@@ -1,15 +1,15 @@
-from django.views.generic import UpdateView,DeleteView,CreateView,ListView,DetailView
+from django.views.generic import UpdateView,ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from dashboard.admin.forms import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from review.models import ReviewModel,ReviewStatusType
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminReviewListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/reviews/review-list.html"
     paginate_by = 10
@@ -35,7 +35,8 @@ class AdminReviewListView(LoginRequiredMixin, HasAdminAccessPermission, ListView
         context["total_items"] = self.get_queryset().count()  
         context["status_types"] = ReviewStatusType.choices
         return context
-    
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminReviewEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/reviews/review-edit.html"
     queryset = ReviewModel.objects.all()

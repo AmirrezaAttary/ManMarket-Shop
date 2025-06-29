@@ -1,29 +1,23 @@
-from typing import Any
 from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
-from django.forms.forms import BaseForm
-from django.http.response import HttpResponse
 from django.views.generic import (
-    View,
-    TemplateView,
     UpdateView,
     ListView,
     DeleteView,
     CreateView
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
-from django.contrib.auth import views as auth_views
 from dashboard.admin.forms import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from accounts.models import Profile
 from django.shortcuts import redirect
-from django.contrib import messages
 from order.models import CouponModel
 from django.core.exceptions import FieldError
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminCouponListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/coupons/coupon-list.html"
     paginate_by = 10
@@ -48,6 +42,7 @@ class AdminCouponListView(LoginRequiredMixin, HasAdminAccessPermission, ListView
         return context
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminCouponCreateView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, CreateView):
     template_name = "dashboard/admin/coupons/coupon-create.html"
     queryset = CouponModel.objects.all()
@@ -63,6 +58,7 @@ class AdminCouponCreateView(LoginRequiredMixin, HasAdminAccessPermission, Succes
         return reverse_lazy("dashboard:admin:coupon-list")
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminCouponEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/coupons/coupon-edit.html"
     queryset = CouponModel.objects.all()
@@ -76,7 +72,7 @@ class AdminCouponEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessM
         context = super().get_context_data(**kwargs)
         return context
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminCouponDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/coupons/coupon-delete.html"
     queryset = CouponModel.objects.all()

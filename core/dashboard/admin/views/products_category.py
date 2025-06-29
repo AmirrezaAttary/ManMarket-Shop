@@ -1,23 +1,21 @@
 from django.views.generic import (
-    View,
-    TemplateView,
     UpdateView,
     ListView,
     DeleteView,
     CreateView
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import ProductCategoryModelForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
-from django.contrib import messages
 from django.core.exceptions import FieldError
 from shop.models import ProductCategoryModel
 
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminProductCategoryListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
     template_name = "dashboard/admin/products-category/category-list.html"
     paginate_by = 10
@@ -40,7 +38,9 @@ class AdminProductCategoryListView(LoginRequiredMixin, HasAdminAccessPermission,
         context = super().get_context_data(**kwargs)
         context["total_items"] = self.get_queryset().count()
         return context
+    
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class AdminProductCategoryCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
     template_name = "dashboard/admin/products-category/product-category-create.html"
     form_class = ProductCategoryModelForm
@@ -49,6 +49,8 @@ class AdminProductCategoryCreateView(LoginRequiredMixin, HasAdminAccessPermissio
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:category-list')
     
+    
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminProductCategoryDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-category/product-category-delete.html"
     queryset = ProductCategoryModel.objects.all()
@@ -56,7 +58,8 @@ class AdminProductCategoryDeleteView(LoginRequiredMixin, HasAdminAccessPermissio
     
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:category-list')
-    
+
+@method_decorator(cache_page(60 * 15), name='dispatch')    
 class AdminProductCategoryEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, UpdateView):
     template_name = "dashboard/admin/products-category/product-category-edit.html"
     queryset = ProductCategoryModel.objects.all()

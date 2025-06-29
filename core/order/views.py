@@ -4,11 +4,13 @@ from django.views.generic import (
     FormView,
     View
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from order.permissions import HasCustomerAccessPermission
 from order.models import UserAddressModel
 from order.forms import CheckOutForm
-from cart.models import CartModel, CartItemModel
+from cart.models import CartModel
 from order.models import OrderModel, OrderItemModel
 from django.urls import reverse_lazy
 from cart.cart import CartSession
@@ -24,7 +26,7 @@ from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
 
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
     template_name = "order/checkout.html"
     form_class = CheckOutForm
@@ -167,13 +169,16 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         return context
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class OrderCompletedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):
     template_name = "order/completed.html"
     
+
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class OrderFailedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):
     template_name = "order/failed.html"
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ValidateCouponView(LoginRequiredMixin, HasCustomerAccessPermission, View):
 
     def post(self, request, *args, **kwargs):
