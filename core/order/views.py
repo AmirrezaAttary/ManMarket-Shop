@@ -4,8 +4,7 @@ from django.views.generic import (
     FormView,
     View
 )
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from order.permissions import HasCustomerAccessPermission
 from order.models import UserAddressModel

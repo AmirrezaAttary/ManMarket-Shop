@@ -4,8 +4,7 @@ from dashboard.permissions import HasCustomerAccessPermission
 from django.contrib.auth import views as auth_views
 from dashboard.customer.forms import *
 from django.contrib.messages.views import SuccessMessageMixin
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from django.urls import reverse_lazy
 from accounts.models import Profile
 from django.shortcuts import redirect

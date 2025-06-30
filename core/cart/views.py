@@ -3,8 +3,7 @@ from django.views.generic import View, TemplateView
 from django.http import JsonResponse
 from cart.cart import CartSession
 from django.contrib import messages
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 
 # Create your views here.
 

@@ -1,5 +1,4 @@
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from django.views.generic import TemplateView,CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 from website.forms import ContatctForm

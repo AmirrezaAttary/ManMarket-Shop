@@ -1,8 +1,7 @@
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 
 
 class AdminDashboardHomeView(LoginRequiredMixin, HasAdminAccessPermission, TemplateView):

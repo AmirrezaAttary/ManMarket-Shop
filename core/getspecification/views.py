@@ -1,8 +1,7 @@
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from .tasks import fetch_and_save_specifications, all_specifications_updated
 from .models import PriceSpecification
 from celery import chord

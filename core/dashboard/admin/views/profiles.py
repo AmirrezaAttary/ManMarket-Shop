@@ -2,8 +2,7 @@ from django.views.generic import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from django.contrib.auth import views as auth_views
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from dashboard.admin.forms import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy

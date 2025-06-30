@@ -1,7 +1,6 @@
 from django.views.generic import  DeleteView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from dashboard.permissions import HasCustomerAccessPermission
 
 from dashboard.customer.forms import *

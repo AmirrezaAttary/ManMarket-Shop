@@ -1,7 +1,6 @@
 from django.views import View
 from django.http import HttpResponseRedirect
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from shop.models import  ProductColorInventory, Color
 from .scripts import extract_product_data
 from pricegethamrh.models import PriceGetHamrh

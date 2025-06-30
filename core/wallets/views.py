@@ -8,8 +8,7 @@ from payment.models import PaymentModel
 from payment.zarinpal_client import ZarinPalSandbox
 from django.views.generic import TemplateView
 from wallets.models import Wallet
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 
 
 

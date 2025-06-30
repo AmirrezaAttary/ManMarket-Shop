@@ -11,8 +11,7 @@ from accounts.utils import send_password_reset_email
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib import messages  
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 
 
 
@@ -27,9 +26,15 @@ class RegisterView(TemplateView):
     template_name = 'accounts/register.html'
 
     def get(self, request, *args, **kwargs):
+        # بررسی اینکه آیا کاربر وارد شده است
+        if request.user.is_authenticated:
+            return redirect('dashboard:home')  # به صفحه داشبورد هدایت کن
         return self.render_to_response({'form': RegisterForm()})
 
     def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('dashboard:home')  # به صفحه داشبورد هدایت کن
+
         messages.add_message(request, messages.SUCCESS, 'You have successfully logged')
         form = RegisterForm(request.POST)
         if form.is_valid():

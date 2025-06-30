@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView

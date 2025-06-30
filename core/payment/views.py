@@ -8,8 +8,7 @@ from order.models import OrderModel, OrderStatusType
 from wallets.models import WalletTransaction
 from cart.cart import CartSession
 from cart.models import CartModel
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 # Create your views here.
 
 # payment/views.py

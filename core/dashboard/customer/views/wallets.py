@@ -1,8 +1,7 @@
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasCustomerAccessPermission
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
+
 from wallets.models import Wallet
 
 
