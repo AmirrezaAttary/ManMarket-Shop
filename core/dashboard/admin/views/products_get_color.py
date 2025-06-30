@@ -17,18 +17,18 @@ from pricegethamrh.models import PriceGetHamrh
 import redis
 from django.http import JsonResponse
 
-def check_hamrah_status(request):
-    r = redis.Redis(host='redis', port=6379, db=2)
-    status = r.get("hamrah_update_status")
-    if status:
-        status = status.decode()
-        if status == "done":
-            r.delete("hamrah_update_status")
-            return JsonResponse({"status": "done"})
-        elif status.startswith("error:"):
-            r.delete("hamrah_update_status")
-            return JsonResponse({"status": "error", "message": status})
-    return JsonResponse({"status": "pending"})
+# def check_hamrah_status(request):
+#     r = redis.Redis(host='redis', port=6379, db=2)
+#     status = r.get("hamrah_update_status")
+#     if status:
+#         status = status.decode()
+#         if status == "done":
+#             r.delete("hamrah_update_status")
+#             return JsonResponse({"status": "done"})
+#         elif status.startswith("error:"):
+#             r.delete("hamrah_update_status")
+#             return JsonResponse({"status": "error", "message": status})
+#     return JsonResponse({"status": "pending"})
 
 
 
@@ -39,7 +39,7 @@ class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListVi
 
     def get(self, request, *args, **kwargs):
         r = redis.Redis(host='redis', port=6379, db=2)
-        status = r.get("hamrah_update_status")
+        status = r.get("hamrah_update_status")  
 
         if status:
             status = status.decode()
@@ -57,7 +57,7 @@ class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListVi
     def get_queryset(self):
         queryset = PriceGetHamrh.objects.all()
         if search_q := self.request.GET.get("q"):
-            queryset = queryset.filter(title__icontains=search_q)
+            queryset = queryset.filter(product__title__icontains=search_q)
         if order_by := self.request.GET.get("order_by"):
             try:
                 queryset = queryset.order_by(order_by)

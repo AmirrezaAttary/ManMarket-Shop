@@ -57,16 +57,19 @@ def update_all_hamrah_products():
                         pci.price = discounted_price
                         pci.discount_percent = 0
                         pci.save()
-                        print(f"✅ قیمت بروزرسانی شد: {product.id} | رنگ: {color_title} | قیمت: {discounted_price}")
+                        print(f"✅ قیمت بروزرسانی شد: {product.title} | رنگ: {color_title} | قیمت: {discounted_price}")
                     else:
-                        print(f"🆕 موجودی جدید اضافه شد: {product.id} | رنگ: {color_title} | قیمت: {discounted_price}")
+                        print(f"🆕 موجودی جدید اضافه شد: {product.title} | رنگ: {color_title} | قیمت: {discounted_price}")
 
             except Exception as e:
-                print(f"❌ خطا در پردازش محصول {product.id} | URL: {item.url}")
+                print(f"❌ خطا در پردازش محصول {product.title} | URL: {item.url}")
                 import traceback
                 traceback.print_exc()
+                ProductColorInventory.objects.filter(product=product).update(price=0)
+                print(f"صفر شدن قیمت‌ها برای محصول: {product.title} به دلیل خطای عمومی.")
+                r.set("hamrah_update_status", f"error: General error for {product.title}", ex=300)
                 continue
-
+            
         r.set("hamrah_update_status", "done", ex=300)
         print("✅ بروزرسانی همه محصولات همکار با موفقیت انجام شد.")
 
