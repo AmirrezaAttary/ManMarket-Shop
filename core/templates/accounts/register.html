@@ -43,7 +43,7 @@
             رمزی برای خودتان انتخاب کنید
             <input type="password" name="password1" class="form-control custom-text my-2 py-2"
                 placeholder="رمز خود را وارد کنید" id="myPassword">
-                <button type="button" onclick="togglePasswordVisibility()">Show</button>
+            <button type="button" onclick="togglePasswordVisibility()">Show</button>
         </label>
         <!--password input end---------->
 
@@ -52,7 +52,7 @@
             تکرار رمز
             <input type="password" name="password2" class="form-control custom-text my-2 py-2"
                 placeholder="رمز خود را وارد کنید" id="myPassword2">
-                <button type="button" onclick="togglePasswordVisibility2()">Show</button>
+            <button type="button" onclick="togglePasswordVisibility2()">Show</button>
         </label>
         <!--password input end---------->
 
@@ -74,15 +74,15 @@
 
     </form>
     <!------------    login form :::::: end----------->
-    
-    
-        
-    
-        
-    <!-- <form action="{% comment %}{% provider_login_url 'google' %}{% endcomment %}" method="post" hidden id="google">
-        
 
-    </form> -->
+
+
+
+
+    <form action="{% provider_login_url 'google' %}" method="post" hidden id="google">
+
+        {% csrf_token %}
+    </form>
 </main>
 
 

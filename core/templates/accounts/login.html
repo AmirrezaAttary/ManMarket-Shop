@@ -76,7 +76,9 @@ login
     <!------------    login form :::::: end----------->
 
 
-
+    <form id="google" method="post" action="{% provider_login_url 'google' %}" hidden>
+        {% csrf_token %}
+    </form>
 
 </main>
 
