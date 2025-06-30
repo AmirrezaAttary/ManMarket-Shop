@@ -1,7 +1,16 @@
-from django.db.models import OuterRef, Subquery, DecimalField, ExpressionWrapper, F, Min, Max, Prefetch
+from django.db.models import (OuterRef,
+                                Subquery,
+                                DecimalField,
+                                ExpressionWrapper,
+                                F,Min,Max,
+                                Prefetch ,Case,
+                                When, Value,
+                                IntegerField
+                                )
 from django.views.generic import ListView, DetailView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
 from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
@@ -13,7 +22,6 @@ from review.models import ReviewModel,ReviewStatusType
 class ShopListProductView(ListView):
     template_name = 'shop/product_list.html'
     paginate_by = 12
-    
 
     def get_queryset(self):
         queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
@@ -50,13 +58,12 @@ class ShopListProductView(ListView):
                 queryset = queryset.annotate(min_price=Min("color_inventories__price")).order_by("min_price")
             elif order_by == "expensive":
                 queryset = queryset.annotate(max_price=Max("color_inventories__price")).order_by("-max_price")
-            queryset = queryset.annotate(min_price=Min("color_inventories__price"))
+
         discounted_price_expr = ExpressionWrapper(
             F('price') - (F('price') * F('discount_percent') / 100),
             output_field=DecimalField()
         )
 
-        # فقط موجودی‌هایی که قیمت تخفیف‌خورده‌شان بزرگ‌تر از 0 است
         discounted_inventory = ProductColorInventory.objects.filter(
             product=OuterRef('pk')
         ).annotate(
@@ -76,10 +83,26 @@ class ShopListProductView(ListView):
         queryset = queryset.annotate(
             min_discounted_price=min_discounted_price_subquery,
             min_discount_percent=min_discount_percent_subquery
+        ).annotate(
+            # محصولات بدون قیمت (0 یا None) در انتها
+            price_priority=Case(
+                When(min_discounted_price__isnull=True, then=Value(1)),
+                When(min_discounted_price=0, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField()
+            )
         ).prefetch_related(
             Prefetch('color_inventories', queryset=ProductColorInventory.objects.select_related('color'))
-        )
+        ).order_by('price_priority')  # ابتدا محصولات با قیمت معتبر
+
         return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_items'] = self.get_queryset().count()
+        context["categories"] = ProductCategoryModel.objects.all()
+        context["brands"] = Brand.objects.all()
+        return context
     
 
     def get_context_data(self, **kwargs):
