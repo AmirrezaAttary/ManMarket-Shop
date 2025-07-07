@@ -14,7 +14,20 @@
                 {% endif %}
                 {% endwith %}
                 <div class="icons d-flex justify-content-center">
-                    <button data-likes="0" data-liked="false" class="like">
+
+                    {% if product.id in wishlist_items %}
+                    <button onclick="addToWishlist(this, {{ product.id }})" data-likes="1" data-liked="true"
+                        class="like active">
+                        <svg class="svg-tag" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
+                            width="1.5em" height="1em">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                d="m7 12.45l-5.52-5c-3-3 1.41-8.76 5.52-4.1c4.11-4.66 8.5 1.12 5.52 4.1Z">
+                            </path>
+                        </svg>
+                    </button>
+                    {% else %}
+                    <button onclick="addToWishlist(this, {{ product.id }})" data-likes="0" data-liked="false"
+                        class="like">
                         <svg class="svg-tag" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
                             width="1.5em" height="1em">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -22,6 +35,9 @@
                             </path>
                         </svg>
                     </button>
+                    {% endif %}
+
+
                     <a href="{% url 'shop:product-detail' slug=product.slug %}">
                         <button class="view">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em" height="1.2em">
@@ -69,7 +85,19 @@
                 {% endif %}
                 {% endwith %}
                 <div class="icons d-flex justify-content-center">
-                    <button data-likes="0" data-liked="false" class="like">
+                    {% if product.id in wishlist_items %}
+                    <button onclick="addToWishlist(this, {{ product.id }})" data-likes="1" data-liked="true"
+                        class="like active">
+                        <svg class="svg-tag" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
+                            width="1.5em" height="1em">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                d="m7 12.45l-5.52-5c-3-3 1.41-8.76 5.52-4.1c4.11-4.66 8.5 1.12 5.52 4.1Z">
+                            </path>
+                        </svg>
+                    </button>
+                    {% else %}
+                    <button onclick="addToWishlist(this, {{ product.id }})" data-likes="0" data-liked="false"
+                        class="like">
                         <svg class="svg-tag" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14"
                             width="1.5em" height="1em">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -77,6 +105,8 @@
                             </path>
                         </svg>
                     </button>
+                    {% endif %}
+
                     <a href="{% url 'shop:product-detail' slug=product.slug %}">
                         <button class="view">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em" height="1.2em">
