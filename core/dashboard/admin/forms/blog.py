@@ -1,6 +1,6 @@
 from django import forms
 from blog.models import Post
-
+from django_summernote.widgets import SummernoteWidget
 
 class BlogPostForm(forms.ModelForm):
     class Meta:
@@ -14,6 +14,9 @@ class BlogPostForm(forms.ModelForm):
             'slug' ,
             'tags'
         ]
+        widgets = {
+            'content': SummernoteWidget(),  # فقط روی این فیلد اعمال میشه
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,5 +25,5 @@ class BlogPostForm(forms.ModelForm):
         self.fields['category'].widget.attrs['class'] = 'form-control'
         self.fields['tags'].widget.attrs['class'] = 'form-control'
         self.fields['image'].widget.attrs['class'] = 'form-control'
-        self.fields['content'].widget.attrs['class'] = 'form-control'
+        # self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-select'

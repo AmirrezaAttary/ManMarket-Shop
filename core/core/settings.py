@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "django_jalali",
     'robots',
     'django_celery_beat',
+    'django_summernote', 
     
     # add sigin up with google
     'allauth',

@@ -33,3 +33,6 @@ cryptography
 # seo
 django-robots
 
+
+# eidtor text
+django-summernote 
