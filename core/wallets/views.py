@@ -24,8 +24,9 @@ class WalletChargeFailedView(TemplateView):
 
 class WalletChargeView(HasCustomerAccessPermission,View):
     def get(self, request):
+        wallet = Wallet.objects.get(user=self.request.user)
         form = WalletChargeForm()
-        return render(request, "wallets/wallet_charge.html", {"form": form})
+        return render(request, "wallets/wallet_charge.html", {"form": form,"wallet":wallet})
 
     def post(self, request):
         form = WalletChargeForm(request.POST)

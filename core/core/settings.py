@@ -30,6 +30,7 @@ DEBUG = True
 
 
 ALLOWED_HOSTS = [
+    '192.168.73.237',
     '127.0.0.1',
     'manmarket.ir',
     'www.manmarket.ir',

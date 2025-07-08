@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -19,7 +20,7 @@
 
         <div class="ws-cs-wallet-info">
             <img src="https://cdn-icons-png.flaticon.com/512/1170/1170576.png" alt="wallet icon" />
-            <span>موجودی فعلی: ۱۲۰٬۰۰۰ تومان</span>
+            <span>موجودی فعلی: {{wallet.balance|floatformat:0|intcomma}} تومان</span>
         </div>
 
         <form method="post">
