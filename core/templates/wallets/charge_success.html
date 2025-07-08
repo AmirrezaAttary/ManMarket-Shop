@@ -1,5 +1,32 @@
-<div class="alert alert-success">
-    <h2>پرداخت با موفقیت انجام شد ✅</h2>
-    <p>موجودی کیف پول شما با موفقیت افزایش یافت.</p>
-    <a href="{% url 'dashboard:customer:wallet-detail' %}">بازگشت به کیف پول</a>
-</div>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>پرداخت موفق</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+
+<body class="body-su">
+
+    <div class="card-su" role="alert" aria-live="assertive">
+
+        <svg class="icon-success-su" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" />
+            <path d="M20 34l10 10 18-22" />
+        </svg>
+
+        <h1 class="text-dark">پرداخت با موفقیت انجام شد!</h1>
+        <p>موجودی کیف پول شما با موفقیت به‌روزرسانی شد. از اعتماد شما سپاسگزاریم.</p>
+        <a href="{% url 'dashboard:customer:wallet-detail' %}">
+            <button class="color-su text-light px-3 rounded-3 mt-3">بازگشت به کیف پول</button>
+        </a>
+    </div>
+
+</body>
+
+</html>
