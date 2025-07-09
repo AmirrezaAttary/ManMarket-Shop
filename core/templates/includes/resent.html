@@ -1,29 +1,38 @@
 {% load static %}
-<section class="blog ">
+<br><br>
+<section class="blog mt-4">
+
     <h5 class="text-center mb-4">
+
         <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
         <span class="px-2">وبلاگ </span>
         <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
     </h5>
+
     <div class="container">
         <div class="blog-container has-scrollbar">
             {% for post in posts %}
             <div class="blog-card">
                 <a href="{% url 'blog:blog-detail' slug=post.slug %}">
-                    <img src="{{post.image.url}}" alt="{{post.title}}" class="blog-banner" width="300">
+                    <img style="max-width: 292px;" src="{{post.image.url}}" alt="{{post.title}}" class="blog-banner"
+                        width="300">
                 </a>
+
                 <div class="blog-content">
-                    <a href="{% url 'blog:blog-detail' slug=post.slug %}" class="blog-category">{{post.title}}</a>
+                    <a href="{% url 'blog:blog-detail' slug=post.slug %}" class="blog-category">
+                        {% for cat in post.category.all|slice:"-2:" %}
+                        {{ cat.name }}
+                        {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </a>
                     <a href="{% url 'blog:blog-detail' slug=post.slug %}">
-                        <h3 class="blog-title">{{post.content|truncatechars:30}}</h3>
+                        <h3 class="blog-title">{{post.title}}</h3>
                     </a>
                 </div>
             </div>
-            {% empty %}
-            <h2 style="width: 100%; margin: 0 auto; text-align: center;">
-                هنوز بلاگی منتشر نشده
-            </h2>
             {% endfor %}
+
+
         </div>
     </div>
     <div class="d-flex justify-content-center mt-4">
@@ -32,3 +41,7 @@
         </a>
     </div>
 </section>
+
+
+
+<!-- blog img :: start----->

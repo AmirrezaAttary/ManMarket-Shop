@@ -44,7 +44,6 @@
 .three-bg{
   background-color: rgb(225, 220, 213);
   img{
-    //width: 10%;
     top: 30% !important;
     height: 50% !important;
   }
@@ -199,6 +198,10 @@
   .swiper-pagination{
     left: -41% !important;
     top: 61% !important;
+  }
+}@media only screen and (max-width: 450px){
+  .main-slider{
+    margin-top: 80px !important;
   }
 }
 @media only screen and (max-width: 450px){
