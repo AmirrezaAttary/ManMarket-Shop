@@ -6,67 +6,38 @@
 {% block content %}
 <div class="row">
     {% include 'dashboard/customer/sidebar.html' %}
-    <!-- Card -->
-    <div class="col-md-9 mb-9">
-        <!-- Card -->
-        <div class="card mb-3">
-            <div class="card-header border-bottom">
-                <h4 class="card-header-title">ویرایش نشانی </h4>
-            </div>
+    <main class="profile-content-area-new">
+        <section class="profile-section-new">
+            <header class="section-header-new border-0">
+                <h2><svg>
+                        <use xlink:href="#icon-map-pin"></use>
+                    </svg>آدرس‌های من</h2>
+            </header>
 
-            <form action="." method="post">
-                <!-- Body -->
-                <div class="card-body">
-                    <!-- Form -->
+            <div id="addressesListContainer" class="mt-4">
+                <!-- STATIC: Addresses are hardcoded. JS only handles visual toggles. -->
 
-                    {% csrf_token %}
-
-
-                    <!-- Form -->
-                    <div class="row">
-                        <div class="col-md-4  mb-4">
-                            <label class="col-form-label form-label">استان</label>
-                            {{form.state}}
-                        </div>
-                        <!-- End Form -->
-                        <!-- Form -->
-                        <div class="col-md-4  mb-4">
-                            <label class=" col-form-label form-label">شهر</label>
-                            {{form.city}}
-                        </div>
-                        <!-- End Form -->
-                        <!-- Form -->
-                        <div class="col-md-4  mb-4">
-                            <label class=" col-form-label form-label">کد پستی</label>
-                            {{form.zip_code}}
-                        </div>
-                        <!-- End Form -->
-                    </div>
-                    <!-- Form -->
-                    <div class="row mb-4">
-                        <label class="col-form-label form-label">آدرس</label>
+                <div class="rounded-3 container">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <label for="as" class="ws-cs-label">استان</label>
+                        {{form.state}}
+                        <label for="amount" class="ws-cs-label">شهر</label>
+                        {{form.city}}
+                        <label for="df" class="ws-cs-label">کد پستی</label>
+                        {{form.zip_code}}
+                        <label for="addressLine1Input" class="form-label-custom">آدرس کامل</label>
                         {{form.address}}
-                    </div>
-                    <!-- End Form -->
 
 
+                        <button type="submit" class="theme-color text-light rounded-3">ویرایش آدرس</button>
+                    </form>
                 </div>
-                <!-- End Body -->
 
-                <!-- Footer -->
-                <div class="card-footer pt-0">
-                    <div class="d-flex justify-content-end gap-3">
-                        <a class="btn btn-danger"
-                            href="{% url 'dashboard:customer:address-delete' pk=object.pk %}"> حذف</a>
-                        <a  href="{% url 'dashboard:customer:address-list' %}"><button class="btn btn-secondary">بازگشت</button> </a>
-                        <button class="btn btn-primary" type="submit">ذخیره تغییرات</button>
-                    </div>
-                </div>
-            </form>
-            <!-- End Footer -->
-        </div>
-        <!-- End Card -->
+            </div>
+        </section>
+    </main>
     </div>
-</div>
-</div>
-{% endblock %}
+    </div>
+    
+    {% endblock %}
