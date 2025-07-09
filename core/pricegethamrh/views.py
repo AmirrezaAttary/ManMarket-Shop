@@ -41,10 +41,11 @@ class GetColorAndPrice(View):
                 raw_price = int(value.get('price') or value.get('old_price') or 0)
             except (TypeError, ValueError):
                 raw_price = 0
-
-            discounted_price = int(raw_price * 10 / 11)
-            discounted_price += (discounted_price * 2.999) / 100
-
+            
+            discounted_price = int(raw_price * 2 ) /100
+            discounted_price += raw_price
+            
+            
             discount = 0
 
             pci, created = ProductColorInventory.objects.get_or_create(

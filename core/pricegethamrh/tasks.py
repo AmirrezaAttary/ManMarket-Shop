@@ -40,8 +40,8 @@ def update_all_hamrah_products():
                     except (TypeError, ValueError):
                         raw_price = 0
 
-                    discounted_price = int(raw_price * 10 / 11)
-                    discounted_price += int((discounted_price * 2.999) / 100)
+                    discounted_price = int(raw_price * 2 ) /100
+                    discounted_price += raw_price
 
                     pci, created = ProductColorInventory.objects.get_or_create(
                         product=product,
