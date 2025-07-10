@@ -1,173 +1,420 @@
-{% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
 
-{% block content %}
-<br><br><br>
-<section class="p-wrap">
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>checkout</title>
+    <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/logo/logo.webp' %}">
+
+</head>
+
+<body class="my-3 py-3">
 
 
-    <div class="dj-sh-checkout-container dj-sh-container">
-        <main class="dj-sh-checkout-main">
-            <section class="dj-sh-checkout-section dj-sh-address-section">
-                <form action="." method="post" id="checkout-form">
-                    {% csrf_token %}
-                    <h2 class="dj-sh-section-title">
-                        <svg class="dj-sh-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+
+    <div class="shop-cs-container">
+        <div class="shop-cs-checkout-layout">
+            <main class="shop-cs-checkout-main">
+                <section class="shop-cs-checkout-card py-1">
+
+                    <a class="mx-2 back-to d-inline  mt-4" href="{% url 'cart:cart-summery' %}" style="right: 10px">
+                        <svg class="cs-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="35px"
+                            height="35px">
+                            <path fill="currentColor" fill-rule="evenodd"
+                                d="M2 10a.75.75 0 0 1 .75-.75h12.59l-2.1-1.95a.75.75 0 1 1 1.02-1.1l3.5 3.25a.75.75 0 0 1 0 1.1l-3.5 3.25a.75.75 0 1 1-1.02-1.1l2.1-1.95H2.75A.75.75 0 0 1 2 10"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </a>
+
+                    <div class="shop-cs-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path
-                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+                                d="M12 2C7.589 2 4 5.589 4 10c0 4.411 8 12 8 12s8-7.589 8-12c0-4.411-3.589-8-8-8zm0 12c-2.206 0-4-1.794-4-4s1.794-4 4-4 4 1.794 4 4-1.794 4-4 4z">
                             </path>
                         </svg>
-                        انتخاب آدرس تحویل سفارش
-                    </h2>
-                    <div class="dj-sh-address-list" id="address-list-container">
-                        {% for address in addresses %}
-                        <article class="dj-sh-address-card dj-sh-selectable" data-address-id="addr-{{address.id}}">
-                            <svg class="dj-sh-icon-svg dj-sh-selected-icon" xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 15 15" width="1em" height="1em">
-                                <path fill="none" stroke="currentColor"
-                                    d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"></path>
-                            </svg>
-                            <div class="dj-sh-address-card-header">
-
-                            </div>
-                            <p class="dj-sh-address-text">
-                                <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+                        <h1 class="shop-cs-card-title text-dark">آدرس تحویل سفارش</h1>
+                        <div class="shop-cs-card-header-actions">
+                            <button class="shop-cs-btn shop-cs-btn--secondary" id="btn-toggle-address">
+                                تغییر آدرس
+                                <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z">
                                     </path>
-                                </svg> {{address.state}},{{address.city}},{{address.address}} ,{{address.zip_code}}
-                            </p>
-                            <div class="dj-sh-address-card-actions">
-                                <input type="radio" name="address_id" value="{{address.id}}" id="address-{{address.id}}"
-                                    hidden>
-                                <button class="dj-sh-btn dj-sh-btn-select-address" type="button"
-                                    onclick="selectAddress('{{address.id}}')">انتخاب</button>
-                            </div>
-                        </article>
-                        {% endfor %}
-                    </div>
-                    <a href="{% url 'dashboard:customer:address-list' %}">
-                        <button class="dj-sh-btn dj-sh-btn-add-address" type="button">
-                            <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
-                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-                            </svg> مدیریت آدرس ها
-                        </button>
-                    </a>
-                    <div class="dj-payment-method-selection">
-                        <h3 class="dj-sh-summary-title">روش پرداخت</h3>
-                        <div class="dj-sh-radio-group">
-                            <label>
-                                <input type="radio" name="payment_method" value="wallet" checked>
-                                پرداخت با کیف پول
-                            </label>
-                            <label>
-                                <input type="radio" name="payment_method" value="zarinpal">
-                                پرداخت با کارت بانکی
-                            </label>
-                            <p class="wallet-info">
-                                موجودی کیف پول شما:
-                                <strong>{{wallet.balance|floatformat:0|intcomma}}</strong> تومان
-                            </p>
+                                </svg>
+                            </button>
                         </div>
                     </div>
-                    <hr>
-                </form>
-            </section>
-        </main>
-        
+                    <div class="shop-cs-card-body">
+                        <div id="active-address-display">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" viewBox="0 0 24 24">
+                                <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
+                            </svg>
+                            <div class="address-details-wrapper"></div>
+                        </div>
+                        <div id="address-list-collapsible">
+                            <form action="." method="post" id="checkout-form">
+                                {% csrf_token %}
+                                {% for address in addresses %}
+                                <div class="shop-cs-address-option shop-cs-selectable-option">
+                                    <input type="radio" name="address_id" value="{{ address.id }}"
+                                        id="address-{{ address.id }}" {% if forloop.first %}checked{% endif %}>
 
-        <aside class="dj-sh-order-summary">
+                                    <label for="address-{{ address.id }}" class="shop-cs-selectable-label">
+                                        <span class="shop-cs-custom-tick-container">
+                                            <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
+                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
+                                            </svg>
+                                        </span>
+                                        <div class="shop-cs-address-details">
+                                            <strong>{{ address.state }}</strong>
+                                            <p>{{ address.state }}, {{ address.city }}, {{ address.address }}
+                                                ,{{address.zip_code }}</p>
+                                        </div>
+                                    </label>
+                                </div>
+                                {% endfor %}
 
-            <h3 class="dj-sh-summary-title">خلاصه سفارش</h3>
-            <div class="dj-sh-summary-totals">
-                <div class="dj-sh-total-row" id="summary-items-total-row"><span>قیمت
-                        کالاها</span><span>{{total_price|intcomma}}<span class="dj-sh-currency">تومان</span></span>
-                </div>
-                <div class="dj-sh-total-row dj-sh-shipping-cost">
-                    <span>هزینه ارسال <svg class="dj-sh-icon-svg" viewBox="0 0 24 24" fill="currentColor"
-                            title="هزینه ارسال بر اساس آدرس، زمان و روش ارسال محاسبه می‌شود">
+                                <a href="{% url 'dashboard:customer:address-list' %}"
+                                    class="shop-cs-btn shop-cs-btn--secondary" style="margin-top: 10px;" role="button">+
+                                    افزودن آدرس جدید</a>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                <section class="shop-cs-checkout-card p-0">
+                    <div class="shop-cs-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path
-                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+                                d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8a1 1 0 0 0 .93-.64L21.99 8.431a1 1 0 0 0-.168-1z">
                             </path>
-                        </svg></span>
-                    <span>۱۰۰٬۰۰۰ <span class="dj-sh-currency">تومان</span></span>
+                            <circle cx="10.5" cy="19.5" r="1.5"></circle>
+                            <circle cx="17.5" cy="19.5" r="1.5"></circle>
+                        </svg>
+                        <h2 class="shop-cs-card-title">سبد خرید شما ({{cart.get_total_quantity}} کالا)</h2>
+                    </div>
+                    <div class="shop-cs-card-body shop-cs-card-body--no-padding" id="cart-items-list">
+
+                        {% for item in cart_items %}
+                        <div class="shop-cs-cart-item-s">
+                            <img src="{{item.product_obj.image.url}}" alt="{{item.product_obj.title}}"
+                                style="width:80px; height:80px; object-fit: cover; border-radius: var(--border-radius-md);">
+                            <div style="flex-grow: 1;">
+                                <h3 style="margin:0 0 8px;">{{item.product_obj.title}}</h3>
+                                <div style="font-weight:700;">{{item.total_price|intcomma}}<span
+                                        class="shop-cs-price-unit">تومان</span></div>
+                            </div>
+                            <div class="shop-cs-quantity-control-container">
+                                <button class="shop-cs-quantity-btn cartexz-qty-button"
+                                    onclick="addOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')"
+                                    data-action="increase" aria-label="افزایش تعداد"><svg
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg></button>
+                                <span class="shop-cs-quantity-display"
+                                    data-quantity="{{item.quantity}}">{{item.quantity}}</span>
+                                <button class="shop-cs-quantity-btn cartexz-qty-button"
+                                    onclick="removeOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')"
+                                    aria-label="کاهش تعداد"></button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+
+                <section class="shop-cs-checkout-card p-0 pb-5" id="shipment-section">
+                <div class="shop-cs-card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M15 11h2.586l-2.293-2.293 1.414-1.414L21.414 12l-4.707 4.707-1.414-1.414L17.586 13H15v-2z"></path><path d="M13 3H8.667C7.194 3 6 4.194 6 5.667V10H4v10h1v-4h1v4h1v-4h1v4h1v-4h1v4h1V5.667C14 4.194 12.806 3 11.333 3H13V2h-2v1zM9 8H8V6h1v2zm2 0h-1V6h1v2z"></path></svg>
+                    <h2 class="shop-cs-card-title">شیوه و زمان ارسال</h2>
                 </div>
-                <div class="dj-sh-total-row" id="summary-discount-row"><span>تخفیف کالاها</span><span
-                        class="dj-sh-discount" id="summary-discount-value">۰ <span
-                            class="dj-sh-currency">تومان</span></span></div>
-                <div class="dj-sh-total-row" id="summary-items-total-row">
-                    <span>مالیات(10%)</span><span>{{total_tax|intcomma}}<span class="dj-sh-currency">تومان</span></span>
+
+                <form id="" class="shop-cs-payment-method-section">
+                    <div class="shop-cs-selectable-option">
+                        <input type="radio" name="payment_method" value="wallet" id="payment-memecx" >
+                        <label for="payment-memecx" class="shop-cs-selectable-label">
+                            <span class="shop-cs-custom-tick-container">
+                                <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                            </span>
+                            <div class="shop-cs-payment-details"><strong>ارسال با پست عادی</strong></div>
+                        </label>
+                    </div>
+                    <div class="shop-cs-selectable-option">
+                        <input type="radio" name="payment_method" value="wallet" id="payment-eyyo" >
+                        <label for="payment-eyyo" class="shop-cs-selectable-label">
+                            <span class="shop-cs-custom-tick-container">
+                                <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                            </span>
+                            <div class="shop-cs-payment-details"><strong>ارسال با ماهکس</strong></div>
+                        </label>
+                    </div>
+                    <div class="shop-cs-selectable-option">
+                        <input type="radio" name="payment_method" value="card" id="payment-yoey"  checked>
+                        <label for="payment-yoey" class="shop-cs-selectable-label">
+                            <span class="shop-cs-custom-tick-container">
+                                <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                            </span>
+                            <div class="shop-cs-payment-details"><strong>ارسال با تیپاکس</strong></div>
+                        </label>
+                    </div>
+                </form>
+
+                <div class="shop-cs-card-body">
+                    <div class="shop-cs-time-scroller-wrapper">
+                        <div class="shop-cs-time-scroller">
+                            <div class="shop-cs-time-scroller__list">
+                                <div class="shop-cs-time-scroller__item active" data-time-group="one-day">ارسال امروز</div>
+                                <div class="shop-cs-time-scroller__item" data-time-group="day1-times">پنج‌شنبه ۱۲</div>
+                                <div class="shop-cs-time-scroller__item" data-time-group="day2-times">شنبه ۱۴</div>
+                                <div class="shop-cs-time-scroller__item" data-time-group="day3-times">یکشنبه ۱۵</div>
+                                <div class="shop-cs-time-scroller__item" data-time-group="day4-times">دوشنبه ۱۶</div>
+                                <div class="shop-cs-time-scroller__item" data-time-group="day5-times">سه‌شنبه ۱۷</div>
+                                <div class="shop-cs-time-scroller__item" data-time-group="day6-times">چهارشنبه ۱۸</div>
+                                <div class="shop-cs-time-scroller__item" data-time-group="day7-times">پنج‌شنبه ۱۹</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shop-cs-time-slot-section">
+                        <div id="one-day" class="shop-cs-time-slot-group active">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option">
+                                <input type="radio" name="delivery_time" value="d1-em" id="d1-em">
+                                <label for="d1-em" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                                </span>
+                                    <span>امروز ساعت 8 صبح تا 12 ظهر </span>
+                                </label>
+                            </div>
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option">
+                                <input type="radio" name="delivery_time" value="d1-em2" id="d1-em2">
+                                <label for="d1-em2" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                                </span>
+                                    <span>امروز ساعت 12 ظهر تا 4 بعد از ظهر </span>
+                                </label>
+                            </div>
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option">
+                                <input type="radio" name="delivery_time" value="d1-em3" id="d1-em3">
+                                <label for="d1-em3" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                                </span>
+                                    <span>امروز ساعت 4 بعد از ظهر تا 8 شب </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="day1-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option">
+                                <input type="radio" name="delivery_time" value="d1-t1" id="d1-t1">
+                                <label for="d1-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                                </span>
+                                    <span>از 8 صبح تا 12 ظهر </span>
+                                </label>
+                            </div>
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option">
+                                <input type="radio" name="delivery_time" value="d1-t2" id="d1-t2">
+                                <label for="d1-t2" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                                </span>
+                                    <span>از 12 ظهر تا 4 بعد از ظهر </span>
+                                </label>
+                            </div>
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option">
+                                <input type="radio" name="delivery_time" value="d1-t3" id="d1-t3">
+                                <label for="d1-t3" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg>
+                                </span>
+                                    <span>از 4 بعد از ظهر تا 8 شب</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="day2-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option"><input type="radio" name="delivery_time" value="d2-t1" id="d2-t1"><label for="d2-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container"><svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg></span><span>ساعت ۱۰ تا ۱۶</span></label></div>
+                        </div>
+                        <div id="day3-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option"><input type="radio" name="delivery_time" value="d3-t1" id="d3-t1"><label for="d3-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container"><svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg></span><span>ساعت ۱۱ تا ۱۷</span></label></div>
+                        </div>
+                        <div id="day4-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option"><input type="radio" name="delivery_time" value="d4-t1" id="d4-t1"><label for="d4-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container"><svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg></span><span>ساعت ۹ تا ۱۲</span></label></div>
+                        </div>
+                        <div id="day5-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option"><input type="radio" name="delivery_time" value="d5-t1" id="d5-t1"><label for="d5-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container"><svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg></span><span>ساعت ۱۰ تا ۱۸</span></label></div>
+                        </div>
+                        <div id="day6-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option"><input type="radio" name="delivery_time" value="d6-t1" id="d6-t1"><label for="d6-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container"><svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg></span><span>ساعت ۱۲ تا ۱۸</span></label></div>
+                        </div>
+                        <div id="day7-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option"><input type="radio" name="delivery_time" value="d7-t1" id="d7-t1"><label for="d7-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container"><svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg></span><span>ساعت ۹ تا ۱۵</span></label></div>
+                        </div>
+                        <div id="day8-times" class="shop-cs-time-slot-group">
+                            <div class="shop-cs-time-slot-option shop-cs-selectable-option"><input type="radio" name="delivery_time" value="d8-t1" id="d8-t1"><label for="d8-t1" class="shop-cs-selectable-label"><span class="shop-cs-custom-tick-container"><svg class="shop-cs-tick-icon" viewBox="0 0 16 16"><path d="M4.5 8.5l2.5 2.5 5-5"></path></svg></span><span>ساعت ۱۰ تا ۱۴</span></label></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="dj-sh-total-row dj-sh-final-total"><span>مبلغ قابل
-                        پرداخت</span><span>{{total_price_with_tax|intcomma}}<span
-                            class="dj-sh-currency">تومان</span></span></div>
-            </div>
-            <button type="submit" form="checkout-form"
-                class="dj-sh-btn dj-sh-btn-primary dj-sh-btn-block dj-sh-btn-continue">ادامه فرآیند خرید</button>
-            <p class="dj-sh-terms">ثبت سفارش به معنی موافقت با <a href="{% url 'faq:rules' %}">شرایط و قوانین من
-                    مارکت</a> است.</p>
-        </aside>
+            </section>
+            </main>
+
+            <form class="shop-cs-checkout-sidebar">
+                <div class="shop-cs-checkout-card shop-cs-order-summary-card">
+                    <div class="shop-cs-card-body shop-cs-card-body--no-padding">
+                        <div class="shop-cs-summary-row">
+                            <div class="label">قیمت کالاها ({{cart.get_total_quantity}})</div>
+                            <div class="value">{{total_price|intcomma}} <span class="shop-cs-price-unit">تومان</span>
+                            </div>
+                        </div>
+                        <div class="shop-cs-summary-row">
+                            <div class="label">هزینه بسته بندی ارسال</div>
+                            <div class="value">50,000 <span class="shop-cs-price-unit">تومان</span></div>
+                        </div>
+                        <div class="shop-cs-summary-row">
+                            <div class="label"> سود شما از خرید</div>
+                            <div class="value" style="color:var(--dk-red)"> ({{sod|intcomma}}) <span
+                                    class="shop-cs-price-unit">تومان</span></div>
+                        </div>
+                        <div id="total-amount-row" class="shop-cs-summary-row">
+                            <div class="label">مبلغ نهایی</div>
+                            <div class="value" id="final-amount" data-amount="{{total_price_with_tax|intcomma}}">
+                                {{total_price_with_tax|intcomma}}<span class="shop-cs-price-unit">تومان</span></div>
+                        </div>
+                        <div
+                            class="d-flex justify-content-around align-items-center flex-wrap px-3 shop-cs-summary-row">
+                            <div class="fs-14">کد تخفیف :</div>
+                            <div class="fs-14"><input type="text" class="form-control"></div>
+                            <div class="fs-14 w-100 w-center mt-3">
+                                <button class="w-50 shop-cs-btn--primary text-light rounded-3">بررسی کد</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="payment-form" class="shop-cs-payment-method-section">
+                        <div class="shop-cs-selectable-option">
+                            <input type="radio" name="payment_method" form="checkout-form" value="wallet" id="payment-wallet"
+                                data-wallet="{{wallet.balance|floatformat:0|intcomma}}">
+                            <label for="payment-wallet" class="shop-cs-selectable-label">
+                                <span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
+                                        <path d="M4.5 8.5l2.5 2.5 5-5"></path>
+                                    </svg>
+                                </span>
+                                <div class="shop-cs-payment-details">
+                                    <strong>پرداخت با کیف پول</strong>
+                                    <p id="wallet-text">موجودی: {{wallet.balance|floatformat:0|intcomma}} تومان</p>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="shop-cs-selectable-option">
+                            
+                            <input type="radio" name="payment_method" form="checkout-form" value="zarinpal" id="payment-card" checked>
+                            <label for="payment-card" class="shop-cs-selectable-label">
+                                <span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
+                                        <path d="M4.5 8.5l2.5 2.5 5-5"></path>
+                                    </svg>
+                                </span>
+                                <div class="shop-cs-payment-details">
+                                    <strong>پرداخت با کارت بانکی</strong>
+                                    <p>پرداخت آنلاین از طریق درگاه امن</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="shop-cs-summary-action" style="padding:16px;">
+                        <button class="shop-cs-btn shop-cs-btn--primary" style="width: 100%; padding: 12px;"
+                            type="submit" form="checkout-form">ادامه
+                            فرآیند خرید</button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
     </div>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script>
 
+        function removeProducts(product_id, color_id) {
+            $.ajax({
+                url: "{%  url 'cart:session-remove-product' %}",
+                method: 'POST',
+                data: {
+                    product_id: product_id,
+                    color_id: color_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
 
-</section>
+                },
+                success: function (response) {
+                    console.log(response);
+                    window.location.reload();
+                    // do something with the response data
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    // handle the error case
+                }
+            });
+        }
+    </script>
 
-{% endblock content %}
+    <script>
+        function removeOneProductQuantity(product_id, color_id) {
+            $.ajax({
+                url: "{%  url 'cart:session-remove-one-quantity' %}",
+                method: 'POST',
+                data: {
+                    product_id: product_id,
+                    color_id: color_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
 
-{% block extra_js %}
-<script>
-    function selectAddress(addressId) {
-        // رادیو باتن مربوط به آدرس را انتخاب می‌کند
-        document.getElementById('address-' + addressId).checked = true;
-    }
-</script>
+                },
+                success: function (response) {
+                    console.log(response);
+                    window.location.reload();
+                    // do something with the response data
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    // handle the error case
+                }
+            });
+        }
+        function addOneProductQuantity(product_id, color_id) {
+            $.ajax({
+                url: "{%  url 'cart:session-add-one-quantity' %}",
+                method: 'POST',
+                data: {
+                    product_id: product_id,
+                    color_id: color_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
 
-<script>
-    function applyDiscount(total_price, total_tax) {
-        $("#total-price").html(total_price)
-        $("#total-tax").html(total_tax)
+                },
+                success: function (response) {
+                    console.log(response);
+                    window.location.reload();
+                    // do something with the response data
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                    // handle the error case
+                }
+            });
+        }
+    </script>
 
-        formatPriceInToman(document.getElementById("total-price"))
-        formatPriceInToman(document.getElementById("total-tax"))
-    }
+    <script src="{% static 'js/shopping.js' %}"></script>
 
-    function validateCoupon() {
-        $.ajax({
-            url: "{%  url 'order:validate-coupon' %}",
-            method: 'POST',
-            data: {
-                code: $('#coupon-input').val(),
-                csrfmiddlewaretoken: '{{ csrf_token }}'
+    <script src="{% static 'vendor/toastify/toastify.js' %}"></script>
+    {% include 'messages.html' %}
 
-            },
-            success: function (response) {
-                console.log("success", response);
-                Toastify({
-                    text: response.message,
-                    className: `info`,
-                    style: {
-                        background: "blue",
-                    }
-                }).showToast();
-                applyDiscount(response.total_price, response.total_tax)
-                // do something with the response data
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(errorThrown);
-                Toastify({
-                    text: jqXHR.responseJSON.message,
-                    className: `error`,
-                    style: {
-                        background: "red",
-                    }
-                }).showToast();
+</body>
 
-                // handle the error case
-            }
-        });
-    }
-
-</script>
-<script src="{% static 'js/shopping.js' %}"></script>
-{% endblock %}
+</html>

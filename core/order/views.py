@@ -58,13 +58,13 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
         if payment_method == "wallet":
             wallet = Wallet.objects.get(user=self.request.user)
-            total_tax = round((order.total_price * 10) / 100)
+            total_tax = round((order.total_price))
 
             # ✅ افزودن هزینه‌ی ثابت
-            order.total_price += 100000 + total_tax
+            order.total_price += 50000
 
             if wallet.balance >= order.total_price:
-                # پرداخت موفق
+                # پرداخت موفق   
                 wallet.balance -= order.total_price
                 wallet.save()
 
@@ -96,8 +96,8 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
         if payment_method == "zarinpal":
             zarinpal = ZarinPalSandbox()
-            total_tax = round((order.total_price * 10) / 100)
-            order.total_price += total_tax + 100000
+            total_tax = round((order.total_price)) + 50000
+            order.total_price = total_tax 
             
 
             callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
@@ -159,12 +159,19 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         context["addresses"] = UserAddressModel.objects.filter(
             user=self.request.user)
         total_price = cart.calculate_total_price()
-        total_tax = round((total_price * 10)/100)
+        
         wallet = Wallet.objects.get(user=self.request.user)
         context['wallet'] = wallet
         context["total_price"] = total_price
-        context["total_tax"] = total_tax
-        context['total_price_with_tax'] = total_price + total_tax + 100000
+
+        context['total_price_with_tax'] = total_price  + 50000
+        cart = CartSession(self.request.session)
+        total_payment_price = cart.get_total_payment_amount()
+        tot_payment_price = cart.get_tot_payment_amount()
+        sod = tot_payment_price - total_payment_price
+        context["sod"] = sod
+        cart_items = cart.get_cart_items()
+        context["cart_items"] = cart_items
         return context
 
 

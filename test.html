@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<br><br><br>
+<section class="p-wrap">
+
+
+    <div class="dj-sh-checkout-container dj-sh-container">
+        <main class="dj-sh-checkout-main">
+            <section class="dj-sh-checkout-section dj-sh-address-section">
+                <form action="." method="post" id="checkout-form">
+                    {% csrf_token %}
+                    <h2 class="dj-sh-section-title">
+                        <svg class="dj-sh-icon-svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+                            </path>
+                        </svg>
+                        انتخاب آدرس تحویل سفارش
+                    </h2>
+                    <div class="dj-sh-address-list" id="address-list-container">
+                        {% for address in addresses %}
+                        <article class="dj-sh-address-card dj-sh-selectable" data-address-id="addr-{{address.id}}">
+                            <svg class="dj-sh-icon-svg dj-sh-selected-icon" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 15 15" width="1em" height="1em">
+                                <path fill="none" stroke="currentColor"
+                                    d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 1 1 0-14a7 7 0 0 1 0 14Z"></path>
+                            </svg>
+                            <div class="dj-sh-address-card-header">
+
+                            </div>
+                            <p class="dj-sh-address-text">
+                                <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z">
+                                    </path>
+                                </svg> {{address.state}},{{address.city}},{{address.address}} ,{{address.zip_code}}
+                            </p>
+                            <div class="dj-sh-address-card-actions">
+                                <input type="radio" name="address_id" value="{{address.id}}" id="address-{{address.id}}"
+                                    hidden>
+                                <button class="dj-sh-btn dj-sh-btn-select-address" type="button"
+                                    onclick="selectAddress('{{address.id}}')">انتخاب</button>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'dashboard:customer:address-list' %}">
+                        <button class="dj-sh-btn dj-sh-btn-add-address" type="button">
+                            <svg class="dj-sh-icon-svg" viewBox="0 0 24 24">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                            </svg> مدیریت آدرس ها
+                        </button>
+                    </a>
+                    <div class="dj-payment-method-selection">
+                        <h3 class="dj-sh-summary-title">روش پرداخت</h3>
+                        <div class="dj-sh-radio-group">
+                            <label>
+                                <input type="radio" name="payment_method" value="wallet" checked>
+                                پرداخت با کیف پول
+                            </label>
+                            <label>
+                                <input type="radio" name="payment_method" value="zarinpal">
+                                پرداخت با کارت بانکی
+                            </label>
+                            <p class="wallet-info">
+                                موجودی کیف پول شما:
+                                <strong>{{wallet.balance|floatformat:0|intcomma}}</strong> تومان
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                </form>
+            </section>
+        </main>
+        
+
+        <aside class="dj-sh-order-summary">
+
+            <h3 class="dj-sh-summary-title">خلاصه سفارش</h3>
+            <div class="dj-sh-summary-totals">
+                <div class="dj-sh-total-row" id="summary-items-total-row"><span>قیمت
+                        کالاها</span><span>{{total_price|intcomma}}<span class="dj-sh-currency">تومان</span></span>
+                </div>
+                <div class="dj-sh-total-row dj-sh-shipping-cost">
+                    <span>هزینه ارسال <svg class="dj-sh-icon-svg" viewBox="0 0 24 24" fill="currentColor"
+                            title="هزینه ارسال بر اساس آدرس، زمان و روش ارسال محاسبه می‌شود">
+                            <path
+                                d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+                            </path>
+                        </svg></span>
+                    <span>۱۰۰٬۰۰۰ <span class="dj-sh-currency">تومان</span></span>
+                </div>
+                <div class="dj-sh-total-row" id="summary-discount-row"><span>تخفیف کالاها</span><span
+                        class="dj-sh-discount" id="summary-discount-value">۰ <span
+                            class="dj-sh-currency">تومان</span></span></div>
+                <div class="dj-sh-total-row" id="summary-items-total-row">
+                    <span>مالیات(10%)</span><span>{{total_tax|intcomma}}<span class="dj-sh-currency">تومان</span></span>
+                </div>
+                <div class="dj-sh-total-row dj-sh-final-total"><span>مبلغ قابل
+                        پرداخت</span><span>{{total_price_with_tax|intcomma}}<span
+                            class="dj-sh-currency">تومان</span></span></div>
+            </div>
+            <button type="submit" form="checkout-form"
+                class="dj-sh-btn dj-sh-btn-primary dj-sh-btn-block dj-sh-btn-continue">ادامه فرآیند خرید</button>
+            <p class="dj-sh-terms">ثبت سفارش به معنی موافقت با <a href="{% url 'faq:rules' %}">شرایط و قوانین من
+                    مارکت</a> است.</p>
+        </aside>
+    </div>
+
+
+</section>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    function selectAddress(addressId) {
+        // رادیو باتن مربوط به آدرس را انتخاب می‌کند
+        document.getElementById('address-' + addressId).checked = true;
+    }
+</script>
+
+<script>
+    function applyDiscount(total_price, total_tax) {
+        $("#total-price").html(total_price)
+        $("#total-tax").html(total_tax)
+
+        formatPriceInToman(document.getElementById("total-price"))
+        formatPriceInToman(document.getElementById("total-tax"))
+    }
+
+    function validateCoupon() {
+        $.ajax({
+            url: "{%  url 'order:validate-coupon' %}",
+            method: 'POST',
+            data: {
+                code: $('#coupon-input').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+
+            },
+            success: function (response) {
+                console.log("success", response);
+                Toastify({
+                    text: response.message,
+                    className: `info`,
+                    style: {
+                        background: "blue",
+                    }
+                }).showToast();
+                applyDiscount(response.total_price, response.total_tax)
+                // do something with the response data
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+                Toastify({
+                    text: jqXHR.responseJSON.message,
+                    className: `error`,
+                    style: {
+                        background: "red",
+                    }
+                }).showToast();
+
+                // handle the error case
+            }
+        });
+    }
+
+</script>
+<script src="{% static 'js/shopping.js' %}"></script>
+{% endblock %}

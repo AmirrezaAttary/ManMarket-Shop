@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ADDRESS LOGIC
-    const addressForm = document.getElementById('address-form');
+    const addressForm = document.getElementById('checkout-form');
     const activeAddressDisplayWrapper = document.querySelector('#active-address-display .address-details-wrapper');
     const toggleBtn = document.getElementById('btn-toggle-address');
     const collapsibleList = document.getElementById('address-list-collapsible');
