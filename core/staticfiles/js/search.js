@@ -65,9 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const minPriceValueInput = document.getElementById('minPriceValue');
     const maxPriceValueInput = document.getElementById('maxPriceValue');
     const priceSliderRange = document.getElementById('priceSliderRange');
-
-    const actualMinProductPrice = 0;
-    const actualMaxProductPrice = 100000000;
+    const min_db = document.getElementById('min_db_html').value;
+    const max_db = document.getElementById('max_db_html').value;
+    const actualMinProductPrice =  0;
+    const actualMaxProductPrice = parseInt(max_db, 10) || 100000000;
 
     let currentMinPrice = actualMinProductPrice;
     let currentMaxPrice = actualMaxProductPrice;

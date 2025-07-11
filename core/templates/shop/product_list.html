@@ -2,19 +2,21 @@
 {% load static %}
 {% load humanize %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/bootstrap/boot.rtl.css' %}">
+{% endblock extra_css %}
+
 {% block title %}فروشگاه{% endblock title %}
 {% block content %}
-<br><br><br>
-<div class="container-fluid my-3 fill-page-container">
+
+<div class="container-fluid my-3 fill-page-container mt-5 pt-4">
     <div class="row gx-3 h-100">
 
-        <!-- ======================= سایدبار فیلتر استاتیک شده ======================= -->
-        <aside class="col-lg-3 fill-filters-sidebar-container mb-3 mb-lg-0">
+        <form class="col-lg-3 fill-filters-sidebar-container mb-3 mb-lg-0" method="get" action="." id="mobileFiltersForm">
             <div class="fill-filters-sidebar-content-wrapper">
                 <div class="fill-sidebar-header">فیلتر محصولات</div>
                 <div class="accordion" id="filtersAccordion">
 
-                    <!-- Price Filter -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingPrice">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -38,22 +40,23 @@
                                 <div class="fill-price-slider-container">
                                     <div class="fill-price-slider-track" id="priceSliderTrack">
                                         <div class="fill-price-slider-range" id="priceSliderRange"></div>
-                                        <div class="fill-price-slider-handle" id="maxPriceHandle"
-                                            data-handle="min-visual"></div>
                                         <div class="fill-price-slider-handle" id="minPriceHandle"
+                                            data-handle="min-visual"></div>
+                                        <div class="fill-price-slider-handle" id="maxPriceHandle"
                                             data-handle="max-visual"></div>
                                     </div>
                                 </div>
                                 <div class="fill-price-display">
-                                    از <span id="maxPriceDisplay">-</span> تا <span id="minPriceDisplay">-</span> تومان
+                                    از <span id="minPriceDisplay">-</span> تا <span id="maxPriceDisplay">-</span> تومان
                                 </div>
-                                <input type="hidden" id="minPriceValue">
-                                <input type="hidden" id="maxPriceValue">
+                                <input type="hidden" value="{{ min_price_all }}" id="min_db_html">
+                                <input type="hidden" value="{{ max_price_all }}" id="max_db_html">
+                                <input type="hidden" form="mobileFiltersForm" name="min_price" id="minPriceValue">
+                                <input type="hidden" form="mobileFiltersForm" name="max_price" id="maxPriceValue">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Category Filter -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingCategory">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -77,9 +80,9 @@
                             <div class="accordion-body fill-filter-options-list" id="categoryFilterContainer">
                                 {% for category in categories %}
                                 <div class="fill-filter-option">
-                                    <input type="checkbox" id="category-filter-{{category.id}}"
-                                        value="{{category.slug}}">
-                                    <label for="category-filter-{{category.id}}">{{category}}<span
+                                    <input type="checkbox" name="category" form="mobileFiltersForm" id="category-filter-{{category.id}}"
+                                        value="{{category.slug}}" {% if category.slug in selected_categories %}checked{% endif %}>
+                                    <label for="category-filter-{{category.id}}">{{category.title}}<span
                                             class="fill-custom-tick-container"><svg class="fill-tick-icon"
                                                 viewBox="0 0 16 16">
                                                 <path d="M4.5 8.5l2.5 2.5 5-5"></path>
@@ -90,7 +93,6 @@
                         </div>
                     </div>
 
-                    <!-- Brand Filter -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingBrand">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -113,7 +115,8 @@
                             <div class="accordion-body fill-filter-options-list" id="brandFilterContainer">
                                 {% for brand in brands %}
                                 <div class="fill-filter-option">
-                                    <input type="checkbox" id="brand-filter-{{brand.id}}" value="{{brand.slug}}">
+                                    <input type="checkbox" form="mobileFiltersForm" name="brand" id="brand-filter-{{brand.id}}"
+                                        value="{{brand.slug}}" {% if brand.slug in selected_brands %}checked{% endif %}>
                                     <label for="brand-filter-{{brand.id}}">{{brand}}<span
                                             class="fill-custom-tick-container"><svg class="fill-tick-icon"
                                                 viewBox="0 0 16 16">
@@ -124,64 +127,9 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Sort Filter -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingSort">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
-                                <svg class="fill-accordion-header-icon" viewBox="0 0 24 24">
-                                    <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path>
-                                </svg>
-                                مرتب‌سازی
-                                <svg class="fill-accordion-chevron" xmlns="http://www.w3.org/2000/svg" width="16"
-                                    height="16" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="collapseSort" class="accordion-collapse collapse" aria-labelledby="headingSort"
-                            data-bs-parent="#filtersAccordion">
-                            <div class="accordion-body fill-filter-options-list" id="order_byOptionsContainer">
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-1" name="order_byOption" value="newest"
-                                        checked>
-                                    <label for="order_by-filter-1">جدیدترین<span class="fill-custom-tick-container"><svg
-                                                class="fill-tick-icon" viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-2" name="order_byOption" value="popular">
-                                    <label for="order_by-filter-2">محبوب ترین<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-3" name="order_byOption" value="cheap">
-                                    <label for="order_by-filter-3">ارزان ترین<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-4" name="order_byOption" value="expensive">
-                                    <label for="order_by-filter-4">گران‌ترین<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="fill-clear-filters-container px-3">
-                    <button id="clearFiltersButton" class="btn theme-color d-block">
+                    <button id="clearFiltersButton" class="btn theme-color d-block" type="submit" form="mobileFiltersForm">
                         <svg viewBox="0 0 24 24">
                             <path
                                 d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
@@ -189,20 +137,50 @@
                         </svg>
                         پاک کردن فیلترها
                     </button>
-                    <button id="applyFiltersMobileButton" class="btn theme-color">
+                    <button id="applyFiltersMobileButton" class="btn theme-color" form="mobileFiltersForm" type="submit">
                         اعمال فیلترها
                     </button>
                 </div>
             </div>
-        </aside>
+        </form>
 
         <main class="col-lg-9 py-3 d-flex flex-column fill-main-content mt-0">
 
-            <!-- ======================= شروع نوار فیلتر موبایل ======================= -->
+            <div class="accordion-item d-n-fill">
+                <div>
+                    <div class="accordion-body fill-filter-options-list d-flex">
+                        <div class="fill-filter-option b-none w-center">
+                            <label class="mx-0"> مرتب سازی بر اساس : </label>
+                        </div>
+                        <div class="fill-filter-option b-none w-center">
+                            <input type="radio" id="sort-filter-2" value="newest" {% if selected_order == "newest" %}checked{% endif %}>
+                            <label for="sort-filter-2">جدیدترین
+                            </label>
+                        </div>
+                        <div class="fill-filter-option b-none w-center">
+                            <input type="radio" id="sort-filter-1" name="sortOption" value="popular" {% if selected_order == "popular" %}checked{% endif %}>
+                            <label for="sort-filter-1">محبوب ترین
+                            </label>
+                        </div>
+
+                        <div class="fill-filter-option b-none w-center">
+                            <input type="radio" id="sort-filter-3" name="sortOption" value="cheap" {% if selected_order == "cheap" %}checked{% endif %}>
+                            <label for="sort-filter-3">ارزان ترین
+                            </label>
+                        </div>
+                        <div class="fill-filter-option b-none w-center">
+                            <input type="radio" id="sort-filter-4" name="sortOption" value="expensive" {% if selected_order == "expensive" %}checked{% endif %}>
+                            <label for="sort-filter-4">گران‌ترین
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div id="mobileFilterBar" class="mobile-filter-bar">
                 <div class="mobile-filter-bar-wrapper">
 
-                    <!-- دکمه تغییر چینش (گرید/لیست) -->
                     <div class="layout-toggle-container">
                         <button class="btn-filter-chip btn-layout-toggle" id="layoutToggleButton" title="تغییر چینش">
                             <span class="layout-icon-container">
@@ -230,123 +208,171 @@
                         </div>
                     </div>
 
-                    <!-- چیپ‌های اسکرول‌خور فیلتر -->
                     <div class="scrollable-filter-chips">
-                        <button class="btn-filter-chip" data-filter-target="all">
+                        <button class="btn-filter-chip" type="button" data-filter-target="all">
                             <svg viewBox="0 0 24 24">
                                 <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path>
                             </svg>
                             <span>فیلترها</span>
                         </button>
-                        <button class="btn-filter-chip" data-filter-target="price"><span>قیمت</span></button>
-                        <button class="btn-filter-chip" data-filter-target="category"><span>دسته‌بندی</span></button>
-                        <button class="btn-filter-chip" data-filter-target="brand"><span>برند</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="popular"><span>محبوب‌ترین</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="newest"><span>جدیدترین</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="cheap"><span>ارزان‌ترین</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="expensive"><span>گران‌ترین</span></button>
-                        <button class="btn-filter-chip" data-filter-target="color"><span>رنگ</span></button>
-                        <button class="btn-filter-chip" data-filter-target="size"><span>سایز</span></button>
-                        <button class="btn-filter-chip" data-filter-target="material"><span>جنس</span></button>
+                        <button class="btn-filter-chip mobile-filter {% if selected_order == "popular" %}active{% endif %}" id="mobile-popular" data-sort-option="popular"><span>محبوب‌ترین</span></button>
+                        <button class="btn-filter-chip mobile-filter {% if selected_order == "newest" %}active{% endif %}" id="mobile-newest" data-sort-option="newest"><span>جدیدترین</span></button>
+                        <button class="btn-filter-chip mobile-filter {% if selected_order == "cheap" %}active{% endif %}" id="mobile-price-asc" data-sort-option="cheap"><span>ارزان‌ترین</span></button>
+                        <button class="btn-filter-chip mobile-filter {% if selected_order == "expensive" %}active{% endif %}" id="mobile-price-desc" data-sort-option="expensive"><span>گران‌ترین</span></button>
+
                     </div>
                 </div>
             </div>
-            <!-- ======================= پایان نوار فیلتر موبایل ======================= -->
 
             <div id="resultsGridContainer" class="flex-grow-1">
                 <div id="resultsGrid" class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 py-2">
                     {% for object in object_list %}
-                    {% if object.min_discounted_price == None %}
-                    <div class="col box-cs pc-s" data-price="ناموجود" data-category="{{object.category}}"
-                        data-brand="{{object.brand}}">
-                        {% else %}
-                        <div class="col box-cs pc-s" data-price="{{object.min_discounted_price}}"
-                            data-category="{{object.category}}" data-brand="{{object.brand}}">
-                            {% endif %}
-                            <a target="_blank" href="{% url 'shop:product-detail' slug=object.slug %}"
-                                class="fill-product-card-link d-block h-100">
-                                <div class="card h-100 fill-product-card">
-                                    <img src="{{object.image.url}}" class="card-img-top fill-product-card-img"
-                                        alt="{{object.title}}">
-                                    <div class="card-body d-flex flex-column w-right">
-                                        <h5 class="card-title"> {{object.title}}</h5>
-                                        <div class="fill-card-brand my-1">{{object.category}}</div>
-                                        <p class="card-text fill-description flex-grow-1">{{object.brief_description}}
-                                        </p>
-                                        {% if object.min_discounted_price == None %}
-                                        <p class="card-price py-1 px-2"><span class="fill-price-value">ناموجود</span>
-                                        </p>
+
+                    <div class="col box-cs pc-s"
+                        data-price="{% if object.min_discounted_price == None %}ناموجود{% else %}{{object.min_discounted_price|intcomma}}{% endif %}"
+                        data-category="{{object.category}}" data-brand="{{object.brand}}" data-id="p{{object.id}}">
+                        <a target="_blank" href="{% url 'shop:product-detail' slug=object.slug %}"
+                            class="fill-product-card-link d-block h-100">
+                            <div class="card h-100 fill-product-card">
+                                <img src="{{object.image.url}}" class="card-img-top fill-product-card-img"
+                                    alt="گوشی آیفون 13">
+                                <div class="card-body d-flex flex-column w-right">
+                                    <h5 class="card-title"> {{object.title}}</h5>
+                                    <div class="fill-card-brand my-1">{{object.category}}</div>
+                                    <p class="card-text fill-description flex-grow-1">{{object.brief_description}}</p>
+                                    <p class="card-price py-1 px-2 ">
+                                        <span class="fill-price-value">{% if object.min_discounted_price == None %}
+                                            ناموجود{% else %}{{object.min_discounted_price|intcomma}}تومان {% endif %}</span>
+                                        <span class="money-icon"></span>
+                                    </p>
+                                    <div dir="ltr"
+                                        class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center flex-column">
+
+                                        {% with object.color_inventories.all as colors %}
+                                        {% for inventory in colors %}
+
+                                        {% if inventory.price == 0 or inventory.price == None %}
+
                                         {% else %}
-                                        <p class="card-price py-1 px-2"><span
-                                                class="fill-price-value">{{object.min_discounted_price}}</span>
-                                            تومان</p>
-                                        {% endif %}
-                                        <div dir="ltr"
-                                            class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center">
-                                            {% with object.color_inventories.all as colors %}
-                                            {% for inventory in colors|slice:":3" %}
-                                            <span class="mx-1 three-color"
-                                                style="background-color: {{ inventory.hex_color }};">
-                                                <span class="">
 
-                                                </span>
+
+                                        <span class="mx-1 one-color mt-1"
+                                            style="background-color: {{ inventory.hex_color }};">
+                                            <span class="">
+
                                             </span>
-                                            {% endfor %}
-                                            {% if colors|length > 3 %}
-                                            <span class="mx-1">
-                                                <svg class="cs-color" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 16 16" width="22px" height="22px">
-                                                    <path fill="currentColor" fill-rule="evenodd"
-                                                        d="M3 8a1 1 0 1 1 2 0a1 1 0 0 1-2 0m4 0a1 1 0 1 1 2 0a1 1 0 0 1-2 0m3.99 0a1 1 0 1 1 2 0a1 1 0 0 1-2 0"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                            </span>
-                                            {% endif %}
-                                            {% endwith %}
-                                        </div>
-                                        <span class="cs-sc-star align-items-center d-flex justify-content-center">
-                                            <svg class="star rated  cs-star mb-1 mx-1" viewBox="0 0 24 24">
-                                                <polygon
-                                                    points="12 2 15 10 24 10 17 15 19 23 12 18 5 23 7 15 0 10 9 10" />
-                                            </svg>
-                                            {{object.avg_rate}}
                                         </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        {% endfor %}
-                    </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% endwith %}
 
-                    <div id="noResultsMessage" class="alert alert-warning mt-3 d-none" role="alert">
-                        محصولی برای نمایش وجود ندارد.
+                                    </div>
+                                    <span class="cs-sc-star align-items-center d-flex justify-content-center">
+                                        <svg class="star rated  cs-star mb-1 mx-1" viewBox="0 0 24 24">
+                                            <polygon points="12 2 15 10 24 10 17 15 19 23 12 18 5 23 7 15 0 10 9 10" />
+                                        </svg>
+                                        {{object.avg_rate}}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                    <nav aria-label="Page navigation" class="mt-auto pt-3" id="paginationContainer">
-                        <ul class="pagination justify-content-center" id="paginationUl"
-                            data-total-pages="{{ page_obj.paginator.num_pages }}"></ul>
-                    </nav>
+                    {% endfor %}
                 </div>
+
+                <div id="noResultsMessage" class="alert alert-warning mt-3 d-none" role="alert">
+                    محصولی برای نمایش وجود ندارد.
+                </div>
+
+                {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+
+                        {# قبلی #}
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <button class="page-link" onclick="changePage(`{{ page_obj.previous_page_number }}`)"
+                                aria-label="Previous">
+                                <span aria-hidden="true">
+                                    <i class="bi bi-chevron-double-right small">قبلی</i>
+                                </span>
+                            </button>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled" hidden>
+                            <button class="page-link" tabindex="-1" aria-disabled="true">
+                                <span aria-hidden="true">
+                                    <i class="bi bi-chevron-double-right small"></i>
+                                </span>
+                            </button>
+                        </li>
+                        {% endif %}
+
+                        {# صفحات #}
+                        {% for i in page_obj.paginator.page_range %}
+                        {% if i == page_obj.number %}
+                        <li class="page-item active">
+                            <button class="page-link">{{ i }}</button>
+                        </li>
+                        {% elif i >= page_obj.number|add:'-1' and i <= page_obj.number|add:'1' %} <li class="page-item">
+                            <button class="page-link" onclick="changePage(`{{ i }}`)">{{ i }}</button>
+                            </li>
+                            {% elif i == 1 or i == page_obj.paginator.num_pages %}
+                            <li class="page-item">
+                                <button class="page-link" onclick="changePage(`{{ i }}`)">{{ i }}</button>
+                            </li>
+                            {% elif i == page_obj.number|add:'-3' or i == page_obj.number|add:'3' %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                            {% endfor %}
+
+                            {# بعدی #}
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <button class="page-link" onclick="changePage(`{{ page_obj.next_page_number }}`)"
+                                    aria-label="Next">
+                                    <span aria-hidden="true">
+                                        <i class="bi bi-chevron-double-left small">بعدی </i>
+                                    </span>
+                                </button>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled" hidden>
+                                <button class="page-link" tabindex="-1" aria-disabled="true">
+                                    <span aria-hidden="true">
+                                        <i class="bi bi-chevron-double-left small"></i>
+                                    </span>
+                                </button>
+                            </li>
+                            {% endif %}
+
+                    </ul>
+                </nav>
+                {% endif %}
+
+            </div>
         </main>
 
     </div>
 </div>
 
 <div class="filters-bottom-sheet-overlay rounded-3" id="filtersBottomSheetOverlay"></div>
+
+
 <div class="filters-bottom-sheet rounded-3" id="filtersBottomSheet">
     <div class="filters-bottom-sheet-header">
         <span class="title">فیلتر محصولات</span>
         <button class="btn-close-sheet" id="closeBottomSheetButton" aria-label="بستن">×</button>
     </div>
     <div class="filters-bottom-sheet-content" id="bottomSheetFilterContent">
-        <!-- محتوای فیلترها در حالت موبایل به اینجا منتقل می شود -->
     </div>
 </div>
+
 
 {% endblock content %}
 
 
-
-{% block extra_js %}
+{% block extra_jss %}
 <script>
 
     $(document).ready(function () {
@@ -374,11 +400,52 @@
             window.location.href = new_url;
         }
     });
+    $('#sort-filter-2').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("order_by", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#sort-filter-1').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("order_by", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#sort-filter-3').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("order_by", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
+    $('#sort-filter-4').change(function () {
+        let current_url_params = new URLSearchParams(window.location.search)
+        var selectedOption = $(this).val();
+        current_url_params.set("order_by", selectedOption)
+        let new_url = window.location.pathname + "?" + current_url_params.toString()
+        window.location.href = new_url
+    });
 
 </script>
+
+<script>
+    $(document).ready(function () {
+        $('.mobile-filter').click(function (e) {
+            e.preventDefault();  // برای جلوگیری از رفتار پیش‌فرض دکمه (مثلاً در فرم)
+
+            let selectedOption = $(this).data('sort-option');  // خواندن از data-sort-option
+            let current_url_params = new URLSearchParams(window.location.search);
+            current_url_params.set("order_by", selectedOption);
+
+            let new_url = window.location.pathname + "?" + current_url_params.toString();
+            window.location.href = new_url;
+        });
+    });
+</script>
+
 <script src="{% static 'js/custom.js' %}"></script>
 <script src="{% static 'js/search.js' %}"></script>
-<script src="{% static 'cdn-product/listbootstrap.bundle.min.js' %}"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
-{% endblock extra_js %}
+{% endblock extra_jss %}

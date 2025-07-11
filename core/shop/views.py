@@ -44,19 +44,39 @@ class ShopListProductView(ListView):
         if max_price:
             queryset = queryset.filter(color_inventories__price__lte=max_price)
 
-        order_by = self.request.GET.get("order_by")
-        if order_by:
-            if order_by == "visited":
-                queryset = queryset.order_by("-product_view")
-            elif order_by == "newest":
-                queryset = queryset.order_by("-created_date")
-            elif order_by == "popular":
-                queryset = queryset.order_by("-avg_rate")
-            elif order_by == "cheap":
-                queryset = queryset.annotate(min_price=Min("color_inventories__price")).order_by("min_price")
-            elif order_by == "expensive":
-                queryset = queryset.annotate(max_price=Max("color_inventories__price")).order_by("-max_price")
+        # annotate برای حداقل و حداکثر قیمت
+        queryset = queryset.annotate(
+            min_price=Min("color_inventories__price"),
+            max_price=Max("color_inventories__price")
+        )
 
+        # annotate برای اولویت قیمت (برای همه حالت‌ها)
+        queryset = queryset.annotate(
+            price_priority=Case(
+                When(min_price__isnull=True, then=Value(1)),
+                When(min_price=0, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField()
+            )
+        )
+
+        # فیلتر مرتب‌سازی
+        order_by = self.request.GET.get("order_by")
+        if order_by == "visited":
+            queryset = queryset.order_by("price_priority", F("product_view").desc(nulls_last=True))
+        elif order_by == "newest":
+            queryset = queryset.order_by("price_priority", F("created_date").desc(nulls_last=True))
+        elif order_by == "popular":
+            queryset = queryset.order_by("price_priority", F("avg_rate").desc(nulls_last=True))
+        elif order_by == "cheap":
+            queryset = queryset.order_by("price_priority", "min_price")
+        elif order_by == "expensive":
+            queryset = queryset.order_by("price_priority", "-max_price")
+        else:
+            # اگر کاربر order_by نفرستاده بود، فقط اولویت قیمت مهم است
+            queryset = queryset.order_by("price_priority")
+
+        # محاسبه تخفیف
         discounted_price_expr = ExpressionWrapper(
             F('price') - (F('price') * F('discount_percent') / 100),
             output_field=DecimalField()
@@ -70,28 +90,15 @@ class ShopListProductView(ListView):
             discounted_price__gt=0
         ).order_by('discounted_price')
 
-        min_discounted_price_subquery = Subquery(
-            discounted_inventory.values('discounted_price')[:1]
-        )
-
-        min_discount_percent_subquery = Subquery(
-            discounted_inventory.values('discount_percent')[:1]
-        )
-
         queryset = queryset.annotate(
-            min_discounted_price=min_discounted_price_subquery,
-            min_discount_percent=min_discount_percent_subquery
-        ).annotate(
-            # محصولات بدون قیمت (0 یا None) در انتها
-            price_priority=Case(
-                When(min_discounted_price__isnull=True, then=Value(1)),
-                When(min_discounted_price=0, then=Value(1)),
-                default=Value(0),
-                output_field=IntegerField()
-            )
-        ).prefetch_related(
+            min_discounted_price=Subquery(discounted_inventory.values('discounted_price')[:1]),
+            min_discount_percent=Subquery(discounted_inventory.values('discount_percent')[:1])
+        )
+
+        # prefetch رنگ‌ها
+        queryset = queryset.prefetch_related(
             Prefetch('color_inventories', queryset=ProductColorInventory.objects.select_related('color'))
-        ).order_by('price_priority')  # ابتدا محصولات با قیمت معتبر
+        )
 
         return queryset.distinct()
 
@@ -100,17 +107,19 @@ class ShopListProductView(ListView):
         context['total_items'] = self.get_queryset().count()
         context["categories"] = ProductCategoryModel.objects.all()
         context["brands"] = Brand.objects.all()
-        return context
-    
+        context["selected_brands"] = self.request.GET.getlist("brand")
+        context["selected_categories"] = self.request.GET.getlist("category")
+        context["selected_order"] = self.request.GET.get("order_by", "")
+        price_range = ProductColorInventory.objects.filter(price__gt=0).aggregate(
+        min_price=Min("price"),
+        max_price=Max("price")
+        )
+        context["min_price_all"] = price_range["min_price"]
+        context["max_price_all"] = price_range["max_price"]
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['total_items'] = self.get_queryset().count()
-        context["categories"] = ProductCategoryModel.objects.all()
-        context["brands"] = Brand.objects.all()
         return context
-    
-
+            
+  
   
 class ShopDetailProductView(DetailView):
     template_name = 'shop/product_detail.html'
@@ -152,7 +161,7 @@ class ShopDetailProductView(DetailView):
         context["total_reviews_count"] = total_reviews_count
         return context
     
-    
+ 
   
 class AddOrRemoveWishlistView(LoginRequiredMixin, View):
 
