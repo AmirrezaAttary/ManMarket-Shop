@@ -106,6 +106,13 @@
 
             <div class="col-lg-3 col-12" id="a-s">
                 <div id="product-summary-panel">
+                    
+                {% if request.user.is_authenticated and request.user.type == 2 or request.user.type == 3 %}
+                    <a target="_blank" href="{% url 'dashboard:admin:product-edit' pk=object.pk %}" style="border: 1px solid red;border-radius: 10px;">
+                        مشاهده در ادمین
+                    </a>
+                {% endif %}
+
                     <div class="panel-card">
                         <div class="panel-section price-section">
                             {% if default_color.discounted_price == None %}
