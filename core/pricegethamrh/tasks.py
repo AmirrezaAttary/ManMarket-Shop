@@ -49,13 +49,15 @@ def update_all_hamrah_products():
                         defaults={
                             'price': discounted_price,
                             'discount_percent': 0,
-                            'hex_color': value.get('color_code', '#ffffff')  # پیش‌فرض سفید
+                            'hex_color': value.get('color_code', '#ffffff'),  # پیش‌فرض سفید
+                            'stock': value.get('quantity', 0)
                         }
                     )
 
                     if not created:
                         pci.price = discounted_price
                         pci.discount_percent = 0
+                        pci.stock = value.get('quantity', 0)
                         pci.save()
                         print(f"✅ قیمت بروزرسانی شد: {product.title} | رنگ: {color_title} | قیمت: {discounted_price}")
                     else:

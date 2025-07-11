@@ -54,7 +54,8 @@ class GetColorAndPrice(View):
                 defaults={
                     'price': discounted_price,
                     'discount_percent': discount,
-                    'hex_color': color_code
+                    'hex_color': color_code,
+                    'stock' : value.get('quantity', 0)
                 }
             )
 
@@ -62,6 +63,7 @@ class GetColorAndPrice(View):
                 pci.price = discounted_price
                 pci.discount_percent = discount
                 pci.hex_color = color_code  # ← اضافه کردن مقدار کد رنگ
+                pci.stock = value.get('quantity', 0)
                 pci.save()
 
 

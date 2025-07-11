@@ -82,7 +82,8 @@ def extract_product_data(url):
             result[color_name] = {
                 "color": color_name,
                 "color_code": color_code,
-                "price": int(price)
+                "price": int(price),
+                "quantity" : quantity
             }
 
     return result

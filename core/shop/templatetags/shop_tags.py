@@ -73,3 +73,28 @@ def show_most_viewed_products(context):
         "request": request,
         "wishlist_items": wishlist_items
     }
+
+
+
+@register.inclusion_tag("includes/similar-products.html", takes_context=True)
+def show_similar_products(context, product):
+    request = context.get("request")
+    brand = product.brand
+    category = product.category
+
+    similar_prodcuts = ProductModel.objects.filter(
+        status=ProductStatusType.publish.value,
+        brand=brand,
+        category=category,
+        color_inventories__price__gt=0  # فقط محصولاتی که حداقل یک قیمت > 0 دارند
+    ).exclude(id=product.id).distinct().order_by("-created_date")[:8]
+
+    wishlist_items = WishlistProductModel.objects.filter(
+        user=request.user
+    ).values_list("product__id", flat=True) if request.user.is_authenticated else []
+
+    return {
+        "similar_prodcuts": similar_prodcuts,
+        "request": request,
+        "wishlist_items": wishlist_items
+    }

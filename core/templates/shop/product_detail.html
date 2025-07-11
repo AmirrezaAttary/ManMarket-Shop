@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load shop_tags %}
 {% block title %}
 {{ object.title }} | خرید {{ object.category }} | manmarket.ir
 {% endblock title %}
@@ -356,6 +357,7 @@
         <div id="SH-HS-related-products-card" class="SH-HS-detail-card">
 
             <!-- SIMILAR POST RO INJA BEZAR -->
+        {% show_similar_products object %}
 
         </div>
     </div>

@@ -1,0 +1,33 @@
+{% load humanize %}
+
+{% if similar_prodcuts %}
+<div class="splide SH-HS-related-splide pb-4 mb-5">
+    <div class="splide__track">
+        <h5 class="text-center mb-5">
+            <span style="color: red; letter-spacing: -4px; font-size: 20px">------</span>
+            <span class="px-2">محصولات مرتبط</span>
+            <span style="color: red; letter-spacing: -4px; font-size: 20px">------</span>
+        </h5>
+        <ul class="splide__list">
+            {% for product in similar_prodcuts %}
+                <li class="splide__slide SH-HS-related-product-item w-center">
+                    <a href="{{ product.get_absolute_url }}" class="SH-HS-product-link w-center">
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}" class="SH-HS-product-thumbnail">
+                        <h4 class="SH-HS-product-title my-2">{{ product.title }}</h4>
+                        <span class="SH-HS-product-price my-2">
+                            {% with min_price=product.get_min_price %}
+                                {% if min_price %}
+                                    {{ min_price|intcomma }} تومان
+                                {% endif %}
+                            {% endwith %}
+                        </span>
+                    </a>
+                    <a href="{{ product.get_absolute_url }}">
+                        <button class="SH-HS-btn-add-to-cart">مشاهده محصول</button>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
