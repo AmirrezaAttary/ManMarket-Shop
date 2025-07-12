@@ -78,7 +78,6 @@ INSTALLED_APPS = [
     'chat',
     
     # other app for internet
-    'channels',
     'django.contrib.humanize',
     "taggit",
     "django_jalali",
