@@ -37,6 +37,7 @@ urlpatterns = [
     path('faq/', include('faq.urls')),
     path('accounts_c/', include('allauth.urls')),
     path('wallets/', include('wallets.urls')),
+    path('chat/', include('chat.urls')),
     path('summernote/', include('django_summernote.urls')),
     
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps_dict},
