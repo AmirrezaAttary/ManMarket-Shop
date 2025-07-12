@@ -42,14 +42,14 @@ def update_all_hamrah_products():
 
                     discounted_price = int(raw_price * 2 ) /100
                     discounted_price += raw_price
-
+                    color_code = value.get('color_code', '#ffffff')
                     pci, created = ProductColorInventory.objects.get_or_create(
                         product=product,
                         color=color,
                         defaults={
                             'price': discounted_price,
                             'discount_percent': 0,
-                            'hex_color': value.get('color_code', '#ffffff'),  # پیش‌فرض سفید
+                            'hex_color': color_code,  # پیش‌فرض سفید
                             'stock': value.get('quantity', 0)
                         }
                     )
@@ -58,6 +58,7 @@ def update_all_hamrah_products():
                         pci.price = discounted_price
                         pci.discount_percent = 0
                         pci.stock = value.get('quantity', 0)
+                        pci.hex_color = color_code
                         pci.save()
                         print(f"✅ قیمت بروزرسانی شد: {product.title} | رنگ: {color_title} | قیمت: {discounted_price}")
                     else:
