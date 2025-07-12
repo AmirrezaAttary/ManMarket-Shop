@@ -279,11 +279,12 @@
                     </div>
                     {% endfor %}
                 </div>
-
-                <div id="noResultsMessage" class="alert alert-warning mt-3 d-none" role="alert">
+                
+                {% if not object_list  %}                
+                <h3>
                     محصولی برای نمایش وجود ندارد.
-                </div>
-
+                </h3>
+                {% endif %}
                 {% if page_obj.has_other_pages %}
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center">
