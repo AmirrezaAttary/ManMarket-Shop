@@ -75,7 +75,10 @@ INSTALLED_APPS = [
     'faq',
     'review',
     'wallets',
+    'chat',
+    
     # other app for internet
+    'channels',
     'django.contrib.humanize',
     "taggit",
     "django_jalali",

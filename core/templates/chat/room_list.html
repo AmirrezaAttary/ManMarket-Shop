@@ -1,0 +1,278 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پلتفرم کامل چت | نسخه نهایی قطعی</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chats.css' %}">
+</head>
+
+<body>
+
+    <div class="x-chat-layout">
+        <aside class="x-chat-product-sidebar">
+            <header class="x-chat-product-sidebar-header">
+                <h2 class="x-chat-sidebar-title">چت‌های شما</h2>
+                <div class="x-chat-sidebar-search">
+                    <input type="text" id="x-chat-search-input" placeholder="جستجو در چت‌ها...">
+                </div>
+            </header>
+            <div class="x-chat-product-sidebar-list">
+
+                {% for chat in object_list %}
+                <a href="{% url 'chat:chat_room' pk=chat.id %}" class="x-chat-product-item"
+                    data-chat-id="1">
+                    <div class="x-chat-product-item-image"><img src="{{chat.product.image.url}}" alt="Keyboard"></div>
+                    <div class="x-chat-product-item-info">
+                        <div class="x-chat-product-item-name">{{chat.product.title}}</div>
+                        <p class="x-chat-product-item-last-message">{{chat.chat_messages.}}</p>
+                    </div>
+                </a>
+                {% endfor %}
+
+
+
+            </div>
+        </aside>
+
+        <main class="x-chat-main mt-0">
+            <header class="x-chat-header">
+
+                <img src="" alt="Product" class="x-chat-header-product-image" id="x-chat-header-image">
+                <div class="x-chat-header-info">
+                    <div class="x-chat-header-title" id="x-chat-header-title"></div>
+                    <div class="x-chat-header-subtitle" id="x-chat-header-subtitle"></div>
+                </div>
+            </header>
+            <div class="x-chat-body" id="x-chat-body">
+                <div class="x-chat-messages-container" id="x-chat-messages-container"></div>
+            </div>
+            <footer class="x-chat-footer">
+                <div class="x-chat-footer-input-wrapper">
+                    <button class="x-chat-icon-button" id="x-chat-attachment-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" style="transform: rotate(45deg);">
+                            <path
+                                d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                            </path>
+                        </svg>
+                    </button>
+                    <textarea class="x-chat-message-input" id="x-chat-message-input" placeholder="پیام ...."
+                        rows="1"></textarea>
+                </div>
+                <button class="x-chat-send-button x-chat-icon-button" id="x-chat-send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                    </svg>
+                </button>
+            </footer>
+        </main>
+    </div>
+
+    <div class="x-chat-lightbox-overlay" id="x-chat-lightbox-overlay">
+        <div class="x-chat-lightbox-content"><img src="" alt="بزرگنمایی تصویر" id="x-chat-lightbox-image"></div>
+    </div>
+    <input type="file" id="x-chat-image-upload-input" accept="image/*" style="display: none;">
+
+    <script>
+        const contacts = document.querySelectorAll('.contact');
+        const textarea = document.querySelector('textarea');
+        const sendBtn = document.querySelector('.send-button');
+        const sendImageBtn = document.querySelector('.send-image');
+
+        function updateChatState() {
+            const activeContact = document.querySelector('.contact.active');
+            const enabled = !!activeContact;
+            if (textarea) textarea.disabled = !enabled;
+            if (sendBtn) sendBtn.disabled = !enabled;
+            if (sendImageBtn) {
+                sendImageBtn.disabled = !enabled;
+                if (!enabled) {
+                    sendImageBtn.classList.add('disabled');
+                } else {
+                    sendImageBtn.classList.remove('disabled');
+                }
+            }
+        }
+
+        updateChatState();
+
+        contacts.forEach(contact => {
+            contact.addEventListener('click', () => {
+                contacts.forEach(c => c.classList.remove('active'));
+                contact.classList.add('active');
+                updateChatState();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const xChatLayout = document.querySelector('.x-chat-layout');
+            const xChatProductItems = document.querySelectorAll('.x-chat-product-item');
+            const xChatBackBtn = document.getElementById('x-chat-back-to-list-btn');
+            const xChatSearchInput = document.getElementById('x-chat-search-input');
+            const xChatHeaderImage = document.getElementById('x-chat-header-image');
+            const xChatHeaderTitle = document.getElementById('x-chat-header-title');
+            const xChatHeaderSubtitle = document.getElementById('x-chat-header-subtitle');
+            const xChatMessagesContainer = document.getElementById('x-chat-messages-container');
+            const xChatMessageInput = document.getElementById('x-chat-message-input');
+            const xChatSendButton = document.getElementById('x-chat-send-button');
+            const xChatAttachmentBtn = document.getElementById('x-chat-attachment-btn');
+            const xChatImageUploadInput = document.getElementById('x-chat-image-upload-input');
+            const xChatLightboxOverlay = document.getElementById('x-chat-lightbox-overlay');
+            const xChatLightboxImage = document.getElementById('x-chat-lightbox-image');
+            const xChatBody = document.getElementById('x-chat-body');
+
+            function updateInputState() {
+                const activeChat = document.querySelector('.x-chat-product-item.x-chat-active');
+                const enabled = !!activeChat;
+                if (xChatMessageInput) xChatMessageInput.disabled = !enabled;
+                if (xChatSendButton) xChatSendButton.disabled = !enabled;
+                if (xChatAttachmentBtn) {
+                    xChatAttachmentBtn.disabled = !enabled;
+                    if (!enabled) {
+                        xChatAttachmentBtn.classList.add('disabled');
+                    } else {
+                        xChatAttachmentBtn.classList.remove('disabled');
+                    }
+                }
+            }
+
+            const getCurrentTime = () =>
+                `${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}`;
+
+            const addMessage = (content, type, sender, animate = true) => {
+                const group = document.createElement('div');
+                group.className = `x-chat-message-group x-chat-${sender}`;
+                if (animate) group.classList.add('x-chat-fadeIn');
+
+                const bubble = document.createElement('div');
+                bubble.className = `x-chat-message-bubble x-chat-${sender}`;
+                const time = getCurrentTime();
+
+                let bubbleContent = '';
+                if (type === 'text') {
+                    bubbleContent = `
+  <p class="x-chat-message-text">${content}</p>
+  <div class="x-chat-message-meta">${time}</div>`;
+                } else if (type === 'image') {
+                    bubbleContent = `
+  <div class="x-chat-message-image">
+          <img src="${content}" alt="عکس ارسالی">
+          </div>
+  <div class="x-chat-message-meta">${time}</div>`;
+                }
+                bubble.innerHTML = bubbleContent;
+                group.appendChild(bubble);
+                xChatMessagesContainer.appendChild(group);
+                xChatBody.scrollTop = xChatBody.scrollHeight;
+                if (type === 'image') {
+                    bubble.querySelector('img').addEventListener('click', () => openLightbox(content));
+                }
+            };
+
+            const openLightbox = src => {
+                xChatLightboxImage.src = src;
+                xChatLightboxOverlay.classList.add('x-chat-active');
+            };
+
+            const adjustInputHeight = () => {
+                xChatMessageInput.style.height = 'auto';
+                xChatMessageInput.style.height = `${xChatMessageInput.scrollHeight}px`;
+            };
+
+            const sendMessage = () => {
+                const text = xChatMessageInput.value.trim();
+                if (text) {
+                    addMessage(text, 'text', 'sent');
+                    xChatMessageInput.value = '';
+                    xChatSendButton.classList.remove('x-chat-active');
+                    adjustInputHeight();
+                }
+            };
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeChatId = urlParams.get('chat_id');
+
+            if (activeChatId) {
+                const activeItem = document.querySelector(`.x-chat-product-item[data-chat-id="${activeChatId}"]`);
+                if (activeItem) {
+                    xChatProductItems.forEach(item => item.classList.remove('x-chat-active'));
+                    activeItem.classList.add('x-chat-active');
+                    xChatHeaderImage.src = activeItem.querySelector('img').src;
+                    xChatHeaderTitle.textContent = activeItem.querySelector('.x-chat-product-item-name').textContent;
+                    xChatHeaderSubtitle.textContent = "آنلاین";
+                    xChatLayout.classList.add('x-chat-mobile-view-chat');
+                    addMessage('سلام، این محصول موجوده؟', 'text', 'sent', false);
+                    addMessage('سلام، بله موجوده.', 'text', 'received', false);
+                }
+            } else {
+                xChatHeaderTitle.textContent = "یک چت را انتخاب کنید";
+                xChatHeaderSubtitle.textContent = " ";
+                xChatMessagesContainer.innerHTML = '';
+            }
+
+            updateInputState();
+
+            xChatProductItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    xChatProductItems.forEach(i => i.classList.remove('x-chat-active'));
+                    item.classList.add('x-chat-active');
+                    xChatHeaderImage.src = item.querySelector('img').src;
+                    xChatHeaderTitle.textContent = item.querySelector('.x-chat-product-item-name').textContent;
+                    xChatHeaderSubtitle.textContent = "آنلاین";
+                    xChatLayout.classList.add('x-chat-mobile-view-chat');
+                    xChatMessagesContainer.innerHTML = '';
+                    updateInputState();
+                });
+            });
+
+            xChatBackBtn.addEventListener('click', () => {
+                window.location.href = window.location.pathname;
+            });
+
+            xChatSearchInput.addEventListener('input', e => {
+                const term = e.target.value.toLowerCase().trim();
+                xChatProductItems.forEach(item => {
+                    item.style.display = item.querySelector('.x-chat-product-item-name').textContent
+                        .toLowerCase().includes(term)
+                        ? 'flex'
+                        : 'none';
+                });
+            });
+
+            xChatLightboxOverlay.addEventListener('click', () => {
+                xChatLightboxOverlay.classList.remove('x-chat-active');
+            });
+
+            xChatMessageInput.addEventListener('input', () => {
+                xChatSendButton.classList.toggle('x-chat-active', xChatMessageInput.value.trim().length > 0);
+                adjustInputHeight();
+            });
+
+            xChatSendButton.addEventListener('click', sendMessage);
+            xChatMessageInput.addEventListener('keydown', e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            xChatAttachmentBtn.addEventListener('click', () => xChatImageUploadInput.click());
+
+            xChatImageUploadInput.addEventListener('change', e => {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = ev => addMessage(ev.target.result, 'image', 'sent');
+                    reader.readAsDataURL(e.target.files[0]);
+                    e.target.value = null;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
