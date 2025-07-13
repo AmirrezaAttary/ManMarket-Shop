@@ -4,6 +4,10 @@ import redis
 from shop.models import ProductColorInventory, Color
 from pricegethamrh.models import PriceGetHamrh
 from .scripts import extract_product_data
+import math
+
+def round_up_to_thousand(price):
+    return math.ceil(price / 1000) * 1000
 
 @shared_task
 def update_all_hamrah_products():
@@ -42,12 +46,15 @@ def update_all_hamrah_products():
 
                     discounted_price = int(raw_price * 2 ) /100
                     discounted_price += raw_price
+                    
+                    final_price = round_up_to_thousand(discounted_price)
+                    
                     color_code = value.get('color_code', '#ffffff')
                     pci, created = ProductColorInventory.objects.get_or_create(
                         product=product,
                         color=color,
                         defaults={
-                            'price': discounted_price,
+                            'price': final_price,
                             'discount_percent': 0,
                             'hex_color': color_code,  # پیش‌فرض سفید
                             'stock': value.get('quantity', 0)
@@ -55,14 +62,14 @@ def update_all_hamrah_products():
                     )
 
                     if not created:
-                        pci.price = discounted_price
+                        pci.price = final_price
                         pci.discount_percent = 0
                         pci.stock = value.get('quantity', 0)
                         pci.hex_color = color_code
                         pci.save()
-                        print(f"✅ قیمت بروزرسانی شد: {product.title} | رنگ: {color_title} | قیمت: {discounted_price}")
+                        print(f"✅ قیمت بروزرسانی شد: {product.title} | رنگ: {color_title} | قیمت: {final_price}")
                     else:
-                        print(f"🆕 موجودی جدید اضافه شد: {product.title} | رنگ: {color_title} | قیمت: {discounted_price}")
+                        print(f"🆕 موجودی جدید اضافه شد: {product.title} | رنگ: {color_title} | قیمت: {final_price}")
 
             except Exception as e:
                 print(f"❌ خطا در پردازش محصول {product.title} | URL: {item.url}")

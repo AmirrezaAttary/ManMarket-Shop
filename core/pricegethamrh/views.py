@@ -8,6 +8,7 @@ from django.urls import reverse
 from .tasks import update_all_hamrah_products
 from django.contrib import messages  
 from django.shortcuts import redirect
+import math
 
 
 class GetColorAndPrice(View):
@@ -17,6 +18,9 @@ class GetColorAndPrice(View):
 
     def get(self, request, *args, **kwargs):
         return self.handle_request(request)
+
+    def round_up_to_thousand(self, price):
+        return math.ceil(price / 1000) * 1000
 
     def handle_request(self, request):
         product_id = self.kwargs.get("pk")
@@ -45,14 +49,14 @@ class GetColorAndPrice(View):
             discounted_price = int(raw_price * 2 ) /100
             discounted_price += raw_price
             
-            
+            final_price = self.round_up_to_thousand(discounted_price)
             discount = 0
 
             pci, created = ProductColorInventory.objects.get_or_create(
                 product=product,
                 color=color,
                 defaults={
-                    'price': discounted_price,
+                    'price': final_price,
                     'discount_percent': discount,
                     'hex_color': color_code,
                     'stock' : value.get('quantity', 0)
@@ -60,7 +64,7 @@ class GetColorAndPrice(View):
             )
 
             if not created:
-                pci.price = discounted_price
+                pci.price = final_price
                 pci.discount_percent = discount
                 pci.hex_color = color_code  # ← اضافه کردن مقدار کد رنگ
                 pci.stock = value.get('quantity', 0)
