@@ -9,6 +9,7 @@ class Color(models.Model):
 
     def __str__(self):
         return self.title
+    
 class ProductColorInventory(models.Model):
     product = models.ForeignKey("shop.ProductModel", on_delete=models.CASCADE, related_name="color_inventories")
     color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name="product_inventories")
@@ -19,6 +20,7 @@ class ProductColorInventory(models.Model):
     )
     price = models.DecimalField(default=0, max_digits=10, decimal_places=0)
     hex_color = models.CharField(max_length=7, default="#000000")  # Hex color code
+    updated_date = models.DateTimeField(auto_now=True)
     
     def get_price(self):
         discount_amount = self.price * (Decimal(self.discount_percent) / Decimal('100'))

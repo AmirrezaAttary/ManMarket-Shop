@@ -66,7 +66,7 @@ def update_all_hamrah_products():
                         pci.discount_percent = 0
                         pci.stock = value.get('quantity', 0)
                         pci.hex_color = color_code
-                        pci.save()
+                        pci.save(force_update=True)
                         print(f"✅ قیمت بروزرسانی شد: {product.title} | رنگ: {color_title} | قیمت: {final_price}")
                     else:
                         print(f"🆕 موجودی جدید اضافه شد: {product.title} | رنگ: {color_title} | قیمت: {final_price}")

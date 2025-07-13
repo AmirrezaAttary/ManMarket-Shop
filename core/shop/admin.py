@@ -27,8 +27,8 @@ class ProductColorInventoryInline(admin.TabularInline):
     model = ProductColorInventory
     extra = 1
     autocomplete_fields = ("color",)
-    fields = ("color", "price", "stock", "discount_percent",'hex_color')
-    readonly_fields = ()
+    fields = ("color", "price", "stock", "discount_percent", "hex_color", "updated_date")
+    readonly_fields = ("updated_date",)
 
 # مدیریت محصولات
 @admin.register(ProductModel)
