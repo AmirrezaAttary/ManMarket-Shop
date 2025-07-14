@@ -254,7 +254,16 @@
                                         {% if inventory.price == 0 or inventory.price == None %}
 
                                         {% else %}
+                                        
+                                        {% if inventory.hex_color == "#ffffff" %}
+                                            <span class="mx-1 one-color mt-1"
+                                            style="background-color: {{ inventory.hex_color }}; border:1px solid gray">
+                                            <span class="">
 
+                                            </span>
+                                        </span>
+                                        {% else %}
+                                            
 
                                         <span class="mx-1 one-color mt-1"
                                             style="background-color: {{ inventory.hex_color }};">
@@ -262,6 +271,7 @@
 
                                             </span>
                                         </span>
+                                        {% endif %}
                                         {% endif %}
                                         {% endfor %}
                                         {% endwith %}
