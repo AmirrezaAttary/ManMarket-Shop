@@ -82,6 +82,7 @@
                         <tr>
                             <th scope="col">مشخصات </th>
                             <th scope="col">مقدار</th>
+                            <th scope="col">ویژگی اصلی</th>
                             <th scope="col">عملیات</th>
 
                         </tr>
@@ -91,6 +92,14 @@
                         <tr>
                             <th scope="row">{{sep.name}}</th>
                             <td>{{sep.value}}</td>
+                            
+                            {% if sep.status == False %}
+                                <td>خیر</td>
+                                {% else %}
+                                <td>بله</td>
+                            {% endif %}
+                                
+                            
 
 
                             <td class="d-flex">

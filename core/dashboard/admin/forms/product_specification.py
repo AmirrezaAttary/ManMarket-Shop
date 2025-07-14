@@ -33,6 +33,7 @@ class SpecificationCreateForm(forms.ModelForm):
         fields = [
             'name',
             'value',
+            'status',
         ] 
 
     def __init__(self, *args, **kwargs):
@@ -41,5 +42,6 @@ class SpecificationCreateForm(forms.ModelForm):
         # افزودن کلاس CSS برای Bootstrap
         self.fields['name'].widget.attrs['class'] = 'form-control'
         self.fields['value'].widget.attrs['class'] = 'form-control'
+        # self.fields['status'].widget.attrs['class'] = 'form-control'
 
         

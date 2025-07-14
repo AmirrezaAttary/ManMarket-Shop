@@ -20,7 +20,7 @@ class ColorAdmin(admin.ModelAdmin):
 class ProductSpecificationInline(admin.TabularInline):
     model = ProductSpecification
     extra = 1
-    fields = ("name", "value")
+    fields = ("name", "value",'status')
 
 # اینلاین رنگ و قیمت برای محصولات
 class ProductColorInventoryInline(admin.TabularInline):

@@ -32,6 +32,13 @@
                 <!-- Header -->
                 <div class="card-header border-bottom d-flex justify-content-between align-items-center">
                     <h5 class="card-header-title">ویرایش محصول</h5>
+                    {% if object.pricespecification %}
+                        <a href="{% url 'dashboard:admin:specification-edit' pk=object.pricespecification.id %}">
+                            مشخصات
+                        </a>
+                    {% else %}
+                        <span style="color: red;">مشخصات ثبت نشده است</span>
+                    {% endif %}
                     {% if object.is_published %}
                     <a class="btn btn-sm btn-primary" target="_blank"
                         href="{% url 'shop:product-detail' slug=object.slug %}">نمایش

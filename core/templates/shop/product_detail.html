@@ -89,13 +89,18 @@
 
                     <h2 class="product-key-features-cards my-1" style="font-size: 17px;">ویژگی‌ها</h2>
                     <div class="features-grid">
-
+                        
+                        {% if specific.status %}
+                            
+                        
+                            
                         {% for specific in specifications|slice:'6' %}
                         <div class="feature-item">
                             <span class="feature-label" style="font-size: 14px;">{{specific.name}}</span>
                             <span class="feature-value" style="font-size: 14px;">{{specific.value}}</span>
                         </div>
                         {% endfor %}
+                        {% endif %}
                     </div>
                     <div class=" w-100 w-center d-flex justify-content-center mt-2">
                         <button class="feature-item rounded-3 alll-cs " style="font-size: 14px;">
@@ -968,7 +973,9 @@
         const stockCount = stock ? stock.innerText.trim() : '{{default_color.stock}}';
         const contents = [
             { text: 'تعداد بازدید در 24 ساعت اخیر {{product_view_times_100}}  +', icon: '{% static "img/seenz.png" %}' },
-            { text: 'موجود در سبد خرید 56 نفر دیگر', icon: '{% static "img/money.soney.png" %}' },
+            {% if product_in_cart_users_count > 0 %}
+            { text: 'موجود در سبد خرید {{ product_in_cart_users_count }} نفر دیگر', icon: '{% static "img/money.soney.png" %}' },
+            {% endif %}
             { text: '{{default_color.stock}} عدد در انبار موجود است', icon: '{% static "img/ananan.png" %}' },
         ];
 

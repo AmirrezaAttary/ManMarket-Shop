@@ -14,6 +14,7 @@ from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
                          ProductSpecification,Brand,WishlistProductModel)
 from review.models import ReviewModel,ReviewStatusType
+from cart.models import CartItemModel
 # Create your views here.
 
 
@@ -149,6 +150,7 @@ class ShopDetailProductView(DetailView):
 
         # پیدا کردن رنگ با کمترین قیمت تخفیف‌خورده (بزرگ‌تر از صفر)
         default_color = min(valid_colors, key=lambda c: c.discounted_price, default=None)
+        product_users_count = CartItemModel.objects.filter(product=product).values('cart__user').distinct().count()
 
         context['colors'] = colors
         context['default_color'] = default_color
@@ -160,6 +162,7 @@ class ShopDetailProductView(DetailView):
         total_reviews_count =reviews.count()
         context["total_reviews_count"] = total_reviews_count
         context['product_view_times_100'] = product.product_view * 10
+        context['product_in_cart_users_count'] = product_users_count
         return context
      
  
