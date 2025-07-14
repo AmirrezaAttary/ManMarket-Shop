@@ -1,6 +1,6 @@
 from django import forms
 from shop.models import ProductModel, ProductImageModel,Color
-
+from django_summernote.widgets import SummernoteWidget
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -17,6 +17,9 @@ class ProductForm(forms.ModelForm):
             'warranty',
             'brief_title',
         ]
+        widgets = {
+            'description': SummernoteWidget(attrs={'summernote': {'height': '800px','width':'100%'}}),   # فقط روی این فیلد اعمال میشه
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,7 +29,8 @@ class ProductForm(forms.ModelForm):
         self.fields['brand'].widget.attrs['class'] = 'form-select'
         self.fields['image'].widget.attrs['class'] = 'form-control'
         self.fields['brief_description'].widget.attrs['class'] = 'form-control'
-        self.fields['description'].widget.attrs['class'] = 'form-control'
+        self.fields['brief_description'].widget.attrs['style'] = 'height: 200px'
+        # self.fields['description'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-select'
         self.fields['warranty'].widget.attrs['class'] = 'form-control'
         self.fields['brief_title'].widget.attrs['class'] = 'form-control'

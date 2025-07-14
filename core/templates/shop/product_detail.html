@@ -90,14 +90,14 @@
                     <h2 class="product-key-features-cards my-1" style="font-size: 17px;">ویژگی‌ها</h2>
                     <div class="features-grid">
                         
-                        {% if specific.status == True %}
-                        {% for specific in specifications|slice:'6' %}
+                        
+                        {% for specific in specifications_six|slice:'6' %}
                         <div class="feature-item">
                             <span class="feature-label" style="font-size: 14px;">{{specific.name}}</span>
                             <span class="feature-value" style="font-size: 14px;">{{specific.value}}</span>
                         </div>
                         {% endfor %}
-                        {% endif %}
+                        
                     </div>
                     <div class=" w-100 w-center d-flex justify-content-center mt-2">
                         <button class="feature-item rounded-3 alll-cs " style="font-size: 14px;">

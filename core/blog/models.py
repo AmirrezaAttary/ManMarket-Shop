@@ -16,8 +16,8 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     category = models.ManyToManyField("Category")
-    status = models.IntegerField(choices=BlogStatusType.choices,default=BlogStatusType.draft.value)
-    slug = models.SlugField(allow_unicode=True,unique=True)
+    status = models.IntegerField(choices=BlogStatusType.choices,default=BlogStatusType.publish.value)
+    slug = models.SlugField(allow_unicode=True,unique=True,max_length=200)
     tags = TaggableManager()
     
     class Meta:

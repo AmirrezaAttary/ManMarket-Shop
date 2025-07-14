@@ -163,6 +163,7 @@ class ShopDetailProductView(DetailView):
         context["total_reviews_count"] = total_reviews_count
         context['product_view_times_100'] = product.product_view * 10
         context['product_in_cart_users_count'] = product_users_count
+        context['specifications_six'] = ProductSpecification.objects.filter(product=product, status=True)
         return context
      
  

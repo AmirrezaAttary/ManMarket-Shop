@@ -15,7 +15,7 @@ class BlogPostForm(forms.ModelForm):
             'tags'
         ]
         widgets = {
-            'content': SummernoteWidget(),  # فقط روی این فیلد اعمال میشه
+            'content': SummernoteWidget(attrs={'summernote': {'height': '800px','width':'100%'}}),  # فقط روی این فیلد اعمال میشه
         }
 
     def __init__(self, *args, **kwargs):
@@ -23,6 +23,7 @@ class BlogPostForm(forms.ModelForm):
         self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['slug'].widget.attrs['class'] = 'form-control'
         self.fields['category'].widget.attrs['class'] = 'form-control'
+        self.fields['category'].widget.attrs['style'] = 'height: 100px'
         self.fields['tags'].widget.attrs['class'] = 'form-control'
         self.fields['image'].widget.attrs['class'] = 'form-control'
         # self.fields['content'].widget.attrs['class'] = 'form-control'

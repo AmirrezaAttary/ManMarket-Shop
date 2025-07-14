@@ -20,7 +20,7 @@ class ProductModel(models.Model):
     sales_count = models.PositiveIntegerField(default=0)
     warranty = models.CharField(max_length=100, null=True, blank=True)
     
-    status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.draft.value)
+    status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.publish.value)
     
     avg_rate = models.FloatField(default=0.0)
     
