@@ -80,14 +80,14 @@ def show_most_viewed_products(context):
 def show_similar_products(context, product):
     request = context.get("request")
     brand = product.brand
-    category = product.category
+    # category = product.category
 
     similar_prodcuts = ProductModel.objects.filter(
         status=ProductStatusType.publish.value,
         brand=brand,
-        category=category,
+        # category=category,
         color_inventories__price__gt=0  # فقط محصولاتی که حداقل یک قیمت > 0 دارند
-    ).exclude(id=product.id).distinct().order_by("-created_date")[:8]
+    ).exclude(id=product.id).distinct().order_by("-created_date")
 
     wishlist_items = WishlistProductModel.objects.filter(
         user=request.user
