@@ -205,8 +205,13 @@
                                 <div class="not-rot-notification-messages-wrapper">
                                     <div class="not-rot-notification-messages-inner">
                                         <div class="not-rot-message-item"></div>
+                                        {% if product_in_cart_users_count > 0 %}
                                         <div class="not-rot-message-item stst"></div>
                                         <div class="not-rot-message-item" id="stock"></div>
+                                        {% else %}
+                                        <div class="not-rot-message-item" id="stock"></div>
+                                        <div class="not-rot-message-item stst"></div>
+                                        {% endif %}
                                         <div class="not-rot-message-item"></div>
                                     </div>
                                 </div>
