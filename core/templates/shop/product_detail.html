@@ -90,10 +90,7 @@
                     <h2 class="product-key-features-cards my-1" style="font-size: 17px;">ویژگی‌ها</h2>
                     <div class="features-grid">
                         
-                        {% if specific.status %}
-                            
-                        
-                            
+                        {% if specific.status == True %}
                         {% for specific in specifications|slice:'6' %}
                         <div class="feature-item">
                             <span class="feature-label" style="font-size: 14px;">{{specific.name}}</span>
