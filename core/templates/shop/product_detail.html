@@ -78,6 +78,7 @@
                             class="btn-color color-option {% if color.color.id == default_color.color.id %}active-cs{% endif %}"
                             data-price="{{ color.get_price|intcomma }}" data-color-inventory-id="{{ color.id }}"
                             data-color-id="{{ color.color.id }}" data-color-value="{{ color.color }}"
+                            data-stock="{{ color.stock }}"
                             style="font-size: 15px;">
                             {{ color.color }}
                         </button>
@@ -200,7 +201,7 @@
                                     <div class="not-rot-notification-messages-inner">
                                         <div class="not-rot-message-item"></div>
                                         <div class="not-rot-message-item stst"></div>
-                                        <div class="not-rot-message-item"></div>
+                                        <div class="not-rot-message-item" id="stock"></div>
                                         <div class="not-rot-message-item"></div>
                                     </div>
                                 </div>
@@ -382,6 +383,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const colorButtons = document.querySelectorAll('.color-option');
         const priceValueEl = document.getElementById('price-value');
+        const stockEl = document.getElementById('stock'); // اضافه شد
         const addToCartBtn = document.getElementById('add-to-cart-btn');
         const OBJECT_ID = '{{ object.id }}';
 
@@ -396,12 +398,16 @@
                 const colorValue = button.dataset.colorValue;
                 const colorId = button.dataset.colorId;
                 const inventoryId = button.dataset.colorInventoryId;
+                const stock = button.dataset.stock; // مقدار استوک از دکمه
 
                 if (priceValueEl) {
                     priceValueEl.textContent = price;
                 }
 
-                // تابع updateSku و initSwiper اگر دارید:
+                if (stockEl) {
+                    stockEl.textContent = `${stock} عدد در انبار موجود است`;
+                }
+
                 if (typeof updateSku === 'function') updateSku(colorValue);
                 if (typeof initSwiper === 'function' && typeof productImages !== 'undefined') {
                     const filteredImages = productImages.filter(img => img.color === colorValue);
@@ -416,6 +422,7 @@
             });
         });
     });
+
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -957,11 +964,12 @@
         let currentIndex = 0;
         const intervalTime = 3000;
         const messageHeight = 24;
-
+        const stock = document.getElementById('stock');
+        const stockCount = stock ? stock.innerText.trim() : '{{default_color.stock}}';
         const contents = [
-            { text: 'تعداد بازدید در 24 ساعت اخیر 1000  +', icon: '{% static "img/seenz.png" %}' },
+            { text: 'تعداد بازدید در 24 ساعت اخیر {{product_view_times_100}}  +', icon: '{% static "img/seenz.png" %}' },
             { text: 'موجود در سبد خرید 56 نفر دیگر', icon: '{% static "img/money.soney.png" %}' },
-            { text: '3 عدد در انبار موجود است', icon: '{% static "img/ananan.png" %}' },
+            { text: '{{default_color.stock}} عدد در انبار موجود است', icon: '{% static "img/ananan.png" %}' },
         ];
 
         messageItems.forEach((item, index) => {

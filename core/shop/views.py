@@ -159,8 +159,9 @@ class ShopDetailProductView(DetailView):
         context["reviews"] = reviews
         total_reviews_count =reviews.count()
         context["total_reviews_count"] = total_reviews_count
+        context['product_view_times_100'] = product.product_view * 10
         return context
-    
+     
  
   
 class AddOrRemoveWishlistView(LoginRequiredMixin, View):
