@@ -7,6 +7,8 @@
 <br><br><br><br>
 <div class="row">
     {% include 'dashboard/admin/sidebar.html' %}
+
+    
     <!-- Card -->
     <div class="col-md-9 mb-9">
         <!-- Card -->
@@ -14,6 +16,15 @@
             <div class="card-header border-bottom">
                 <h4 class="card-header-title">ویرایش محصول ثبت شده </h4>
             </div>
+            <form method="get" action=".">
+                <label for="brand-select">فیلتر بر اساس برند:</label>
+                <select id="brand-select" name="brand" onchange="this.form.submit()" class="form-control">
+                    <option value="">همه برندها</option>
+                    {% for brand in brands %}
+                        <option value="{{ brand.slug }}" {% if brand.slug == selected_brand %}selected{% endif %}>{{ brand.title }}</option>
+                    {% endfor %}
+                </select>
+            </form>
 
             <form action="." method="post">
                 <!-- Body -->

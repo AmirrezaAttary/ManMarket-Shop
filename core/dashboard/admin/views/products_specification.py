@@ -45,6 +45,13 @@ class AdminGetSpecificationCreateView(LoginRequiredMixin, HasAdminAccessPermissi
     template_name = "dashboard/admin/products-specification/product-specification-create.html"
     form_class = SpecificationForm
     model = PriceSpecification
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        brand_slug = self.request.GET.get('brand')
+        print("brand_slug in view:", brand_slug)
+        kwargs['brand_slug'] = brand_slug
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:specification-list')
