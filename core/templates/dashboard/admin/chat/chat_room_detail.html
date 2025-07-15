@@ -11,8 +11,8 @@
     <div class="col-md-9 mb-9">
         <div class="container mt-5">
             <div class="card shadow rounded">
-                <div class="card-header  text-white">
-                    <h5 class="mb-0">جزئیات چت {{ object.product }}</h5>
+                <div class="card-header  text-white" style="background-color: black;">
+                    <h5 class="mb-0" >جزئیات چت {{ object.product }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -34,9 +34,13 @@
 
 
                     <div class="mb-3">
-                        <label class="fw-bold">آخرین پیام:</label>
+                        <label class="fw-bold">پیام ها:</label>
                         <div class="border rounded p-3 bg-light" style="white-space: pre-line;">
-                            {{ object.last_message }}
+                            
+                            {% for message in object.chat_messages.all %}
+                                {{message}}
+                            {% endfor %}
+                                
                         </div>
                     </div>
 
