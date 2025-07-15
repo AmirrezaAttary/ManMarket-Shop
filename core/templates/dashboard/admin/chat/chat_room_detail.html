@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<br><br><br><br>
+<div class="row">
+    {% include 'dashboard/admin/sidebar.html' %}
+    <!-- Card -->
+    <div class="col-md-9 mb-9">
+        <div class="container mt-5">
+            <div class="card shadow rounded">
+                <div class="card-header  text-white">
+                    <h5 class="mb-0">جزئیات چت {{ object.product }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="fw-bold">کاربر:</label>
+                            <p class="form-control-plaintext">{{ object.customer.user_profile.get_fullname }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold">ادمین:</label>
+                            <p class="form-control-plaintext">{{ object.admin.user_profile.get_fullname }}</p>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="fw-bold">ایمیل کاربر:</label>
+                        <p class="form-control-plaintext">{{ object.customer }}</p>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label class="fw-bold">آخرین پیام:</label>
+                        <div class="border rounded p-3 bg-light" style="white-space: pre-line;">
+                            {{ object.last_message }}
+                        </div>
+                    </div>
+
+                    <div class="text-muted text-end">
+                        <small>تاریخ ارسال: {{ object.created_at|date:"Y-m-d H:i" }}</small>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="{% url 'dashboard:admin:chat-list' %}" class="btn btn-secondary">بازگشت به لیست</a>
+                    <a href="" class="btn btn-danger"
+                        >حذف پیام</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
