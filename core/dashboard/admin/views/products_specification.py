@@ -49,7 +49,7 @@ class AdminGetSpecificationCreateView(LoginRequiredMixin, HasAdminAccessPermissi
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         brand_slug = self.request.GET.get('brand')
-        print("brand_slug in view:", brand_slug)
+        # print("brand_slug in view:", brand_slug)
         kwargs['brand_slug'] = brand_slug
         return kwargs
 

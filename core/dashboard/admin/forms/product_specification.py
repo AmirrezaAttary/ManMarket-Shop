@@ -6,7 +6,7 @@ from shop.models import ProductModel,ProductSpecification
 class SpecificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         brand_slug = kwargs.pop('brand_slug', None)  # ✅ درست
-        print("brand_slug received in form:", brand_slug)  # ← بررسی مقدار
+        # print("brand_slug received in form:", brand_slug)  # ← بررسی مقدار
         super().__init__(*args, **kwargs)
 
         self.fields['product'].widget.attrs['class'] = 'form-control'
