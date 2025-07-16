@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load jformat %}
+{% load jalali_fa %}
 
 {% load blog_tags %}
 
@@ -418,13 +419,31 @@ blog
                     </a>
                     <div class="blog-l-card-content">
                         <h3 class="blog-l-card-title">{{obj.title}}</h3>
-                        <p class="blog-l-card-meta">{{obj.created_at}}</p>
+                        <p class="blog-l-card-meta">{{obj.created_at|to_jalali_farsi}}</p>
                     </div>
                 </article>
                 {% endfor %}
 
             </div>
-            <nav class="blog-l-pagination"><a href="#" class="active">۱</a><a href="#">۲</a><a href="#">۳</a></nav>
+            {% if is_paginated %}
+            <nav class="blog-l-pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                {% endif %}
+
+                {% for num in paginator.page_range %}
+                {% if page_obj.number == num %}
+                <a href="?page={{ num }}" class="active">{{ num }}</a>
+                {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                {% endif %}
+            </nav>
+            {% endif %}
         </main>
         <aside class="blog-l-sidebar">
             <div id="desktop-sidebar-content"></div>
@@ -442,25 +461,31 @@ blog
 
 <template id="sidebar-widgets-template">
     <div class="blog-l-widget">
-        <form class="blog-l-search-box"><input type="search" placeholder="جستجو..."><button type="submit">جستجو</button>
+        <form class="blog-l-search-box" method="get"><input type="search" name="search" placeholder="جستجو..."><button
+                type="submit">جستجو</button>
         </form>
     </div>
     <div class="blog-l-widget">
         <h3 class="blog-l-widget-title">دسته‌بندی‌ها</h3>
         <ul class="blog-l-category-list">
-            <li><a href="#" class="blog-l-category-link"><span>سلامت</span> <span
-                        class="blog-l-category-count">۱۵</span></a></li>
-            <li><a href="#" class="blog-l-category-link"><span>تکنولوژی</span> <span
-                        class="blog-l-category-count">۹</span></a></li>
-            <li><a href="#" class="blog-l-category-link"><span>سبک زندگی</span> <span
-                        class="blog-l-category-count">۲۱</span></a></li>
+
+            {% for category in categorys %}
+            <li><a href="{% url 'blog:blog-list' %}?category={{ category.slug }}" class="blog-l-category-link"><span>
+                        {{category.name }}</span> <span class="blog-l-category-count">{{ category.post_count}}</span></a>
+            </li>
+            {% endfor %}
+
+
         </ul>
     </div>
     <div class="blog-l-widget">
         <h3 class="blog-l-widget-title">هشتگ‌های داغ</h3>
         <div class="blog-l-tags-cloud">
-            <a href="#">#تقویت_ایمنی</a><a href="#">#گوشی_موبایل</a><a href="#">#ورزش</a><a href="#">#دورکاری</a><a
-                href="#">#ویتامینC</a>
+
+            {% for tag in tags %}
+            <a href="{% url 'blog:blog-list' %}?tag={{ tag.slug }}" class="blog-l-tag-link">#{{ tag.name }}</a>
+            {% endfor %}
+
         </div>
     </div>
 </template>

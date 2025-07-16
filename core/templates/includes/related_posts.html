@@ -1,0 +1,8 @@
+{% for post in posts %}
+    <li class="my-2">
+        <a href="{{ post.get_absolute_url }}" class="blog-s-related-post-link w-center">
+            <img style="width: 50%; max-width: 50%;" src="{{ post.image.url }}" alt="{{ post.title }}">
+        </a>
+        <p class="blog-s-widget-title">{{ post.title }}</p>
+    </li>
+{% endfor %}
