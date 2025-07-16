@@ -14,6 +14,8 @@ class ChatRoom(models.Model):
     
     def last_message(self):
         return self.chat_messages.order_by('-timestamp').first()
+    class Meta:
+        ordering = ["-created_at"]
 
 class Message(models.Model):
     chat_room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='chat_messages')

@@ -27,13 +27,13 @@
                     <td>{{ contact.id }}</td>
                     <td>{{ contact.product }}</td>
                     <td>{{ contact.customer.user_profile.get_fullname }}</td>
-                    <td>{{ contact.admin.user_profile.get_fullname  }}</td>
+                    <td>{{ contact.admin.email  }}</td>
                     <td>{{ contact.created_at|date:"Y-m-d H:i" }}</td>
                     <td>
                         <a class="btn btn-sm btn-info"
                             href="{% url 'dashboard:admin:chat-detail' contact.pk %}">مشاهده</a>
-                        <a class="btn btn-sm btn-danger"
-                            href="{% url 'dashboard:admin:contact-delete' contact.pk %}">حذف</a>
+                        <a class="btn btn-sm btn-info"
+                            href="{% url 'dashboard:admin:chat_room_send' contact.pk %}">پاسخ</a>
                     </td>
                 </tr>
                 {% empty %}

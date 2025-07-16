@@ -1,5 +1,6 @@
 from django.views import View
 from django.views.generic import ListView
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
@@ -10,16 +11,20 @@ from accounts.models import User, UserType  # مدل سفارشی شما
 
 class StartChatView(LoginRequiredMixin, View):
     def get(self, request, product_id):
+        # فقط مشتری‌ها اجازه دارند چت بسازند
+        if request.user.type != UserType.customer:
+            return HttpResponseForbidden("دسترسی فقط برای مشتری‌ها مجاز است.")
+
         product = get_object_or_404(ProductModel, id=product_id)
         customer = request.user
 
-        # فیلتر فقط ادمین‌ها بر اساس نوع
+        # پیدا کردن اولین ادمین موجود
         admin = User.objects.filter(type=UserType.admin).first()
 
         if not admin:
             return render(request, 'chat/no_admin.html', {'product': product})
 
-        # جلوگیری از ساخت چت تکراری
+        # جلوگیری از ساخت چت تکراری بین همین مشتری، محصول و ادمین
         chat, created = ChatRoom.objects.get_or_create(
             product=product,
             customer=customer,
@@ -33,17 +38,19 @@ class ChatRoomDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         chat = get_object_or_404(ChatRoom, pk=pk)
 
-        # بررسی اینکه فقط خود مشتری یا ادمین مرتبط می‌تونه چت رو ببینه
         if request.user != chat.customer and request.user != chat.admin:
             return render(request, 'chat/access_denied.html')
 
         messages = chat.chat_messages.order_by('timestamp')
-        chat_room = ChatRoom.objects.filter(customer=request.user)
+
+        all_user_chats = ChatRoom.objects.filter(customer=request.user)
+
         return render(request, 'chat/room.html', {
-            'chat': chat,
+            'chat_room': chat,    # چت جاری
             'messages': messages,
-            'chat_room': chat_room
+            'chats': all_user_chats  # لیست همه چت‌های کاربر
         })
+
 
     def post(self, request, pk):
         chat = get_object_or_404(ChatRoom, pk=pk)

@@ -1,0 +1,23 @@
+{# templates/dashboard/admin/chat/chat_room_send.html #}
+<h2>گفتگو با {{ chat.customer.email }}</h2>
+
+<div style="border: 1px solid #ccc; padding: 1rem; max-height: 300px; overflow-y: scroll;">
+    {% for msg in messages %}
+        <div style="margin-bottom: 10px;">
+            <strong>{{ msg.sender.email }}:</strong> {{ msg.text }}
+            <div style="font-size: 0.8em; color: #888;">{{ msg.timestamp|date:"H:i - Y/m/d" }}</div>
+        </div>
+    {% empty %}
+        <p>پیامی وجود ندارد.</p>
+    {% endfor %}
+</div>
+
+<hr>
+
+<form method="post" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ارسال پاسخ</button>
+    <a href="{% url 'dashboard:admin:chat-list' %}"><button type="button">بازگشت به لیست چت‌ها</button></a>
+</form>
+ 
