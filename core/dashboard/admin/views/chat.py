@@ -4,6 +4,7 @@ from chat.models import ChatRoom, Message
 from  dashboard.admin.forms import AdminReplyForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
+from accounts.models import UserType
 
 class ChatRoomListView(ListView):
     model = ChatRoom
@@ -28,14 +29,17 @@ class ChatRoomSendView(LoginRequiredMixin, FormView):
     def dispatch(self, request, *args, **kwargs):
         self.chat = get_object_or_404(ChatRoom, pk=kwargs['pk'])
 
-        # بررسی اینکه کاربر ادمین چت هست یا نه
+        # اگر کاربر فعلی ادمین چت نیست، ولی نوعش admin است → تغییر ادمین
         if request.user != self.chat.admin:
-            return HttpResponseForbidden("فقط ادمین مربوطه می‌تواند پاسخ دهد.")
+            if request.user.type == UserType.admin or request.user.type == UserType.superuser:
+                self.chat.admin = request.user
+                self.chat.save()
+            else:
+                return HttpResponseForbidden("شما اجازه پاسخ به این چت را ندارید.")
 
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        # ساخت پیام جدید توسط ادمین
         Message.objects.create(
             chat_room=self.chat,
             sender=self.request.user,
