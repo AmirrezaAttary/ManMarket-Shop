@@ -1,336 +1,218 @@
-<div class="container-fluid my-3 fill-page-container">
-    <div class="row gx-3 h-100">
+<main class="profile-content-area-new">
+    <section class="profile-section-new">
+        <header class="section-header-new border-0">
+            <h2><svg>
+                    <use xlink:href="#icon-receipt-list"></use>
+                </svg>سفارشات من</h2>
+            <select id="orderFilterStatus" class="form-control-custom w-auto" style="min-width: 150px;">
+                <option value="all">همه وضعیت‌ها</option>
+                <option value="pending">در حال پردازش</option>
+                <option value="shipped">ارسال شده</option>
+                <option value="delivered">تحویل شده</option>
+                <option value="cancelled">لغو شده</option>
+            </select>
+        </header>
+        <div id="ordersListContainer">
+            <!-- STATIC: Orders are hardcoded below. JS will only show/hide them. -->
+            {% for object in object_list %}
 
-        <!-- ======================= سایدبار فیلتر استاتیک شده ======================= -->
-        <aside class="col-lg-3 fill-filters-sidebar-container mb-3 mb-lg-0">
-            <div class="fill-filters-sidebar-content-wrapper">
-                <div class="fill-sidebar-header">فیلتر محصولات</div>
-                <div class="accordion" id="filtersAccordion">
 
-                    <!-- Price Filter -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingPrice">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapsePrice" aria-expanded="false" aria-controls="collapsePrice">
-                                <svg class="fill-accordion-header-icon" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2.14c1.72.45 3 2 3 3.86 0 2.21-1.79 4-4 4s-4-1.79-4-4c0-1.86 1.28-3.41 3-3.86V7zm2 5c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1z">
-                                    </path>
-                                </svg>
-                                محدوده قیمت
-                                <svg class="fill-accordion-chevron" xmlns="http://www.w3.org/2000/svg" width="16"
-                                    height="16" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="collapsePrice" class="accordion-collapse collapse" aria-labelledby="headingPrice"
-                            data-bs-parent="#filtersAccordion">
-                            <div class="accordion-body">
-                                <div class="fill-price-slider-container">
-                                    <div class="fill-price-slider-track" id="priceSliderTrack">
-                                        <div class="fill-price-slider-range" id="priceSliderRange"></div>
-                                        <div class="fill-price-slider-handle" id="maxPriceHandle"
-                                            data-handle="min-visual"></div>
-                                        <div class="fill-price-slider-handle" id="minPriceHandle"
-                                            data-handle="max-visual"></div>
-                                    </div>
-                                </div>
-                                <div class="fill-price-display">
-                                    از <span id="maxPriceDisplay">-</span> تا <span id="minPriceDisplay">-</span> تومان
-                                </div>
-                                <input type="hidden" id="minPriceValue">
-                                <input type="hidden" id="maxPriceValue">
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Category Filter -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingCategory">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseCategory" aria-expanded="false"
-                                aria-controls="collapseCategory">
-                                <svg class="fill-accordion-header-icon" viewBox="0 0 24 24">
-                                    <path
-                                        d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.58l7-7c.79-.78.79-2.05 0-2.83zm-9.41 8.83L4 11.81V4h7l9 9-7.59 7.59zM6.5 7.5c-.83 0-1.5-.67-1.5-1.5S5.67 4.5 6.5 4.5 8 5.17 8 6s-.67 1.5-1.5 1.5z">
-                                    </path>
-                                </svg>
-                                دسته بندی
-                                <svg class="fill-accordion-chevron" xmlns="http://www.w3.org/2000/svg" width="16"
-                                    height="16" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="collapseCategory" class="accordion-collapse collapse" aria-labelledby="headingCategory"
-                            data-bs-parent="#filtersAccordion">
-                            <div class="accordion-body fill-filter-options-list" id="categoryFilterContainer">
-                                {% for category in categories %}
-                                <div class="fill-filter-option">
-                                    <input type="checkbox" id="category-filter-{{category.id}}"
-                                        value="{{category.slug}}">
-                                    <label for="category-filter-{{category.id}}">{{category}}<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Brand Filter -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingBrand">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseBrand" aria-expanded="false" aria-controls="collapseBrand">
-                                <svg class="fill-accordion-header-icon" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z">
-                                    </path>
-                                </svg>
-                                برند
-                                <svg class="fill-accordion-chevron" xmlns="http://www.w3.org/2000/svg" width="16"
-                                    height="16" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="collapseBrand" class="accordion-collapse collapse" aria-labelledby="headingBrand"
-                            data-bs-parent="#filtersAccordion">
-                            <div class="accordion-body fill-filter-options-list" id="brandFilterContainer">
-                                {% for brand in brands %}
-                                <div class="fill-filter-option">
-                                    <input type="checkbox" id="brand-filter-{{brand.id}}" value="{{brand.slug}}">
-                                    <label for="brand-filter-{{brand.id}}">{{brand}}<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sort Filter -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingSort">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseSort" aria-expanded="false" aria-controls="collapseSort">
-                                <svg class="fill-accordion-header-icon" viewBox="0 0 24 24">
-                                    <path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path>
-                                </svg>
-                                مرتب‌سازی
-                                <svg class="fill-accordion-chevron" xmlns="http://www.w3.org/2000/svg" width="16"
-                                    height="16" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div id="collapseSort" class="accordion-collapse collapse" aria-labelledby="headingSort"
-                            data-bs-parent="#filtersAccordion">
-                            <div class="accordion-body fill-filter-options-list" id="order_byOptionsContainer">
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-1" name="order_byOption" value="newest"
-                                        checked>
-                                    <label for="order_by-filter-1">جدیدترین<span class="fill-custom-tick-container"><svg
-                                                class="fill-tick-icon" viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-2" name="order_byOption" value="popular">
-                                    <label for="order_by-filter-2">محبوب ترین<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-3" name="order_byOption" value="cheap">
-                                    <label for="order_by-filter-3">ارزان ترین<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                                <div class="fill-filter-option">
-                                    <input type="radio" id="order_by-filter-4" name="order_byOption" value="expensive">
-                                    <label for="order_by-filter-4">گران‌ترین<span
-                                            class="fill-custom-tick-container"><svg class="fill-tick-icon"
-                                                viewBox="0 0 16 16">
-                                                <path d="M4.5 8.5l2.5 2.5 5-5"></path>
-                                            </svg></span></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            {% if object.status == 4 %}
+            <div class="order-card-new" data-status="delivered">
+                <div class="order-card-header-new">
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new"></span>
+                        {{ object.jalali_created_date }}</span></div>
+                    <span class="order-status-badge-new delivered">تحویل شده</span>
                 </div>
-                <div class="fill-clear-filters-container px-3">
-                    <button id="clearFiltersButton" class="btn theme-color d-block">
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
-                            </path>
-                        </svg>
-                        پاک کردن فیلترها
-                    </button>
-                    <button id="applyFiltersMobileButton" class="btn theme-color">
-                        اعمال فیلترها
-                    </button>
-                </div>
-            </div>
-        </aside>
+                <p class="order-items-preview">{% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
 
-        <main class="col-lg-9 py-3 d-flex flex-column fill-main-content mt-0">
-
-            <!-- ======================= شروع نوار فیلتر موبایل ======================= -->
-            <div id="mobileFilterBar" class="mobile-filter-bar">
-                <div class="mobile-filter-bar-wrapper">
-
-                    <!-- دکمه تغییر چینش (گرید/لیست) -->
-                    <div class="layout-toggle-container">
-                        <button class="btn-filter-chip btn-layout-toggle" id="layoutToggleButton" title="تغییر چینش">
-                            <span class="layout-icon-container">
-                                <svg class="layout-icon grid-icon" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24" width="1em" height="1em">
-                                    <path fill="currentColor"
-                                        d="M4 8h4V4H4zm6 12h4v-4h-4zm-6 0h4v-4H4zm0-6h4v-4H4zm6 0h4v-4h-4zm6-10v4h4V4zm-6 4h4V4h-4zm6 6h4v-4h-4zm0 6h4v-4h-4z">
-                                    </path>
-                                </svg>
-                            </span>
-                        </button>
-                        <div class="layout-popover" id="layoutPopover">
-                            <button class="layout-option" data-layout="grid" title="نمایش گرید">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
-                                    <path fill="currentColor"
-                                        d="M4 8h4V4H4zm6 12h4v-4h-4zm-6 0h4v-4H4zm0-6h4v-4H4zm6 0h4v-4h-4zm6-10v4h4V4zm-6 4h4V4h-4zm6 6h4v-4h-4zm0 6h4v-4h-4z">
-                                    </path>
-                                </svg>
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
+                <div class="order-footer-new">
+                    <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
+                    <div class="mx-3">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
                             </button>
-                            <button class="layout-option" data-layout="list" title="نمایش لیست">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
-                                    <path fill="currentColor" d="M3 4h18v2H3zm0 7h18v2H3zm0 7h18v2H3z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- چیپ‌های اسکرول‌خور فیلتر -->
-                    <div class="scrollable-filter-chips">
-                        <button class="btn-filter-chip" data-filter-target="all">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path>
-                            </svg>
-                            <span>فیلترها</span>
-                        </button>
-                        <button class="btn-filter-chip" data-filter-target="price"><span>قیمت</span></button>
-                        <button class="btn-filter-chip" data-filter-target="category"><span>دسته‌بندی</span></button>
-                        <button class="btn-filter-chip" data-filter-target="brand"><span>برند</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="popular"><span>محبوب‌ترین</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="newest"><span>جدیدترین</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="cheap"><span>ارزان‌ترین</span></button>
-                        <button class="btn-filter-chip" data-order_by-option="expensive"><span>گران‌ترین</span></button>
-                        <button class="btn-filter-chip" data-filter-target="color"><span>رنگ</span></button>
-                        <button class="btn-filter-chip" data-filter-target="size"><span>سایز</span></button>
-                        <button class="btn-filter-chip" data-filter-target="material"><span>جنس</span></button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
+                                <g fill="currentColor">
+                                    <path
+                                        d="M6 6a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m0 4a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m1 3a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2zm-1 5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1">
+                                    </path>
+                                    <path fill-rule="evenodd"
+                                        d="M2 4a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3zm3-1h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+                                        clip-rule="evenodd"></path>
+                                </g>
+                            </svg>مشاهده فاکتور
+                        </a> -->
                     </div>
                 </div>
             </div>
-            <!-- ======================= پایان نوار فیلتر موبایل ======================= -->
-
-            <div id="resultsGridContainer" class="flex-grow-1">
-                <div id="resultsGrid" class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 py-2">
-                    {% for object in object_list %}
-                    {% if object.min_discounted_price == None %}
-                    <div class="col box-cs pc-s" data-price="ناموجود" data-category="{{object.category}}"
-                        data-brand="{{object.brand}}">
-                        {% else %}
-                        <div class="col box-cs pc-s" data-price="{{object.min_discounted_price}}"
-                            data-category="{{object.category}}" data-brand="{{object.brand}}">
-                            {% endif %}
-                            <a target="_blank" href="{% url 'shop:product-detail' slug=object.slug %}"
-                                class="fill-product-card-link d-block h-100">
-                                <div class="card h-100 fill-product-card">
-                                    <img src="{{object.image.url}}" class="card-img-top fill-product-card-img"
-                                        alt="{{object.title}}">
-                                    <div class="card-body d-flex flex-column w-right">
-                                        <h5 class="card-title"> {{object.title}}</h5>
-                                        <div class="fill-card-brand my-1">{{object.category}}</div>
-                                        <p class="card-text fill-description flex-grow-1">{{object.brief_description}}
-                                        </p>
-                                        {% if object.min_discounted_price == None %}
-                                        <p class="card-price py-1 px-2"><span class="fill-price-value">ناموجود</span>
-                                        </p>
-                                        {% else %}
-                                        <p class="card-price py-1 px-2"><span
-                                                class="fill-price-value">{{object.min_discounted_price}}</span>
-                                            تومان</p>
-                                        {% endif %}
-                                        <div dir="ltr"
-                                            class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center">
-                                            {% with object.color_inventories.all as colors %}
-                                            {% for inventory in colors|slice:":3" %}
-                                            <span class="mx-1 three-color"
-                                                style="background-color: {{ inventory.hex_color }};">
-                                                <span class="">
-
-                                                </span>
-                                            </span>
-                                            {% endfor %}
-                                            {% if colors|length > 3 %}
-                                            <span class="mx-1">
-                                                <svg class="cs-color" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 16 16" width="22px" height="22px">
-                                                    <path fill="currentColor" fill-rule="evenodd"
-                                                        d="M3 8a1 1 0 1 1 2 0a1 1 0 0 1-2 0m4 0a1 1 0 1 1 2 0a1 1 0 0 1-2 0m3.99 0a1 1 0 1 1 2 0a1 1 0 0 1-2 0"
-                                                        clip-rule="evenodd"></path>
-                                                </svg>
-                                            </span>
-                                            {% endif %}
-                                            {% endwith %}
-                                        </div>
-                                        <span class="cs-sc-star align-items-center d-flex justify-content-center">
-                                            <svg class="star rated  cs-star mb-1 mx-1" viewBox="0 0 24 24">
-                                                <polygon
-                                                    points="12 2 15 10 24 10 17 15 19 23 12 18 5 23 7 15 0 10 9 10" />
-                                            </svg>
-                                            {{object.avg_rate}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <div id="noResultsMessage" class="alert alert-warning mt-3 d-none" role="alert">
-                        محصولی برای نمایش وجود ندارد.
-                    </div>
-                    <nav aria-label="Page navigation" class="mt-auto pt-3" id="paginationContainer">
-                        <ul class="pagination justify-content-center" id="paginationUl"
-                            data-total-pages="{{ page_obj.paginator.num_pages }}"></ul>
-                    </nav>
+            {% elif object.status == 3 %}
+            <div class="order-card-new " data-status="shipped">
+                <div class="order-card-header-new">
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new"></span>
+                        {{ object.jalali_created_date }}</span></div>
+                    <span class="order-status-badge-new shipped">ارسال شده</span>
                 </div>
-        </main>
+                <p class="order-items-preview">{% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
 
-    </div>
-</div>
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
+                <div class="order-footer-new">
+                    <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
+                    <div class="mx-3">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
+                            </button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
+                                <g fill="currentColor">
+                                    <path
+                                        d="M6 6a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m0 4a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m1 3a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2zm-1 5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1">
+                                    </path>
+                                    <path fill-rule="evenodd"
+                                        d="M2 4a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3zm3-1h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+                                        clip-rule="evenodd"></path>
+                                </g>
+                            </svg>مشاهده فاکتور
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+            {% elif object.status == 2 %}
+            <div class="order-card-new" data-status="pending">
+                <div class="order-card-header-new">
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new">
+                            {{ object.jalali_created_date }}</span></div>
+                    <span class="order-status-badge-new pending">در حال پردازش</span>
+                </div>
+                <p class="order-items-preview">{% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
 
-<div class="filters-bottom-sheet-overlay rounded-3" id="filtersBottomSheetOverlay"></div>
-<div class="filters-bottom-sheet rounded-3" id="filtersBottomSheet">
-    <div class="filters-bottom-sheet-header">
-        <span class="title">فیلتر محصولات</span>
-        <button class="btn-close-sheet" id="closeBottomSheetButton" aria-label="بستن">×</button>
-    </div>
-    <div class="filters-bottom-sheet-content" id="bottomSheetFilterContent">
-        <!-- محتوای فیلترها در حالت موبایل به اینجا منتقل می شود -->
-    </div>
-</div>
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
+                <div class="order-footer-new">
+                    <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
+                    <div class="mx-3">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
+                            </button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
+                                <g fill="currentColor">
+                                    <path
+                                        d="M6 6a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m0 4a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m1 3a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2zm-1 5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1">
+                                    </path>
+                                    <path fill-rule="evenodd"
+                                        d="M2 4a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3zm3-1h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+                                        clip-rule="evenodd"></path>
+                                </g>
+                            </svg>مشاهده فاکتور
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+            {% elif object.status == 5 %}
+            <div class="order-card-new" data-status="cancelled">
+                <div class="order-card-header-new">
+                    <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span><span class="order-date-new">
+                            {{ object.jalali_created_date }}</span></div>
+                    <span class="order-status-badge-new cancelled">لغو شده</span>
+                </div>
+                <p class="order-items-preview">{% with items=object.order_items.all %}
+                    {% with items_count=items|length %}
+                    {% if items_count >= 2 %}
+                <p class="order-items-preview">
+
+                    {{ items|slice:"-2:"|join:", " }}
+                    ...
+                </p>
+                {% elif items_count == 1 %}
+                <p class="order-items-preview">شامل: {{ items.0 }}...</p>
+                {% else %}
+                <p class="order-items-preview">بدون آیتم</p>
+                {% endif %}
+                {% endwith %}
+                {% endwith %}</p>
+                <div class="order-footer-new">
+                    <span class="order-total-new">{{object.get_price|intcomma}} <small>تومان</small></span>
+                    <div class="mx-3">
+                        <a href="{% url 'dashboard:customer:order-detail' pk=object.pk %}">
+                            <button class="btn-custom btn-secondary btn-sm view-order-details-btn">
+                                <svg>
+                                    <use xlink:href="#icon-eye-open"></use>
+                                </svg> مشاهده جزئیات
+                            </button>
+                        </a>
+                        <!-- <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px" height="22px">
+                                <g fill="currentColor">
+                                    <path
+                                        d="M6 6a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m0 4a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1m1 3a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2zm-1 5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1">
+                                    </path>
+                                    <path fill-rule="evenodd"
+                                        d="M2 4a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3zm3-1h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+                                        clip-rule="evenodd"></path>
+                                </g>
+                            </svg>مشاهده فاکتور
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div id="noOrdersMessage" class="text-muted text-center py-5" style="display: none;">
+                سفارشی با این وضعیت یافت نشد.
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+</main>
