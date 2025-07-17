@@ -114,6 +114,9 @@
                     <a target="_blank" href="{% url 'dashboard:admin:product-edit' pk=object.pk %}" style="border: 1px solid red;border-radius: 10px;">
                         مشاهده در ادمین
                     </a>
+                    <h5>
+                        کد محصول: {{ object.id }}
+                    </h5>
                 {% endif %}
 
                     <div class="panel-card">

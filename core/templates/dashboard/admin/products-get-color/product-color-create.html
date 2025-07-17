@@ -14,6 +14,22 @@
             <div class="card-header border-bottom">
                 <h4 class="card-header-title">ویرایش محصول ثبت شده </h4>
             </div>
+            <form method="get" action=".">
+                <label for="brand-select">فیلتر بر اساس برند:</label>
+                <select id="brand-select" name="brand" onchange="this.form.submit()" class="form-control">
+                    <option value="">همه برندها</option>
+                    {% for brand in brands %}
+                        <option value="{{ brand.slug }}" {% if brand.slug == selected_brand %}selected{% endif %}>{{ brand.title }}</option>
+                    {% endfor %}
+                </select>
+                <select id="category-select" name="category" onchange="this.form.submit()" class="form-control">
+                    <option value="">همه دسته‌بندی‌ها</option>
+                    {% for category in categorys %}
+                        <option value="{{ category.slug }}" {% if category.slug == selected_category %}selected{% endif %}>{{ category.title }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="q"  placeholder="جستجو... کد محصول یا نام" class="form-control" value="{{ request.GET.q }}">
+            </form>
 
             <form action="." method="post">
                 <!-- Body -->

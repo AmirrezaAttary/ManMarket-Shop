@@ -56,7 +56,7 @@ class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListVi
     def get_queryset(self):
         queryset = PriceGetHamrh.objects.all()
         if search_q := self.request.GET.get("q"):
-            queryset = queryset.filter(product__title__icontains=search_q)
+            queryset = queryset.filter(product__title__icontains=search_q)| queryset.filter(product__id__iexact=search_q)
         if order_by := self.request.GET.get("order_by"):
             try:
                 queryset = queryset.order_by(order_by)
@@ -74,7 +74,23 @@ class AdminGetColorCreateView(LoginRequiredMixin, HasAdminAccessPermission, Crea
     template_name = "dashboard/admin/products-get-color/product-color-create.html"
     form_class = PriceGetHamrhForm
     model = PriceGetHamrh
-
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        brand_slug = self.request.GET.get('brand')
+        category_slug = self.request.GET.get('category')
+        kwargs['q'] = self.request.GET.get('q')
+        # print("brand_slug in view:", brand_slug)
+        kwargs['brand_slug'] = brand_slug
+        kwargs['q'] = self.request.GET.get('q')
+        kwargs['category_slug'] = category_slug
+        return kwargs
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['selected_brand'] = self.request.GET.get('brand')
+        context['selected_category'] = self.request.GET.get('category')
+        return context
+    
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:colors-list')
 

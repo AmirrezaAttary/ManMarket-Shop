@@ -31,7 +31,7 @@ class AdminProductListView(LoginRequiredMixin, HasAdminAccessPermission, ListVie
         queryset = ProductModel.objects.all()
         
         if search_q := self.request.GET.get("q"):
-            queryset = queryset.filter(title__icontains=search_q)
+            queryset = queryset.filter(title__icontains=search_q)| queryset.filter(id__iexact=search_q)
         if category_id := self.request.GET.get("category_id"):
             queryset = queryset.filter(category__id=category_id)
         if brand_id := self.request.GET.get("brand_id"):

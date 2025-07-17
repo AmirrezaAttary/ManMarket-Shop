@@ -6,6 +6,10 @@ from shop.models import ProductModel,ProductSpecification
 class SpecificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         brand_slug = kwargs.pop('brand_slug', None)  # ✅ درست
+        q = kwargs.pop('q', None)  # ✅ درست
+        category_slug = kwargs.pop('category_slug', None)  # ✅ درست
+        print("brand_slug received in form:", brand_slug)  # ← بررسی مقدار
+        print("q received in form:", q)  # ← بررسی مقدار
         # print("brand_slug received in form:", brand_slug)  # ← بررسی مقدار
         super().__init__(*args, **kwargs)
 
@@ -18,6 +22,10 @@ class SpecificationForm(forms.ModelForm):
 
             if brand_slug:
                 queryset = queryset.filter(brand__slug=brand_slug)
+            if q:
+                queryset = queryset.filter(title__icontains=q) | queryset.filter(id__iexact=q)
+            if category_slug:
+                queryset = queryset.filter(category__slug=category_slug)
 
             self.fields['product'].queryset = queryset
         else:
