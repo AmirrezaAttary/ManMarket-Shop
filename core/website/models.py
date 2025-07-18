@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 # Create your models here.
 class Contact(models.Model):
@@ -27,3 +28,30 @@ class AboutGrop(models.Model):
         ordering = ['-created_date']
     def __str__(self):
         return self.name
+    
+    
+    
+class ReviewStatusType(models.IntegerChoices):
+    pending = 1, "در انتظار تایید"
+    accepted = 2, "تایید شده"
+    rejected = 3, "رد شده"
+
+
+User = get_user_model()
+
+class Story(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stories')
+    title = models.CharField(max_length=255, verbose_name='تایتل')
+    video = models.FileField(upload_to='stories/videos/', verbose_name='فیلم')
+    icon = models.ImageField(upload_to='stories/icons/', verbose_name='آیکون استوری')
+    status = models.IntegerField(
+            choices=ReviewStatusType.choices, default=ReviewStatusType.pending.value, verbose_name='آیکون استوری')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "استوری"
+        verbose_name_plural = "استوری‌ها"
+
+    def __str__(self):
+        return f"{self.title} - {self.status}"

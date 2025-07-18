@@ -1,5 +1,5 @@
 from django.contrib import admin
-from website.models import Contact,AboutGrop
+from website.models import Contact,AboutGrop, Story
 
 
 # Register your models here.
@@ -17,3 +17,14 @@ class AboutGropAdmin(admin.ModelAdmin):
     list_display = ('name','job','created_date')
     list_filter = ('name',)
     search_fields = ('name','job')
+
+@admin.register(Story)
+class StoryAdmin(admin.ModelAdmin):
+    date_hierarchy = 'created_at'
+    list_display = ('title', 'user', 'status', 'created_at')
+    list_filter = ('status', 'user')
+    search_fields = ('title', 'user__username')
+    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related('user')
