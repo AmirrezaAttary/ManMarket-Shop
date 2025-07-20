@@ -2,19 +2,19 @@
 <header class="mb-3 position-fixed py-2">
     <nav class="desktop-navigation-menu d-flex justify-content-center mt-3 px-5 text-center align-items-center">
         <!--logo in header -- : start-->
-        <div class="mx-1"><a href="{% url 'website:index' %}"><img class="cs-w" alt="من مارکت"
+        <div class="mx-1 w-25"><a href="{% url 'website:index' %}"><img class="cs-w" alt="من مارکت"
                     src="{% static 'img/main.logo.jpg' %}"></a></div>
         <!--logo in header -- : end---->
 
         <!--menu -- : start-->
-        <div class="container w-center mr-cs mt-2">
+        <div class="container w-center mr-cs mt-2 w-75">
             {% include 'base/category-base.html' %}
         </div>
         <!--menu -- : end---->
 
         <!--icons in header -- :: start-->
-        <div class="d-flex justify-content-between icons-in-header mb-1">
-            <div class="cs-mx show-search-modal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="جست و جو ">
+        <div class="d-flex justify-content-end align-items-baseline icons-in-header mb-1 w-25">
+            <div class="cs-mx show-search-modal mt-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="جستجو">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.4em" height="1.4em">
                     <path fill="currentColor"
                         d="M10.77 18.3a7.53 7.53 0 1 1 7.53-7.53a7.53 7.53 0 0 1-7.53 7.53m0-13.55a6 6 0 1 0 6 6a6 6 0 0 0-6-6">
@@ -46,28 +46,23 @@
                 {% if wishlist_total_items == 0 %}
 
                 {% else %}
-
-                <!--like and shop number start-->
-                <span class="number-top-icon num-like">
+                <span class="number-top-icon num-like" >
                     {{wishlist_total_items}}
                 </span>
-                <!--like and shop number end---->
                 {% endif %}
                 <!--like and shop number end---->
             </div>
+            <div class="cs-mx position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom" title="سبد خرید">
 
-            <div class="cs-mx btn position-relative" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                title="سبد خرید">
                 <a class="login-a text-dark" href="{% url 'cart:cart-summery' %}">
-                    <svg class="shop-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="1em"
-                        height="1em">
+                    <svg class="shop-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="1.1em"
+                        height="1.1em">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                             d="M12.182 7.5h-8.18l-1-5h10a.5.5 0 0 1 .49.59l-.82 4a.49.49 0 0 1-.49.41m-9.18-5L2.582.9a.5.5 0 0 0-.49-.4H.502m3.5 7l.42 2.1a.5.5 0 0 0 .49.4h6.09m-.5 3.5a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1m-5 0a.5.5 0 1 1 0-1a.5.5 0 0 1 0 1">
                         </path>
                     </svg>
                 </a>
                 <!--like and shop number start-->
-
                 {% if cart.get_total_quantity == 0 %}
 
                 {% else %}
@@ -75,8 +70,6 @@
                     {{cart.get_total_quantity}}
                 </span>
                 {% endif %}
-
-
                 <!--like and shop number end---->
             </div>
         </div>
@@ -130,7 +123,7 @@
                 </path>
             </svg>
             <p class="tol-mb">
-                جست و جو
+                جستجو
             </p>
         </button>
         <button class="action-btn">
@@ -150,9 +143,11 @@
     <nav class="mobile-navigation-menu has-scrollbar " data-mobile-menu>
         <div class="menu-top">
             <h2 class="menu-title">منو</h2>
-
             <button class="menu-close-btn" data-mobile-menu-close-btn>
-                <ion-icon name="close-outline"></ion-icon>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em">
+                    <path fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="round"
+                        d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
             </button>
         </div>
         <ul class="mobile-menu-category-list">
@@ -167,21 +162,11 @@
                     </div>
                 </button>
                 <ul class="submenu-category-list " data-accordion>
-                    <li class="submenu-category"><a href="#" class="submenu-title">موبایل</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">تبلت</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">لپ تاپ</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">مانیتور</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">کنسول بازی</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">کامپیوتر همه کاره</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">اسپیکر</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">هدست و هدفون</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">ساعت و مچ بند هوشمند</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">گجت خانگی</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">پاور بانک</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">ذخیره ساز اطلاعات</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">موس و کیبورد</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">شارژر و مبدل موبایل</a></li>
-                    <li class="submenu-category"><a href="#" class="submenu-title">قاب و گلس</a></li>
+
+                    {% for category in categorys %}
+                        <li class="submenu-category"><a href="{% url 'shop:product-list' %}?category={{ category.slug }}" class="submenu-title">{{ category.title }}</a></li>
+                    {% endfor %}
+
                 </ul>
             </li>
             <li class="menu-category"><a href="{% url 'website:contact' %}" class="menu-title">تماس با ما</a></li>
