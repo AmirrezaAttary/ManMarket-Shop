@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     
     
-
     # created my app
     'website',
     'accounts',

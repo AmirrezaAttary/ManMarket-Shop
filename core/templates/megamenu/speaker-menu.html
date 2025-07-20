@@ -1,76 +1,25 @@
+{% load menu_tags %}
+
+{% get_mega_menus "speaker" as mega_menus %}
 <div class="mega-menu-pane" id="pane-books-desktop">
     <div class="d-flex justify-content-end flex-column">
-
+        {% for item in mega_menus %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=gbl">
-                    جی بی ال
+                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category={{ item.category.slug }}&brand={{ item.brand.slug }}">
+                    {{ item.brand.title }}
                 </a>
             </h6>
         </div>
+        {% empty %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=sony">
-                    سونی
+                <a class=" d-flex justify-content-start" href="#">
+                    چیزی نیست
                 </a>
             </h6>
         </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=harman-kardon">
-                    هارمن کاردن
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=xiaomi">
-                    شیائومی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=king-star">
-                    کینگ استار
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=anker">
-                    انکر
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=beats">
-                    بیتس
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=himi">
-                    هیمی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=tesco">
-                    تسکو
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=speaker&brand=proone">
-                    پرووان
-                </a>
-            </h6>
-        </div>
+        {% endfor %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2 w-right justify-content-end">
                 <a href="{% url 'shop:product-list' %}?category=speaker" class="w-right a-cl">

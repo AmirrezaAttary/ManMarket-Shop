@@ -1,82 +1,25 @@
+{% load menu_tags %}
+
+{% get_mega_menus "phone" as mega_menus %}
 <div class="mega-menu-pane active" id="pane-digital-desktop">
     <div class="d-flex justify-content-end flex-column">
+        {% for item in mega_menus %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=apple">
-                    اپل
+                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category={{ item.category.slug }}&brand={{ item.brand.slug }}">
+                    {{ item.brand.title }}
                 </a>
             </h6>
         </div>
+        {% empty %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=samsung">
-                    سامسونگ
+                <a class=" d-flex justify-content-start" href="#">
+                    چیزی نیست
                 </a>
             </h6>
         </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=xiaomi">
-                    شیائومی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=honor">
-                    آنر
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=nokia">
-                    نوکیا
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=nothing-phone">
-                    ناتینگ فون
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=vocal">
-                    وکال
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=hmd">
-                    اچ ام دی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=realme">
-                    ریلمی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=redtone">
-                    ردتون
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=phone&brand=tcl">
-                    تی سی ال
-                </a>
-            </h6>
-        </div>
+        {% endfor %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2 w-right justify-content-end">
                 <a href="{% url 'shop:product-list' %}?category=phone" class="w-right a-cl">
