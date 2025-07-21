@@ -12,7 +12,9 @@ class OrderModelAdmin(admin.ModelAdmin):
         "total_price",
         "coupon",
         "status",
-        "created_date"
+        "created_date",
+        "tracking_type",
+        "tracking_code",
     )
 
 

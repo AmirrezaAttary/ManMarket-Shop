@@ -2,6 +2,10 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from decimal import Decimal
 
+class TrackingType(models.IntegerChoices):
+    post = 1 , "ارسال با پست عادی"
+    mahex = 2 , "ارسال با ماهکس"
+    tipax = 3 , "ارسال با تیپاکس"
 
 class OrderStatusType(models.IntegerChoices):
     pending = 1 , "در انتظار پرداخت"
@@ -53,7 +57,9 @@ class OrderModel(models.Model):
     status = models.IntegerField(choices=OrderStatusType.choices,default=OrderStatusType.pending.value)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    tracking_type = models.IntegerField(choices=TrackingType.choices,default=TrackingType.post.value)
     tracking_code = models.CharField(max_length=100, null=True, blank=True, verbose_name="کد رهگیری پستی")
+    
     class Meta:
         ordering = ['-created_date']
     
