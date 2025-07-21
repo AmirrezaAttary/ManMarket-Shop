@@ -1,7 +1,7 @@
 from core.settings import *
 from decouple import config
 
-SECRET_KEY = 'django-insecure-jc35qo)gv(idt+zlq=2&!yq%y)twxum-$8@s^#3dj^7n^!yn_e'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
