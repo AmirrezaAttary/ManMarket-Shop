@@ -5,15 +5,20 @@ from shop.models import ProductModel,ProductSpecification
 
 class SpecificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        brand_slug = kwargs.pop('brand_slug', None)  # ✅ درست
-        q = kwargs.pop('q', None)  # ✅ درست
-        category_slug = kwargs.pop('category_slug', None)  # ✅ درست
-        print("brand_slug received in form:", brand_slug)  # ← بررسی مقدار
-        print("q received in form:", q)  # ← بررسی مقدار
-        # print("brand_slug received in form:", brand_slug)  # ← بررسی مقدار
+        brand_slug = kwargs.pop('brand_slug', None)
+        q = kwargs.pop('q', None)
+        category_slug = kwargs.pop('category_slug', None)
+        print("brand_slug received in form:", brand_slug)
+        print("q received in form:", q)
+
         super().__init__(*args, **kwargs)
 
+        self.fields['product'].required = True
+        self.fields['product'].error_messages = {'required': 'لطفاً یک محصول انتخاب کنید.'}
         self.fields['product'].widget.attrs['class'] = 'form-control'
+
+        self.fields['url'].required = True
+        self.fields['url'].error_messages = {'required': 'لینک محصول را وارد کنید.'}
         self.fields['url'].widget.attrs['class'] = 'form-control'
 
         if not self.instance.pk:
@@ -30,9 +35,11 @@ class SpecificationForm(forms.ModelForm):
             self.fields['product'].queryset = queryset
         else:
             self.fields['product'].queryset = ProductModel.objects.filter(id=self.instance.product_id)
+
     class Meta:
         model = PriceSpecification
         fields = ['product', 'url']
+
 
             
             

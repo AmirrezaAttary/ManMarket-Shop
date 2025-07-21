@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<br><br><br><br>
+<div class="row">
+    {% include 'dashboard/admin/sidebar.html' %}
+    <div class="col-md-9">
+        <div class="card">
+            <!-- Header -->
+            <div class="card-header border-bottom">
+                <h5 class="card-header-title">حذف محصول ثبت شده</h5>
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <form action="." method="post">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row d-flex ">
+                        <p> آیا از حذف محصول زیر اطمینان دارید؟</p>
+                        <div class="row">
+                            <span>شناسه محصول: {{object.pk}}</span>
+                            <span>نام  محصول: {{object.product}}</span>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <div class=" d-flex pt-5 justify-content-end">
+                            <button type="submit" class="btn btn-danger ms-3">تایید حذف</button>
+                            <a class="btn btn-secondary ms-3"
+                                href="{% url 'dashboard:admin:specification-edit' pk=object.pk %}">بازگشت</a>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

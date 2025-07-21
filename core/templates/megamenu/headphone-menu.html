@@ -1,89 +1,25 @@
+{% load menu_tags %}
+
+{% get_mega_menus "headset-headphones" as mega_menus %}
 <div class="mega-menu-pane" id="pane-toys-desktop">
     <div class="d-flex justify-content-end flex-column">
+        {% for item in mega_menus %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=apple">
-                    اپل
+                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category={{ item.category.slug }}&brand={{ item.brand.slug }}">
+                    {{ item.brand.title }}
                 </a>
             </h6>
         </div>
+        {% empty %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=samsung">
-                    سامسونگ
+                <a class=" d-flex justify-content-start" href="#">
+                    چیزی نیست
                 </a>
             </h6>
         </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=xiaomi">
-                    شیائومی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=sony">
-                    سونی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=gbl">
-                    جی بی ال
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=beats">
-                    بیتس
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=honor">
-                    آنر
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=huawei">
-                    هوآوی
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=anker">
-                    انکر
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=kcy">
-                    کی سی وای
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=haylou">
-                    هایلو
-                </a>
-            </h6>
-        </div>
-        <div class="mega-menu-sub-column">
-            <h6 class="px-2">
-                <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=headset-headphones&brand=king-star">
-                    کینگ استار
-                </a>
-            </h6>
-        </div>
+        {% endfor %}
         <div class="mega-menu-sub-column">
             <h6 class="px-2 w-right justify-content-end">
                 <a href="{% url 'shop:product-list' %}?category=headset-headphones" class="w-right a-cl">

@@ -1,0 +1,69 @@
+<div class="my-2">
+    <h5 class="text-center">
+        <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
+        <span class="px-2">سبک من</span>
+        <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
+    </h5>
+    <div class="story-module-main-wrapper">
+
+        <div class="story-module-container">
+            <div class="story-module-stories-wrapper">
+                <div class="story-module-stories-grid">
+
+
+                    {% for story in storys %}
+                    <div class="story-module-story-item mx-4 my-4" data-username="{{story.title}}"
+                        data-avatar="{{story.icon.url}}">
+                        <div class="story-module-story-gradient-border">
+                            <img src="{{story.icon.url}}" alt="{{story.title}}" class="story-module-story-avatar">
+                        </div>
+                        <span class="story-module-story-username">{{story.title}}</span>
+                        <div class="story-module-media-list story-module-d-none">
+                            <video data-duration="15000" data-caption="{{story.title}}"
+                                src="{{story.video.url}}"
+                                class="story-module-media-video"></video>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="story-module-story-modal">
+        <div class="story-module-modal-content">
+            <div class="story-module-modal-progress-bar-container">
+            </div>
+            <div class="story-module-modal-story-header">
+                <img src="" alt="User Avatar" class="story-module-story-header-avatar">
+                <div class="story-module-header-info">
+                    <span class="story-module-story-header-username"></span>
+                    <span class="story-module-story-header-time"></span>
+                </div>
+            </div>
+            <div class="story-module-modal-story-media">
+            </div>
+            <button class="story-module-nav-button story-module-nav-button-prev" aria-label="استوری قبلی">
+                <svg fill="currentColor" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"
+                    role="presentation" data-icon="arrow-left">
+                    <path
+                        d="M11.071 6.28a.5.5 0 0 1 .707 0l5.657 5.657a.5.5 0 0 1 0 .707l-5.657 5.657a.5.5 0 0 1-.707-.707L16.038 12l-4.967-4.967a.5.5 0 0 1 0-.707z">
+                    </path>
+                </svg>
+            </button>
+            <button class="story-module-nav-button story-module-nav-button-next" aria-label="استوری بعدی">
+                <svg fill="currentColor" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"
+                    role="presentation" data-icon="arrow-right">
+                    <path
+                        d="M12.929 6.28a.5.5 0 0 0-.707 0l-5.657 5.657a.5.5 0 0 0 0 .707l5.657 5.657a.5.5 0 0 0 .707-.707L7.962 12l4.967-4.967a.5.5 0 0 0 0-.707z">
+                    </path>
+                </svg>
+            </button>
+            <div class="story-module-external-caption" id="story-module-external-caption">
+                <p id="story-module-caption-text"></p>
+            </div>
+        </div>
+    </div>
+</div>

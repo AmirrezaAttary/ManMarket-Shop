@@ -9,7 +9,7 @@ def show_latest_products(context):
     request = context.get("request")
     latest_products = ProductModel.objects.filter(
         status=ProductStatusType.publish.value
-    ).distinct().order_by("-created_date")[:16]
+    ).distinct().order_by("-created_date")[:12]
     
     wishlist_items = WishlistProductModel.objects.filter(user=request.user).values_list("product__id", flat=True) if request.user.is_authenticated else []
     
@@ -29,7 +29,7 @@ def show_highest_discount_products(context):
         color_inventories__price__gt=0  # فیلتر محصولات دارای قیمت مثبت
     ).annotate(
         discount=F('color_inventories__price') * (F('color_inventories__discount_percent') / 100)
-    ).order_by('-discount').distinct()[:16]  # distinct برای جلوگیری از تکرار محصول به‌خاطر رابطه many-to-one
+    ).order_by('-discount').distinct()[:12]  # distinct برای جلوگیری از تکرار محصول به‌خاطر رابطه many-to-one
 
     wishlist_items = WishlistProductModel.objects.filter(user=request.user).values_list("product__id", flat=True) if request.user.is_authenticated else []
 
@@ -46,7 +46,7 @@ def show_highest_sales_products(context):
     highest_sales_products = ProductModel.objects.filter(
         status=ProductStatusType.publish.value,
         color_inventories__price__gt=0
-    ).order_by('-sales_count').distinct()[:16]
+    ).order_by('-sales_count').distinct()[:12]
 
     wishlist_items = WishlistProductModel.objects.filter(user=request.user).values_list("product__id", flat=True) if request.user.is_authenticated else []
 
@@ -64,7 +64,7 @@ def show_most_viewed_products(context):
     most_viewed_products = ProductModel.objects.filter(
         status=ProductStatusType.publish.value,
         color_inventories__price__gt=0
-    ).order_by('-product_view').distinct()[:16]
+    ).order_by('-product_view').distinct()[:12]
 
     wishlist_items = WishlistProductModel.objects.filter(user=request.user).values_list("product__id", flat=True) if request.user.is_authenticated else []
 

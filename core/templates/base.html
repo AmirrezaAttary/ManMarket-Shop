@@ -9,6 +9,9 @@
 
         {% endblock title %}</title>
 
+    <!--    همه اینا مال ایندکسه -->
+
+    <!--    همه اینا مال ایندکسه -->
     {% block extra_css %}
 
     {% endblock extra_css %}
@@ -53,13 +56,17 @@
             opacity: 1;
         }
     </style>
+
 </head>
 
 <body>
 
+
+
     <!--Shadow Overly start-->
     <div class="overlay" data-overlay></div>
     <!--Shadow Overly start-->
+
 
 
     <!--Header Start-->
@@ -73,14 +80,12 @@
 
 
 
-    <!--Admin Icon start -->
- 
-    <!--Admin Icon end -->
 
-    <!-- main -->
-     
-    {% block content %} {% endblock content %}
-    <!-- endmian -->
+
+    {% block content %}
+
+    {% endblock content %}
+
 
     <!--footer :: start------>
     {% include 'base/footer-base.html' %}
@@ -91,19 +96,18 @@
 
 
 
-    <!--این همه جا هست -->
+
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     {% block extra_js %}
 
     {% endblock extra_js %}
-
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/script.js' %}"></script>
-    <script src="{% static 'js/custom.js' %}"></script>
     <script src="{% static 'vendor/toastify/toastify.js' %}"></script>
-    <!--این همه جا هست -->
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
     {% block extra_jss %}
-        
+
     {% endblock extra_jss %}
 
 
@@ -171,9 +175,10 @@
         }
     </script>
 
-    
+
 
     {% include 'messages.html' %}
+
 
 </body>
 

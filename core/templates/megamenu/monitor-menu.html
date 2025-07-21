@@ -1,74 +1,24 @@
+{% load menu_tags %}
+
+{% get_mega_menus "monitor" as mega_menus %}
 <div class="mega-menu-pane" id="pane-beauty-desktop">
+    {% for item in mega_menus %}
     <div class="mega-menu-sub-column">
         <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=samsung">
-                سامسونگ
+            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category={{ item.category.slug }}&brand={{ item.brand.slug }}">
+                {{ item.brand.title }}
             </a>
         </h6>
     </div>
+    {% empty %}
     <div class="mega-menu-sub-column">
         <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=lg">
-                ال جی
+            <a class=" d-flex justify-content-start" href="#">
+                چیزی نیست
             </a>
         </h6>
     </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=msi">
-                ام اس ای
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=lenovo">
-                لنوو
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=gplus">
-                جی پلاس
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=huawei">
-                هوآوی
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=x-vision">
-                ایکس ویژن
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=maya">
-                مایا
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=ranso">
-                رنسو
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=monitor&brand=horizon">
-                هورایزن
-            </a>
-        </h6>
-    </div>
+    {% endfor %}
     <div class="mega-menu-sub-column">
         <h6 class="px-2 w-right justify-content-end">
             <a href="{% url 'shop:product-list' %}?category=monitor" class="w-right a-cl">

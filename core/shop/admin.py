@@ -8,7 +8,8 @@ from .models import (ProductModel,
                     ProductColorInventory,
                     ProductSpecification ,
                     Brand,
-                    WishlistProductModel
+                    WishlistProductModel,
+                    MegaMenu
                     )
 
 # ثبت رنگ‌ها به صورت مستقل
@@ -73,3 +74,11 @@ class ProductImageModelAdmin(admin.ModelAdmin):
 @admin.register(WishlistProductModel)
 class WishlistProductModelAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "product")
+
+
+@admin.register(MegaMenu)
+class MegaMenuAdmin(admin.ModelAdmin):
+    list_display = ("id", "category", "brand", "created_date", "updated_date")
+    search_fields = ("category__title", "brand__title")
+    list_filter = ("category", "brand")
+    list_per_page = 20

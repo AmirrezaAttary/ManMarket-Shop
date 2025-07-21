@@ -2,29 +2,26 @@
 {% load static %}
 {% load humanize %}
 {% load shop_tags %}
+
 {% block title %}
 {{ object.title }} | خرید {{ object.category }} | manmarket.ir
 {% endblock title %}
 
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/swiper.lib.css' %}" />
 <link rel="stylesheet" href="{% static 'css/sweet.alert.lib.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="{% static 'css/splide.lib.css' %}" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 {% endblock extra_css %}
 
-
 {% block content %}
-
-
-
-
 <div class="product-page-wrapper">
     <div class="container-fluid">
         <div class="row mt-cs">
+
             <div class="col-lg-5 col-md-6 col-12">
                 <div class="product-gallery-area">
                     <div id="galleryTopSwiper" class="gallery-top swiper-container" style="cursor: pointer;">
@@ -64,8 +61,20 @@
 
                     <div class="product-rating align-items-center">
                         <span class="rating-value mx-1" style="font-size: 16px;">{{object.avg_rate}}</span>
-                        <i class="far fa-star text-warning"></i>
+                        <i class="fa-solid fa-star"></i>
                     </div>
+                    <!-- <p class="product-price d-di d-none my-1 mb-1">
+                        <span class="text-dark">
+                            قیمت :
+                        </span>
+                        12,000,000
+                        <svg class="ms-3" width="20" height="20" viewBox="0 0 14 16" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path class="text-gray-880 dark:text-white"
+                                d="M1.14878 6.91843C1.44428 6.91843 1.70285 6.87142 1.92447 6.77739C2.15282 6.68337 2.34422 6.55577 2.49869 6.39458C2.65316 6.2334 2.77069 6.04535 2.85128 5.83044C2.93187 5.62224 2.97888 5.40062 2.99231 5.16556H1.98492C1.6424 5.16556 1.36033 5.12862 1.1387 5.05474C0.917077 4.98087 0.742461 4.87341 0.614858 4.73238C0.487254 4.59134 0.396588 4.42344 0.34286 4.22868C0.295849 4.0272 0.272343 3.80221 0.272343 3.55372C0.272343 3.29852 0.309281 3.05674 0.383156 2.8284C0.457032 2.60005 0.564488 2.39857 0.705523 2.22396C0.846559 2.04934 1.02117 1.91167 1.22937 1.81093C1.44428 1.70347 1.68941 1.64974 1.96477 1.64974C2.1864 1.64974 2.39795 1.68668 2.59943 1.76056C2.80091 1.83443 2.97888 1.95196 3.13335 2.11315C3.28782 2.26761 3.40871 2.47245 3.49601 2.72766C3.59004 2.97615 3.63705 3.27837 3.63705 3.63431V4.47045H4.60415C4.68474 4.47045 4.73847 4.50068 4.76533 4.56112C4.79891 4.61485 4.8157 4.6988 4.8157 4.81297C4.8157 4.93386 4.79891 5.02452 4.76533 5.08497C4.73847 5.13869 4.68474 5.16556 4.60415 5.16556H3.6169C3.60347 5.49464 3.53631 5.80693 3.41542 6.10244C3.30125 6.39794 3.14007 6.65651 2.93187 6.87813C2.72368 7.09976 2.47518 7.27438 2.1864 7.40198C1.89761 7.5363 1.57188 7.60346 1.20922 7.60346H0.141381L0.0809373 6.91843H1.14878ZM0.896929 3.51343C0.896929 3.68133 0.913719 3.82572 0.947299 3.94661C0.987594 4.0675 1.0514 4.16823 1.1387 4.24883C1.23273 4.3227 1.35697 4.37979 1.51144 4.42008C1.66591 4.45366 1.86067 4.47045 2.09573 4.47045H3.00239V3.71491C3.00239 3.21792 2.90501 2.86198 2.71024 2.64707C2.51548 2.43215 2.24684 2.3247 1.90433 2.3247C1.58196 2.3247 1.33347 2.43215 1.15885 2.64707C0.984237 2.86198 0.896929 3.15076 0.896929 3.51343ZM6.26895 4.47045C6.35626 4.47045 6.41335 4.50068 6.44021 4.56112C6.47379 4.61485 6.49058 4.6988 6.49058 4.81297C6.49058 4.93386 6.47379 5.02452 6.44021 5.08497C6.41335 5.13869 6.35626 5.16556 6.26895 5.16556H4.60675C4.51944 5.16556 4.46235 5.13869 4.43549 5.08497C4.40191 5.03124 4.38512 4.94729 4.38512 4.83312C4.38512 4.71223 4.40191 4.62156 4.43549 4.56112C4.46235 4.50068 4.51944 4.47045 4.60675 4.47045H6.26895ZM7.93155 4.47045C8.01886 4.47045 8.07594 4.50068 8.10281 4.56112C8.13639 4.61485 8.15318 4.6988 8.15318 4.81297C8.15318 4.93386 8.13639 5.02452 8.10281 5.08497C8.07594 5.13869 8.01886 5.16556 7.93155 5.16556H6.26935C6.18204 5.16556 6.12495 5.13869 6.09809 5.08497C6.06451 5.03124 6.04772 4.94729 6.04772 4.83312C6.04772 4.71223 6.06451 4.62156 6.09809 4.56112C6.12495 4.50068 6.18204 4.47045 6.26935 4.47045H7.93155ZM9.59415 4.47045C9.68146 4.47045 9.73854 4.50068 9.76541 4.56112C9.79899 4.61485 9.81578 4.6988 9.81578 4.81297C9.81578 4.93386 9.79899 5.02452 9.76541 5.08497C9.73854 5.13869 9.68146 5.16556 9.59415 5.16556H7.93194C7.84464 5.16556 7.78755 5.13869 7.76069 5.08497C7.72711 5.03124 7.71032 4.94729 7.71032 4.83312C7.71032 4.71223 7.72711 4.62156 7.76069 4.56112C7.78755 4.50068 7.84464 4.47045 7.93194 4.47045H9.59415ZM11.2567 4.47045C11.3441 4.47045 11.4011 4.50068 11.428 4.56112C11.4616 4.61485 11.4784 4.6988 11.4784 4.81297C11.4784 4.93386 11.4616 5.02452 11.428 5.08497C11.4011 5.13869 11.3441 5.16556 11.2567 5.16556H9.59454C9.50723 5.16556 9.45015 5.13869 9.42328 5.08497C9.3897 5.03124 9.37291 4.94729 9.37291 4.83312C9.37291 4.71223 9.3897 4.62156 9.42328 4.56112C9.45015 4.50068 9.50723 4.47045 9.59454 4.47045H11.2567ZM12.1638 4.47045C12.4257 4.47045 12.6339 4.39994 12.7884 4.2589C12.9496 4.11787 13.0302 3.9231 13.0302 3.67461V2.2844H13.685V3.67461C13.685 4.15144 13.5506 4.52082 13.282 4.78275C13.0201 5.03795 12.6608 5.16556 12.2041 5.16556H11.2571C11.1698 5.16556 11.1127 5.13869 11.0859 5.08497C11.0523 5.03124 11.0355 4.94729 11.0355 4.83312C11.0355 4.71223 11.0523 4.62156 11.0859 4.56112C11.1127 4.50068 11.1698 4.47045 11.2571 4.47045H12.1638ZM13.7857 0.994934H12.9798V0.279683H13.7857V0.994934ZM12.5063 0.994934H11.7004V0.279683H12.5063V0.994934ZM5.64177 12.9641C5.64177 13.3267 5.58468 13.6659 5.47051 13.9815C5.35634 14.3039 5.1918 14.5826 4.97689 14.8177C4.76198 15.0595 4.50005 15.2509 4.19112 15.3919C3.8889 15.5329 3.54638 15.6035 3.16357 15.6035H2.56921C1.81702 15.6035 1.23273 15.3718 0.816337 14.9084C0.399946 14.445 0.191751 13.8103 0.191751 13.0044V11.2414H0.836485V12.9842C0.836485 13.273 0.870065 13.5349 0.937225 13.77C1.0111 14.0051 1.12191 14.2065 1.26967 14.3744C1.42413 14.549 1.61554 14.6834 1.84388 14.7774C2.07223 14.8714 2.34758 14.9184 2.66995 14.9184H3.1132C3.42885 14.9184 3.70421 14.8647 3.93927 14.7572C4.17433 14.6565 4.36909 14.5188 4.52356 14.3442C4.68474 14.1696 4.80227 13.9648 4.87615 13.7297C4.95674 13.4946 4.99703 13.2495 4.99703 12.9943V10.2844H5.64177V12.9641ZM3.21394 10.0628H2.36773V9.32738H3.21394V10.0628ZM8.24526 13.1656C8.07064 13.1656 7.90274 13.1421 7.74156 13.095C7.58038 13.0413 7.43598 12.954 7.30838 12.8331C7.18749 12.7122 7.09011 12.5544 7.01624 12.3596C6.94236 12.1582 6.90542 11.9097 6.90542 11.6142V6.9197H7.56023V11.4933C7.56023 11.7754 7.62067 12.0104 7.74156 12.1985C7.86916 12.3798 8.074 12.4705 8.35607 12.4705H8.52733C8.67508 12.4705 8.74896 12.5846 8.74896 12.813C8.74896 13.048 8.67508 13.1656 8.52733 13.1656H8.24526ZM8.69324 12.4705C8.95516 12.4705 9.15328 12.4067 9.2876 12.279C9.42192 12.1514 9.48908 11.9802 9.48908 11.7653V11.3825C9.48908 10.7982 9.63683 10.3415 9.93233 10.0124C10.2346 9.68332 10.6509 9.51878 11.1815 9.51878C11.4569 9.51878 11.6986 9.56243 11.9068 9.64974C12.115 9.73705 12.2863 9.8613 12.4206 10.0225C12.5616 10.1837 12.6657 10.3751 12.7329 10.5967C12.8001 10.8183 12.8336 11.0635 12.8336 11.3321C12.8336 11.9097 12.6825 12.3596 12.3803 12.682C12.0781 13.0044 11.6651 13.1656 11.1412 13.1656C10.8726 13.1656 10.614 13.1152 10.3655 13.0144C10.117 12.907 9.92226 12.7189 9.78123 12.4503C9.72078 12.6048 9.64691 12.729 9.5596 12.823C9.47229 12.9171 9.38162 12.9909 9.2876 13.0447C9.19358 13.0917 9.09284 13.1253 8.98538 13.1454C8.88464 13.1588 8.78726 13.1656 8.69324 13.1656H8.53205C8.44475 13.1656 8.38766 13.1387 8.3608 13.085C8.32722 13.0312 8.31043 12.9473 8.31043 12.8331C8.31043 12.7122 8.32722 12.6216 8.3608 12.5611C8.38766 12.5007 8.44475 12.4705 8.53205 12.4705H8.69324ZM12.1889 11.3925C12.1889 11.0433 12.1117 10.7612 11.9572 10.5463C11.8027 10.3247 11.5375 10.2139 11.1614 10.2139C10.4629 10.2139 10.1137 10.6202 10.1137 11.4328C10.1137 11.7754 10.2077 12.0339 10.3957 12.2085C10.5905 12.3831 10.839 12.4705 11.1412 12.4705C11.4837 12.4705 11.7423 12.3764 11.9169 12.1884C12.0982 12.0003 12.1889 11.7351 12.1889 11.3925Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </p> -->
 
                     {% if default_color.discounted_price == None %}
                     {% else %}
@@ -78,8 +87,7 @@
                             class="btn-color color-option {% if color.color.id == default_color.color.id %}active-cs{% endif %}"
                             data-price="{{ color.get_price|intcomma }}" data-color-inventory-id="{{ color.id }}"
                             data-color-id="{{ color.color.id }}" data-color-value="{{ color.color }}"
-                            data-stock="{{ color.stock }}"
-                            style="font-size: 15px;">
+                            data-stock="{{ color.stock }}" style="font-size: 15px;">
                             {{ color.color }}
                         </button>
                         {% endif %}
@@ -87,53 +95,46 @@
                     </div>
 
 
+
                     <h2 class="product-key-features-cards my-1" style="font-size: 17px;">ویژگی‌ها</h2>
                     <div class="features-grid">
-                        
-                        
                         {% for specific in specifications_six|slice:'6' %}
                         <div class="feature-item">
                             <span class="feature-label" style="font-size: 14px;">{{specific.name}}</span>
                             <span class="feature-value" style="font-size: 14px;">{{specific.value}}</span>
                         </div>
                         {% endfor %}
-                        
                     </div>
                     <div class=" w-100 w-center d-flex justify-content-center mt-2">
+                        <hr class="w-25 bg-danger mt-4 mx-2">
                         <button class="feature-item rounded-3 alll-cs " style="font-size: 14px;">
                             دیدن همه ویژگی ها
                         </button>
+                        <hr class="w-25 bg-danger mt-4 mx-2">
+
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-3 col-12" id="a-s">
                 <div id="product-summary-panel">
-                    
-                {% if request.user.is_authenticated and request.user.type == 2 or request.user.type == 3 %}
-                    <a target="_blank" href="{% url 'dashboard:admin:product-edit' pk=object.pk %}" style="border: 1px solid red;border-radius: 10px;">
+                    {% if request.user.is_authenticated and request.user.type == 2 or request.user.type == 3 %}
+                    <a target="_blank" href="{% url 'dashboard:admin:product-edit' pk=object.pk %}"
+                        style="border: 1px solid red;border-radius: 10px;">
                         مشاهده در ادمین
                     </a>
                     <h5>
                         کد محصول: {{ object.id }}
                     </h5>
-                {% endif %}
-
+                    {% endif %}
                     <div class="panel-card">
                         <div class="panel-section price-section">
                             {% if default_color.discounted_price == None %}
                             {% else %}
-                            <span style="font-size: 20px" id="price-value">
-                                {{ default_color.get_price|intcomma }}
+                            <span style="font-size: 20px">
+                                قیمت : <span id="price-value">{{ default_color.get_price|intcomma }}</span>
                             </span>
-                            <span>
-                                <svg class="mx-2" width="20" height="20" viewBox="0 0 14 16" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path class="text-gray-880 dark:text-white"
-                                        d="M1.14878 6.91843C1.44428 6.91843 1.70285 6.87142 1.92447 6.77739C2.15282 6.68337 2.34422 6.55577 2.49869 6.39458C2.65316 6.2334 2.77069 6.04535 2.85128 5.83044C2.93187 5.62224 2.97888 5.40062 2.99231 5.16556H1.98492C1.6424 5.16556 1.36033 5.12862 1.1387 5.05474C0.917077 4.98087 0.742461 4.87341 0.614858 4.73238C0.487254 4.59134 0.396588 4.42344 0.34286 4.22868C0.295849 4.0272 0.272343 3.80221 0.272343 3.55372C0.272343 3.29852 0.309281 3.05674 0.383156 2.8284C0.457032 2.60005 0.564488 2.39857 0.705523 2.22396C0.846559 2.04934 1.02117 1.91167 1.22937 1.81093C1.44428 1.70347 1.68941 1.64974 1.96477 1.64974C2.1864 1.64974 2.39795 1.68668 2.59943 1.76056C2.80091 1.83443 2.97888 1.95196 3.13335 2.11315C3.28782 2.26761 3.40871 2.47245 3.49601 2.72766C3.59004 2.97615 3.63705 3.27837 3.63705 3.63431V4.47045H4.60415C4.68474 4.47045 4.73847 4.50068 4.76533 4.56112C4.79891 4.61485 4.8157 4.6988 4.8157 4.81297C4.8157 4.93386 4.79891 5.02452 4.76533 5.08497C4.73847 5.13869 4.68474 5.16556 4.60415 5.16556H3.6169C3.60347 5.49464 3.53631 5.80693 3.41542 6.10244C3.30125 6.39794 3.14007 6.65651 2.93187 6.87813C2.72368 7.09976 2.47518 7.27438 2.1864 7.40198C1.89761 7.5363 1.57188 7.60346 1.20922 7.60346H0.141381L0.0809373 6.91843H1.14878ZM0.896929 3.51343C0.896929 3.68133 0.913719 3.82572 0.947299 3.94661C0.987594 4.0675 1.0514 4.16823 1.1387 4.24883C1.23273 4.3227 1.35697 4.37979 1.51144 4.42008C1.66591 4.45366 1.86067 4.47045 2.09573 4.47045H3.00239V3.71491C3.00239 3.21792 2.90501 2.86198 2.71024 2.64707C2.51548 2.43215 2.24684 2.3247 1.90433 2.3247C1.58196 2.3247 1.33347 2.43215 1.15885 2.64707C0.984237 2.86198 0.896929 3.15076 0.896929 3.51343ZM6.26895 4.47045C6.35626 4.47045 6.41335 4.50068 6.44021 4.56112C6.47379 4.61485 6.49058 4.6988 6.49058 4.81297C6.49058 4.93386 6.47379 5.02452 6.44021 5.08497C6.41335 5.13869 6.35626 5.16556 6.26895 5.16556H4.60675C4.51944 5.16556 4.46235 5.13869 4.43549 5.08497C4.40191 5.03124 4.38512 4.94729 4.38512 4.83312C4.38512 4.71223 4.40191 4.62156 4.43549 4.56112C4.46235 4.50068 4.51944 4.47045 4.60675 4.47045H6.26895ZM7.93155 4.47045C8.01886 4.47045 8.07594 4.50068 8.10281 4.56112C8.13639 4.61485 8.15318 4.6988 8.15318 4.81297C8.15318 4.93386 8.13639 5.02452 8.10281 5.08497C8.07594 5.13869 8.01886 5.16556 7.93155 5.16556H6.26935C6.18204 5.16556 6.12495 5.13869 6.09809 5.08497C6.06451 5.03124 6.04772 4.94729 6.04772 4.83312C6.04772 4.71223 6.06451 4.62156 6.09809 4.56112C6.12495 4.50068 6.18204 4.47045 6.26935 4.47045H7.93155ZM9.59415 4.47045C9.68146 4.47045 9.73854 4.50068 9.76541 4.56112C9.79899 4.61485 9.81578 4.6988 9.81578 4.81297C9.81578 4.93386 9.79899 5.02452 9.76541 5.08497C9.73854 5.13869 9.68146 5.16556 9.59415 5.16556H7.93194C7.84464 5.16556 7.78755 5.13869 7.76069 5.08497C7.72711 5.03124 7.71032 4.94729 7.71032 4.83312C7.71032 4.71223 7.72711 4.62156 7.76069 4.56112C7.78755 4.50068 7.84464 4.47045 7.93194 4.47045H9.59415ZM11.2567 4.47045C11.3441 4.47045 11.4011 4.50068 11.428 4.56112C11.4616 4.61485 11.4784 4.6988 11.4784 4.81297C11.4784 4.93386 11.4616 5.02452 11.428 5.08497C11.4011 5.13869 11.3441 5.16556 11.2567 5.16556H9.59454C9.50723 5.16556 9.45015 5.13869 9.42328 5.08497C9.3897 5.03124 9.37291 4.94729 9.37291 4.83312C9.37291 4.71223 9.3897 4.62156 9.42328 4.56112C9.45015 4.50068 9.50723 4.47045 9.59454 4.47045H11.2567ZM12.1638 4.47045C12.4257 4.47045 12.6339 4.39994 12.7884 4.2589C12.9496 4.11787 13.0302 3.9231 13.0302 3.67461V2.2844H13.685V3.67461C13.685 4.15144 13.5506 4.52082 13.282 4.78275C13.0201 5.03795 12.6608 5.16556 12.2041 5.16556H11.2571C11.1698 5.16556 11.1127 5.13869 11.0859 5.08497C11.0523 5.03124 11.0355 4.94729 11.0355 4.83312C11.0355 4.71223 11.0523 4.62156 11.0859 4.56112C11.1127 4.50068 11.1698 4.47045 11.2571 4.47045H12.1638ZM13.7857 0.994934H12.9798V0.279683H13.7857V0.994934ZM12.5063 0.994934H11.7004V0.279683H12.5063V0.994934ZM5.64177 12.9641C5.64177 13.3267 5.58468 13.6659 5.47051 13.9815C5.35634 14.3039 5.1918 14.5826 4.97689 14.8177C4.76198 15.0595 4.50005 15.2509 4.19112 15.3919C3.8889 15.5329 3.54638 15.6035 3.16357 15.6035H2.56921C1.81702 15.6035 1.23273 15.3718 0.816337 14.9084C0.399946 14.445 0.191751 13.8103 0.191751 13.0044V11.2414H0.836485V12.9842C0.836485 13.273 0.870065 13.5349 0.937225 13.77C1.0111 14.0051 1.12191 14.2065 1.26967 14.3744C1.42413 14.549 1.61554 14.6834 1.84388 14.7774C2.07223 14.8714 2.34758 14.9184 2.66995 14.9184H3.1132C3.42885 14.9184 3.70421 14.8647 3.93927 14.7572C4.17433 14.6565 4.36909 14.5188 4.52356 14.3442C4.68474 14.1696 4.80227 13.9648 4.87615 13.7297C4.95674 13.4946 4.99703 13.2495 4.99703 12.9943V10.2844H5.64177V12.9641ZM3.21394 10.0628H2.36773V9.32738H3.21394V10.0628ZM8.24526 13.1656C8.07064 13.1656 7.90274 13.1421 7.74156 13.095C7.58038 13.0413 7.43598 12.954 7.30838 12.8331C7.18749 12.7122 7.09011 12.5544 7.01624 12.3596C6.94236 12.1582 6.90542 11.9097 6.90542 11.6142V6.9197H7.56023V11.4933C7.56023 11.7754 7.62067 12.0104 7.74156 12.1985C7.86916 12.3798 8.074 12.4705 8.35607 12.4705H8.52733C8.67508 12.4705 8.74896 12.5846 8.74896 12.813C8.74896 13.048 8.67508 13.1656 8.52733 13.1656H8.24526ZM8.69324 12.4705C8.95516 12.4705 9.15328 12.4067 9.2876 12.279C9.42192 12.1514 9.48908 11.9802 9.48908 11.7653V11.3825C9.48908 10.7982 9.63683 10.3415 9.93233 10.0124C10.2346 9.68332 10.6509 9.51878 11.1815 9.51878C11.4569 9.51878 11.6986 9.56243 11.9068 9.64974C12.115 9.73705 12.2863 9.8613 12.4206 10.0225C12.5616 10.1837 12.6657 10.3751 12.7329 10.5967C12.8001 10.8183 12.8336 11.0635 12.8336 11.3321C12.8336 11.9097 12.6825 12.3596 12.3803 12.682C12.0781 13.0044 11.6651 13.1656 11.1412 13.1656C10.8726 13.1656 10.614 13.1152 10.3655 13.0144C10.117 12.907 9.92226 12.7189 9.78123 12.4503C9.72078 12.6048 9.64691 12.729 9.5596 12.823C9.47229 12.9171 9.38162 12.9909 9.2876 13.0447C9.19358 13.0917 9.09284 13.1253 8.98538 13.1454C8.88464 13.1588 8.78726 13.1656 8.69324 13.1656H8.53205C8.44475 13.1656 8.38766 13.1387 8.3608 13.085C8.32722 13.0312 8.31043 12.9473 8.31043 12.8331C8.31043 12.7122 8.32722 12.6216 8.3608 12.5611C8.38766 12.5007 8.44475 12.4705 8.53205 12.4705H8.69324ZM12.1889 11.3925C12.1889 11.0433 12.1117 10.7612 11.9572 10.5463C11.8027 10.3247 11.5375 10.2139 11.1614 10.2139C10.4629 10.2139 10.1137 10.6202 10.1137 11.4328C10.1137 11.7754 10.2077 12.0339 10.3957 12.2085C10.5905 12.3831 10.839 12.4705 11.1412 12.4705C11.4837 12.4705 11.7423 12.3764 11.9169 12.1884C12.0982 12.0003 12.1889 11.7351 12.1889 11.3925Z"
-                                        fill="currentColor"></path>
-                                </svg>
-                            </span>
+                            <span class="money-icon mx-1"></span>
                             {% endif %}
                         </div>
                         <div class="panel-section ">
@@ -151,21 +152,18 @@
                                     ارتباط با فروشنده
                                 </span>
                                 <span class="w-50 d-flex justify-content-center align-items-baseline">
-                                    <a href="
-                                    {% url 'chat:start_chat' product_id=object.pk %}" class="icon-x p-1 mx-1 ">
+                                    <a href="{% url 'chat:start_chat' product_id=object.pk %}" class="icon-x p-1 mx-1 ">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.4em"
                                             height="1.4em">
                                             <path fill="currentColor"
                                                 d="M8 2.19c3.13 0 5.68 2.25 5.68 5s-2.55 5-5.68 5a5.7 5.7 0 0 1-1.89-.29l-.75-.26l-.56.56a14 14 0 0 1-2 1.55a.13.13 0 0 1-.07 0v-.06a6.58 6.58 0 0 0 .15-4.29a5.25 5.25 0 0 1-.55-2.16c0-2.77 2.55-5 5.68-5M8 .94c-3.83 0-6.93 2.81-6.93 6.27a6.4 6.4 0 0 0 .64 2.64a5.53 5.53 0 0 1-.18 3.48a1.32 1.32 0 0 0 2 1.5a15 15 0 0 0 2.16-1.71a6.8 6.8 0 0 0 2.31.36c3.83 0 6.93-2.81 6.93-6.27S11.83.94 8 .94">
                                             </path>
-                                            <ellipse cx="5.2" cy="7.7" fill="currentColor" rx=".8" ry=".75">
-                                            </ellipse>
+                                            <ellipse cx="5.2" cy="7.7" fill="currentColor" rx=".8" ry=".75"></ellipse>
                                             <ellipse cx="8" cy="7.7" fill="currentColor" rx=".8" ry=".75"></ellipse>
-                                            <ellipse cx="10.8" cy="7.7" fill="currentColor" rx=".8" ry=".75">
-                                            </ellipse>
+                                            <ellipse cx="10.8" cy="7.7" fill="currentColor" rx=".8" ry=".75"></ellipse>
                                         </svg>
                                     </a>
-                                    <a href="09120983422" class="icon-x p-1 mx-1 call-btn">
+                                    <a href="tel:989120983422" target="_blank" class="icon-x p-1 mx-1 ">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.4em"
                                             height="1.4em">
                                             <path fill="currentColor"
@@ -191,7 +189,6 @@
                                     </g>
                                 </svg>
                             </div>
-
                             {% if object.warranty %}
                             <span class="section-text">{{object.warranty}}</span>
                             {% else %}
@@ -206,11 +203,11 @@
                                     <div class="not-rot-notification-messages-inner">
                                         <div class="not-rot-message-item"></div>
                                         {% if product_in_cart_users_count > 0 %}
-                                        <div class="not-rot-message-item stst"></div>
-                                        <div class="not-rot-message-item" id="stock"></div>
+                                        <div class="not-rot-message-item"></div>
+                                        <div class="not-rot-message-item stst" id="stock"></div>
                                         {% else %}
                                         <div class="not-rot-message-item" id="stock"></div>
-                                        <div class="not-rot-message-item stst"></div>
+                                        <div class="not-rot-message-item"></div>
                                         {% endif %}
                                         <div class="not-rot-message-item"></div>
                                     </div>
@@ -237,8 +234,9 @@
                                     </path>
                                 </svg>
                             </div>
-                            <span class="section-text" style="font-size: 14px;">آخرین بروز رسانی قیمت : ساعت {{default_color.updated_date|date:"H:i"}}
-                                امروز </span>
+                            <span class="section-text" style="font-size: 14px;">آخرین بروز رسانی قیمت : ساعت
+                                {{default_color.updated_date|date:"H:i"}} امروز
+                            </span>
                         </div>
                         <div class="panel-action">
                             {% if default_color.discounted_price == None %}
@@ -303,7 +301,6 @@
                         <div class="spec-scroll-container mt-2">
                             <table class="SH-HS-spec-table" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
-                                <tbody>
                                     {% for specific in specifications %}
                                     <tr class="spec-tr">
                                         <th class="spec-td SH-HS-spec-label">{{specific.name}}</th>
@@ -323,14 +320,12 @@
                     <div class="px-3">
                         <div id="comments-section-card" class="SH-HS-detail-card row">
                             <div class="SH-HS-comments-list mb-4 col-md-6 col-12 pt-2">
-                                <div class="h-400">
+                                <div class="h-300">
                                     {% for review in reviews %}
                                     <div class="SH-HS-comment-item">
                                         <div class="SH-HS-comment-header">
                                             <span
-                                                class="SH-HS-comment-author">{{review.user.user_profile.get_fullname}}</span>
-                                            <span class="SH-HS-comment-date mx-1">{{review.created_date|timesince}}
-                                                پیش</span>
+                                                class="SH-HS-comment-date mx-1">{{review.created_date|timesince}}</span>
                                             <div class="SH-HS-comment-rating SH-HS-static-rating mx-1" data-rating="4">
                                             </div>
                                         </div>
@@ -339,27 +334,23 @@
                                     {% endfor %}
                                 </div>
                             </div>
-
                             <div class="SH-HS-comment-form-section  rounded bg-light-gray col-md-6 col-12 mb-5 mt-2">
                                 <h4 class="mb-3 SH-HS-comment-form-title">نظر خود را ثبت کنید</h4>
                                 <form method="post" action="{% url 'review:submit-review' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="product" value="{{ object.id }}">
                                     <div class="mb-3">
                                         <label class="form-label d-block mb-2">امتیاز شما:</label>
                                         <div class="SH-HS-star-rating-input" data-current-rating="0">
-                                            <i class="far fa-star" data-value="1"></i>
-                                            <i class="far fa-star" data-value="2"></i>
-                                            <i class="far fa-star" data-value="3"></i>
-                                            <i class="far fa-star" data-value="4"></i>
-                                            <i class="far fa-star" data-value="5"></i>
+                                            <i class="fas fa-star" data-value="1"></i>
+                                            <i class="fas fa-star" data-value="2"></i>
+                                            <i class="fas fa-star" data-value="3"></i>
+                                            <i class="fas fa-star" data-value="4"></i>
+                                            <i class="fas fa-star" data-value="5"></i>
                                             <input type="hidden" name="rate" id="userRating" value="0">
                                         </div>
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="commentText" class="form-label">دیدگاه شما:</label>
-                                        <textarea name="description" class="form-control" id="commentText" rows="4"
+                                        <textarea name="description" class="form-control cs-h" id="commentText" rows="4"
                                             placeholder="دیدگاه خود را اینجا بنویسید..."></textarea>
                                     </div>
                                     <button type="submit" class="btn SH-HS-btn-primary-outline">ارسال
@@ -374,14 +365,10 @@
         </div>
 
         <div id="SH-HS-related-products-card" class="SH-HS-detail-card">
-
-            <!-- SIMILAR POST RO INJA BEZAR -->
-        {% show_similar_products object %}
-
+            {% show_similar_products object %}
         </div>
     </div>
 </div>
-
 
 {% endblock content %}
 
@@ -389,6 +376,7 @@
 <script src="{% static 'js/swiper.lib.js' %}"></script>
 <script src="{% static 'js/sweet.alert.lib.js' %}"></script>
 <script src="{% static 'js/splide.lib.js' %}"></script>
+<!--اینا همه مال سینگل پروداکته -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const colorButtons = document.querySelectorAll('.color-option');
@@ -434,6 +422,7 @@
     });
 
 </script>
+<!--این اونیه که مال سینگل پروداکته -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const galleryTopSwiperEl = document.getElementById('galleryTopSwiper');
@@ -510,7 +499,7 @@
 
         galleryThumbs = new Swiper(galleryThumbsSwiperEl, {
             spaceBetween: 10,
-            slidesPerView: Math.min(4, productImages.length),
+            slidesPerView: Math.min(3, productImages.length),
             freeMode: true,
             watchSlidesProgress: true,
         });
@@ -736,8 +725,6 @@
 
     if (HeartIcon) {
         HeartIcon.addEventListener('click', async () => {
-
-            addToWishlist(this,{{object.id}});
             let success = true;
 
             let swalOptions = {};
@@ -811,13 +798,14 @@
 
                 star.addEventListener('mouseover', function () {
                     const hoverRating = parseInt(this.dataset.value);
+                    stars.forEach(s => {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    });
                     stars.forEach((s, index) => {
                         if (index < hoverRating) {
                             s.classList.remove('far');
                             s.classList.add('fas');
-                        } else {
-                            s.classList.remove('fas');
-                            s.classList.add('far');
                         }
                     });
                 });
@@ -835,9 +823,9 @@
             for (let i = 0; i < 5; i++) {
                 const star = document.createElement('i');
                 if (i < rating) {
-                    star.classList.add('fas', 'fa-star');
+                    star.classList.add('fa-solid', 'fa-star');
                 } else {
-                    star.classList.add('far', 'fa-star');
+                    star.classList.add('fas', 'fa-star');
                 }
                 container.appendChild(star);
             }
@@ -980,55 +968,55 @@
             { text: 'تعداد بازدید در 24 ساعت اخیر {{product_view_times_100}}  +', icon: '{% static "img/seenz.png" %}' },
             {% if product_in_cart_users_count > 0 %}
             { text: 'موجود در سبد خرید {{ product_in_cart_users_count }} نفر دیگر', icon: '{% static "img/money.soney.png" %}' },
-            {% endif %}
-            { text: '{{default_color.stock}} عدد در انبار موجود است', icon: '{% static "img/ananan.png" %}' },
+        {% endif %}
+        { text: '{{default_color.stock}} عدد در انبار موجود است', icon: '{% static "img/ananan.png" %}' },
         ];
 
-        messageItems.forEach((item, index) => {
-            if (contents[index]) {
-                item.innerHTML = contents[index].text;
-            }
-        });
-
-        function showMessage(index) {
-            messagesInner.style.top = `-${index * messageHeight}px`;
-
-            if (contents[index] && contents[index].icon) {
-                emojiElement.style.transform = 'scale(0.5)';
-                emojiElement.style.opacity = '0';
-
-                setTimeout(() => {
-                    const iconContent = contents[index].icon;
-
-                    while (emojiElement.firstChild) {
-                        emojiElement.removeChild(emojiElement.firstChild);
-                    }
-
-                    if (typeof iconContent === 'string' && (iconContent.endsWith('.png') || iconContent.endsWith('.jpg') || iconContent.endsWith('.jpeg') || iconContent.endsWith('.gif'))) {
-                        const imgElement = document.createElement('img');
-                        imgElement.src = iconContent;
-                        imgElement.alt = "Notification Icon";
-                        emojiElement.appendChild(imgElement);
-                    } else {
-                        const spanElement = document.createElement('span');
-                        spanElement.textContent = iconContent;
-                        emojiElement.appendChild(spanElement);
-                    }
-
-                    emojiElement.style.transform = 'scale(1)';
-                    emojiElement.style.opacity = '1';
-                }, 200);
-            }
+    messageItems.forEach((item, index) => {
+        if (contents[index]) {
+            item.innerHTML = contents[index].text;
         }
+    });
 
-        function nextMessage() {
-            currentIndex = (currentIndex + 1) % contents.length;
-            showMessage(currentIndex);
+    function showMessage(index) {
+        messagesInner.style.top = `-${index * messageHeight}px`;
+
+        if (contents[index] && contents[index].icon) {
+            emojiElement.style.transform = 'scale(0.5)';
+            emojiElement.style.opacity = '0';
+
+            setTimeout(() => {
+                const iconContent = contents[index].icon;
+
+                while (emojiElement.firstChild) {
+                    emojiElement.removeChild(emojiElement.firstChild);
+                }
+
+                if (typeof iconContent === 'string' && (iconContent.endsWith('.png') || iconContent.endsWith('.jpg') || iconContent.endsWith('.jpeg') || iconContent.endsWith('.gif'))) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = iconContent;
+                    imgElement.alt = "Notification Icon";
+                    emojiElement.appendChild(imgElement);
+                } else {
+                    const spanElement = document.createElement('span');
+                    spanElement.textContent = iconContent;
+                    emojiElement.appendChild(spanElement);
+                }
+
+                emojiElement.style.transform = 'scale(1)';
+                emojiElement.style.opacity = '1';
+            }, 200);
         }
+    }
 
+    function nextMessage() {
+        currentIndex = (currentIndex + 1) % contents.length;
         showMessage(currentIndex);
+    }
 
-        setInterval(nextMessage, intervalTime);
+    showMessage(currentIndex);
+
+    setInterval(nextMessage, intervalTime);
     });
 
 
@@ -1055,7 +1043,6 @@
             tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
     })
-
 </script>
-
+<!--این اونیه که مال سینگل پروداکته -->
 {% endblock extra_jss %}

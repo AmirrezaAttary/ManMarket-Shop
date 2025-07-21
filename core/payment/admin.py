@@ -12,5 +12,6 @@ class PaymentModelAdmin(admin.ModelAdmin):
         "amount",
         "response_code",
         "status",
-        "created_date"
+        "created_date",
+        "remainder"
     )

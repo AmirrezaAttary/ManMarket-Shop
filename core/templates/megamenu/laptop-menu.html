@@ -1,81 +1,25 @@
+{% load menu_tags %}
+
+{% get_mega_menus "laptop" as mega_menus %}
 <div class="mega-menu-pane" id="pane-fashion-desktop">
+    {% for item in mega_menus %}
     <div class="mega-menu-sub-column">
         <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=apple">
-                اپل
+            <a class=" d-flex justify-content-start"
+                href="{% url 'shop:product-list' %}?category={{ item.category.slug }}&brand={{ item.brand.slug }}">
+                {{ item.brand.title }}
             </a>
         </h6>
     </div>
+    {% empty %}
     <div class="mega-menu-sub-column">
         <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=microsoft">
-                مایکروسافت
+            <a class=" d-flex justify-content-start" href="#">
+                چیزی نیست
             </a>
         </h6>
     </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=asus">
-                ایسوس
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=hp">
-                اچ پی
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=acer">
-                ایسر
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=lenovo">
-                لنوو
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=hp">
-                اچ پی
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=msi">
-                ام اس ای
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=htc">
-                اچ تی سی
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=lg">
-                ال جی
-            </a>
-        </h6>
-    </div>
-    <div class="mega-menu-sub-column">
-        <h6 class="px-2">
-            <a class=" d-flex justify-content-start" href="{% url 'shop:product-list' %}?category=laptop&brand=sony">
-                سونی
-            </a>
-        </h6>
-    </div>
+    {% endfor %}
 
     <div class="mega-menu-sub-column">
         <h6 class="px-2 w-right justify-content-end">

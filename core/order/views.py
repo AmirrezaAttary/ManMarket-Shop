@@ -20,7 +20,7 @@ from django.utils import timezone
 from django.shortcuts import redirect
 # Create your views here.
 from payment.zarinpal_client import ZarinPalSandbox
-from payment.models import PaymentModel,PayemntStatusType
+from payment.models import PaymentModel,PayemntStatusType,PayemntType
 from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
 
@@ -42,16 +42,18 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         cleaned_data = form.cleaned_data
         address = cleaned_data['address_id']
         coupon = cleaned_data['coupon']
+        tracking_type = cleaned_data['tracking_type']  # 👈 دریافت روش ارسال
 
         cart = CartModel.objects.get(user=user)
-        order = self.create_order(address)
+        order = self.create_order(address, tracking_type)  # 👈 ارسال روش ارسال
 
         self.create_order_items(order, cart)
 
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
-        return redirect(self.create_payment_url(order, cart)) 
+        return redirect(self.create_payment_url(order, cart))
+
 
     def create_payment_url(self, order, cart):
         payment_method = self.request.POST.get("payment_method")
@@ -74,6 +76,9 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                     status=PayemntStatusType.success,
                     wallet=wallet,
                     order=order,
+                    response_json={"code":100},
+                    response_code = 100,
+                    payemnt_type = PayemntType.wallet.value
                 )
 
                 WalletTransaction.objects.create(
@@ -105,23 +110,47 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
             payment_obj = PaymentModel.objects.create(
                 authority_id = response['data']['authority'],
                 amount = order.total_price,
-                order=order
+                order=order,
+                payemnt_type = PayemntType.cart.value
             )
             order.payment = payment_obj
             order.save()
             return zarinpal.generate_payment_url(response['data']['authority'])
+        
+        if payment_method == "card_mahax":
+            zarinpal = ZarinPalSandbox()
+            total_price = round((order.total_price)) + 50000
+            total_tax = round((order.total_price) /10) + 50000  
+            remainder = total_price - total_tax
+            order.total_price = total_tax 
+            
+            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            response = zarinpal.payment_request(callback_url,order.total_price)
+            payment_obj = PaymentModel.objects.create(
+                authority_id = response['data']['authority'],
+                amount = order.total_price,
+                order=order,
+                payemnt_type = PayemntType.cart_home.value,
+                remainder = remainder,
+            )
+            order.payment = payment_obj
+            order.save()
+            return zarinpal.generate_payment_url(response['data']['authority'])
+            
         # برای روش‌های دیگر پرداخت (مثلاً زرین‌پال) باید else اضافه کنی
         messages.error(self.request, "روش پرداخت نامعتبر است.")
         return reverse_lazy("order:checkout")
 
-    def create_order(self, address):
+    def create_order(self, address, tracking_type):
         return OrderModel.objects.create(
             user=self.request.user,
             address=address.address,
             state=address.state,
             city=address.city,
             zip_code=address.zip_code,
+            tracking_type=tracking_type,  # 👈 ذخیره نوع ارسال
         )
+
 
     def create_order_items(self, order, cart):
         for item in cart.cart_items.all():

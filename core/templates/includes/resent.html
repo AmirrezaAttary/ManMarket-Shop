@@ -1,5 +1,3 @@
-{% load static %}
-<br><br>
 <section class="blog mt-4">
 
     <h5 class="text-center mb-4">
@@ -10,29 +8,25 @@
     </h5>
 
     <div class="container">
-        <div class="blog-container has-scrollbar">
+        <div class="blog-container w-center has-scrollbar">
             {% for post in posts %}
-            <div class="blog-card">
+            <div class="blog-card col-md-3 col-sm-6 col-12">
                 <a href="{% url 'blog:blog-detail' slug=post.slug %}">
-                    <img style="max-width: 292px;" src="{{post.image.url}}" alt="{{post.title}}" class="blog-banner"
-                        width="300">
+                    <img style="max-width: 292px;" src="{{post.image.url}}" alt="{{post.title}}" class="blog-banner" width="300">
                 </a>
 
                 <div class="blog-content">
-                    <a href="{% url 'blog:blog-detail' slug=post.slug %}" class="blog-category">
+                    <a href="{% url 'blog:blog-detail' slug=post.slug %}" class="blog-category"> 
                         {% for cat in post.category.all|slice:"-2:" %}
                         {{ cat.name }}
                         {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    </a>
+                        {% endfor %}</a>
                     <a href="{% url 'blog:blog-detail' slug=post.slug %}">
                         <h3 class="blog-title">{{post.title}}</h3>
                     </a>
                 </div>
             </div>
             {% endfor %}
-
-
         </div>
     </div>
     <div class="d-flex justify-content-center mt-4">
@@ -41,7 +35,3 @@
         </a>
     </div>
 </section>
-
-
-
-<!-- blog img :: start----->

@@ -11,9 +11,21 @@ class PriceGetHamrhForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        # افزودن کلاس CSS برای Bootstrap
+        # تنظیم کلاس برای Bootstrap
         self.fields['product'].widget.attrs['class'] = 'form-control'
         self.fields['url'].widget.attrs['class'] = 'form-control'
+
+        # تنظیم اجبار و پیام خطا برای فیلد product
+        self.fields['product'].required = True
+        self.fields['product'].error_messages = {
+            'required': 'لطفاً یک محصول انتخاب کنید.'
+        }
+
+        # تنظیم اجبار و پیام خطا برای فیلد url
+        self.fields['url'].required = True
+        self.fields['url'].error_messages = {
+            'required': 'لینک محصول را وارد کنید.'
+        }
 
         if not self.instance.pk:
             used_products = PriceGetHamrh.objects.values_list('product_id', flat=True)
@@ -21,15 +33,10 @@ class PriceGetHamrhForm(forms.ModelForm):
                 status=ProductStatusType.publish.value
             ).exclude(id__in=used_products)
 
-            # فیلتر براساس brand_slug
             if brand_slug:
                 queryset = queryset.filter(brand__slug=brand_slug)
-
-            # فیلتر براساس q (جستجو)
             if q:
                 queryset = queryset.filter(title__icontains=q) | queryset.filter(id__iexact=q)
-
-            # فیلتر براساس category_slug
             if category_slug:
                 queryset = queryset.filter(category__slug=category_slug)
 
@@ -42,7 +49,4 @@ class PriceGetHamrhForm(forms.ModelForm):
 
     class Meta:
         model = PriceGetHamrh
-        fields = [
-            'product',
-            'url',
-        ]
+        fields = ['product', 'url']
