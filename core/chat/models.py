@@ -14,6 +14,10 @@ class ChatRoom(models.Model):
     
     def last_message(self):
         return self.chat_messages.order_by('-timestamp').first()
+    
+    def last_message_from_admin(self):
+        last_msg = self.last_message()
+        return last_msg and last_msg.sender == self.admin
     class Meta:
         ordering = ["-created_at"]
 

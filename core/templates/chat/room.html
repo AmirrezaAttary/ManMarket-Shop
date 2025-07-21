@@ -5,270 +5,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پلتفرم کامل چت | نسخه نهایی قطعی</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: sans-serif;
-            background: #f5f5f5;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* سایدبار */
-        .x-chat-product-sidebar {
-            width: 300px;
-            background: #ffffff;
-            border-left: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .x-chat-product-sidebar-header {
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
-            background-color: #f9f9f9;
-        }
-
-        .x-chat-sidebar-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-
-        .x-chat-sidebar-search input {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-
-        .x-chat-product-sidebar-list {
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        .x-chat-product-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            text-decoration: none;
-            border-bottom: 1px solid #f1f1f1;
-            transition: background 0.2s ease;
-            color: inherit;
-        }
-
-        .x-chat-product-item:hover {
-            background-color: #f0f0f0;
-        }
-
-        .x-chat-product-item-image img {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            margin-left: 1rem;
-        }
-
-        .x-chat-product-item-info {
-            flex-grow: 1;
-        }
-
-        .x-chat-product-item-name {
-            font-weight: bold;
-            font-size: 0.95rem;
-            margin-bottom: 0.25rem;
-            color: #222;
-        }
-
-        .x-chat-product-item-last-message {
-            font-size: 0.85rem;
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* بخش اصلی چت */
-        .x-chat-layout {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-        }
-
-        .x-chat-header {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            background-color: #f0f0f0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .x-chat-header-product-image {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-left: 1rem;
-        }
-
-        .x-chat-header-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .x-chat-header-subtitle {
-            font-size: 0.85rem;
-            color: #777;
-        }
-
-        .x-chat-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-
-        .x-chat-message {
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            max-width: 75%;
-        }
-
-        .x-chat-message.me {
-            align-self: flex-end;
-            text-align: right;
-        }
-
-        .x-chat-message.them {
-            align-self: flex-start;
-            text-align: left;
-        }
-
-        .x-chat-message-text {
-            background: #f1f1f1;
-            padding: 10px;
-            border-radius: 12px;
-            margin: 0;
-        }
-
-        .x-chat-message.me .x-chat-message-text {
-            background: #d1e7dd;
-        }
-
-        .x-chat-message-time {
-            font-size: 0.7rem;
-            color: #888;
-            margin-top: 2px;
-        }
-
-        .x-chat-footer {
-            padding: 1rem;
-            border-top: 1px solid #ddd;
-            background: #fafafa;
-        }
-
-        .x-chat-footer-input-wrapper {
-            display: flex;
-            width: 100%;
-        }
-
-        .x-chat-message-input {
-            flex: 1;
-            padding: 0.75rem;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-        }
-
-        .x-chat-send-button {
-            background-color: #00b894;
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            margin-right: 0.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .x-chat-send-button svg {
-            vertical-align: middle;
-        }
-    </style>
+    <title>Chat UI</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chats.css' %}">
 </head>
 
 <body>
+    <div class="chat-container">
+        <div class="chat-overlay" id="chatOverlay"></div>
 
-    <!-- سایدبار چت‌ها -->
-    <aside class="x-chat-product-sidebar">
-        <header class="x-chat-product-sidebar-header">
-            <h2 class="x-chat-sidebar-title">چت‌های من</h2>
-            <div class="x-chat-sidebar-search">
-                <input type="text" id="x-chat-search-input" placeholder="جستجو در چت‌ها...">
+        <div class="chat-list" id="chatList">
+            <div class="search-bar">
+                <input type="text" placeholder="جستجو در گفتگوها...">
             </div>
-        </header>
-        <div class="x-chat-product-sidebar-list">
             {% for chat in chats %}
-            <a href="{% url 'chat:chat_room' pk=chat.id %}" class="x-chat-product-item">
-                <div class="x-chat-product-item-image">
-                    <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}">
+            <a href="{% url 'chat:chat_room' pk=chat.id %}" class="chat-item {% if chat.id == chat_room.id %}active{% endif %}">
+                <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}" class="avatar">
+                <div class="chat-info">
+                    <span class="chat-name">{{ chat.product.title }}</span>
+                    <span class="last-message">{{ chat.chat_messages.last.text|truncatechars:40 }}</span>
                 </div>
-                <div class="x-chat-product-item-info">
-                    <div class="x-chat-product-item-name">{{ chat.product.title }}</div>
-                    <p class="x-chat-product-item-last-message">
-                        {{ chat.chat_messages.last.text|truncatechars:40 }}
-                    </p>
-                </div>
+                {% if chat.last_message_from_admin %}
+                    <span class="unread-count">1</span>
+                {% endif %}
             </a>
             {% endfor %}
         </div>
-    </aside>
-
-    <!-- بخش چت اصلی -->
-    <div class="x-chat-layout">
-        <main class="x-chat-main mt-0">
-            <header class="x-chat-header">
-                <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}"
-                    class="x-chat-header-product-image">
-                <div class="x-chat-header-info">
-                    <div class="x-chat-header-title">{{ chat.product.title }}</div>
-                    <div class="x-chat-header-subtitle">کد محصول: {{ chat.product.id }}</div>
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="mobile-menu-icon" id="mobileMenuIcon">
+                    <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                    </svg>
                 </div>
-            </header>
-
-            <div class="x-chat-body" id="chat-box">
+                <a href="{{ chat_room.product.get_absolute_url }}" target="_blank" class="user-info">
+                    <img src="{{ chat_room.product.image.url }}" alt="{{ chat_room.product.title }}" class="avatar">
+                    <span class="user-name">{{ chat_room.product.title }}</span>
+                    <span class="status online">آنلاین</span>
+                </a>
+                <div class="header-actions">
+                </div>
+            </div>
+            <div class="message-area" id="messageArea">
                 {% for msg in messages %}
-                <div class="x-chat-message {% if msg.sender == request.user %}me{% else %}them{% endif %}">
-                    <p class="x-chat-message-text"><strong>{{ msg.sender.email }}</strong>: {{ msg.text }}</p>
-                    <span class="x-chat-message-time">{{ msg.created_at|date:"H:i" }}</span>
+                <div class="message {% if msg.sender == request.user %} sent {% else %}received {% endif %}">
+                    <span class="message-sender">{% if msg.sender == request.user %}کاربر : {% else %}پشتیبان : {% endif %} {{ msg.sender.user_profile.get_fullname }}</span>
+                    <p>{{ msg.text }}</p>
+                    <span class="message-time">{{ msg.created_at|date:"H:i" }}</span>
                 </div>
                 {% empty %}
                 <p>هنوز پیامی وجود ندارد.</p>
                 {% endfor %}
+                <button class="scroll-to-bottom-btn" id="scrollToBottomBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em">
+                        <path fill="none" stroke="currentColor" stroke-Linecap="round" stroke-Linejoin="round"
+                            stroke-Width="2" d="M30 12L16 24L2 12"></path>
+                    </svg>
+                </button>
             </div>
-
-            <footer class="x-chat-footer">
-                <form method="post" class="x-chat-footer-input-wrapper">
-                    {% csrf_token %}
-                    <textarea name="message" class="x-chat-message-input" placeholder="پیام ...." rows="1" required></textarea>
-                    <button type="submit" class="x-chat-send-button x-chat-icon-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                        </svg>
-                    </button>
-                </form>
-            </footer>
-        </main>
+            <form class="message-input-area" action="" method="post">
+                {% csrf_token %}
+                <textarea name="message" placeholder="پیام خود را بنویسید..." name="messageContent"></textarea>
+                <button type="submit">
+                    <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
     </div>
 
+    <script src="{% static 'js/chat.js' %}"></script>
 </body>
 
 </html>
+

@@ -48,7 +48,9 @@ class ChatRoomSendView(LoginRequiredMixin, FormView):
         return redirect('dashboard:admin:chat_room_send', pk=self.chat.pk)
 
     def get_context_data(self, **kwargs):
+        chats = ChatRoom.objects.all()
         context = super().get_context_data(**kwargs)
         context['chat'] = self.chat
+        context['chats'] = chats
         context['messages'] = self.chat.chat_messages.order_by('timestamp')
         return context
