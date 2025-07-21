@@ -1,16 +1,13 @@
 {% load static %}
 <section class="w-center py-2">
     <div class="d-flex justify-content-center flex-wrap">
-
         {% for category in categorys %}
-
         {% if category.image %}
         <a href="{% url 'shop:product-list' %}?category={{category.slug}}" class="slide-item min-mr my-3 mx-3">
             <img src="{{category.image.url}}" alt="{{category.title}}">
             <div class="category-circle"></div>
             <p class="category-name">{{category.title}}</p>
         </a>
-
         {% endif %}
 
         {% endfor %}

@@ -525,6 +525,7 @@ button.view:disabled { /* استایل برای دکمه view وقتی غیرف�
   .np-wr{
     white-space: nowrap !important;
     font-size: 11.5px !important;
+    width: 100% !important;
   }
   .min-mr{
     margin-right: 0.5rem !important;
@@ -815,6 +816,11 @@ button.view:disabled { /* استایل برای دکمه view وقتی غیرف�
   transition: all 0.2s ease;
   box-shadow: 0 5px 12px rgba(var(--forgetx-primary-rgb), 0.3);
   letter-spacing: 0.02em;
+}
+
+.btn-primary:focus{
+  background-color: var(--forgetx-primary-color) !important;
+  border-color: var(--forgetx-primary-color) !important;
 }
 
 .btn-primary:hover {
@@ -1472,10 +1478,7 @@ button.view:disabled { /* استایل برای دکمه view وقتی غیرف�
   }
 }
 
-.d-bx{
-  width: 100%;
-  text-align: -webkit-left;
-}
+
 .m-text{
   transition: 0.3s;
 }
