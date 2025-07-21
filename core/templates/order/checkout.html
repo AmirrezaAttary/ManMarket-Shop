@@ -8,12 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>checkout</title>
 
-    <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
+
     <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/logo/logo.webp' %}">
-
+    <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
 </head>
 
 <body class="my-3 py-3">
@@ -58,15 +58,15 @@
                             <div class="address-details-wrapper"></div>
                         </div>
                         <div id="address-list-collapsible">
-                            <form action="." method="post" id="checkout-form">
+                            <form action="." method="post" id="address-form">
 
                                 {% csrf_token %}
                                 {% for address in addresses %}
                                 <div class="shop-cs-address-option shop-cs-selectable-option">
                                     <input type="radio" name="address_id" value="{{ address.id }}"
-                                        id="address-{{ address.id }}" {% if forloop.first %}checked{% endif %}>
+                                        id="address-{{ forloop.counter }}" {% if forloop.first %}checked{% endif %}>
 
-                                    <label for="address-{{ address.id }}" class="shop-cs-selectable-label">
+                                    <label for="address-{{ forloop.counter }}" class="shop-cs-selectable-label">
                                         <span class="shop-cs-custom-tick-container">
                                             <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
                                                 <path d="M4.5 8.5l2.5 2.5 5-5"></path>
@@ -144,7 +144,7 @@
 
                     <form id="shipment-method-form" class="shop-cs-payment-method-section">
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="tracking_type" value="1" form="checkout-form" id="shipment-post">
+                            <input type="radio" name="tracking_type" value="1" form="address-form" id="shipment-post">
                             <label for="shipment-post" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
                                     <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
@@ -156,7 +156,7 @@
                             </label>
                         </div>
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="tracking_type" value="2" form="checkout-form" value="mahax" id="shipment-mahax">
+                            <input type="radio" name="tracking_type" value="2" form="address-form" value="mahax" id="shipment-mahax">
                             <label for="shipment-mahax" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
                                     <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
@@ -168,7 +168,7 @@
                             </label>
                         </div>
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="tracking_type" value="3" form="checkout-form" value="tipax" id="shipment-tipax" checked>
+                            <input type="radio" name="tracking_type" value="3" form="address-form" value="tipax" id="shipment-tipax" checked>
                             <label for="shipment-tipax" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
                                     <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
@@ -181,7 +181,7 @@
                         </div>
                     </form>
 
-                    <div class="shop-cs-card-body">
+                    <!-- <div class="shop-cs-card-body">
                         <div class="shop-cs-time-scroller-wrapper">
                             <div class="shop-cs-time-scroller">
                                 <div class="shop-cs-time-scroller__list">
@@ -339,7 +339,7 @@
                                             </svg></span><span>ساعت ۱۰ تا ۱۴</span></label></div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </section>
             </main>
             
@@ -377,7 +377,7 @@
 
                     <div id="payment-form" class="shop-cs-payment-method-section">
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="payment_method" form="checkout-form" value="wallet"
+                            <input type="radio" name="payment_method" form="address-form" value="wallet"
                                 id="payment-wallet" data-wallet="{{wallet.balance|floatformat:0|intcomma}}">
                             <label for="payment-wallet" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
@@ -392,7 +392,7 @@
                             </label>
                         </div>
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="payment_method" form="checkout-form" value="zarinpal"
+                            <input type="radio" name="payment_method" form="address-form" value="zarinpal"
                                 id="payment-card" checked>
                             <label for="payment-card" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
@@ -407,16 +407,17 @@
                             </label>
                         </div>
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="payment_method" form="checkout-form" value="card_mahax" id="payment-home">
+                            <input type="radio" name="payment_method" form="address-form" value="card_mahax" id="payment-home">
                             <label for="payment-home" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
                                     <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
                                         <path d="M4.5 8.5l2.5 2.5 5-5"></path>
                                     </svg>
                                 </span>
-                                <div class="shop-cs-payment-details">
+                                <div class="shop-cs-payment-details">   
                                     <strong>پرداخت درب محل</strong>
                                     <p>فقط با ارسال توسط ماهکس</p>
+                                    <p>پرداخت 10% از مبلغ در ابتدا</p>
                                 </div>
                             </label>
                         </div>
@@ -424,7 +425,7 @@
 
                     <div class="shop-cs-summary-action" style="padding:16px;">
                         <button class="shop-cs-btn shop-cs-btn--primary" style="width: 100%; padding: 12px;"
-                            type="submit" form="checkout-form">ادامه
+                            type="submit" form="address-form">ادامه
                             فرآیند خرید</button>
                     </div>
                 </div>
@@ -433,6 +434,9 @@
     </div>
 
 
+
+
+    <script src="{% static 'js/shopping.js' %}"></script>
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     <script>
 
@@ -503,9 +507,6 @@
             });
         }
     </script>
-
-    <script src="{% static 'js/shopping.js' %}"></script>
-
     <script src="{% static 'vendor/toastify/toastify.js' %}"></script>
     
     {% include 'messages.html' %}
