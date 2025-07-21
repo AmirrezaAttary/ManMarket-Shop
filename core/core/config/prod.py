@@ -8,9 +8,11 @@ DEBUG = False
 
 
 ALLOWED_HOSTS = [
-    "https://manmarket.ir",
-    "https://www.manmarket.ir",
-    "https://mail.manmarket.ir",  # ← این خط را اضافه کن
+    '192.168.73.237',
+    '127.0.0.1',
+    'manmarket.ir',
+    'www.manmarket.ir',
+    'mail.manmarket.ir',  # ← این خط را اضافه کن
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
