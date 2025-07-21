@@ -16,7 +16,7 @@
 
         <div class="chat-list" id="chatList">
             <div class="search-bar">
-                <input type="text" placeholder="جستجو در گفتگوها...">
+                <a href="{% url 'dashboard:admin:chat-list' %}">بازگشت</a>
             </div>
             {% for chat in chats %}
             <a href="{% url 'dashboard:admin:chat_room_send' chat.pk %}" class="chat-item {% if chat.id == chat_room.id %}active{% endif %}">

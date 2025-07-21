@@ -68,7 +68,7 @@ class AdminGetSpecificationCreateView(LoginRequiredMixin, HasAdminAccessPermissi
 class AdminGetSpecificationDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-specification/product-specification-delete.html"
     queryset = PriceSpecification.objects.all()
-    success_message = "حذف رنگ با موفقیت انجام شد"
+    success_message = "حذف مشخصات با موفقیت انجام شد"
     
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:specification-list')
@@ -78,7 +78,7 @@ class AdminGetSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission
     template_name = "dashboard/admin/products-specification/product-specification-edit.html"
     queryset = PriceSpecification.objects.all()
     form_class = SpecificationForm
-    success_message = "ویرایش رنگ با موفقیت انجام شد"
+    success_message = "ویرایش مشخصات با موفقیت انجام شد"
     
     
 
@@ -118,7 +118,7 @@ class AdminSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission, S
     template_name = "dashboard/admin/products-specification/specification-edit.html"
     queryset = ProductSpecification.objects.all()
     form_class = SpecificationCreateForm
-    success_message = "ویرایش رنگ با موفقیت انجام شد"
+    success_message = "ویرایش مشخصات با موفقیت انجام شد"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -136,7 +136,7 @@ class AdminSpecificationEditView(LoginRequiredMixin, HasAdminAccessPermission, S
 class AdminSpecificationDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/products-specification/specification-delete.html"
     queryset = ProductSpecification.objects.all()
-    success_message = "حذف رنگ با موفقیت انجام شد"
+    success_message = "حذف مشخصات با موفقیت انجام شد"
     
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:specification-edit-one', kwargs={'pk': self.kwargs['prduct_pk']})
