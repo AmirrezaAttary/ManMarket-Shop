@@ -4,6 +4,14 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/bootstrap/boot.rtl.css' %}">
+<style>
+.h-130 {
+    height: 200px;
+    overflow-y: scroll;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    scrollbar-width: thin;
+}
+</style>
 {% endblock extra_css %}
 
 {% block title %}فروشگاه{% endblock title %}
@@ -77,7 +85,7 @@
                         </h2>
                         <div id="collapseCategory" class="accordion-collapse collapse" aria-labelledby="headingCategory"
                             data-bs-parent="#filtersAccordion">
-                            <div class="accordion-body fill-filter-options-list" id="categoryFilterContainer">
+                            <div class="accordion-body fill-filter-options-list h-130" id="categoryFilterContainer">
                                 {% for category in categories %}
                                 <div class="fill-filter-option">
                                     <input type="checkbox" name="category" form="mobileFiltersForm" id="category-filter-{{category.id}}"
@@ -112,7 +120,7 @@
                         </h2>
                         <div id="collapseBrand" class="accordion-collapse collapse" aria-labelledby="headingBrand"
                             data-bs-parent="#filtersAccordion">
-                            <div class="accordion-body fill-filter-options-list" id="brandFilterContainer">
+                            <div class="accordion-body fill-filter-options-list h-130" id="brandFilterContainer">
                                 {% for brand in brands %}
                                 <div class="fill-filter-option">
                                     <input type="checkbox" form="mobileFiltersForm" name="brand" id="brand-filter-{{brand.id}}"

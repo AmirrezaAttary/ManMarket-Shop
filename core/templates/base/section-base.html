@@ -7,7 +7,7 @@
     </span>
     <h5 class="py-3 text-center">جستجو</h5>
     <form action="{% url 'shop:product-list' %}" class="text-center position-relative container">
-        <input class="form-control my-inp" type="search" placeholder="عنوان یا برند محصول را وارد کنید">
+        <input name="q" class="form-control my-inp" type="search" placeholder="عنوان یا برند محصول را وارد کنید">
         <div>
             <button class="sub-btn" type="submit">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em">
