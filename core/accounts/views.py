@@ -11,15 +11,17 @@ from accounts.utils import send_password_reset_email
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib import messages  
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 
 
 
-class LoginView(auth_views.LoginView):
+class LoginView(SuccessMessageMixin,auth_views.LoginView):
     template_name = "accounts/login.html"
     form_class = AuthenticationForm
     redirect_authenticated_user = True
+    success_message = 'شما با موفقیت وارد من مارکت شدید'
     
 
 class RegisterView(TemplateView):
@@ -35,7 +37,7 @@ class RegisterView(TemplateView):
         if request.user.is_authenticated:
             return redirect('dashboard:home')  # به صفحه داشبورد هدایت کن
 
-        messages.add_message(request, messages.SUCCESS, 'You have successfully logged')
+        messages.add_message(request, messages.SUCCESS, 'شما با موفقیت وارد من مارکت شدید')
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()

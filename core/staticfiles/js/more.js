@@ -1,4 +1,4 @@
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
@@ -7,13 +7,13 @@
     const signupForm = document.querySelector('form');
 
     document.querySelectorAll('.sing-toggle-password').forEach(toggleButton => {
-    toggleButton.addEventListener('click', function() {
-    const targetId = this.dataset.target;
-    const passwordField = document.getElementById(targetId);
+        toggleButton.addEventListener('click', function () {
+            const targetId = this.dataset.target;
+            const passwordField = document.getElementById(targetId);
 
-    if (passwordField.type === 'password') {
-    passwordField.type = 'text';
-    this.innerHTML = `
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                this.innerHTML = `
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 16 16"
@@ -26,9 +26,9 @@
                                 ></path>
                             </svg>
                         `;
-} else {
-    passwordField.type = 'password';
-    this.innerHTML = `
+            } else {
+                passwordField.type = 'password';
+                this.innerHTML = `
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 16 16"
@@ -44,69 +44,69 @@
                                 </g>
                             </svg>
                         `;
-}
-});
-});
+            }
+        });
+    });
 
-    emailInput.addEventListener('input', function() {
-    if (!emailInput.validity.valid && emailInput.value.length > 0) {
-    emailError.classList.remove('d-none');
-    emailInput.classList.add('is-invalid');
-} else {
-    emailError.classList.add('d-none');
-    emailInput.classList.remove('is-invalid');
-}
-});
+    emailInput.addEventListener('input', function () {
+        if (!emailInput.validity.valid && emailInput.value.length > 0) {
+            emailError.classList.remove('d-none');
+            emailInput.classList.add('is-invalid');
+        } else {
+            emailError.classList.add('d-none');
+            emailInput.classList.remove('is-invalid');
+        }
+    });
 
     passwordInput.addEventListener('input', checkPasswordMatch);
     confirmPasswordInput.addEventListener('input', checkPasswordMatch);
 
     function checkPasswordMatch() {
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
 
-    if (confirmPassword.length > 0 && password !== confirmPassword) {
-    confirmPasswordError.classList.remove('d-none');
-    confirmPasswordInput.classList.add('is-invalid');
-} else {
-    confirmPasswordError.classList.add('d-none');
-    confirmPasswordInput.classList.remove('is-invalid');
-}
-}
+        if (confirmPassword.length > 0 && password !== confirmPassword) {
+            confirmPasswordError.classList.remove('d-none');
+            confirmPasswordInput.classList.add('is-invalid');
+        } else {
+            confirmPasswordError.classList.add('d-none');
+            confirmPasswordInput.classList.remove('is-invalid');
+        }
+    }
 
-    signupForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    if (signupForm.checkValidity() && passwordInput.value === confirmPasswordInput.value) {
-    alert('فرم با موفقیت ارسال شد! (این فقط یک نمونه است)');
-} else {
-    signupForm.classList.add('was-validated');
-    if (passwordInput.value !== confirmPasswordInput.value) {
-    confirmPasswordError.classList.remove('d-none');
-    confirmPasswordInput.classList.add('is-invalid');
-} else {
-    confirmPasswordError.classList.add('d-none');
-    confirmPasswordInput.classList.remove('is-invalid');
-}
-}
+    // signupForm.addEventListener('submit', function (event) {
+    //     event.preventDefault();
+    //     if (signupForm.checkValidity() && passwordInput.value === confirmPasswordInput.value) {
+    //         alert('فرم با موفقیت ارسال شد! (این فقط یک نمونه است)');
+    //     } else {
+    //         signupForm.classList.add('was-validated');
+    //         if (passwordInput.value !== confirmPasswordInput.value) {
+    //             confirmPasswordError.classList.remove('d-none');
+    //             confirmPasswordInput.classList.add('is-invalid');
+    //         } else {
+    //             confirmPasswordError.classList.add('d-none');
+    //             confirmPasswordInput.classList.remove('is-invalid');
+    //         }
+    //     }
+    // });
 });
-});
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const emailError = document.getElementById('email-error');
-        const loginForm = document.getElementById('loginForm');
+document.addEventListener('DOMContentLoaded', function () {
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const emailError = document.getElementById('email-error');
+    const loginForm = document.getElementById('loginForm');
 
-        // --- Toggle Password Visibility ---
-        document.querySelectorAll('.logix-toggle-password').forEach(toggleButton => {
-            toggleButton.addEventListener('click', function() {
-                const targetId = this.dataset.target;
-                const passwordField = document.getElementById(targetId);
+    // --- Toggle Password Visibility ---
+    document.querySelectorAll('.logix-toggle-password').forEach(toggleButton => {
+        toggleButton.addEventListener('click', function () {
+            const targetId = this.dataset.target;
+            const passwordField = document.getElementById(targetId);
 
-                if (passwordField.type === 'password') {
-                    passwordField.type = 'text';
-                    this.innerHTML = `
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                this.innerHTML = `
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 16 16"
@@ -119,9 +119,9 @@
                                 ></path>
                             </svg>
                         `;
-                } else {
-                    passwordField.type = 'password';
-                    this.innerHTML = `
+            } else {
+                passwordField.type = 'password';
+                this.innerHTML = `
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 16 16"
@@ -137,58 +137,58 @@
                                 </g>
                             </svg>
                         `;
-                }
-            });
-        });
-
-
-        // --- Email Validation ---
-        emailInput.addEventListener('input', function() {
-            if (!emailInput.validity.valid && emailInput.value.length > 0) {
-                emailError.classList.remove('d-none');
-                emailInput.classList.add('is-invalid');
-            } else {
-                emailError.classList.add('d-none');
-                emailInput.classList.remove('is-invalid');
-            }
-        });
-
-        // --- Form Submission ---
-        loginForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            if (loginForm.checkValidity()) {
-                alert('ورود با موفقیت انجام شد! (این فقط یک نمونه است)');
-            } else {
-                loginForm.classList.add('was-validated');
             }
         });
     });
 
 
-        document.addEventListener('DOMContentLoaded', function() {
-        const emailInput = document.getElementById('email');
-        const emailError = document.getElementById('email-error');
-        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-
-        // --- Email Validation ---
-        emailInput.addEventListener('input', function() {
+    // --- Email Validation ---
+    emailInput.addEventListener('input', function () {
         if (!emailInput.validity.valid && emailInput.value.length > 0) {
-        emailError.classList.remove('d-none');
-        emailInput.classList.add('is-invalid');
-    } else {
-        emailError.classList.add('d-none');
-        emailInput.classList.remove('is-invalid');
-    }
+            emailError.classList.remove('d-none');
+            emailInput.classList.add('is-invalid');
+        } else {
+            emailError.classList.add('d-none');
+            emailInput.classList.remove('is-invalid');
+        }
     });
 
-        // --- Form Submission ---
-        forgotPasswordForm.addEventListener('submit', function(event) {
+    // --- Form Submission ---
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (loginForm.checkValidity()) {
+            alert('ورود با موفقیت انجام شد! (این فقط یک نمونه است)');
+        } else {
+            loginForm.classList.add('was-validated');
+        }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('email-error');
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+
+    // --- Email Validation ---
+    emailInput.addEventListener('input', function () {
+        if (!emailInput.validity.valid && emailInput.value.length > 0) {
+            emailError.classList.remove('d-none');
+            emailInput.classList.add('is-invalid');
+        } else {
+            emailError.classList.add('d-none');
+            emailInput.classList.remove('is-invalid');
+        }
+    });
+
+    // --- Form Submission ---
+    forgotPasswordForm.addEventListener('submit', function (event) {
         event.preventDefault();
         if (forgotPasswordForm.checkValidity()) {
-        alert('لینک بازیابی رمز عبور به ایمیل شما ارسال شد! (این فقط یک نمونه است)');
-        // اینجا می‌توانید کد مربوط به ارسال ایمیل بازیابی به سرور را اضافه کنید
-    } else {
-        forgotPasswordForm.classList.add('was-validated');
-    }
+            alert('لینک بازیابی رمز عبور به ایمیل شما ارسال شد! (این فقط یک نمونه است)');
+            // اینجا می‌توانید کد مربوط به ارسال ایمیل بازیابی به سرور را اضافه کنید
+        } else {
+            forgotPasswordForm.classList.add('was-validated');
+        }
     });
-    });
+});

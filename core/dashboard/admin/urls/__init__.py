@@ -20,4 +20,5 @@ urlpatterns = [
     path("",include("dashboard.admin.urls.blog_category")),
     path("",include("dashboard.admin.urls.contact")),
     path("",include("dashboard.admin.urls.chat")),
+    path("",include("dashboard.admin.urls.story")),
 ]

@@ -35,7 +35,7 @@ class ProductColorInventoryInline(admin.TabularInline):
 @admin.register(ProductModel)
 class ProductModelAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "status", "created_date","product_view")
-    search_fields = ("title",)
+    search_fields = ("title","id",)
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ProductSpecificationInline,ProductColorInventoryInline]
     list_filter = ("status", "category", "brand")

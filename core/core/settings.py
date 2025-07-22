@@ -21,7 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-DEBUG = False
+DEBUG = True
+
 # SECURITY WARNING: keep the secret key used in production secret!
 ALLOWED_HOSTS = [
     '192.168.73.237',
