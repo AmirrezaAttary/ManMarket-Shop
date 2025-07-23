@@ -96,8 +96,31 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                 self.clear_cart(cart)
                 return reverse_lazy("order:completed")
             else:
-                messages.error(self.request, "موجودی کیف پول شما کافی نیست.")
-                return reverse_lazy("order:checkout")
+                zarinpal = ZarinPalSandbox()
+                wallet = Wallet.objects.get(user=self.request.user)
+                wallet_value = wallet.balance
+                total_tax = round((order.total_price)) + 50000
+
+                final_price = int(total_tax - wallet_value)
+                
+                callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+                response = zarinpal.payment_request(callback_url,final_price)
+                print(response)
+                payment_obj = PaymentModel.objects.create(
+                    authority_id = response['data']['authority'],
+                    amount = final_price,
+                    order=order,
+                    wallet=wallet,
+                    payemnt_type = PayemntType.wallet_cart.value
+                )
+                order.payment = payment_obj
+                order.save()
+                return zarinpal.generate_payment_url(response['data']['authority'])
+                
+                # messages.error(self.request, "موجودی کیف پول شما کافی نیست.")
+                # return reverse_lazy("order:checkout")
+
+
 
         if payment_method == "zarinpal":
             zarinpal = ZarinPalSandbox()
