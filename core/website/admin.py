@@ -23,7 +23,7 @@ class StoryAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     list_display = ('title', 'user', 'status', 'created_at')
     list_filter = ('status', 'user')
-    search_fields = ('title', 'user__email')
+    search_fields = ('id','title', 'user__email')
     
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

@@ -64,8 +64,8 @@
                     </div>
 
                     <div class="col-md-1 py-1">
-                        <button type="submit" class="btn btn-sm btn-icon btn-primary btn-search"><i
-                                class="bi-search"></i></button>
+                        <button type="submit" class="btn btn-sm btn-icon btn-primary btn-search">اعمال</button>
+                        <a href="{% url 'dashboard:admin:story-create' %}"><button type="button" class="btn btn-sm btn-icon btn-primary btn-search">ایجاد استوری</button></a>
                     </div>
                 </form>
             </div>
@@ -103,7 +103,7 @@
                                     <tbody>
                                         {% for object in object_list %}
                                         <tr>
-                                            <th scope="row">{{forloop.counter}}</th>
+                                            <th scope="row">{{object.id}}</th>
                                             <td>{{object.title}}</td>
                                             <td>{{object.user.user_profile.get_fullname}}</td>
                                             <td>{{object.created_at|date:"Y-m-d h:i"}}</td>

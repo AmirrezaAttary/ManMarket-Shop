@@ -1,6 +1,7 @@
-from django.views.generic import UpdateView,ListView
+from django.views.generic import UpdateView,ListView,CreateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
+from django.shortcuts import redirect
 
 from dashboard.admin.forms import *
 from django.contrib.messages.views import SuccessMessageMixin
@@ -19,7 +20,7 @@ class AdminStoryListView(LoginRequiredMixin, HasAdminAccessPermission, ListView)
     def get_queryset(self):
         queryset = Story.objects.all()
         if search_q := self.request.GET.get("q"):
-            queryset = queryset.filter(title__icontains=search_q)
+            queryset = queryset.filter(title__icontains=search_q) | queryset.filter(id__iexact=search_q)
         if status := self.request.GET.get("status"):
             queryset = queryset.filter(status=status)
         if order_by := self.request.GET.get("order_by"):
@@ -44,3 +45,27 @@ class AdminStoryEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMes
     
     def get_success_url(self) -> str:
         return reverse_lazy("dashboard:admin:story-edit",kwargs={"pk":self.kwargs.get("pk")})
+    
+    
+    
+class AdminStoryCreateView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, CreateView):
+    template_name = "dashboard/admin/storys/story-create.html"
+    queryset = Story.objects.all()
+    form_class = StoryForm
+    success_message = "ایجاد استوری با موفقیت انجام شد"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        super().form_valid(form)
+        return redirect(reverse_lazy("dashboard:admin:story-edit", kwargs={"pk": form.instance.pk}))
+        
+
+    def get_success_url(self):
+        return reverse_lazy("dashboard:admin:story-list")
+    
+    
+class AdminStoryDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    template_name = "dashboard/admin/storys/story-delete.html"
+    queryset = Story.objects.all()
+    success_url = reverse_lazy("dashboard:admin:story-list")
+    success_message = "حذف استوری با موفقیت انجام شد"
