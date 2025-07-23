@@ -95,9 +95,21 @@
                 </form>
             </div>
         </div>
-
+        <div class="">
+            <div class="card mb-5">
+                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="card-header-title">محصولات مرتبط</h5>
+                </div>
+                
+                {% for item in object.post_products.all %}
+                {{item.product.id}}  ---  {{item.product.title}}
+                {% endfor %}
+                    
+            </div>
+        </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}

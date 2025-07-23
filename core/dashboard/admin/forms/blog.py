@@ -1,5 +1,5 @@
 from django import forms
-from blog.models import Post
+from blog.models import Post,PostProduct
 from django_summernote.widgets import SummernoteWidget
 
 class BlogPostForm(forms.ModelForm):
@@ -28,3 +28,15 @@ class BlogPostForm(forms.ModelForm):
         self.fields['image'].widget.attrs['class'] = 'form-control'
         # self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-select'
+        
+        
+class BlogPostProductForm(forms.ModelForm):
+    class Meta:
+        model = PostProduct
+        fields = [
+            'post',
+            'product',
+        ]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].widget.attrs['class'] = 'form-select'

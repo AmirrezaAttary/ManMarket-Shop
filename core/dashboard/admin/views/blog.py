@@ -7,7 +7,7 @@ from django.views.generic import (
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
-from dashboard.admin.forms import BlogPostForm
+from dashboard.admin.forms import BlogPostForm,BlogPostProductForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.core.exceptions import FieldError
@@ -69,3 +69,11 @@ class AdminBlogEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMes
 
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:blog-edit", kwargs={"pk": self.kwargs['pk']})
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_product'] = BlogPostProductForm
+        return context
+    
+    
