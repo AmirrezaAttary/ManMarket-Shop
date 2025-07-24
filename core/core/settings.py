@@ -145,9 +145,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 60,  # در ثانیه (افزایش timeout پیش‌فرض)
+        }
     }
 }
-
+ 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -290,3 +293,5 @@ CACHES = {
 
 
 # time setting
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 50000

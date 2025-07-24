@@ -25,14 +25,31 @@ class CartSession:
             return
         self.save()
         
-    def add_product(self, product_id, color_id,color_inventory_id):
+    def add_product(self, product_id, color_id, color_inventory_id):
+        from shop.models import ProductColorInventory  # اگر بالای فایل import نکردی
+
+        color_inventory = ProductColorInventory.objects.filter(
+            id=color_inventory_id,
+            product_id=product_id,
+            color_id=color_id
+        ).first()
+
+        if not color_inventory or color_inventory.stock == 0:
+            return  # اضافه نکن
+
         for item in self._cart["items"]:
             if product_id == item["product_id"] and color_id == item["color_id"] and color_inventory_id == item['color_inventory_id']:
-                item["quantity"] += 1
+                if item["quantity"] < color_inventory.stock:
+                    item["quantity"] += 1
                 break
         else:
-            new_item = {"product_id": product_id, "color_id": color_id,"color_inventory_id":color_inventory_id, "quantity": 1}
-            self._cart["items"].append(new_item)
+            self._cart["items"].append({
+                "product_id": product_id,
+                "color_id": color_id,
+                "color_inventory_id": color_inventory_id,
+                "quantity": 1
+            })
+
         self.save()
 
     def clear(self):
@@ -180,6 +197,10 @@ class CartSession:
                 color=color_obj,
                 color_inventory=color_inventory_obj
             )
+            if color_inventory_obj:
+                max_stock = color_inventory_obj.stock
+                item["quantity"] = min(item["quantity"], max_stock)
+
             cart_item.quantity = item["quantity"]
             cart_item.save()
 

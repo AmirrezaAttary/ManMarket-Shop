@@ -8,6 +8,7 @@ from order.models import OrderModel, OrderStatusType
 from wallets.models import WalletTransaction
 from cart.cart import CartSession
 from cart.models import CartModel
+from shop.models import ProductColorInventory
 
 
 # Create your views here.
@@ -36,6 +37,20 @@ class PaymentVerifyView(View):
                 order.status = OrderStatusType.success.value
                 order.save()
 
+                # 🔻 کم کردن موجودی محصولات از انبار
+                # ✅ کاهش موجودی محصولات بر اساس رنگ و تعداد سفارش
+                for item in order.order_items.all():
+                    try:
+                        inventory = ProductColorInventory.objects.get(
+                            product=item.product,
+                            color=item.color
+                        )
+                        inventory.stock = max(0, inventory.stock - item.quantity)
+                        inventory.save()
+                    except ProductColorInventory.DoesNotExist:
+                        # موجودی برای این ترکیب پیدا نشد، صرف‌نظر یا لاگ شود
+                        continue
+
                 # ✅ اگر پرداخت ترکیبی بود، موجودی کیف پول صفر و تراکنش ساخته شود
                 if payment_obj.payemnt_type == PayemntType.wallet_cart.value:
                     wallet = payment_obj.wallet
@@ -44,7 +59,7 @@ class PaymentVerifyView(View):
                             wallet=wallet,
                             amount=wallet.balance,
                             description=f"پرداخت جزئی از سفارش #{order.id}",
-                            transaction_type='payment'
+                            transaction_type='payment'  
                         )
                         wallet.balance = 0
                         wallet.save()
@@ -54,7 +69,9 @@ class PaymentVerifyView(View):
                 if cart:
                     cart.cart_items.all().delete()
                     CartSession(request.session).clear()
+
                 return redirect(reverse_lazy("order:completed"))
+
 
 
             wallet = getattr(payment_obj, "wallet", None)
