@@ -251,7 +251,10 @@
                                     <p class="card-price py-1 px-2 ">
                                         <span class="fill-price-value">{% if object.min_discounted_price == None %}
                                             ناموجود{% else %}{{object.min_discounted_price|intcomma}}تومان {% endif %}</span>
+                                            {% if object.min_discounted_price == None %}
+                                            {% else %}
                                         <span class="money-icon"></span>
+                                        {% endif %}
                                     </p>
                                     <div dir="ltr"
                                         class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center flex-column">

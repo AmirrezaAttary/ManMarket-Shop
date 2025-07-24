@@ -28,7 +28,7 @@ class ProductModel(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     
     def get_min_price(self):
-        prices = self.color_inventories.filter(price__gt=0).order_by('price').values_list('price', flat=True)
+        prices = self.color_inventories.filter(price__gt=0, stock__gt=0).order_by('price').values_list('price', flat=True)
         return prices[0] if prices else None
     
     class Meta:

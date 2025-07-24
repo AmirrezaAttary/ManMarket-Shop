@@ -5,7 +5,8 @@ from django.db.models import (OuterRef,
                                 F,Min,Max,
                                 Prefetch ,Case,
                                 When, Value,
-                                IntegerField
+                                IntegerField,
+                                Q
                                 )
 from django.views.generic import ListView, DetailView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -37,21 +38,34 @@ class ShopListProductView(ListView):
         if brand_ids:
             queryset = queryset.filter(brand__slug__in=brand_ids)
 
+        # annotate برای min و max قیمت با شرط stock > 0
+        queryset = queryset.annotate(
+            min_price=Subquery(
+                ProductColorInventory.objects.filter(
+                    product=OuterRef('pk'),
+                    price__gt=0,
+                    stock__gt=0
+                ).order_by('price').values('price')[:1]
+            ),
+            max_price=Subquery(
+                ProductColorInventory.objects.filter(
+                    product=OuterRef('pk'),
+                    price__gt=0,
+                    stock__gt=0
+                ).order_by('-price').values('price')[:1]
+            )
+        )
+
+        # حالا بعد از annotate، فیلتر min/max price
         min_price = self.request.GET.get('min_price')
         if min_price:
-            queryset = queryset.filter(color_inventories__price__gte=min_price)
+            queryset = queryset.filter(Q(min_price__gte=min_price) | Q(min_price__isnull=True))
 
         max_price = self.request.GET.get('max_price')
         if max_price:
-            queryset = queryset.filter(color_inventories__price__lte=max_price)
+            queryset = queryset.filter(Q(max_price__lte=max_price) | Q(max_price__isnull=True))
 
-        # annotate برای حداقل و حداکثر قیمت
-        queryset = queryset.annotate(
-            min_price=Min("color_inventories__price"),
-            max_price=Max("color_inventories__price")
-        )
-
-        # annotate برای اولویت قیمت (برای همه حالت‌ها)
+        # priority قیمت
         queryset = queryset.annotate(
             price_priority=Case(
                 When(min_price__isnull=True, then=Value(1)),
@@ -74,17 +88,17 @@ class ShopListProductView(ListView):
         elif order_by == "expensive":
             queryset = queryset.order_by("price_priority", "-max_price")
         else:
-            # اگر کاربر order_by نفرستاده بود، فقط اولویت قیمت مهم است
             queryset = queryset.order_by("price_priority")
 
-        # محاسبه تخفیف
+        # محاسبه قیمت تخفیف‌خورده از color_inventories
         discounted_price_expr = ExpressionWrapper(
             F('price') - (F('price') * F('discount_percent') / 100),
             output_field=DecimalField()
         )
 
         discounted_inventory = ProductColorInventory.objects.filter(
-            product=OuterRef('pk')
+            product=OuterRef('pk'),
+            stock__gt=0
         ).annotate(
             discounted_price=discounted_price_expr
         ).filter(
@@ -96,12 +110,15 @@ class ShopListProductView(ListView):
             min_discount_percent=Subquery(discounted_inventory.values('discount_percent')[:1])
         )
 
-        # prefetch رنگ‌ها
         queryset = queryset.prefetch_related(
-            Prefetch('color_inventories', queryset=ProductColorInventory.objects.select_related('color'))
+            Prefetch(
+                'color_inventories',
+                queryset=ProductColorInventory.objects.filter(stock__gt=0).select_related('color')
+            )
         )
 
         return queryset.distinct()
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -111,14 +128,18 @@ class ShopListProductView(ListView):
         context["selected_brands"] = self.request.GET.getlist("brand")
         context["selected_categories"] = self.request.GET.getlist("category")
         context["selected_order"] = self.request.GET.get("order_by", "")
-        price_range = ProductColorInventory.objects.filter(price__gt=0).aggregate(
-        min_price=Min("price"),
-        max_price=Max("price")
+        
+        # فقط قیمت‌های رنگ‌هایی که موجودی دارند
+        price_range = ProductColorInventory.objects.filter(price__gt=0, stock__gt=0).aggregate(
+            min_price=Min("price"),
+            max_price=Max("price")
         )
+
         context["min_price_all"] = price_range["min_price"]
         context["max_price_all"] = price_range["max_price"]
 
         return context
+
             
   
   
@@ -138,8 +159,8 @@ class ShopDetailProductView(DetailView):
         context = super().get_context_data(**kwargs)
         product = context['product']
 
-        # تمام رنگ‌ها
-        colors = ProductColorInventory.objects.filter(product=product)
+        # فقط رنگ‌هایی که stock آن‌ها بیشتر از 0 است
+        colors = ProductColorInventory.objects.filter(product=product, stock__gt=0)
 
         # محاسبه قیمت تخفیف‌خورده برای هر رنگ
         for color in colors:
@@ -150,6 +171,7 @@ class ShopDetailProductView(DetailView):
 
         # پیدا کردن رنگ با کمترین قیمت تخفیف‌خورده (بزرگ‌تر از صفر)
         default_color = min(valid_colors, key=lambda c: c.discounted_price, default=None)
+
         product_users_count = CartItemModel.objects.filter(product=product).values('cart__user').distinct().count()
 
         context['colors'] = colors
@@ -157,15 +179,14 @@ class ShopDetailProductView(DetailView):
         context['specifications'] = ProductSpecification.objects.filter(product=product)
         context["is_wished"] = WishlistProductModel.objects.filter(
             user=self.request.user, product__id=self.get_object().id).exists() if self.request.user.is_authenticated else False
-        reviews = ReviewModel.objects.filter(product=product,status=ReviewStatusType.accepted.value)
+        reviews = ReviewModel.objects.filter(product=product, status=ReviewStatusType.accepted.value)
         context["reviews"] = reviews
-        total_reviews_count =reviews.count()
-        context["total_reviews_count"] = total_reviews_count
+        context["total_reviews_count"] = reviews.count()
         context['product_view_times_100'] = product.product_view * 10
         context['product_in_cart_users_count'] = product_users_count
         context['specifications_six'] = ProductSpecification.objects.filter(product=product, status=True)
         return context
-     
+
  
   
 class AddOrRemoveWishlistView(LoginRequiredMixin, View):
