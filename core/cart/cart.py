@@ -50,6 +50,7 @@ class CartSession:
             try:
                 product_id = int(item["product_id"])
                 color_id = int(item["color_id"])
+                color_inventory_id = int(item.get("color_inventory_id"))
 
                 # بررسی موجود بودن محصول
                 product_obj = ProductModel.objects.get(
@@ -57,34 +58,37 @@ class CartSession:
                     status=ProductStatusType.publish.value
                 )
 
-                # بررسی موجود بودن رنگ در انبار
                 color_inventory = ProductColorInventory.objects.filter(
+                    id=color_inventory_id,
                     product_id=product_id,
                     color_id=color_id
                 ).first()
 
-                if color_inventory is None:
-                    continue  # اگر رنگ نبود، این آیتم را نگه نمی‌داریم
+                if not color_inventory or color_inventory.stock == 0:
+                    continue  # اگر موجودی صفر است یا رنگ موجود نیست → حذف شود
 
-                # محاسبه قیمت‌ها و افزودن اطلاعات اضافی
                 cart_item = item.copy()
                 cart_item["product_obj"] = product_obj
                 cart_item["color_inventory"] = color_inventory
+
+                # اگر مقدار در سبد بیشتر از موجودی است → محدود کن
+                if item["quantity"] > color_inventory.stock:
+                    item["quantity"] = color_inventory.stock
+
+                cart_item["quantity"] = item["quantity"]
                 cart_item["total_price"] = color_inventory.get_price() * item["quantity"]
                 cart_item["tot_price"] = color_inventory.get_price_product() * item["quantity"]
 
                 valid_items.append(cart_item)
-                updated_items.append(item) # این‌ها را در cart نگه می‌داریم
+                updated_items.append(item)
 
             except ProductModel.DoesNotExist:
-                continue  # اگر محصول حذف شده باشد، رد می‌کنیم
+                continue
 
-        # بروزرسانی session با آیتم‌های معتبر
         self._cart["items"] = updated_items
         self.save()
         return valid_items
 
-        
     def has_product(self, product_id, color_id):
         count = sum(1 for item in self._cart["items"] if item["product_id"] == product_id and item["color_id"] == color_id)
         return count

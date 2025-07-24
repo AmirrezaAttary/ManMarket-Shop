@@ -6,44 +6,44 @@
 
 
 {% block title %}
-    cart summery
+cart summery
 {% endblock title %}
-    
+
 
 
 {% block extra_css %}
-    <style>
-        .tooltip-container {
-  position: relative;
-  display: inline-block;
-}
+<style>
+    .tooltip-container {
+        position: relative;
+        display: inline-block;
+    }
 
-.tooltip-container .tooltip-text {
-  visibility: hidden;
-  width: 180px;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 6px;
-  border-radius: 6px;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%; /* بالای دکمه */
-  left: 50%;
-  margin-left: -90px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  font-size: 12px;
-}
+    .tooltip-container .tooltip-text {
+        visibility: hidden;
+        width: 180px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 6px;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        /* بالای دکمه */
+        left: 50%;
+        margin-left: -90px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+    }
 
-.tooltip-container:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-
-    </style>
+    .tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
 {% endblock extra_css %}
-    
+
 
 {% block content %}
 <br><br><br>
@@ -66,7 +66,7 @@
                     <div class="item-info">
                         <img src="{{item.product_obj.image.url}}" alt="{{item.product_obj.title}}">
                         <div class="item-details">
-                            <h3>{{item.product_obj.title}}</h3>
+                            <a href="{{item.product_obj.get_absolute_url}}" class="text-dark"><h3>{{item.product_obj.title}}</h3></a>
                             <p class="variant">رنگ:{{item.color_inventory.color}} </p>
                             <p class="seller">فروشنده: من مارکت</p>
                         </div>
@@ -74,45 +74,61 @@
                     <div class="item-actions-pricing">
                         <div class="item-actions">
                             <div class="item-quantity">
-                                <button class="quantity-btn increase" onclick="addOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')" data-id="1" aria-label="افزایش تعداد">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            {% if item.quantity == item.color_inventory.stock %}
+                            {% else %}
+                                <button class="quantity-btn increase"
+                                    onclick="addOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')"
+                                    data-id="1" aria-label="افزایش تعداد">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
                                 </button>
-                                <span class="quantity-value">{{item.quantity}}</span>
-                                <button class="quantity-btn decrease" onclick="removeOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')" data-id="1" aria-label="کاهش تعداد">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                {% endif %}
+                                {% if item.quantity == item.color_inventory.stock %}
+                                <span class="quantity-value" style="margin-right: 32%;">{{item.quantity}}</span>
+                                {% else %}
+                                <span class="quantity-value" >{{item.quantity}}</span>
+                                {% endif %}
+                                <button class="quantity-btn decrease"
+                                    onclick="removeOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')"
+                                    data-id="1" aria-label="کاهش تعداد">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
                                 </button>
                             </div>
-                            <button class="remove-item-btn" onclick="removeProducts('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')" aria-label="حذف محصول">
-                                <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 2048 2048"
-                                        width="1em"
-                                        height="1em"
-                                >
-                                    <path
-                                            fill="currentColor"
-                                            d="M1792 384h-128v1472q0 40-15 75t-41 61t-61 41t-75 15H448q-40 0-75-15t-61-41t-41-61t-15-75V384H128V256h512V128q0-27 10-50t27-40t41-28t50-10h384q27 0 50 10t40 27t28 41t10 50v128h512zM768 256h384V128H768zm768 128H384v1472q0 26 19 45t45 19h1024q26 0 45-19t19-45zM768 1664H640V640h128zm256 0H896V640h128zm256 0h-128V640h128z"
-                                    ></path>
+                            <button class="remove-item-btn"
+                                onclick="removeProducts('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')"
+                                aria-label="حذف محصول">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width="1em"
+                                    height="1em">
+                                    <path fill="currentColor"
+                                        d="M1792 384h-128v1472q0 40-15 75t-41 61t-61 41t-75 15H448q-40 0-75-15t-61-41t-41-61t-15-75V384H128V256h512V128q0-27 10-50t27-40t41-28t50-10h384q27 0 50 10t40 27t28 41t10 50v128h512zM768 256h384V128H768zm768 128H384v1472q0 26 19 45t45 19h1024q26 0 45-19t19-45zM768 1664H640V640h128zm256 0H896V640h128zm256 0h-128V640h128z">
+                                    </path>
 
                                 </svg>
                             </button>
                         </div>
                         <!-- Added data-unit-price here -->
                         <div class="item-pricing" data-unit-price="5800000">
-                            <span class="item-total-price">{{item.total_price|intcomma}}</span> <span class="currency">تومان</span>
+                            <span class="item-total-price">{{item.total_price|intcomma}}</span> <span
+                                class="currency">تومان</span>
                         </div>
                     </div>
                 </li>
                 {% empty %}
-            <!-- Empty Cart Message -->
-            <div id="empty-cart-message" >
-                <center>
-                    <br>
-                <p>سبد خرید شما خالی است!</p>
-                <br><br>
-                <a href="{% url 'website:index' %}">بازگشت به صفحه اصلی</a>
-            </center>
-            </div>
+                <!-- Empty Cart Message -->
+                <div id="empty-cart-message">
+                    <center>
+                        <br>
+                        <p>سبد خرید شما خالی است!</p>
+                        <br><br>
+                        <a href="{% url 'website:index' %}">بازگشت به صفحه اصلی</a>
+                    </center>
+                </div>
                 {% endfor %}
 
             </ul>
@@ -122,7 +138,8 @@
             <h6 class="my-2">خلاصه سفارش</h6>
             <div class="summary-row mt-1">
                 <span>قیمت کالاها (<span id="total-items-count">{{cart.get_total_quantity}}</span> کالا)</span>
-                <span id="subtotal-price">{{cart.get_tot_payment_amount|intcomma}}<span class="currency">تومان</span></span>
+                <span id="subtotal-price">{{cart.get_tot_payment_amount|intcomma}}<span
+                        class="currency">تومان</span></span>
             </div>
             <div class="summary-row mt-1 discount">
                 <span>سود شما از خرید</span>
@@ -130,23 +147,24 @@
             </div>
             <div class="summary-row mt-1 total">
                 <span>جمع سبد خرید</span>
-                <span id="total-payable">{{cart.get_total_payment_amount|intcomma}}<span class="currency">تومان</span></span>
+                <span id="total-payable">{{cart.get_total_payment_amount|intcomma}}<span
+                        class="currency">تومان</span></span>
             </div>
-            
+
             {% if cart.get_total_quantity == 0 %}
             <div class="tooltip-container">
-            <a href="{% url 'order:checkout' %}">
-                <button style="background-color: gray; width: 290px;" class="checkout-btn more-shop" disabled>
-                ادامه فرآیند خرید
-                </button>
-            </a>
-            <span class="tooltip-text">ابتدا محصولی به سبد خرید اضافه کنید</span>
+                <a href="{% url 'order:checkout' %}">
+                    <button style="background-color: gray; width: 290px;" class="checkout-btn more-shop" disabled>
+                        ادامه فرآیند خرید
+                    </button>
+                </a>
+                <span class="tooltip-text">ابتدا محصولی به سبد خرید اضافه کنید</span>
             </div>
             {% else %}
             <a href="{% url 'order:checkout' %}">
-            <button class="checkout-btn more-shop">
-                ادامه فرآیند خرید
-            </button>
+                <button class="checkout-btn more-shop">
+                    ادامه فرآیند خرید
+                </button>
             </a>
             {% endif %}
 
@@ -154,11 +172,11 @@
     </div>
 </div>
 {% endblock content %}
-    
+
 {% block extra_js %}
 <script>
-  
-    function removeProducts(product_id,color_id){
+
+    function removeProducts(product_id, color_id) {
         $.ajax({
             url: "{%  url 'cart:session-remove-product' %}",
             method: 'POST',
@@ -166,7 +184,7 @@
                 product_id: product_id,
                 color_id: color_id,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
-    
+
             },
             success: function (response) {
                 console.log(response);
@@ -182,7 +200,7 @@
 </script>
 
 <script>
-    function removeOneProductQuantity(product_id,color_id){
+    function removeOneProductQuantity(product_id, color_id) {
         $.ajax({
             url: "{%  url 'cart:session-remove-one-quantity' %}",
             method: 'POST',
@@ -190,7 +208,7 @@
                 product_id: product_id,
                 color_id: color_id,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
-    
+
             },
             success: function (response) {
                 console.log(response);
@@ -203,7 +221,7 @@
             }
         });
     }
-    function addOneProductQuantity(product_id,color_id){
+    function addOneProductQuantity(product_id, color_id) {
         $.ajax({
             url: "{%  url 'cart:session-add-one-quantity' %}",
             method: 'POST',
@@ -211,7 +229,7 @@
                 product_id: product_id,
                 color_id: color_id,
                 csrfmiddlewaretoken: '{{ csrf_token }}'
-    
+
             },
             success: function (response) {
                 console.log(response);
@@ -226,4 +244,3 @@
     }
 </script>
 {% endblock %}
-

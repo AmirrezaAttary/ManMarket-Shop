@@ -110,6 +110,8 @@
                                         class="shop-cs-price-unit">تومان</span></div>
                             </div>
                             <div class="shop-cs-quantity-control-container">
+                                {% if item.quantity == item.color_inventory.stock %}
+                                {% else %}
                                 <button class="shop-cs-quantity-btn cartexz-qty-button"
                                     onclick="addOneProductQuantity('{{item.product_obj.id}}','{{item.color_inventory.color.id}}')"
                                     data-action="increase" aria-label="افزایش تعداد"><svg
@@ -117,6 +119,7 @@
                                         <line x1="12" y1="5" x2="12" y2="19"></line>
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                     </svg></button>
+                                {% endif %}
                                 <span class="shop-cs-quantity-display"
                                     data-quantity="{{item.quantity}}">{{item.quantity}}</span>
                                 <button class="shop-cs-quantity-btn cartexz-qty-button"
@@ -156,7 +159,8 @@
                             </label>
                         </div>
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="tracking_type" value="2" form="address-form" value="mahax" id="shipment-mahax">
+                            <input type="radio" name="tracking_type" value="2" form="address-form" value="mahax"
+                                id="shipment-mahax">
                             <label for="shipment-mahax" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
                                     <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
@@ -168,7 +172,8 @@
                             </label>
                         </div>
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="tracking_type" value="3" form="address-form" value="tipax" id="shipment-tipax" checked>
+                            <input type="radio" name="tracking_type" value="3" form="address-form" value="tipax"
+                                id="shipment-tipax" checked>
                             <label for="shipment-tipax" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
                                     <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
@@ -342,7 +347,7 @@
                     </div> -->
                 </section>
             </main>
-            
+
             <form class="shop-cs-checkout-sidebar">
                 <div class="shop-cs-checkout-card shop-cs-order-summary-card">
                     <div class="shop-cs-card-body shop-cs-card-body--no-padding">
@@ -407,14 +412,15 @@
                             </label>
                         </div>
                         <div class="shop-cs-selectable-option">
-                            <input type="radio" name="payment_method" form="address-form" value="card_mahax" id="payment-home">
+                            <input type="radio" name="payment_method" form="address-form" value="card_mahax"
+                                id="payment-home">
                             <label for="payment-home" class="shop-cs-selectable-label">
                                 <span class="shop-cs-custom-tick-container">
                                     <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
                                         <path d="M4.5 8.5l2.5 2.5 5-5"></path>
                                     </svg>
                                 </span>
-                                <div class="shop-cs-payment-details">   
+                                <div class="shop-cs-payment-details">
                                     <strong>پرداخت درب محل</strong>
                                     <p>فقط با ارسال توسط ماهکس</p>
                                     <p>پرداخت 10% از مبلغ در ابتدا</p>
@@ -508,7 +514,7 @@
         }
     </script>
     <script src="{% static 'vendor/toastify/toastify.js' %}"></script>
-    
+
     {% include 'messages.html' %}
 
 
