@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from accounts.models import UserType
 
 User = get_user_model()
 # Create your models here.
@@ -17,7 +18,8 @@ class ChatRoom(models.Model):
     
     def last_message_from_admin(self):
         last_msg = self.last_message()
-        return last_msg and last_msg.sender == self.admin
+        return last_msg and last_msg.sender.type in [UserType.admin.value, UserType.superuser.value]
+    
     class Meta:
         ordering = ["-created_at"]
 

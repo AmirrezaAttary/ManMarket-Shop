@@ -47,15 +47,17 @@
                 </div>
             </div>
             <div class="message-area" id="messageArea">
-                {% for msg in messages %}
-                <div class="message {% if msg.sender == request.user %}sent  {% else %}received {% endif %}">
-                    <span class="message-sender">{% if msg.sender == request.user %}پشتیبان  : {% else %}کاربر : {% endif %} {{ msg.sender.user_profile.get_fullname }}</span>
+            {% for msg in messages %}
+                <div class="message {% if msg.sender.type == 2 or msg.sender.type == 3 %}sent{% else %}received{% endif %}">
+                    <span class="message-sender">
+                        {% if msg.sender.type == 2 or msg.sender.type == 3 %}پشتیبان :{% else %}کاربر :{% endif %} {{ msg.sender.user_profile.get_fullname }}
+                    </span>
                     <p>{{ msg.text }}</p>
-                    <span class="message-time">{{ msg.created_at|date:"H:i" }}</span>
+                    <span class="message-time">{{ msg.timestamp|date:"H:i" }}</span>
                 </div>
-                {% empty %}
+            {% empty %}
                 <p>هنوز پیامی وجود ندارد.</p>
-                {% endfor %}
+            {% endfor %}
                 <button class="scroll-to-bottom-btn" id="scrollToBottomBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em">
                         <path fill="none" stroke="currentColor" stroke-Linecap="round" stroke-Linejoin="round"
