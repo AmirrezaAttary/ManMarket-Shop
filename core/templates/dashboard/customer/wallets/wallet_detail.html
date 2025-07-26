@@ -21,7 +21,13 @@
                     <p class="wallet-balance-amount my-3">
                     <p class="my-3"></p> موجودی فعلی
                     :
-                    {{wallet.balance|floatformat:0|intcomma}} <span class="currency">تومان</span></p>
+
+                    {% if wallet.balance == 0 %}
+                    {{wallet.balance|floatformat:0|intcomma}}.0
+                    {% else %}
+
+                    {{wallet.balance|floatformat:0|intcomma}}
+                    {% endif %} <span class="currency">تومان</span></p>
                 </div>
                 <button class="btn-custom z-x">
                     <a class="text-light" href="{% url 'wallets:charge' %}">

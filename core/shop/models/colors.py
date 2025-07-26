@@ -10,6 +10,9 @@ class Color(models.Model):
     def __str__(self):
         return self.title
     
+    class Meta:
+        ordering = ["-id"]
+    
 class ProductColorInventory(models.Model):
     product = models.ForeignKey("shop.ProductModel", on_delete=models.CASCADE, related_name="color_inventories")
     color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name="product_inventories")

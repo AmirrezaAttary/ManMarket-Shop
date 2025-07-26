@@ -23,7 +23,7 @@ from payment.zarinpal_client import ZarinPalSandbox
 from payment.models import PaymentModel,PayemntStatusType,PayemntType
 from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
-
+from shop.models import ProductColorInventory
 
 
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
@@ -90,11 +90,24 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
                 # ✅ به‌روزرسانی وضعیت سفارش
                 order.payment = payment_obj
-                order.status = OrderStatusType.success.value  # 👈 این خط رو اضافه کن
+                order.status = OrderStatusType.success.value
                 order.save()
+
+                # ✅ کاهش موجودی محصولات
+                for item in order.order_items.all():
+                    try:
+                        inventory = ProductColorInventory.objects.get(
+                            product=item.product,
+                            color=item.color
+                        )
+                        inventory.stock = max(0, inventory.stock - item.quantity)
+                        inventory.save()
+                    except ProductColorInventory.DoesNotExist:
+                        continue
 
                 self.clear_cart(cart)
                 return reverse_lazy("order:completed")
+
             else:
                 zarinpal = ZarinPalSandbox()
                 wallet = Wallet.objects.get(user=self.request.user)
