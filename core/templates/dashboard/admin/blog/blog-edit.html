@@ -103,9 +103,34 @@
                         href="{% url 'dashboard:admin:admin_blog_add_product' post_id=object.id %}">افزودن محصول مرتبط</a>
                 </div>
 
-                {% for item in object.post_products.all %}
-                {{item.product.id}} --- {{item.product.title}}
-                {% endfor %}
+                                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">محصول</th>
+                                <th scope="col">کد محصول</th>
+                                <th scope="col">عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in object.post_products.all %}
+                            <tr>
+                                <th scope="row">{{item.id}}</th>
+                                <td>{{item.product.title}}</td>
+                                <td>{{item.product.id}}</td>
+
+                                <td class="d-flex">
+                                    <a class="btn btn-sm btn-danger btn-icon btn-ghost-primary" target="_blank"
+                                        href="{% url 'dashboard:admin:admin_blog_delete_product' pk=item.pk %}"><i
+                                            class="bi-eye">delete</i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         </div>

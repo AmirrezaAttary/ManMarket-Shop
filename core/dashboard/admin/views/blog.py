@@ -57,7 +57,7 @@ class AdminBlogCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateVi
 class AdminBlogDeleteView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
     template_name = "dashboard/admin/blog/blog-delete.html"
     queryset = Post.objects.all()
-    success_message = "حذف رنگ با موفقیت انجام شد"
+    success_message = "حذف بلاگ با موفقیت انجام شد"
     
     def get_success_url(self):
         return reverse_lazy('dashboard:admin:blog-list')
@@ -67,7 +67,7 @@ class AdminBlogEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMes
     template_name = "dashboard/admin/blog/blog-edit.html"
     queryset = Post.objects.all()
     form_class = BlogPostForm
-    success_message = "ویرایش رنگ با موفقیت انجام شد"
+    success_message = "ویرایش بلاگ با موفقیت انجام شد"
 
     def get_success_url(self):
         return reverse_lazy("dashboard:admin:blog-edit", kwargs={"pk": self.kwargs['pk']})
@@ -108,3 +108,12 @@ class AdminBlogAddProduct(LoginRequiredMixin, HasAdminAccessPermission, SuccessM
         context = super().get_context_data(**kwargs)
         context['post'] = self.post_instance  # برای قالب همچنان post بفرست
         return context
+
+
+class AdminBlogDeleteProduct(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, DeleteView):
+    template_name = "dashboard/admin/blog/delete_product.html"
+    queryset = PostProduct.objects.all()
+    success_message = "حذف محصول مرتبط با موفقیت انجام شد"
+    
+    def get_success_url(self):
+        return reverse('dashboard:admin:blog-edit', kwargs={'pk': self.object.post.id})
