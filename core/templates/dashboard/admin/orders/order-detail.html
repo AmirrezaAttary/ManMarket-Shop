@@ -36,6 +36,7 @@
                   <th scope="col">تصویر</th>
                   <th scope="col">کد محصول</th>
                   <th scope="col">نام محصول</th>
+                  <th scope="col">رنگ</th>
                   <th scope="col">تعداد سفارش</th>
                   <th scope="col">قیمت واحد محصول</th>
                 </tr>
@@ -51,6 +52,7 @@
                   </td>
                   <td>{{order_item.product.pk}}</td>
                   <td>{{order_item.product.title}}</td>
+                  <td>{{order_item.color}}</td>
                   <td>{{order_item.quantity}}</td>
                   <td class="formatted-price">{{order_item.price|intcomma}}</td>
                 </tr>
@@ -69,7 +71,7 @@
         <form>
           <div class="row mb-3 align-items-center">
             <dt class="col-md-3">سفارش دهنده:</dt>
-            <dl class="col-md-3">{{request.user.user_profile.get_full_name}}</dl>
+            <dl class="col-md-3">{{request.user.user_profile.get_fullname}}</dl>
             <dt class="col-md-3">وضعیت سفارش:</dt>
             <dl class="col-md-3 ">{{object.get_status.label}}</dl>
           </div>

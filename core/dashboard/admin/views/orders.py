@@ -1,4 +1,4 @@
-from django.views.generic import ListView,DetailView
+from django.views.generic import ListView,DetailView,UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 
@@ -39,6 +39,12 @@ class AdminOrderDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailV
 
     def get_queryset(self):
         return OrderModel.objects.all()
+    
+    
+class AdminOrderEditView(LoginRequiredMixin, HasAdminAccessPermission,UpdateView):
+    template_name = "dashboard/admin/orders/edit-detail.html"
+    queryset = OrderModel.objects.all()
+    pass
     
   
 class AdminOrderInvoiceView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):

@@ -90,7 +90,7 @@
                                 <tr>
                                     <th scope="row">{{forloop.counter}}</th>
                                     <td><a href="{% url 'dashboard:admin:order-detail' pk=object.pk %}">{{object.id}}</a></td>
-                                    <td>{{object.user.user_profile.get_full_name}}</td>
+                                    <td>{{object.user.user_profile.get_fullname}}</td>
                                     <td  >{{object.get_price|intcomma}}</td>
                                     <td>{{object.created_date|date:"Y-m-d h:i"}}</td>
                                     <td>{{object.get_status.label}}</td>
