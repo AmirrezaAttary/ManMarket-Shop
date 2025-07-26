@@ -2,16 +2,18 @@ from django.views.generic import (
     UpdateView,
     ListView,
     DeleteView,
-    CreateView
+    CreateView,
+    FormView
 )
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
 from dashboard.admin.forms import BlogPostForm,BlogPostProductForm
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
+from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import FieldError
-from blog.models import Post,Category
+from blog.models import Post,Category,PostProduct
 
 
 
@@ -76,4 +78,33 @@ class AdminBlogEditView(LoginRequiredMixin, HasAdminAccessPermission, SuccessMes
         context['form_product'] = BlogPostProductForm
         return context
     
-    
+class AdminBlogAddProduct(LoginRequiredMixin, HasAdminAccessPermission, SuccessMessageMixin, FormView):
+    template_name = 'dashboard/admin/blog/add_product.html'
+    form_class = BlogPostProductForm
+    success_message = "محصول با موفقیت به پست اضافه شد."
+
+    def dispatch(self, request, *args, **kwargs):
+        self.post_instance = get_object_or_404(Post, id=self.kwargs.get('post_id'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        product = form.cleaned_data['product']
+        PostProduct.objects.get_or_create(post=self.post_instance, product=product)
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse("dashboard:admin:blog-edit", kwargs={"pk": self.post_instance.id})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'brand_slug': self.request.GET.get('brand'),
+            'category_slug': self.request.GET.get('category'),
+            'q': self.request.GET.get('q'),
+        })
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = self.post_instance  # برای قالب همچنان post بفرست
+        return context

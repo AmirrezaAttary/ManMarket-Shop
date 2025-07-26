@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block extra_css %}
+<style>
+    .small-primary-button {
+        padding: 3px 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 10px;
+        border-radius: 5px;
+    }
+
+    .small-primary-button:hover,
+    .small-primary-button:focus {
+        background-color: #0056b3;
+    }
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+<br><br><br><br>
+<div class="row">
+    {% include 'dashboard/admin/sidebar.html' %}
+    <div class="col-md-9">
+        <div class="card">
+            <!-- Header -->
+            <div class="card-header border-bottom">
+                <h5 class="card-header-title">ایجاد محصول مرتبط با {{post.title}}</h5>
+            </div>
+            <!-- End Header -->
+            <form method="get" action=".">
+                <label for="brand-select">فیلتر بر اساس برند:</label>
+                <select id="brand-select" name="brand" onchange="this.form.submit()" class="form-control">
+                    <option value="">همه برندها</option>
+                    {% for brand in brands %}
+                        <option value="{{ brand.slug }}" {% if brand.slug == selected_brand %}selected{% endif %}>{{ brand.title }}</option>
+                    {% endfor %}
+                </select>
+                <select id="category-select" name="category" onchange="this.form.submit()" class="form-control">
+                    <option value="">همه دسته‌بندی‌ها</option>
+                    {% for category in categorys %}
+                        <option value="{{ category.slug }}" {% if category.slug == selected_category %}selected{% endif %}>{{ category.title }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="q"  placeholder="جستجو... کد محصول یا نام" class="form-control" value="{{ request.GET.q }}">
+            </form>
+            <!-- Body -->
+            <form action="." method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="row d-flex ">
+
+
+
+                        <div class="col-md-6 mb-3">
+                            <label>محصول</label>
+                            {{form.product}}
+                        </div>
+
+
+                    </div>
+                    <div class="card-footer">
+                        <div class=" d-flex pt-5 justify-content-end">
+                            <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:blog-edit' pk=post.id %}">بازگشت</a>
+                            <button class="btn btn-primary ms-3" type="submit">ایجاد استوری</button>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+
+{% endblock %}
+
+{% block extra_js_no_compress %}
+<script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+<script>
+    // Replace 'editor' with the id of your textarea
+    CKEDITOR.replace('ckeditor');
+</script>
+{% endblock %}
