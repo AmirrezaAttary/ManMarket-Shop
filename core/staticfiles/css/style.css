@@ -12911,7 +12911,7 @@ html[dir=rtl] .wow-notification-close-new {
 }
 
 .submenu-category-list.active {
-  max-height: 580px;
+  max-height: 1000px;
   visibility: visible;
 }
 
