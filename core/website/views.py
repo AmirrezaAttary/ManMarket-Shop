@@ -21,7 +21,7 @@ class ContactView(SuccessMessageMixin,CreateView):
     
   
 class AboutView(TemplateView):
-    template_name = 'website/about.html'
+    template_name = 'faq/man-one-seen.html'
     
   
 class CollectionView(TemplateView):
