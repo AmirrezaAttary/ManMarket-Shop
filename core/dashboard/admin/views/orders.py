@@ -1,6 +1,7 @@
 from django.views.generic import ListView,DetailView,UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
+from django.urls import reverse
 
 from dashboard.admin.forms import *
 from django.core.exceptions import FieldError
@@ -42,9 +43,12 @@ class AdminOrderDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailV
     
     
 class AdminOrderEditView(LoginRequiredMixin, HasAdminAccessPermission,UpdateView):
-    template_name = "dashboard/admin/orders/edit-detail.html"
+    template_name = "dashboard/admin/orders/order-edit.html"
     queryset = OrderModel.objects.all()
-    pass
+    form_class = OrederModelForm
+    
+    def get_success_url(self):
+        return reverse("dashboard:admin:order-detail", kwargs={'pk': self.kwargs['pk']})
     
   
 class AdminOrderInvoiceView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):

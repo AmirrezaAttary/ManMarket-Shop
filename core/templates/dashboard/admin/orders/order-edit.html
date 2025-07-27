@@ -47,7 +47,8 @@
                   <th scope="row">{{forloop.counter}}</th>
                   <td>
                     <span class="avatar ">
-                      <img class="avatar-img" style="max-width: 80px;max-height: 80px;" src="{{order_item.product.image.url}}" alt="Image Description">
+                      <img class="avatar-img" style="max-width: 80px;max-height: 80px;"
+                        src="{{order_item.product.image.url}}" alt="Image Description">
                     </span>
                   </td>
                   <td>{{order_item.product.pk}}</td>
@@ -68,12 +69,13 @@
 
       </div>
       <div class="card-footer row pt-5 mt-5">
-        <form>
+        <form method="post" action=".">
+          {% csrf_token %}
           <div class="row mb-3 align-items-center">
             <dt class="col-md-3">سفارش دهنده:</dt>
             <dl class="col-md-3">{{request.user.user_profile.get_fullname}}</dl>
             <dt class="col-md-3">وضعیت سفارش:</dt>
-            <dl class="col-md-3 ">{{object.get_status.label}}</dl>
+            <dl class="col-md-3 ">{{form.status}}</dl>
           </div>
           <div class="row mb-3">
             <dt class="col-md-3"> تاریخ سفارش:</dt>
@@ -99,21 +101,21 @@
 
           <div class="row mb-3">
             <dt class="col-md-3"> نوع پست:</dt>
-            <dl class="col-md-3">{{object.get_tracking_type_display}}</dl>
+            <dl class="col-md-3">{{form.tracking_type}}</dl>
             <dt class="col-md-3">کد پیگیری سفارش:</dt>
-            <dl class="col-md-3">{{object.tracking_code}}</dl>
+            <dl class="col-md-3">{{form.tracking_code}}</dl>
           </div>
-
           <div class="row mb-3">
             <dt class="col-md-3"> نوع پرداخت:</dt>
             <dl class="col-md-3">{{ object.payment.get_payemnt_type_display }}</dl>
             <dt class="col-md-3">باقیمانده:</dt>
-            <dl class="col-md-3">{{object.payment.remainder}}</dl>
+            <dl class="col-md-3">{{ form.remainder }}</dl>
           </div>
           <div class=" d-flex pt-5 justify-content-end">
             <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:order-list' %}">بازگشت</a>
 
           </div>
+          <button type="submit">ثبت تغییرات</button>
         </form>
       </div>
       <!-- End Body -->

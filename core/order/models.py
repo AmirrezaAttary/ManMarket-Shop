@@ -88,6 +88,7 @@ class OrderModel(models.Model):
             return round(self.total_price - (self.total_price * Decimal( self.coupon.discount_percent /100)))
         else:
             return self.total_price
+
     def get_tracking_url(self):
         if self.tracking_code:
             return f"https://mahex.com/tracking?consignmentId={self.tracking_code}"
