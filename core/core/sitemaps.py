@@ -5,7 +5,7 @@ from website.sitemaps import StaticViewSitemap
 from blog.sitemaps import BlogPostSitemap
 
 sitemaps_dict = {
-    'products': ProductModelSitemap,
     'static': StaticViewSitemap,
+    'products': ProductModelSitemap,
     'blog': BlogPostSitemap,
 }
