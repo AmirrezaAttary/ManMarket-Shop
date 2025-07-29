@@ -414,8 +414,14 @@ blog
                 {% for obj in object_list %}
                 <article class="blog-l-post-card"><a href="{% url 'blog:blog-detail' slug=obj.slug %}"
                         class="blog-l-card-image"><img src="{{obj.image.url}}" alt="{{obj.title}}">
-
-                        <span class="blog-l-card-category">سلامت</span>
+                        
+                    {% with obj.category.all|first as cat %}
+                        {% if cat %}
+                            <span class="blog-l-card-category">{{ cat }}</span>
+                        {% endif %}
+                    {% endwith %}
+                            
+                        
                     </a>
                     <div class="blog-l-card-content">
                         <h3 class="blog-l-card-title">{{obj.title}}</h3>
