@@ -93,3 +93,62 @@ def extract_product_data(url):
 
 
 # print(extract_product_data('https://hamrahtel.com/products/nothing-phone-2a-plus-256gb-ram-12gb'))
+
+
+
+
+def get_kasrapars_product_data(url):
+    match = re.search(r'/product/([^/?#]+)', url)
+    if not match:
+        return {"error": "❌ آدرس نامعتبر است یا slug پیدا نشد."}
+
+    slug = match.group(1)
+
+    api_url = (
+        f'https://api.kasrapars.ir/api/web/v10/product/slug?slug={slug}&expand='
+        'is_wish,priceQuality,review,review.items,surveyScores,letMeKnow,images,category,'
+        'categoryParents,groupedFeatures,letMeKnowOnAvailability,variety.letMeKnowOnAvailability,'
+        'varieties,cartFeatures,coworkerShortName,src,isInWishList,varieties.promotionCoworker,'
+        'varieties.color,varieties.canBuyWithBnPlByUser,activeVarietyId,varieties.guarantee,'
+        'varieties.company,varieties.pack,varieties.company.surveyStats,varieties.company.city,'
+        'videos,surveyCount,surveyAverageScore,questionCount,varieties.company.present_sell,'
+        'reserveCeilCount,varieties.prePayment'
+    )
+
+    response = requests.get(api_url)
+
+    if response.status_code != 200:
+        return {"error": f"❌ خطا در درخواست: {response.status_code}, پاسخ: {response.text}"}
+
+    data = response.json()
+    varieties = data.get('varieties', [])
+
+    result = {}
+
+    for variety in varieties:
+        color_data = variety.get('color')
+        
+        if isinstance(color_data, dict):
+            color_name = color_data.get('color_name', 'نامشخص')
+            color_code = color_data.get('hexcode', None)
+        else:
+            color_name = 'نامشخص'
+            color_code = None
+
+        price = variety.get('price_main') or 0
+        quantity = variety.get('stock_count') or 0
+
+        if quantity == 0:
+            price = 0
+
+        result[color_name] = {
+            "color": color_name,
+            "color_code": color_code,
+            "price": int(price),
+            "quantity": quantity
+        }
+
+    return result
+
+
+print(get_kasrapars_product_data("https://plus.kasrapars.ir/product/xiaomi-redmi-pb200lzm-power-bank-20000-mah-with-microusb-conversion-cable"))
