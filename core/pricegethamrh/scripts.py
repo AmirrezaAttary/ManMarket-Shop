@@ -151,4 +151,4 @@ def get_kasrapars_product_data(url):
     return result
 
 
-print(get_kasrapars_product_data("https://plus.kasrapars.ir/product/xiaomi-redmi-pb200lzm-power-bank-20000-mah-with-microusb-conversion-cable"))
+# print(get_kasrapars_product_data("https://plus.kasrapars.ir/product/xiaomi-redmi-pb200lzm-power-bank-20000-mah-with-microusb-conversion-cable"))
