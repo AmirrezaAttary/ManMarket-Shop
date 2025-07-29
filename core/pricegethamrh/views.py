@@ -2,7 +2,7 @@ from django.views import View
 from django.http import HttpResponseRedirect
 
 from shop.models import  ProductColorInventory, Color
-from .scripts import extract_product_data
+from .scripts import extract_product_data, get_kasrapars_product_data
 from pricegethamrh.models import PriceGetHamrh
 from django.urls import reverse
 from .tasks import update_all_hamrah_products
@@ -22,17 +22,8 @@ class GetColorAndPrice(View):
     def round_up_to_thousand(self, price):
         return math.ceil(price / 1000) * 1000
 
-    def handle_request(self, request):
-        product_id = self.kwargs.get("pk")
-        products = PriceGetHamrh.objects.filter(product__id=product_id)
-        if not products.exists():
-            # اگر محصول پیدا نشد، مثلاً به صفحه خطا یا لیست محصولات برگرد
-            return HttpResponseRedirect(reverse("product_list"))
-
-        product = products.first().product
-        extra = extract_product_data(products.first().url)
-
-        for key, value in extra.items():
+    def process_data(self, product, data):
+        for key, value in data.items():
             color_title = value.get('color')
             color_code = value.get('color_code', '#ffffff')  # پیش‌فرض سفید
 
@@ -45,10 +36,10 @@ class GetColorAndPrice(View):
                 raw_price = int(value.get('price') or value.get('old_price') or 0)
             except (TypeError, ValueError):
                 raw_price = 0
-            
-            discounted_price = int(raw_price * 2 ) /100
+
+            discounted_price = int(raw_price * 2) / 100
             discounted_price += raw_price
-            
+
             final_price = self.round_up_to_thousand(discounted_price)
             discount = 0
 
@@ -59,23 +50,42 @@ class GetColorAndPrice(View):
                     'price': final_price,
                     'discount_percent': discount,
                     'hex_color': color_code,
-                    'stock' : value.get('quantity', 0)
+                    'stock': value.get('quantity', 0)
                 }
             )
 
             if not created:
                 pci.price = final_price
                 pci.discount_percent = discount
-                pci.hex_color = color_code  # ← اضافه کردن مقدار کد رنگ
+                pci.hex_color = color_code
                 pci.stock = value.get('quantity', 0)
                 pci.save()
 
+    def handle_request(self, request):
+        product_id = self.kwargs.get("pk")
+        products = PriceGetHamrh.objects.filter(product__id=product_id)
 
-        # ✅ ریدایرکت به صفحه‌ای که می‌خوای
+        if not products.exists():
+            return HttpResponseRedirect(reverse("product_list"))
+
+        for p in products:
+            product = p.product
+
+            # بررسی و پردازش URL سایت همراه‌تل
+            if p.url:
+                extra_data = extract_product_data(p.url)
+                if isinstance(extra_data, dict):
+                    self.process_data(product, extra_data)
+
+            # بررسی و پردازش URL سایت کسری‌پارس
+            if p.url_kasra:
+                kasra_data = get_kasrapars_product_data(p.url_kasra)
+                if isinstance(kasra_data, dict):
+                    self.process_data(product, kasra_data)
+
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        # مسیر دلخواه خودت رو جایگزین کن
         return reverse("dashboard:admin:product-edit", kwargs={"pk": self.kwargs.get("pk")})
     
     

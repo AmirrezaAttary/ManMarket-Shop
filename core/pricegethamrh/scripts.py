@@ -136,7 +136,7 @@ def get_kasrapars_product_data(url):
             color_code = None
 
         price = variety.get('price_main') or 0
-        quantity = variety.get('stock_count') or 0
+        quantity = variety.get('stock_count') or 1
 
         if quantity == 0:
             price = 0
@@ -144,7 +144,7 @@ def get_kasrapars_product_data(url):
         result[color_name] = {
             "color": color_name,
             "color_code": color_code,
-            "price": int(price),
+            "price": (int(price)/10),
             "quantity": quantity
         }
 
