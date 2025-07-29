@@ -7,6 +7,7 @@ class PriceGetHamrh(models.Model):
     """
     product = models.ForeignKey('shop.ProductModel',null=True,blank=True,on_delete=models.CASCADE)
     url = models.URLField(max_length=255,null=True,blank=True, unique=True)
+    url_kasra = models.URLField(max_length=255,null=True,blank=True, unique=True)
 
 
     created_date = models.DateTimeField(auto_now_add=True)

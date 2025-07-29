@@ -11,22 +11,25 @@ class PriceGetHamrhForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        # تنظیم کلاس برای Bootstrap
-        self.fields['product'].widget.attrs['class'] = 'form-control'
-        self.fields['url'].widget.attrs['class'] = 'form-control'
+        # Bootstrap class
+        for field in ['product', 'url', 'url_kasra']:
+            if field in self.fields:
+                self.fields[field].widget.attrs.update({
+                    'class': 'form-control',
+                    'placeholder': self.fields[field].label or ''
+                })
 
-        # تنظیم اجبار و پیام خطا برای فیلد product
+        # Required settings
         self.fields['product'].required = True
         self.fields['product'].error_messages = {
             'required': 'لطفاً یک محصول انتخاب کنید.'
         }
 
-        # تنظیم اجبار و پیام خطا برای فیلد url
-        self.fields['url'].required = True
-        self.fields['url'].error_messages = {
-            'required': 'لینک محصول را وارد کنید.'
-        }
+        # url و url_kasra را به‌طور پیش‌فرض اختیاری می‌گذاریم
+        self.fields['url'].required = False
+        self.fields['url_kasra'].required = False
 
+        # Custom queryset for new instances
         if not self.instance.pk:
             used_products = PriceGetHamrh.objects.values_list('product_id', flat=True)
             queryset = ProductModel.objects.filter(
@@ -40,13 +43,25 @@ class PriceGetHamrhForm(forms.ModelForm):
             if category_slug:
                 queryset = queryset.filter(category__slug=category_slug)
 
-            self.fields['product'].queryset = queryset
+            self.fields['product'].queryset = queryset.order_by('-id')
         else:
             self.fields['product'].queryset = ProductModel.objects.filter(
                 id=self.instance.product_id,
                 status=ProductStatusType.publish.value
             )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        url = cleaned_data.get('url')
+        url_kasra = cleaned_data.get('url_kasra')
+
+        if not url and not url_kasra:
+            raise forms.ValidationError(
+                "حداقل یکی از آدرس‌های محصول (HamrahTel یا KasraPars) باید وارد شود."
+            )
+
+        return cleaned_data
+
     class Meta:
         model = PriceGetHamrh
-        fields = ['product', 'url']
+        fields = ['product', 'url', 'url_kasra']
