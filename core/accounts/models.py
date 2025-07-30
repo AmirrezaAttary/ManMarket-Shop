@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import date
 # Create your models here.
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -81,6 +81,16 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='profile/',default='default/default-profile.webp')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    birth_date = models.DateField(null=True, blank=True, help_text="تاریخ تولد را وارد کنید (مثلاً 1375-05-10)")
+    
+    def age(self):
+        """محاسبه‌ی سن کاربر بر اساس birth_date"""
+        if self.birth_date:
+            today = date.today()
+            return today.year - self.birth_date.year - (
+                (today.month, today.day) < (self.birth_date.month, self.birth_date.day)
+            )
+        return None
 
     def get_fullname(self):
         if self.first_name or self.last_name:

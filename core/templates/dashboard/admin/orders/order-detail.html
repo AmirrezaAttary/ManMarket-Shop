@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load jformat %}
+
 
 
 {% block content %}
@@ -77,7 +79,7 @@
           </div>
           <div class="row mb-3">
             <dt class="col-md-3"> تاریخ سفارش:</dt>
-            <dl class="col-md-3">{{object.created_date|date:"Y-m-d h:i"}}</dl>
+            <dl class="col-md-3">{{ object.created_date|jformat:"%Y/%m/%d - %H:%M" }}</dl>
             <dt class="col-md-3">قیمت نهایی</dt>
             <dl class="col-md-3 formatted-price">{{object.total_price|intcomma}}</dl>
           </div>
@@ -108,7 +110,7 @@
             <dt class="col-md-3"> نوع پرداخت:</dt>
             <dl class="col-md-3">{{ object.payment.get_payemnt_type_display }}</dl>
             <dt class="col-md-3">باقیمانده:</dt>
-            <dl class="col-md-3">{{object.payment.remainder}}</dl>
+            <dl class="col-md-3">{{object.payment.remainder|intcomma}}</dl>
           </div>
           <div class="row mb-3">
             <dt class="col-md-3">کد پرداخت :</dt>
