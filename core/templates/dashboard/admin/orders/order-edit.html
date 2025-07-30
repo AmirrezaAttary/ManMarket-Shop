@@ -111,11 +111,26 @@
             <dt class="col-md-3">باقیمانده:</dt>
             <dl class="col-md-3">{{ form.remainder }}</dl>
           </div>
+          <div class="row mb-3">
+            <dt class="col-md-3">کد پرداخت :</dt>
+            <dl class="col-md-3">{{ object.payment.response_code }}</dl>
+            <dt class="col-md-3">کد پیگیری پرداخت:</dt>
+            <dl class="col-md-3">{{object.payment.authority_id}}</dl>
+          </div>
+
+          <div class="row mb-3">
+            <dt class="col-md-3">وضعیت پرداخت:</dt>
+            <dl class="col-md-3">{{ object.payment.get_status_display }}</dl>
+            {% if object.payment.payemnt_type != 2 %}
+            <dt class="col-md-3">شماره کارت پرداختی:</dt>
+            <dl class="col-md-3">{{ object.payment.response_json.data.card_pan }}</dl>
+            {% endif %}
+          </div>
           <div class=" d-flex pt-5 justify-content-end">
             <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:order-list' %}">بازگشت</a>
-
+            <button type="submit">ثبت تغییرات</button>
           </div>
-          <button type="submit">ثبت تغییرات</button>
+
         </form>
       </div>
       <!-- End Body -->
