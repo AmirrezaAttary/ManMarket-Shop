@@ -8,6 +8,11 @@
 من‌مارکت 🛒 | فروشگاه آنلاین کالای دیجیتال با ضمانت و ارسال سریع
 {% endblock title %}
 
+{% block meta_description %}
+<meta name="description"
+    content="بهترین و کامل‌ترین فروشگاه کالای دیجیتال با پیشنهادهای ویژه، قیمت‌های باورنکردنی و موجودی محدود. تجربه شگفت انگیز و بی‌نظیر در خرید آنلاین!">
+{% endblock meta_description %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/swiper.lib.css' %}">
 <link rel="stylesheet" href="{% static 'css/sweet.alert.lib.css' %}">
@@ -159,7 +164,7 @@
 {% endblock content %}
 
 {% block extra_jss %}
-    <!--کتابخانه های ایندکس -->
+<!--کتابخانه های ایندکس -->
 <script src="{% static 'js/owl.js' %}"></script>
 <script src="{% static 'js/video.lib.js' %}"></script>
 <script src="{% static 'js/swiper.lib.js' %}"></script>
