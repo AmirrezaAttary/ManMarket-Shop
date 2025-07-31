@@ -72,12 +72,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+    class Meta:
+        ordering = ['-id']
 
 class Profile(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE,related_name="user_profile")
-    first_name = models.CharField(max_length=255,default='نام')
-    last_name = models.CharField(max_length=255,default='نام خانوادگی')
-    phone_number = models.CharField(max_length=12, validators=[validate_iranian_cellphone_number],default='09123456789')
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=12, validators=[validate_iranian_cellphone_number])
     image = models.ImageField(upload_to='profile/',default='default/default-profile.webp')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -96,7 +98,8 @@ class Profile(models.Model):
         if self.first_name or self.last_name:
             return self.first_name + " " + self.last_name
         return "کاربر جدید"
-
+    
+    
 
     
 @receiver(post_save,sender=User)

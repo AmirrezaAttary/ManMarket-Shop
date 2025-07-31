@@ -21,4 +21,5 @@ urlpatterns = [
     path("",include("dashboard.admin.urls.contact")),
     path("",include("dashboard.admin.urls.chat")),
     path("",include("dashboard.admin.urls.story")),
+    path("",include("dashboard.admin.urls.users")),
 ]
