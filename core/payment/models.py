@@ -5,10 +5,11 @@ from order.models import OrderModel
 
 
 class PayemntType(models.IntegerChoices):
-    cart = 1,'پرداخت با کارت بانکی'
+    cart = 1,'پرداخت با درگاه پرداخت '
     wallet = 2, "پرداخت با کیف پول"
     cart_home = 3, "پرداخت در محل"
-    wallet_cart = 4, "ترکیبی کیف پول و کارت"
+    wallet_cart = 4, "ترکیبی کیف پول و درگاه"
+    person = 5 , "پرداخت حضوری"
 
 class PayemntStatusType(models.IntegerChoices):
     pending = 1, "در انتظار"
