@@ -154,43 +154,43 @@ document.addEventListener('DOMContentLoaded', () => {
         backdrop.classList.remove('open');
     };
 
-    const setDefaultAddress = (cardToMakeDefault) => {
-        if (cardToMakeDefault.classList.contains('is-default')) return;
-        const currentDefault = addressListContainer.querySelector('.address-card-new.is-default');
-        if (currentDefault) {
-            currentDefault.classList.remove('is-default');
-        }
-        cardToMakeDefault.classList.add('is-default');
-        showToast({type: 'success', title: 'انجام شد', message: 'آدرس پیش‌فرض با موفقیت تغییر کرد.'});
-    };
+    // const setDefaultAddress = (cardToMakeDefault) => {
+    //     if (cardToMakeDefault.classList.contains('is-default')) return;
+    //     const currentDefault = addressListContainer.querySelector('.address-card-new.is-default');
+    //     if (currentDefault) {
+    //         currentDefault.classList.remove('is-default');
+    //     }
+    //     cardToMakeDefault.classList.add('is-default');
+    //     showToast({type: 'success', title: 'انجام شد', message: 'آدرس پیش‌فرض با موفقیت تغییر کرد.'});
+    // };
 
-    if (addressListContainer) {
-        addressListContainer.addEventListener('click', (e) => {
-            const card = e.target.closest('.address-card-new');
-            if (!card) return;
+    // if (addressListContainer) {
+    //     addressListContainer.addEventListener('click', (e) => {
+    //         const card = e.target.closest('.address-card-new');
+    //         if (!card) return;
 
-            const button = e.target.closest('button');
+    //         const button = e.target.closest('button');
 
-            if (button) {
-                e.stopPropagation();
-                if (button.classList.contains('edit-address-btn')) {
-                    openAddressModal('edit');
-                } else if (button.classList.contains('delete-address-btn')) {
-                    if (card.classList.contains('is-default')) {
-                        showToast({type: 'error', title: 'خطا', message: 'شما نمی‌توانید آدرس پیش‌فرض را حذف کنید.'});
-                        return;
-                    }
-                    card.style.transition = 'all 0.3s ease';
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateX(50px)';
-                    setTimeout(() => card.remove(), 300);
-                    showToast({type: 'info', title: 'حذف شد', message: 'آدرس مورد نظر حذف گردید.'});
-                }
-            } else {
-                setDefaultAddress(card);
-            }
-        });
-    }
+    //         if (button) {
+    //             e.stopPropagation();
+    //             if (button.classList.contains('edit-address-btn')) {
+    //                 openAddressModal('edit');
+    //             } else if (button.classList.contains('delete-address-btn')) {
+    //                 if (card.classList.contains('is-default')) {
+    //                     showToast({type: 'error', title: 'خطا', message: 'شما نمی‌توانید آدرس پیش‌فرض را حذف کنید.'});
+    //                     return;
+    //                 }
+    //                 card.style.transition = 'all 0.3s ease';
+    //                 card.style.opacity = '0';
+    //                 card.style.transform = 'translateX(50px)';
+    //                 setTimeout(() => card.remove(), 300);
+    //                 showToast({type: 'info', title: 'حذف شد', message: 'آدرس مورد نظر حذف گردید.'});
+    //             }
+    //         } else {
+    //             setDefaultAddress(card);
+    //         }
+    //     });
+    // }
 
     if (addNewAddressBtn) addNewAddressBtn.addEventListener('click', () => openAddressModal('add'));
     if (modal) {
@@ -199,13 +199,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (backdrop) backdrop.addEventListener('click', closeAddressModal);
 
-    if (addressForm) {
-        addressForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            closeAddressModal();
-            showToast({type: 'success', title: 'ذخیره شد', message: 'آدرس شما (به صورت نمایشی) ذخیره شد.'});
-        });
-    }
+    // if (addressForm) {
+    //     addressForm.addEventListener('submit', (e) => {
+    //         e.preventDefault();
+    //         closeAddressModal();
+    //         showToast({type: 'success', title: 'ذخیره شد', message: 'آدرس شما (به صورت نمایشی) ذخیره شد.'});
+    //     });
+    // }
 });
 
 
