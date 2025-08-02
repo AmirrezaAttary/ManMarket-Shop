@@ -7,6 +7,18 @@
 {{ object.title }}
 {% endblock title %}
 
+
+{% block meta_description %}
+
+{% if object.meta_description %}
+    <meta name="description"
+    content="{{object.meta_description}}"> 
+{% endif %}
+    
+
+{% endblock meta_description %}
+    
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/swiper.lib.css' %}" />
 <link rel="stylesheet" href="{% static 'css/sweet.alert.lib.css' %}">

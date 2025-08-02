@@ -19,6 +19,11 @@
         href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/blogs.css' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/logo/logo.webp' %}">
+    {% if object.meta_description %}
+    <meta name="description"
+    content="{{object.meta_description}}"> 
+    {% endif %}
 </head>
 
 
