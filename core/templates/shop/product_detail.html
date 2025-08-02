@@ -71,7 +71,7 @@
                 <div class="product-info-area">
                     <span class="product-category" style="font-size: 12px;display: flex;justify-content: center;color: black;"><a
                             class="mx-2" href="{% url 'shop:product-list' %}?category={{object.category.slug}}">{{object.category}}</a> / <a class="mx-2"
-                            href="{% url 'shop:product-list' %}?brand={{object.brand.slug}}">{{object.brand}}</a></span>
+                            href="{% url 'shop:product-list' %}?category={{object.category.slug}}&brand={{object.brand.slug}}">{{object.brand}}</a></span>
                     <h1 class="product-title" style="font-size: 18px;">{{object.title}}</h1>
                     <h1 class="card-title-2 my-3">
                         {{object.brief_title}}
