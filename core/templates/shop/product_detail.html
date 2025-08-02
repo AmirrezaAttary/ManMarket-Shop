@@ -42,6 +42,18 @@
                         </svg>
                     </div>
                     {% if request.user.is_authenticated %}
+                    {% if is_wished %}
+                    <button onclick="addToWishlist(this,'{{object.id}}')">
+                        <div class="heart-x" title="حذف از علاقه‌مندی‌ها">
+                            <svg class="theme-c" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em"
+                                height="1em">
+                                <path fill="currentColor" fillRule="evenodd"
+                                    d="M75.307 100.706c48.803-51.694 128.848-48.347 173.652 7.261l7.042 8.739l7.041-8.739c44.805-55.608 124.849-58.954 173.653-7.261c46.203 48.941 46.203 128.289 0 177.23L256.001 469.333H256l-.089-.096L75.307 277.936c-46.204-48.941-46.204-128.289 0-177.23"
+                                    clipRule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </button>
+                    {% else %}
                     <button onclick="addToWishlist(this,'{{object.id}}')">
                         <div class="heart-x" title="افزودن به علاقه‌مندی‌ها"><svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 256 256" width="1.3em" height="1.3em">
@@ -51,6 +63,7 @@
                             </svg>
                         </div>
                     </button>
+                    {% endif %}
                     {% else %}
                     <a href="{% url 'dashboard:home' %}">
                         <button>
@@ -69,8 +82,10 @@
 
             <div class="col-lg-4 col-md-6 col-12">
                 <div class="product-info-area">
-                    <span class="product-category" style="font-size: 12px;display: flex;justify-content: center;color: black;"><a
-                            class="mx-2" href="{% url 'shop:product-list' %}?category={{object.category.slug}}">{{object.category}}</a> / <a class="mx-2"
+                    <span class="product-category"
+                        style="font-size: 12px;display: flex;justify-content: center;color: black;"><a class="mx-2"
+                            href="{% url 'shop:product-list' %}?category={{object.category.slug}}">{{object.category}}</a>
+                        / <a class="mx-2"
                             href="{% url 'shop:product-list' %}?category={{object.category.slug}}&brand={{object.brand.slug}}">{{object.brand}}</a></span>
                     <h1 class="product-title" style="font-size: 18px;">{{object.title}}</h1>
                     <h1 class="card-title-2 my-3">
@@ -94,6 +109,9 @@
                                 fill="currentColor"></path>
                         </svg>
                     </p> -->
+                    <!-- سسس -->
+
+
 
                     {% if default_color.discounted_price == None %}
                     {% else %}
