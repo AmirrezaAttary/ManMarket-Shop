@@ -41,12 +41,17 @@
                             </path>
                         </svg>
                     </div>
-                    <div class="heart-x" title="افزودن به علاقه‌مندی‌ها"><svg xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 256 256" width="1.3em" height="1.3em">
-                            <path fill="currentColor"
-                                d="M223 57a58.07 58.07 0 0 0-81.92-.1L128 69.05l-13.09-12.19A58 58 0 0 0 33 139l89.35 90.66a8 8 0 0 0 11.4 0L223 139a58 58 0 0 0 0-82m-11.35 70.76L128 212.6l-83.7-84.92a42 42 0 0 1 59.4-59.4l.2.2l18.65 17.35a8 8 0 0 0 10.9 0l18.65-17.35l.2-.2a42 42 0 1 1 59.36 59.44Z">
-                            </path>
-                        </svg></div>
+                    
+                    <button onclick="addToWishlist(this,'{{object.id}}')">
+                        <div class="heart-x" title="افزودن به علاقه‌مندی‌ها"><svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 256 256" width="1.3em" height="1.3em">
+                                <path fill="currentColor"
+                                    d="M223 57a58.07 58.07 0 0 0-81.92-.1L128 69.05l-13.09-12.19A58 58 0 0 0 33 139l89.35 90.66a8 8 0 0 0 11.4 0L223 139a58 58 0 0 0 0-82m-11.35 70.76L128 212.6l-83.7-84.92a42 42 0 0 1 59.4-59.4l.2.2l18.65 17.35a8 8 0 0 0 10.9 0l18.65-17.35l.2-.2a42 42 0 1 1 59.36 59.44Z">
+                                </path>
+                            </svg>
+                        </div>
+                    </button>
+                    
                 </div>
             </div>
 
@@ -725,43 +730,7 @@
         console.warn("هشدار: عنصر ShareIcon (.share-x) برای عملکرد اشتراک‌گذاری پیدا نشد.");
     }
 
-    if (HeartIcon) {
-        HeartIcon.addEventListener('click', async () => {
-            let success = true;
 
-            let swalOptions = {};
-            if (success) {
-                swalOptions = {
-                    title: 'اضافه شد!',
-                    text: 'با موفقیت به علاقه‌مندی‌های شما اضافه شد.',
-                    icon: 'success',
-                    position: 'center',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    customClass: {
-                        title: 'swal2-title-small',
-                        htmlContainer: 'swal2-html-container-small'
-                    }
-                };
-            } else {
-                swalOptions = {
-                    title: 'خطا!',
-                    text: 'متأسفانه مشکلی پیش آمد و آیتم به علاقه‌مندی‌ها اضافه نشد.',
-                    icon: 'error',
-                    confirmButtonText: 'باشه',
-                    position: 'center',
-                    customClass: {
-                        title: 'swal2-title-small',
-                        htmlContainer: 'swal2-html-container-small'
-                    }
-                };
-            }
-            await showSweetAlertAndOverlay(swalOptions);
-        });
-    } else {
-        console.warn("هشدار: عنصر HeartIcon (.heart-x) برای عملکرد علاقه‌مندی‌ها پیدا نشد.");
-    }
 
     if (!localOverlay) {
         console.warn("هشدار: عنصر Overlay (#sweetalertOverlay) پیدا نشد. عملکرد پوشش صفحه و بستن با کلیک بر روی آن غیرفعال خواهد بود.");

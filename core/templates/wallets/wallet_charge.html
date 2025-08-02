@@ -26,7 +26,7 @@
         <form method="post">
             {% csrf_token %}
             <label for="amount" class="ws-cs-label">مبلغ مورد نظر (تومان)</label>
-            <input type="number" id="amount" name="amount" placeholder="مثلاً ۵۰٬۰۰۰" class="ws-cs-input" required />
+            <input type="text" id="amount" name="amount" placeholder="مثلاً ۵۰٬۰۰۰" class="ws-cs-input" required />
 
             <button type="submit" class="ws-cs-button">ادامه پرداخت</button>
             {% if error %}
@@ -36,6 +36,31 @@
 
         <div class="ws-cs-tip">پرداخت‌های شما از طریق درگاه امن بانکی انجام می‌شود.</div>
     </div>
+
+    <script>
+        const amountInput = document.getElementById("amount");
+
+        amountInput.addEventListener("input", function (e) {
+            // مقدار بدون کاراکترهای غیر عددی
+            let raw = e.target.value.replace(/[^0-9]/g, '');
+
+            if (raw === "") {
+                e.target.value = "";
+                return;
+            }
+
+            // تبدیل به فرمت با ممیز فارسی
+            let formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, "٬");
+
+            e.target.value = formatted;
+        });
+
+        // جلوگیری از ارسال مقدار با ممیزها و ارسال عدد خام
+        const form = amountInput.closest("form");
+        form.addEventListener("submit", function () {
+            amountInput.value = amountInput.value.replace(/[^0-9]/g, '');
+        });
+    </script>
 
 </body>
 

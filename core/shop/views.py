@@ -190,7 +190,10 @@ class ShopDetailProductView(DetailView):
  
   
 class AddOrRemoveWishlistView(LoginRequiredMixin, View):
-
+    def handle_no_permission(self):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'message': 'برای استفاده از این قابلیت باید وارد شوید.'}, status=401)
+        return super().handle_no_permission()
 
     def post(self, request, *args, **kwargs):
         product_id = request.POST.get("product_id")

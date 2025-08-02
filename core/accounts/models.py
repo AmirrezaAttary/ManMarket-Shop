@@ -77,9 +77,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE,related_name="user_profile")
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=12, validators=[validate_iranian_cellphone_number])
+    first_name = models.CharField(max_length=255,null=True,blank=True)
+    last_name = models.CharField(max_length=255,null=True,blank=True)
+    phone_number = models.CharField(max_length=12, validators=[validate_iranian_cellphone_number],null=True,blank=True)
     image = models.ImageField(upload_to='profile/',default='default/default-profile.webp')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -95,10 +95,9 @@ class Profile(models.Model):
         return None
 
     def get_fullname(self):
-        if self.first_name or self.last_name:
-            return self.first_name + " " + self.last_name
-        return "کاربر جدید"
-    
+        name = " ".join(filter(None, [self.first_name, self.last_name]))
+        return name if name else "کاربر جدید"
+        
     
 
     
