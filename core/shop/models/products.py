@@ -21,7 +21,7 @@ class ProductModel(models.Model):
     warranty = models.CharField(max_length=100, null=True, blank=True)
     
     status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.publish.value)
-    
+    meta_description = models.CharField(max_length=255,null=True,blank=True)
     avg_rate = models.FloatField(default=0.0)
     
     created_date = models.DateTimeField(auto_now_add=True)

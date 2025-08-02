@@ -12,11 +12,13 @@
       <h2><svg>
           <use xlink:href="#icon-map-pin"></use>
         </svg>آدرس‌های من</h2>
-      <button class="btn-custom btn-primary btn-sm" id="addNewAddressBtn">
+        <a href="{% url 'dashboard:customer:address-create' %}">
+      <button class="btn-custom btn-primary btn-sm" >
         <svg>
           <use xlink:href="#icon-plus-circle-fill"></use>
         </svg>افزودن آدرس
       </button>
+    </a>
     </header>
 
     <div id="addressesListContainer" class="mt-4">

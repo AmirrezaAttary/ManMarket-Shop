@@ -16,6 +16,7 @@ class ProductForm(forms.ModelForm):
             'brand',
             'warranty',
             'brief_title',
+            'meta_description'
         ]
         widgets = {
             'description': SummernoteWidget(attrs={'summernote': {'height': '800px','width':'100%'}}),   # فقط روی این فیلد اعمال میشه
@@ -34,6 +35,7 @@ class ProductForm(forms.ModelForm):
         self.fields['status'].widget.attrs['class'] = 'form-select'
         self.fields['warranty'].widget.attrs['class'] = 'form-control'
         self.fields['brief_title'].widget.attrs['class'] = 'form-control'
+        self.fields['meta_description'].widget.attrs['class'] = 'form-control'
         
         
 class ProductImageForm(forms.ModelForm):

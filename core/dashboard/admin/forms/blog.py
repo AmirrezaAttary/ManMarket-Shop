@@ -13,7 +13,8 @@ class BlogPostForm(forms.ModelForm):
             'category' ,
             'status' ,
             'slug' ,
-            'tags'
+            'tags',
+            'meta_description'
         ]
         widgets = {
             'content': SummernoteWidget(attrs={'summernote': {'height': '800px','width':'100%'}}),  # فقط روی این فیلد اعمال میشه
@@ -27,6 +28,7 @@ class BlogPostForm(forms.ModelForm):
         self.fields['category'].widget.attrs['style'] = 'height: 100px'
         self.fields['tags'].widget.attrs['class'] = 'form-control'
         self.fields['image'].widget.attrs['class'] = 'form-control'
+        self.fields['meta_description'].widget.attrs['class'] = 'form-control'
         # self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-select'
         

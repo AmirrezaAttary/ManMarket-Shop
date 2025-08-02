@@ -20,6 +20,7 @@ class Post(models.Model):
     status = models.IntegerField(choices=BlogStatusType.choices,default=BlogStatusType.publish.value)
     slug = models.SlugField(allow_unicode=True,unique=True,max_length=200)
     tags = TaggableManager()
+    meta_description = models.CharField(max_length=255,null=True,blank=True)
     
     class Meta:
         ordering = ['-created_at']
