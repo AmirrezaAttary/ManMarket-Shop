@@ -3,7 +3,8 @@ from django.views.generic import (
     UpdateView,
     ListView,
     DeleteView,
-    CreateView
+    CreateView,
+    DetailView
 )
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -56,4 +57,22 @@ class AdminUsersListView(LoginRequiredMixin, HasAdminAccessPermission, ListView)
         # 🆕 اضافه کردن گزینه‌های فیلتر وضعیت به context
         context["type_choices"] = UserType.choices
         context["current_type_filter"] = self.request.GET.get("type")
+        return context
+    
+    
+    
+class AdminUsersDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):
+    template_name = "dashboard/admin/users/users-detail.html"
+    model = User  # اضافه کردن model برای اینکه DetailView به درستی کار کند
+
+    def get_queryset(self):
+        return User.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.object
+        context["order_count"] = user.order_user.count()
+        context["wishlist_count"] = user.wishlist_user.count()
+        context["reviw_count"] = user.reviw_user.count()
+        context["customer_chat_count"] = user.customer_chats.count()
         return context

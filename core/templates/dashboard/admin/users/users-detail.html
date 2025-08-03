@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load jformat %}
+
+
+
+{% block content %}
+<br><br><br><br>
+<div class="row">
+  {% include 'dashboard/admin/sidebar.html' %}
+  <!-- Card -->
+  <div class="col-md-9 mb-9">
+    <!-- Card -->
+    <div class="card">
+      <!-- Header -->
+      <div class="card-header border-bottom">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class=""> کاربر {{object.email}}</h5>
+          {% if object.is_successful %}
+          <!-- <a class="btn btn-primary" href="{% comment %}{% url 'dashboard:admin:order-invoice' pk=object.pk %}{% endcomment %}"
+            target="_blank">مشاهده فاکتور</a> -->
+          {% endif %}
+        </div>
+      </div>
+      <!-- End Header -->
+
+      <!-- Body -->
+      <div class="card-body">
+
+        <div class="row">
+          <!-- Table -->
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">تصویر</th>
+                  <th scope="col">نام و نام خانوادگی</th>
+                  <th scope="col">شماره کاربر</th>
+                  <th scope="col">نوع کاربر</th>
+                  <th scope="col">تعداد سفارش ها</th>
+                  <th scope="col">سن کاربر</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                <tr>
+                  <th scope="row">{{object.id}}</th>
+                  <td>
+                    <span class="avatar ">
+                      <img class="avatar-img" style="max-width: 80px;max-height: 80px;" src="{{object.user_profile.image.url}}" alt="Image Description">
+                    </span>
+                  </td>
+                  <td>{{object.user_profile.get_fullname}}</td>
+                  <td>{{object.user_profile.phone_number}}</td>
+                  <td>{{object.get_type_display}}</td>
+                  <td> {{ order_count }}<a href="">مشاهده</a></td>
+                  <td class="formatted-price">{{object.user_profile.age}}</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+          <!-- End Table -->
+
+        </div>
+        <!-- End Row -->
+
+
+      </div>
+      <div class="card-footer row pt-5 mt-5">
+        <form>
+          <div class="row mb-3 align-items-center">
+            <dt class="col-md-3">موجودی کیف پول : <a href="">مشاهده</a></dt>
+            <dl class="col-md-3">{{object.wallet_user.balance|floatformat:0|intcomma}} تومان</dl>
+            <dt class="col-md-3">تعداد محصولات مورد علاقه: <a href="">مشاهده</a></dt>
+            <dl class="col-md-3 ">{{wishlist_count}}</dl>
+          </div>
+          <div class="row mb-3">
+            <dt class="col-md-3"> تاریخ عضویت:</dt>
+            <dl class="col-md-3">{{ object.created_date|jformat:"%Y/%m/%d" }}</dl>
+            <dt class="col-md-3">تعداد چت ها : <a href="">مشاهده</a></dt>
+            <dl class="col-md-3">{{customer_chat_count}}</dl>
+          </div>
+          <!-- End Row -->
+          <div class="row mb-3">
+            <dt class="col-md-3"> تعداد نظر های داده شده: <a href="">مشاهده</a></dt>
+            <dl class="col-md-3">{{reviw_count}}</dl>
+
+          </div>
+
+                    
+          <div class=" d-flex pt-5 justify-content-end">
+            <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:users-list' %}">بازگشت</a>
+
+          </div>
+        </form>
+      </div>
+      <!-- End Body -->
+    </div>
+    <!-- End Card -->
+  </div>
+</div>
+
+{% endblock %}

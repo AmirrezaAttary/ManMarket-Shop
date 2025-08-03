@@ -96,7 +96,7 @@
                                     {% endif %}
                                     <td class="d-flex">
                                         <a class="btn btn-sm btn-icon btn-ghost-secondary"
-                                            href=""><i
+                                            href="{% url 'dashboard:admin:users-detail' pk=object.id  %}"><i
                                                 class="bi-pencil-square">مشاهده</i></a>
                                     </td>
                                 </tr>

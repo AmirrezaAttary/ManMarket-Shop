@@ -14,7 +14,7 @@ class ReviewStatusType(models.IntegerChoices):
 
 
 class ReviewModel(models.Model):
-    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE,related_name='reviw_user')
     product = models.ForeignKey('shop.ProductModel',on_delete=models.CASCADE)
     description = models.TextField()
     rate = models.IntegerField(default=5, validators=[
