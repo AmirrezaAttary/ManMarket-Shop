@@ -24,3 +24,4 @@ if __name__ == '__main__':
 
 # ssh ubuntu@188.213.196.209
 # docker exec -it backend bash
+# docker compose -f docker-compose-stage.yml restart backend

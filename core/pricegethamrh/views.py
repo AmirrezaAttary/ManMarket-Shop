@@ -23,12 +23,21 @@ class GetColorAndPrice(View):
         return math.ceil(price / 1000) * 1000
 
     def process_data(self, product, data):
+        # لیست تمام رنگ‌های محصول در دیتابیس
+        existing_pcis = ProductColorInventory.objects.filter(product=product)
+        existing_colors = {pci.color.title: pci for pci in existing_pcis}
+        
+        # لیست رنگ‌های دیده‌شده در دیتای جدید
+        seen_colors = set()
+
         for key, value in data.items():
             color_title = value.get('color')
             color_code = value.get('color_code', '#ffffff')  # پیش‌فرض سفید
 
             if not color_title:
                 continue
+
+            seen_colors.add(color_title)  # ثبت رنگ جدید
 
             color, _ = Color.objects.get_or_create(title=color_title)
 
@@ -61,6 +70,14 @@ class GetColorAndPrice(View):
                 pci.stock = value.get('quantity', 0)
                 pci.save()
 
+        # تنظیم موجودی و قیمت صفر برای رنگ‌هایی که در دیتای جدید نیستند
+        for color_title, pci in existing_colors.items():
+            if color_title not in seen_colors:
+                pci.price = 0
+                pci.stock = 0
+                pci.save()
+
+
     def handle_request(self, request):
         product_id = self.kwargs.get("pk")
         products = PriceGetHamrh.objects.filter(product__id=product_id)
@@ -71,19 +88,25 @@ class GetColorAndPrice(View):
         for p in products:
             product = p.product
 
+            combined_data = {}
+
             # بررسی و پردازش URL سایت همراه‌تل
             if p.url:
                 extra_data = extract_product_data(p.url)
                 if isinstance(extra_data, dict):
-                    self.process_data(product, extra_data)
+                    combined_data.update(extra_data)
 
             # بررسی و پردازش URL سایت کسری‌پارس
             if p.url_kasra:
                 kasra_data = get_kasrapars_product_data(p.url_kasra)
                 if isinstance(kasra_data, dict):
-                    self.process_data(product, kasra_data)
+                    combined_data.update(kasra_data)
+
+            # فقط یک بار پردازش داده‌های ترکیب‌شده
+            self.process_data(product, combined_data)
 
         return HttpResponseRedirect(self.get_success_url())
+
 
     def get_success_url(self):
         return reverse("dashboard:admin:product-edit", kwargs={"pk": self.kwargs.get("pk")})
