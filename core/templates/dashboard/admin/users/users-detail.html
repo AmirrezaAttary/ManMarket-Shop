@@ -55,7 +55,7 @@
                   <td>{{object.user_profile.get_fullname}}</td>
                   <td>{{object.user_profile.phone_number}}</td>
                   <td>{{object.get_type_display}}</td>
-                  <td> {{ order_count }}<a href="">مشاهده</a></td>
+                  <td> {{ order_count }}<a href="{% url 'dashboard:admin:users-order' pk=object.id %}">مشاهده</a></td>
                   <td class="formatted-price">{{object.user_profile.age}}</td>
                 </tr>
                 
@@ -74,18 +74,18 @@
           <div class="row mb-3 align-items-center">
             <dt class="col-md-3">موجودی کیف پول : <a href="{% url 'dashboard:admin:users-wallet' pk=object.wallet_user.id %}">مشاهده</a></dt>
             <dl class="col-md-3">{{object.wallet_user.balance|floatformat:0|intcomma}} تومان</dl>
-            <dt class="col-md-3">تعداد محصولات مورد علاقه: <a href="">مشاهده</a></dt>
+            <dt class="col-md-3">تعداد محصولات مورد علاقه: <a href="{% url 'dashboard:admin:users-wishlist' pk=object.id %}">مشاهده</a></dt>
             <dl class="col-md-3 ">{{wishlist_count}}</dl>
           </div>
           <div class="row mb-3">
             <dt class="col-md-3"> تاریخ عضویت:</dt>
             <dl class="col-md-3">{{ object.created_date|jformat:"%Y/%m/%d" }}</dl>
-            <dt class="col-md-3">تعداد چت ها : <a href="">مشاهده</a></dt>
+            <dt class="col-md-3">تعداد چت ها : <a href="{% url 'dashboard:admin:users-chat' pk=object.id %}">مشاهده</a></dt>
             <dl class="col-md-3">{{customer_chat_count}}</dl>
           </div>
           <!-- End Row -->
           <div class="row mb-3">
-            <dt class="col-md-3"> تعداد نظر های داده شده: <a href="">مشاهده</a></dt>
+            <dt class="col-md-3"> تعداد نظر های داده شده: <a href="{% url 'dashboard:admin:users-review' pk=object.id %}">مشاهده</a></dt>
             <dl class="col-md-3">{{reviw_count}}</dl>
 
           </div>

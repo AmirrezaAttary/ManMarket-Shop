@@ -27,13 +27,13 @@
         <header class="section-header-new border-0">
             <h2><svg>
                     <use xlink:href="#icon-wallet"></use>
-                </svg>کیف پول شما</h2>
+                </svg>کیف پول کاربر {{wallet.user.email}}</h2>
         </header>
         <center>
             <section class="w-center p-0" style="width: 883px;">
                 <div class="wallet-balance-card w-50 w-right m-0">
                     <div>
-                        <p class="wallet-balance-label my-3">{{wallet.user.user_profile.get_fullname}}</p>
+                        <p class="wallet-balance-label my-3">{{wallet.user.user_profile.get_fullname}} - {{wallet.user.email}}</p>
                         <p class="wallet-balance-amount my-3">
                         <p class="my-3"></p> موجودی فعلی
                         :
