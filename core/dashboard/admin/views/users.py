@@ -12,6 +12,7 @@ from dashboard.permissions import HasAdminAccessPermission
 from django.core.exceptions import FieldError
 
 from accounts.models import User,UserType
+from wallets.models import Wallet
 
 
 class AdminUsersListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
@@ -76,3 +77,11 @@ class AdminUsersDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailV
         context["reviw_count"] = user.reviw_user.count()
         context["customer_chat_count"] = user.customer_chats.count()
         return context
+    
+    
+class AdminUsersDetailWalletView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):
+    template_name = "dashboard/admin/users/users-wallet.html"
+    model = Wallet
+    
+    def get_queryset(self):
+        return Wallet.objects.all()

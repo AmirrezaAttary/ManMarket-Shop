@@ -8,6 +8,7 @@ class Wallet(models.Model):
 
     def __str__(self):
         return self.user.email
+    
 class WalletTransaction(models.Model):
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions')
     amount = models.DecimalField(max_digits=12, decimal_places=2)

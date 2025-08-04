@@ -72,7 +72,7 @@
       <div class="card-footer row pt-5 mt-5">
         <form>
           <div class="row mb-3 align-items-center">
-            <dt class="col-md-3">موجودی کیف پول : <a href="">مشاهده</a></dt>
+            <dt class="col-md-3">موجودی کیف پول : <a href="{% url 'dashboard:admin:users-wallet' pk=object.wallet_user.id %}">مشاهده</a></dt>
             <dl class="col-md-3">{{object.wallet_user.balance|floatformat:0|intcomma}} تومان</dl>
             <dt class="col-md-3">تعداد محصولات مورد علاقه: <a href="">مشاهده</a></dt>
             <dl class="col-md-3 ">{{wishlist_count}}</dl>

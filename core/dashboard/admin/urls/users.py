@@ -5,6 +5,7 @@ from .. import views
 urlpatterns = [
     path("users/list/",views.AdminUsersListView.as_view(),name="users-list"),
     path("users/<int:pk>/detail/",views.AdminUsersDetailView.as_view(),name="users-detail"),
+    path("users/<int:pk>/wallet/detail/",views.AdminUsersDetailWalletView.as_view(),name="users-wallet"),
     # path("product/create/",views.AdminProductCreateView.as_view(),name="product-create"),
     # path("product/<int:pk>/edit/",views.AdminProductEditView.as_view(),name="product-edit"),
     # path("product/<int:pk>/delete/",views.AdminProductDeleteView.as_view(),name="product-delete"),
