@@ -79,7 +79,7 @@ class Profile(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE,related_name="user_profile")
     first_name = models.CharField(max_length=255,null=True,blank=True)
     last_name = models.CharField(max_length=255,null=True,blank=True)
-    phone_number = models.CharField(max_length=12, validators=[validate_iranian_cellphone_number],null=True,blank=True)
+    phone_number = models.CharField(max_length=12,unique=True, validators=[validate_iranian_cellphone_number],null=True,blank=True)
     image = models.ImageField(upload_to='profile/',default='default/default-profile.webp')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

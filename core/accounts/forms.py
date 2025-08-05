@@ -1,12 +1,48 @@
-from django.contrib.auth import forms as auth_forms
-from django.core.exceptions import ValidationError
 from django import forms
-from accounts.models import User
+from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
+from django.contrib.auth import authenticate
+from django.utils.translation import gettext_lazy as _
+from accounts.models import User, Profile
 
-class AuthenticationForm(auth_forms.AuthenticationForm):
-    def confirm_login_allowed(self, user):
-        super(AuthenticationForm,self).confirm_login_allowed(user)
-        
+
+class AuthenticationForm(BaseAuthenticationForm):
+    username = forms.CharField(
+        label=_("ایمیل یا شماره تلفن"),
+        widget=forms.TextInput(attrs={"autofocus": True}),
+    )
+
+    def clean(self):
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
+
+        if username and password:
+            user = self.get_user_by_email_or_phone(username)
+
+            if user:
+                self.user_cache = authenticate(
+                    self.request, username=user.email, password=password
+                )
+                if self.user_cache is None:
+                    raise forms.ValidationError("رمز عبور اشتباه است.")
+                else:
+                    self.confirm_login_allowed(self.user_cache)
+            else:
+                raise forms.ValidationError("کاربری با این مشخصات یافت نشد.")
+        return self.cleaned_data
+
+    def get_user_by_email_or_phone(self, identifier):
+        """بررسی اینکه ورودی ایمیل است یا شماره و بازگرداندن یوزر مناسب"""
+        try:
+            if "@" in identifier:
+                return User.objects.get(email__iexact=identifier)
+            else:
+                return User.objects.get(user_profile__phone_number=identifier)
+        except User.DoesNotExist:
+            return None
+
+    def get_user(self):
+        return self.user_cache
+
 
         
         
