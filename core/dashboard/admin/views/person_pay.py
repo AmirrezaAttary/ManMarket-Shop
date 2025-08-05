@@ -1,12 +1,12 @@
 from django.views.generic import ListView,DetailView,UpdateView,CreateView,FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasAdminAccessPermission
-from django.urls import reverse
+from django.urls import reverse,reverse_lazy
 
 from dashboard.admin.forms import *
 from django.core.exceptions import FieldError
 from order.models import OrderModel,OrderStatusType
-from payment.models import PayemntType
+from payment.models import PayemntType,PaymentModel
 
 
 class AdminPersonPayListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
@@ -37,5 +37,13 @@ class AdminPersonPayListView(LoginRequiredMixin, HasAdminAccessPermission, ListV
     
     
     
-class AdminPersonPayCreateView(LoginRequiredMixin, HasAdminAccessPermission, FormView):
-    pass
+class AdminPersonPayCreateView(LoginRequiredMixin, HasAdminAccessPermission, CreateView):
+    model = PaymentModel
+    form_class = InPersonPaymentForm
+    template_name = "dashboard/admin/person_pay/person-pay-create.html"
+    success_url = reverse_lazy("dashboard:person-pay-list")  # یا هر آدرس مناسب دیگر
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "ثبت پرداخت حضوری"
+        return context

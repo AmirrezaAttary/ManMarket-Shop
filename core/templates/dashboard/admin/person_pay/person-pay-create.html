@@ -1,0 +1,14 @@
+{# templates/dashboard/admin/person_pay/person-pay-create.html #}
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<br><br><br><br><br>
+<h2>ثبت پرداخت حضوری</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">ثبت پرداخت</button>
+</form>
+{% endblock %}

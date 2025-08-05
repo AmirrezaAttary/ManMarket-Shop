@@ -13,3 +13,4 @@ from . blog_category import *
 from . chat import *
 from . story import *
 from . orders import *
+from . person_pay import *
