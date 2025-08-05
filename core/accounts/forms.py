@@ -19,35 +19,16 @@ class AuthenticationForm(BaseAuthenticationForm):
         password = self.cleaned_data.get("password")
 
         if username and password:
-            user = self.get_user_by_email_or_phone(username)
-
-            if user:
-                self.user_cache = authenticate(
-                    self.request, username=user.email, password=password
-                )
-                if self.user_cache is None:
-                    raise forms.ValidationError("رمز عبور اشتباه است.")
-                else:
-                    self.confirm_login_allowed(self.user_cache)
+            self.user_cache = authenticate(self.request, username=username, password=password)
+            if self.user_cache is None:
+                raise forms.ValidationError("کاربری با این مشخصات یافت نشد یا رمز اشتباه است.")
             else:
-                raise forms.ValidationError("کاربری با این مشخصات یافت نشد.")
+                self.confirm_login_allowed(self.user_cache)
         return self.cleaned_data
-
-    def get_user_by_email_or_phone(self, identifier):
-        """بررسی اینکه ورودی ایمیل است یا شماره و بازگرداندن یوزر مناسب"""
-        try:
-            if "@" in identifier:
-                return User.objects.get(email__iexact=identifier)
-            else:
-                return User.objects.get(user_profile__phone_number=identifier)
-        except User.DoesNotExist:
-            return None
 
     def get_user(self):
         return self.user_cache
 
-
-        
         
 
 class RegisterForm(forms.Form):
@@ -65,7 +46,7 @@ class RegisterForm(forms.Form):
         else:
             # شماره موبایل
             validate_iranian_cellphone_number(value)
-            if Profile.objects.filter(phone_number=value).exists():
+            if User.objects.filter(phone_number=value).exists():
                 raise ValidationError("این شماره موبایل قبلاً استفاده شده است.")
             self.cleaned_data['is_email'] = False
         return value
@@ -85,13 +66,6 @@ class RegisterForm(forms.Form):
         if is_email:
             user = User.objects.create_user(email=email_or_phone, password=password)
         else:
-            user = User.objects.create_user(email=None, password=password)
-
-        if not is_email:
-            profile = user.user_profile  # چون با related_name="user_profile"
-            profile.phone_number = email_or_phone
-            profile.save()
+            user = User.objects.create_user(email=None, password=password, phone_number=email_or_phone)
 
         return user
-
-    
