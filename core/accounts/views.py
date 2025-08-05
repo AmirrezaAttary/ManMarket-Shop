@@ -28,26 +28,27 @@ class RegisterView(TemplateView):
     template_name = 'accounts/register.html'
 
     def get(self, request, *args, **kwargs):
-        # بررسی اینکه آیا کاربر وارد شده است
         if request.user.is_authenticated:
-            return redirect('dashboard:home')  # به صفحه داشبورد هدایت کن
+            return redirect('dashboard:home')
         return self.render_to_response({'form': RegisterForm()})
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('dashboard:home')  # به صفحه داشبورد هدایت کن
+            return redirect('dashboard:home')
 
-        messages.add_message(request, messages.SUCCESS, 'شما با موفقیت وارد من مارکت شدید')
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user)  # ورود خودکار پس از ثبت‌نام
+            user.backend = 'accounts.backends.EmailOrPhoneBackend'
+            login(request, user)
+            messages.success(request, 'ثبت‌نام شما با موفقیت انجام شد.')
             return redirect(self.get_success_url())
+
         return self.render_to_response({'form': form})
 
     def get_success_url(self):
         return reverse_lazy('website:index')
+
 
     
 class LogoutView(auth_views.LogoutView):

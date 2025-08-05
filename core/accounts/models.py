@@ -27,8 +27,8 @@ class UserManager(BaseUserManager):
         """
         Create and save a User with the given email and password.
         """
-        if not email:
-            raise ValueError(_("The Email must be set"))
+        # if not email:
+        #     raise ValueError(_("The Email must be set"))
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -54,7 +54,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-    email = models.EmailField(_("email address"), unique=True)
+    email = models.EmailField(_("email address"), null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
@@ -64,13 +64,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
 
     def __str__(self):
-        return self.email
+        return self.email or f"User #{self.pk}"
+
 
     class Meta:
         ordering = ['-id']
