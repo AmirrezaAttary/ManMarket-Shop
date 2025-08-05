@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
+{% load jformat %}
 
 {% block content %}
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -78,7 +79,7 @@
                             {{ transaction.description }}
                         </p>
                         <p class="transaction-date">
-                            {{ transaction.created_at|date:"Y/m/d - ساعت H:i" }}
+                            {{ transaction.created_at|jformat:"%Y/%m/%d - %H:%M"}}
                         </p>
                     </div>
                     <div

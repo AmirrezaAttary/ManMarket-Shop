@@ -56,7 +56,7 @@ class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListVi
     def get_queryset(self):
         queryset = PriceGetHamrh.objects.all()
         if search_q := self.request.GET.get("q"):
-            queryset = queryset.filter(product__title__icontains=search_q)| queryset.filter(product__id__iexact=search_q)
+            queryset = queryset.filter(product__title__icontains=search_q)| queryset.filter(product__id__iexact=search_q) | queryset.filter(url__icontains=search_q) | queryset.filter(url_kasra__icontains=search_q)
         if order_by := self.request.GET.get("order_by"):
             try:
                 queryset = queryset.order_by(order_by)
