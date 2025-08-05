@@ -387,6 +387,7 @@
                                 <h4 class="mb-3 SH-HS-comment-form-title">نظر خود را ثبت کنید</h4>
                                 <form method="post" action="{% url 'review:submit-review' %}">
                                     {% csrf_token %}
+                                    <input type="hidden" name="product" value="{{ product.id }}">
                                     <div class="mb-3">
                                         <label class="form-label d-block mb-2">امتیاز شما:</label>
                                         <div class="SH-HS-star-rating-input" data-current-rating="0">
