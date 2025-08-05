@@ -184,6 +184,20 @@
                                         کاری) </strong></div>
                             </label>
                         </div>
+                        {% if request.user.type == 2 or request.user.type == 3 %}
+                        <div class="shop-cs-selectable-option">
+                            <input type="radio" name="tracking_type" value="4" form="address-form" value="person"
+                                id="shipment-person" checked>
+                            <label for="shipment-person" class="shop-cs-selectable-label">
+                                <span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
+                                        <path d="M4.5 8.5l2.5 2.5 5-5"></path>
+                                    </svg>
+                                </span>
+                                <div class="shop-cs-payment-details"><strong>حضوری</strong></div>
+                            </label>
+                        </div>
+                        {% endif %}
                     </form>
 
                 </section>
@@ -268,6 +282,23 @@
                                 </div>
                             </label>
                         </div>
+                        {% if request.user.type == 2 or request.user.type == 3 %}
+                        <div class="shop-cs-selectable-option">
+                            <input type="radio" name="payment_method" form="address-form" value="person"
+                                id="payment-person">
+                            <label for="payment-person" class="shop-cs-selectable-label">
+                                <span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
+                                        <path d="M4.5 8.5l2.5 2.5 5-5"></path>
+                                    </svg>
+                                </span>
+                                <div class="shop-cs-payment-details">
+                                    <strong>پرداخت حضوری </strong>
+                                    <p></p>
+                                </div>
+                            </label>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <div class="shop-cs-summary-action" style="padding:16px;">

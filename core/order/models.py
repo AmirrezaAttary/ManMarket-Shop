@@ -6,6 +6,7 @@ class TrackingType(models.IntegerChoices):
     post = 1 , "ارسال با پست عادی"
     mahex = 2 , "ارسال با ماهکس"
     tipax = 3 , "ارسال با تیپاکس"
+    person = 4, "حضوری"
 
 class OrderStatusType(models.IntegerChoices):
     pending = 1 , "در انتظار پرداخت"

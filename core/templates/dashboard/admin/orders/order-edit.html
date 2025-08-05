@@ -117,7 +117,13 @@
             <dt class="col-md-3">کد پرداخت :</dt>
             <dl class="col-md-3">{{ object.payment.response_code }}</dl>
             <dt class="col-md-3">کد پیگیری پرداخت:</dt>
-            <dl class="col-md-3">{{object.payment.authority_id}}</dl>
+          <dl class="col-md-3">
+              {% if object.payment.payemnt_type == 5 %}
+                  {{ form.authority_id }}
+              {% else %}
+                  {{ object.payment.authority_id }}
+              {% endif %}
+          </dl>
           </div>
 
           <div class="row mb-3">

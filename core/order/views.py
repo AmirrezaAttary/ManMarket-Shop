@@ -14,7 +14,7 @@ from order.models import OrderModel, OrderItemModel
 from django.urls import reverse_lazy
 from cart.cart import CartSession
 from decimal import Decimal
-from order.models import CouponModel,OrderStatusType
+from order.models import CouponModel,OrderStatusType,TrackingType
 from django.http import JsonResponse
 from django.utils import timezone
 from django.shortcuts import redirect
@@ -24,6 +24,7 @@ from payment.models import PaymentModel,PayemntStatusType,PayemntType
 from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
 from shop.models import ProductColorInventory
+from accounts.models import UserType
 
 
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
@@ -76,7 +77,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                     status=PayemntStatusType.success,
                     wallet=wallet,
                     order=order,
-                    response_json={"code":100},
+                    response_json={"data":{"code":100}},
                     response_code = 100,
                     payemnt_type = PayemntType.wallet.value
                 )
@@ -173,6 +174,56 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
             order.save()
             return zarinpal.generate_payment_url(response['data']['authority'])
             
+            
+        if payment_method == "person":
+            user = self.request.user
+            if user.type not in [UserType.admin, UserType.superuser]:
+                messages.error(self.request, "شما اجازه ثبت سفارش حضوری را ندارید.")
+                return reverse_lazy("order:checkout")
+
+            order.total_price += 50000  # ✅ افزودن هزینه ثابت برای حضوری
+
+            # 🟩 مقداردهی آدرس به صورت حضوری
+            order.address = "تحویل حضوری در فروشگاه"
+            order.state = "خراسان رضوی"
+            order.city = "سبزوار"
+            order.zip_code = "0000000000"
+            order.tracking_type = TrackingType.person.value
+
+            # ایجاد شی پرداخت حضوری
+            payment_obj = PaymentModel.objects.create(
+                authority_id="PERSON-" + timezone.now().strftime("%Y%m%d%H%M%S"),
+                amount=order.total_price,
+                status=PayemntStatusType.success,
+                order=order,
+                payemnt_type=PayemntType.person.value,
+                response_json={"data": {"code": 100}},
+                response_code=100,
+                remainder=order.total_price
+            )
+
+            order.payment = payment_obj
+            order.status = OrderStatusType.success.value
+            order.save()
+
+            # کاهش موجودی محصولات
+            for item in order.order_items.all():
+                try:
+                    inventory = ProductColorInventory.objects.get(
+                        product=item.product,
+                        color=item.color
+                    )
+                    inventory.stock = max(0, inventory.stock - item.quantity)
+                    inventory.save()
+                except ProductColorInventory.DoesNotExist:
+                    continue
+
+            self.clear_cart(cart)
+            return reverse_lazy("order:completed")
+
+
+        
+        
         # برای روش‌های دیگر پرداخت (مثلاً زرین‌پال) باید else اضافه کنی
         messages.error(self.request, "روش پرداخت نامعتبر است.")
         return reverse_lazy("order:checkout")
