@@ -22,7 +22,7 @@ class ProductColorInventory(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
     price = models.DecimalField(default=0, max_digits=10, decimal_places=0)
-    hex_color = models.CharField(max_length=7, default="#000000")  # Hex color code
+    hex_color = models.CharField(max_length=10, default="#000000")  # Hex color code
     updated_date = models.DateTimeField(auto_now=True)
     
     def get_price(self):

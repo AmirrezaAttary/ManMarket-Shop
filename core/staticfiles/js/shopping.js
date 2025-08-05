@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         scroller.addEventListener('mousemove', e => {
-            if(!isDragging) return;
+            if (!isDragging) return;
             e.preventDefault();
             const x = e.pageX - scroller.offsetLeft;
             const walk = (x - startX) * 10;
@@ -241,4 +241,42 @@ document.addEventListener('DOMContentLoaded', () => {
             updateShipmentMethodDisplay(initialCheckedPaymentMethod.value, initialCheckedPaymentMethod.id);
         }
     }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const paymentInputs = document.querySelectorAll('input[name="payment_method"]');
+    const shippingOptions = document.querySelectorAll('input[name="tracking_type"]');
+    const shipmentMahax = document.getElementById('shipment-mahax');
+
+    function handlePaymentChange() {
+        const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+        if (!selectedPayment) return;
+
+        // اگر پرداخت در محل انتخاب شد
+        if (selectedPayment.value === 'card_mahax') {
+            shippingOptions.forEach(option => {
+                if (option.value !== '2') {
+                    option.disabled = true;
+                    option.closest('.shop-cs-selectable-option')?.classList.add('disabled');
+                } else {
+                    option.disabled = false;
+                    option.closest('.shop-cs-selectable-option')?.classList.remove('disabled');
+                    option.checked = true; // اجبار به انتخاب "ماهکس"
+                }
+            });
+        } else {
+            // در حالت‌های دیگر، همه گزینه‌های ارسال مجاز هستند
+            shippingOptions.forEach(option => {
+                option.disabled = false;
+                option.closest('.shop-cs-selectable-option')?.classList.remove('disabled');
+            });
+        }
+    }
+
+    paymentInputs.forEach(input => {
+        input.addEventListener('change', handlePaymentChange);
+    });
+
+    // اجرا در بار اول هنگام لود صفحه
+    handlePaymentChange();
 });
