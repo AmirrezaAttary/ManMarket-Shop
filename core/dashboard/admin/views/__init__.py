@@ -17,3 +17,4 @@ from .contact import *
 from .chat import *
 from .story import *
 from .users import *
+from .person_pay import *
