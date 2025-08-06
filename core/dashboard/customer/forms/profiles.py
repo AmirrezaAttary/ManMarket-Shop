@@ -1,7 +1,8 @@
 from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from accounts.models import Profile
+from accounts.models import User,Profile
+from django.core.exceptions import ValidationError
 
 
 class CustomerPasswordChangeForm(auth_forms.PasswordChangeForm):
@@ -56,25 +57,34 @@ class CustomerProfileEditForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی را وارد نمایید'
 
-        # مقداردهی اولیه برای email و phone_number
         if self.instance and self.instance.user:
             self.fields['phone_number'].initial = self.instance.user.phone_number
             self.fields['email'].initial = self.instance.user.email
 
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if email:
+            # بررسی یکتابودن ایمیل
+            qs = User.objects.filter(email=email)
+            if self.instance and self.instance.user:
+                qs = qs.exclude(pk=self.instance.user.pk)
+            if qs.exists():
+                raise ValidationError("ایمیل وارد شده قبلاً ثبت شده است.")
+        return email
+
     def save(self, commit=True):
         profile = super().save(commit=False)
-
         if commit:
             profile.save()
 
-        # ذخیره phone_number و email در مدل user
         user = profile.user
         if user:
             user.phone_number = self.cleaned_data.get('phone_number')
             user.email = self.cleaned_data.get('email')
             if commit:
                 user.save()
-
         return profile
+
+        
         
         
