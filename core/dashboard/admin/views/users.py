@@ -33,7 +33,7 @@ class AdminUsersListView(LoginRequiredMixin, HasAdminAccessPermission, ListView)
             queryset = queryset.filter(
                 Q(email__icontains=search_q) |
                 Q(id__iexact=search_q) |
-                Q(user_profile__phone_number__icontains=search_q) |
+                Q(phone_number__icontains=search_q) |
                 Q(user_profile__first_name__icontains=search_q) |
                 Q(user_profile__last_name__icontains=search_q)
             )

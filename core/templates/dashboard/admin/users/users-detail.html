@@ -53,7 +53,7 @@
                     </span>
                   </td>
                   <td>{{object.user_profile.get_fullname}}</td>
-                  <td>{{object.user_profile.phone_number}}</td>
+                  <td>{{object.phone_number}}</td>
                   <td>{{object.get_type_display}}</td>
                   <td> {{ order_count }}<a href="{% url 'dashboard:admin:users-order' pk=object.id %}">مشاهده</a></td>
                   <td class="formatted-price">{{object.user_profile.age}}</td>
