@@ -66,6 +66,7 @@ class RegisterForm(forms.Form):
         if is_email:
             user = User.objects.create_user(email=email_or_phone, password=password)
         else:
-            user = User.objects.create_user(email=None, password=password, phone_number=email_or_phone)
+            # مشخصاً مقدار email را برابر با None قرار می‌دهیم
+            user = User.objects.create_user(email=None, phone_number=email_or_phone, password=password)
 
         return user
