@@ -38,17 +38,25 @@ class RegisterForm(forms.Form):
 
     def clean_email_or_phone(self):
         value = self.cleaned_data['email_or_phone'].strip()
+        user_qs = User.objects.all()
+        current_user = self.initial.get('user')  # کاربر جاری برای فرم ویرایش
+
         if '@' in value:
             # ایمیل
-            if User.objects.filter(email__iexact=value).exists():
-                raise ValidationError("این ایمیل قبلاً استفاده شده است.")
+            if current_user:
+                user_qs = user_qs.exclude(pk=current_user.pk)
+            if user_qs.filter(email__iexact=value).exists():
+                raise ValidationError("این ایمیل قبلاً ثبت شده است.")
             self.cleaned_data['is_email'] = True
         else:
             # شماره موبایل
             validate_iranian_cellphone_number(value)
-            if User.objects.filter(phone_number=value).exists():
-                raise ValidationError("این شماره موبایل قبلاً استفاده شده است.")
+            if current_user:
+                user_qs = user_qs.exclude(pk=current_user.pk)
+            if user_qs.filter(phone_number=value).exists():
+                raise ValidationError("این شماره موبایل قبلاً ثبت شده است.")
             self.cleaned_data['is_email'] = False
+
         return value
 
     def clean_password2(self):

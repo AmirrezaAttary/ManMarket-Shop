@@ -64,14 +64,25 @@ class AdminProfileEditForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        if email:
-            # بررسی یکتابودن ایمیل
-            qs = User.objects.filter(email=email)
-            if self.instance and self.instance.user:
-                qs = qs.exclude(pk=self.instance.user.pk)
-            if qs.exists():
-                raise ValidationError("ایمیل وارد شده قبلاً ثبت شده است.")
+        if email in ["", None]:
+            return None
+        qs = User.objects.filter(email=email)
+        if self.instance and self.instance.user:
+            qs = qs.exclude(pk=self.instance.user.pk)
+        if qs.exists():
+            raise ValidationError("ایمیل وارد شده قبلاً ثبت شده است.")
         return email
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data.get("phone_number")
+        if phone in ["", None]:
+            return None
+        qs = User.objects.filter(phone_number=phone)
+        if self.instance and self.instance.user:
+            qs = qs.exclude(pk=self.instance.user.pk)
+        if qs.exists():
+            raise ValidationError("شماره همراه وارد شده قبلاً ثبت شده است.")
+        return phone
 
     def save(self, commit=True):
         profile = super().save(commit=False)
@@ -80,10 +91,15 @@ class AdminProfileEditForm(forms.ModelForm):
 
         user = profile.user
         if user:
-            user.phone_number = self.cleaned_data.get('phone_number')
-            user.email = self.cleaned_data.get('email')
+            phone = self.cleaned_data.get('phone_number')
+            email = self.cleaned_data.get('email')
+
+            user.phone_number = phone if phone else None
+            user.email = email if email else None
+
             if commit:
                 user.save()
         return profile
+
 
         
