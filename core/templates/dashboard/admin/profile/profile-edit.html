@@ -25,13 +25,21 @@
                                         value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <input type="email" class="form-control" name="email"
-                                        value="{{request.user.email}}" placeholder="ایمیل">
+                                    <input type="email" class="form-control" name="email" value="{{request.user.email}}"
+                                        placeholder="ایمیل">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <input type="text" class="form-control" name="phone_number"
                                         value="{{request.user.phone_number}}" placeholder="شماره همراه">
                                 </div>
+
+
+                                {% if request.user.is_authenticated and not request.user.is_verified %}
+                                <h5>حساب شما هنوز تایید نشده است.</h5>
+                                {% else %}
+                                <h5>حساب شما تایید شده است.</h5>
+                                {% endif %}
+
 
                                 <div class="col-12 text-start">
                                     <button class="btn bg-light theme-color rounded-1 text-dark">
@@ -41,6 +49,13 @@
                                 </div>
                             </div>
                         </form>
+                        {% if request.user.is_authenticated and not request.user.is_verified %}
+                        <form action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="email" value="{{ request.user.email }}">
+                            <button type="submit" class="btn btn-warning">ارسال مجدد لینک تایید</button>
+                        </form>
+                        {% endif %}
                         <form action="{% url 'dashboard:admin:download_database' %}" method="get">
                             <button type="submit">📥 دانلود بک‌آپ دیتابیس</button>
                         </form>
