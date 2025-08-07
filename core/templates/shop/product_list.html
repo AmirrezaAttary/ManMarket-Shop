@@ -256,7 +256,7 @@
                                     <p class="card-text fill-description flex-grow-1">{{object.brief_description}}</p>
                                     <p class="card-price py-1 px-2 ">
                                         <span class="fill-price-value">{% if object.min_discounted_price == None %}
-                                            ناموجود{% else %}{{object.min_discounted_price|intcomma}}تومان {% endif %}</span>
+                                            ناموجود{% else %}{{object.min_discounted_price|intcomma}} {% endif %}</span>
                                             {% if object.min_discounted_price == None %}
                                             {% else %}
                                         <span class="money-icon"></span>
