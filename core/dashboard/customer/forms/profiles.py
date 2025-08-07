@@ -61,6 +61,11 @@ class CustomerProfileEditForm(forms.ModelForm):
             self.fields['phone_number'].initial = self.instance.user.phone_number
             self.fields['email'].initial = self.instance.user.email
 
+            # ✅ اگر کاربر وریفای شده بود، فیلد ایمیل را غیرفعال کن
+            if self.instance.user.is_verified:
+                self.fields['email'].disabled = True
+
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if email in ["", None]:
@@ -94,10 +99,14 @@ class CustomerProfileEditForm(forms.ModelForm):
             email = self.cleaned_data.get('email')
 
             user.phone_number = phone if phone else None
-            user.email = email if email else None
+
+            # ✅ فقط در صورتی که کاربر وریفای نشده بود ایمیل را به‌روزرسانی کن
+            if not user.is_verified:
+                user.email = email if email else None
 
             if commit:
                 user.save()
         return profile
-        
+
+
         
