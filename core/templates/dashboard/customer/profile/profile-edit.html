@@ -114,6 +114,19 @@
                     </div>
                 </div>
             </div>
+                        
+                        {% if request.user == None %}
+                            لطفا یک ایمیل وارد کنید
+
+                            
+                        {% elif request.user.is_authenticated and not request.user.is_verified %}
+                            لطفا ایمیل خود را تایید کنید <br>
+                        <form action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="email" value="{{ request.user.email }}">
+                            <button type="submit" class="btn btn-warning">ارسال مجدد لینک تایید</button>
+                        </form>
+                        {% endif %}
         </div>
     </form>
 </main>
