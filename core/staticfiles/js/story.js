@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const externalCaptionElement = modalContent.querySelector('#story-module-external-caption');
     const captionTextElement = externalCaptionElement.querySelector('#story-module-caption-text');
+    captionTextElement.setAttribute('href' , '')
+    captionTextElement.setAttribute('target' , '_blank')
+    captionTextElement.style.cursor = 'pointer'
+
+    captionTextElement.addEventListener('click' , ()=>{
+        window.location.href = '../../single.product.html'
+    })
 
 
     let currentStoryUserIndex = 0;
@@ -116,6 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
             videoPlayer = null;
         }
         hideLoader();
+
+
 
         modalContent.style.transition = 'transform 0.3s ease-in, opacity 0.3s ease-in';
         modal.style.transition = 'opacity 0.3s ease-in';
@@ -484,6 +493,10 @@ document.addEventListener('DOMContentLoaded', () => {
             closeStoryModal();
         }
     });
+    let CloseStoryInMB = document.getElementById('close-btn-story')
+    CloseStoryInMB.addEventListener('click' , ()=>{
+        closeStoryModal();
+    })
     modalContent.addEventListener('click', (e) => {
         e.stopPropagation();
     });
@@ -492,6 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('story-module-active')) {
             closeStoryModal();
+
         }
         if (e.key === 'ArrowRight' && modal.classList.contains('story-module-active')) {
             prevStory();

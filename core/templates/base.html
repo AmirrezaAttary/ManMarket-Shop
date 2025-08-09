@@ -25,6 +25,10 @@
     <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/logo/logo.webp' %}">
 
+    {% block extra_csss %}
+
+    {% endblock extra_csss %}
+
     <style>
         .profile-container {
             position: relative;
@@ -63,7 +67,7 @@
 
 </head>
 
-<body>
+<body style="background-color: #fff;">
 
 
 

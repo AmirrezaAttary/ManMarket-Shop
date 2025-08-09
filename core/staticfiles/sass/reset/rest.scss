@@ -1,11 +1,23 @@
 
 body{
   overflow-x: hidden !important;
+  font-feature-settings: "lnum" on;
+  background-color: white !important;
 }
 
 body *{
   font-family: peyda, sans-serif ;
   font-weight: normal !important;
+  font-feature-settings: "lnum" on;
+
+}
+
+/* غیرفعال کردن قابلیت انتخاب متن */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 
@@ -70,8 +82,12 @@ img, ion-icon, a { display: block; }
 span { display: inline-block; }
 
 html {
-  font-family: "Poppins", sans-serif;
+  font-family: peyda, sans-serif ;
+  font-weight: normal !important;
   overscroll-behavior: contain;
+}
+[lang="en"] {
+  font-family: peyda, sans-serif  !important;
 }
 
 p{
@@ -80,9 +96,6 @@ p{
 
 input::placeholder { font: inherit; }
 
-body {
-  background: var(--white);
-}
 
 
 body::-webkit-scrollbar { width: 15px; }

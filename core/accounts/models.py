@@ -102,9 +102,6 @@ class Profile(models.Model):
         return name if name else "کاربر جدید"
         
     
-    
-# accounts/models.py
-
 
 
 class EmailOTP(models.Model):

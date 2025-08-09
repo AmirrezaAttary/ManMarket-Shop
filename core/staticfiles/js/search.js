@@ -1,7 +1,3 @@
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
     const mobileFilterBar = document.getElementById('mobileFilterBar');
     const filtersBottomSheetOverlay = document.getElementById('filtersBottomSheetOverlay');
@@ -10,7 +6,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBottomSheetButton = document.getElementById('closeBottomSheetButton');
     const sidebarFilterContentWrapper = document.querySelector('.fill-filters-sidebar-content-wrapper');
 
+    const layoutToggleButton = document.getElementById('layoutToggleButton');
+    const layoutPopover = document.getElementById('layoutPopover');
+    const resultsGrid = document.getElementById('resultsGrid');
+    const layoutOptions = document.querySelectorAll('.layout-popover .layout-option');
+
     const isMobile = () => window.innerWidth < 992;
+
+    const setLayout = (layout) => {
+        if (!resultsGrid || !layoutOptions) return;
+        if (layout === 'list') {
+            resultsGrid.classList.add('view-list');
+            resultsGrid.classList.remove('row-cols-2', 'row-cols-sm-2', 'row-cols-md-3', 'row-cols-lg-4');
+        } else {
+            resultsGrid.classList.remove('view-list');
+            resultsGrid.classList.add('row-cols-2', 'row-cols-sm-2', 'row-cols-md-3', 'row-cols-lg-4');
+        }
+        layoutOptions.forEach(option => {
+            if (option.dataset.layout === layout) {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+    };
 
     const updateLayoutBasedOnWidth = () => {
         if (isMobile()) {
@@ -20,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     bottomSheetFilterContent.appendChild(sidebarFilterContentWrapper);
                 }
             }
+            setLayout('list');
         } else {
             document.body.classList.remove('is-mobile-layout');
             const desktopSidebar = document.querySelector('.fill-filters-sidebar-container');
@@ -28,11 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     desktopSidebar.appendChild(sidebarFilterContentWrapper);
                 }
             }
+            setLayout('grid');
         }
     };
 
+    const debounce = (func, delay) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
     updateLayoutBasedOnWidth();
-    window.addEventListener('resize', updateLayoutBasedOnWidth);
+    window.addEventListener('resize', debounce(updateLayoutBasedOnWidth, 250));
 
     const filterChips = document.querySelectorAll('.mobile-filter-bar .btn-filter-chip[data-filter-target="all"]');
     filterChips.forEach(chip => {
@@ -42,15 +71,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    closeBottomSheetButton.addEventListener('click', () => {
-        filtersBottomSheetOverlay.classList.remove('show');
-        filtersBottomSheet.classList.remove('show');
-    });
+    if (closeBottomSheetButton) {
+        closeBottomSheetButton.addEventListener('click', () => {
+            filtersBottomSheetOverlay.classList.remove('show');
+            filtersBottomSheet.classList.remove('show');
+        });
+    }
 
-    filtersBottomSheetOverlay.addEventListener('click', () => {
-        filtersBottomSheetOverlay.classList.remove('show');
-        filtersBottomSheet.classList.remove('show');
-    });
+    if (filtersBottomSheetOverlay) {
+        filtersBottomSheetOverlay.addEventListener('click', () => {
+            filtersBottomSheetOverlay.classList.remove('show');
+            filtersBottomSheet.classList.remove('show');
+        });
+    }
 
     const applyFiltersMobileButton = document.getElementById('applyFiltersMobileButton');
     if (applyFiltersMobileButton) {
@@ -70,10 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxPriceValueInput = document.getElementById('maxPriceValue');
     const priceSliderRange = document.getElementById('priceSliderRange');
 
-    const min_db = document.getElementById('min_db_html').value;
-    const max_db = document.getElementById('max_db_html').value;
-    const actualMinProductPrice =  0;
-    const actualMaxProductPrice = parseInt(max_db, 10) || 100000000;    
+    const actualMinProductPrice = 100;
+    const actualMaxProductPrice = 180000000;
+    const PRICE_STEP = 1000000;
+
     let currentMinPrice = actualMinProductPrice;
     let currentMaxPrice = actualMaxProductPrice;
 
@@ -82,10 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updatePriceDisplays = () => {
-        minPriceDisplay.textContent = formatPrice(currentMinPrice);
-        maxPriceDisplay.textContent = formatPrice(currentMaxPrice);
-        minPriceValueInput.value = currentMinPrice;
-        maxPriceValueInput.value = currentMaxPrice;
+        if (minPriceDisplay && maxPriceDisplay && minPriceValueInput && maxPriceValueInput) {
+            minPriceDisplay.textContent = formatPrice(currentMinPrice);
+            maxPriceDisplay.textContent = formatPrice(currentMaxPrice);
+            minPriceValueInput.value = currentMinPrice;
+            maxPriceValueInput.value = currentMaxPrice;
+        }
     };
 
     const updateSliderUI = () => {
@@ -138,12 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const sliderRect = priceSliderTrack.getBoundingClientRect();
         let newX = getClientX(e) - sliderRect.left;
         let percent = (newX / sliderRect.width) * 100;
-
         percent = Math.max(0, Math.min(100, percent));
 
-        const step = 1000000;
         let rawValue = actualMinProductPrice + (percent / 100) * (actualMaxProductPrice - actualMinProductPrice);
-        const newValue = Math.round(rawValue / step) * step;
+        const newValue = Math.round(rawValue / PRICE_STEP) * PRICE_STEP;
 
         if (activeHandle === minPriceHandle) {
             currentMinPrice = Math.min(newValue, currentMaxPrice);
@@ -170,10 +203,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.removeEventListener('touchend', onEnd);
     };
 
-    minPriceHandle.addEventListener('mousedown', (e) => onStart(e, minPriceHandle));
-    maxPriceHandle.addEventListener('mousedown', (e) => onStart(e, maxPriceHandle));
-    minPriceHandle.addEventListener('touchstart', (e) => onStart(e, minPriceHandle));
-    maxPriceHandle.addEventListener('touchstart', (e) => onStart(e, maxPriceHandle));
+    if (minPriceHandle && maxPriceHandle) {
+        minPriceHandle.addEventListener('mousedown', (e) => onStart(e, minPriceHandle));
+        maxPriceHandle.addEventListener('mousedown', (e) => onStart(e, maxPriceHandle));
+        minPriceHandle.addEventListener('touchstart', (e) => onStart(e, minPriceHandle));
+        maxPriceHandle.addEventListener('touchstart', (e) => onStart(e, maxPriceHandle));
+    }
 
     updatePriceDisplays();
     updateSliderUI();
@@ -189,36 +224,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     input.checked = true;
                 }
             });
-
             currentMinPrice = actualMinProductPrice;
             currentMaxPrice = actualMaxProductPrice;
             updateSliderUI();
             updatePriceDisplays();
         });
     }
-
-    const layoutToggleButton = document.getElementById('layoutToggleButton');
-    const layoutPopover = document.getElementById('layoutPopover');
-    const resultsGrid = document.getElementById('resultsGrid');
-    const layoutOptions = document.querySelectorAll('.layout-popover .layout-option');
-
-    const setLayout = (layout) => {
-        if (layout === 'list') {
-            resultsGrid.classList.add('view-list');
-            resultsGrid.classList.remove('row-cols-2', 'row-cols-sm-2', 'row-cols-md-3', 'row-cols-lg-4');
-        } else {
-            resultsGrid.classList.remove('view-list');
-            resultsGrid.classList.add('row-cols-2', 'row-cols-sm-2', 'row-cols-md-3', 'row-cols-lg-4');
-        }
-
-        layoutOptions.forEach(option => {
-            if (option.dataset.layout === layout) {
-                option.classList.add('active');
-            } else {
-                option.classList.remove('active');
-            }
-        });
-    };
 
     if (layoutToggleButton) {
         layoutToggleButton.addEventListener('click', (event) => {
@@ -229,20 +240,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.addEventListener('click', (event) => {
-        if (!layoutPopover.contains(event.target) && !layoutToggleButton.contains(event.target)) {
+        if (layoutPopover && layoutToggleButton && !layoutPopover.contains(event.target) && !layoutToggleButton.contains(event.target)) {
             layoutPopover.classList.remove('show');
             layoutToggleButton.classList.remove('popover-active');
         }
     });
 
-    layoutOptions.forEach(option => {
-        option.addEventListener('click', () => {
-            const selectedLayout = option.dataset.layout;
-            setLayout(selectedLayout);
-            layoutPopover.classList.remove('show');
-            layoutToggleButton.classList.remove('popover-active');
+    if (layoutOptions) {
+        layoutOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const selectedLayout = option.dataset.layout;
+                setLayout(selectedLayout);
+                if (layoutPopover && layoutToggleButton) {
+                    layoutPopover.classList.remove('show');
+                    layoutToggleButton.classList.remove('popover-active');
+                }
+            });
         });
-    });
-
-    setLayout('grid');
+    }
 });

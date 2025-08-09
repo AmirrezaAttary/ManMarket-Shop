@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             galleryTop = null;
         }
 
+
         const galleryTopWrapper = galleryTopSwiperEl.querySelector('.swiper-wrapper');
         const galleryThumbsWrapper = galleryThumbsSwiperEl.querySelector('.swiper-wrapper');
 
@@ -126,6 +127,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(() => {
                     verticalGalleryContentEl.children[actualInitialIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 50);
+                setTimeout(
+                    ()=>{
+                        let HiddenS = document.getElementsByClassName('box-in-slider-single-pr')
+                        Array.from(HiddenS).forEach(element => {
+                            element.style.display = 'none'
+                        });
+                    },3000)
             }
             if(closeModalButton) closeModalButton.focus();
         } else {
@@ -620,3 +628,19 @@ document.querySelectorAll('.alll-cs').forEach(btn => {
         tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
 })
+
+
+let notX = document.querySelector('.not-x')
+
+notX.addEventListener('click' , function (){
+    Swal.fire({
+        title: 'به محض موجود شدن این کالا , از طریق پیامک یا ایمیل به شما اطلاع رسانی خواهد شد .',
+        icon: 'success',
+        position: 'center',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true,
+    });
+})
+
+

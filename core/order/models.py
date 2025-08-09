@@ -7,13 +7,16 @@ class TrackingType(models.IntegerChoices):
     mahex = 2 , "ارسال با ماهکس"
     tipax = 3 , "ارسال با تیپاکس"
     person = 4, "حضوری"
+    
 
 class OrderStatusType(models.IntegerChoices):
     pending = 1 , "در انتظار پرداخت"
-    success = 2, "در حال پردازش"
-    shipped = 3, "ارسال شده"
-    deliverd = 4, "تحویل شده"
-    failed = 5,"لغو شده"
+    awaiting = 2, "در انتظار تایید سفارش"
+    success = 3, "در حال پردازش"
+    shipped = 4, "ارسال شده"
+    deliverd = 5, "تحویل شده"
+    failed = 6,"لغو شده"
+
 
 class UserAddressModel(models.Model):
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)

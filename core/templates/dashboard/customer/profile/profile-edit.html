@@ -4,7 +4,25 @@
 {% block content %}
 
 {% include 'dashboard/customer/sidebar.html' %}
+
+
+
 <main class="profile-content-area-new">
+    <form action="{% url 'dashboard:customer:profile-image-edit' %}" method="post" enctype="multipart/form-data" id="profileImageForm-2">
+        {% csrf_token %}
+        </form>
+        <div class="sidebar-avatar-wrapper-2 position-relative w-center my-5">
+        <!-- STATIC: Default avatar SVG placeholder -->
+        <div class="position-relative w-50">
+
+            <img src="{{ request.user.user_profile.image.url }}" alt="آواتار پیش‌فرض" class="sidebar-avatar" id="profileAvatarPreview-2">
+            <label for="avatarUploadInput-2" class="sidebar-avatar-upload p-1 w-right position-absolute ms-5" title="تغییر عکس پروفایل">
+                <svg viewBox="0 0 24 24"><use xlink:href="#icon-edit-pencil"></use></svg>
+            </label>
+            <input type="file" form="profileImageForm-2" name="image" onchange="setTimeout(() => document.getElementById('profileImageForm-2').submit(), 100);" id="avatarUploadInput-2" class="d-none" accept="image/*">
+        </div>
+
+    </div>
     <form method="post" action="." class="profile-section-new">
         {% csrf_token %}
         <header class="section-header-new border-0">
