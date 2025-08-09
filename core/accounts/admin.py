@@ -3,8 +3,10 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Profile
+from .models import Profile,EmailOTP
 from django.contrib.auth import get_user_model
+from django.utils.html import format_html
+from django.utils.timezone import now
 
 # Register your models here.
 
@@ -86,3 +88,37 @@ class SessionAdmin(admin.ModelAdmin):
     list_display = ['session_key', '_session_data', 'expire_date']
     readonly_fields = ['_session_data']
 admin.site.register(Session, SessionAdmin)
+
+
+
+
+# accounts/admin.py
+
+
+
+@admin.register(EmailOTP)
+class EmailOTPAdmin(admin.ModelAdmin):
+    list_display = ('user', 'code', 'created_at', 'is_used', 'valid_status')
+    list_filter = ('is_used', 'created_at')
+    search_fields = ('user__email', 'code')
+    ordering = ('-created_at',)
+
+    def valid_status(self, obj):
+        """نمایش وضعیت معتبر بودن OTP"""
+        if obj.is_valid():
+            return format_html('<span style="color: green;">✅ معتبر</span>')
+        else:
+            return format_html('<span style="color: red;">❌ منقضی</span>')
+    valid_status.short_description = 'وضعیت اعتبار'
+
+    def get_queryset(self, request):
+        """لود پیشرفته با select_related برای کاربر"""
+        return super().get_queryset(request).select_related('user')
+
+    readonly_fields = ('user', 'code', 'created_at', 'is_used')
+
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'code', 'is_used', 'created_at')
+        }),
+    )

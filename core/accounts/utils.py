@@ -29,3 +29,19 @@ def send_activation_link(request, user):
 
     # حالا این لینک رو می‌تونی توی ایمیل ارسال کنی یا به کاربر نشون بدی
     print("Activation link:", activation_link)
+
+
+
+# accounts/utils.py
+
+from random import randint
+from .models import EmailOTP
+
+
+def send_email_otp(user):
+    code = str(randint(100000, 999999))
+    EmailOTP.objects.create(user=user, code=code)
+
+    subject = "کد ورود یکبار مصرف"
+    message = f"کد ورود شما به سایت: {code}\nاین کد تا 2 دقیقه معتبر است."
+    send_mail(subject, message, 'info@manmarket.ir', [user.email], fail_silently=False)

@@ -1,5 +1,5 @@
 from django.contrib.auth import views as auth_views
-from accounts.forms import AuthenticationForm,RegisterForm,ResendActivationEmailForm
+from accounts.forms import AuthenticationForm,RegisterForm,ResendActivationEmailForm,EmailOTPRequestForm, EmailOTPVerifyForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib.auth.tokens import default_token_generator
@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth import get_user_model
-from accounts.utils import send_password_reset_email
+from accounts.utils import send_password_reset_email,send_email_otp
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib import messages  
@@ -15,7 +15,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views import View
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
-from accounts.models import User
+from accounts.models import User, EmailOTP
 from django.core.mail import send_mail
 from django.views.generic import FormView
 from django.utils.encoding import force_str
@@ -145,3 +145,35 @@ class ResendActivationEmailView(FormView):
             messages.error(self.request, "کاربری با این ایمیل یافت نشد.")
 
         return super().form_valid(form)
+    
+    
+    
+# accounts/views.py
+
+class EmailOTPRequestView(FormView):
+    template_name = 'accounts/email_otp_request.html'
+    form_class = EmailOTPRequestForm
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        user = User.objects.get(email=email)
+        send_email_otp(user)
+        self.request.session['otp_email'] = email  # ذخیره موقت
+        return redirect('accounts:email_otp_verify')
+
+
+class EmailOTPVerifyView(FormView):
+    template_name = 'accounts/email_otp_verify.html'
+    form_class = EmailOTPVerifyForm
+
+    def get_initial(self):
+        return {'email': self.request.session.get('otp_email')}
+
+    def form_valid(self, form):
+        user = form.cleaned_data['user']
+        user.backend = 'accounts.backends.EmailOrPhoneBackend'  # اضافه کردن backend
+        login(self.request, user)
+        EmailOTP.objects.filter(user=user, code=form.cleaned_data['code']).update(is_used=True)
+        messages.success(self.request, "ورود شما با موفقیت انجام شد.")
+        return redirect('dashboard:home')
+
