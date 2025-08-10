@@ -57,7 +57,15 @@ class CustomerOrderDetailView(LoginRequiredMixin, HasCustomerAccessPermission, D
 
     def get_queryset(self):
         return OrderModel.objects.filter(user=self.request.user)
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # تبدیل تاریخ به شمسی برای هر سفارش
+        context["jalali_created_date"] = to_jalali(self.object.created_date)
+        context["jalali_updated_date"] = to_jalali(self.object.updated_date)
+        return context
+    
+    
   
 class CustomerOrderInvoiceView(LoginRequiredMixin, HasCustomerAccessPermission, DetailView):
     template_name = "dashboard/customer/orders/order-invoice.html"

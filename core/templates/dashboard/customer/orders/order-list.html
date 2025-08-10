@@ -50,7 +50,7 @@
                         <div class="order-footer-new">
                             <span class="order-total-new">{{object.total_price|intcomma}}<small>تومان</small></span>
                             <div class="mx-3">
-                                <a href="" class="btn-custom btn-secondary btn-sm">
+                                <a href="{% url 'dashboard:customer:order-detail' pk=object.id %}" class="btn-custom btn-secondary btn-sm">
                                     <svg class="svg-icon">
                                         <use xlink:href="#icon-external-link"></use>
                                     </svg>
