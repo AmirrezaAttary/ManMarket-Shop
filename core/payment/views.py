@@ -34,7 +34,7 @@ class PaymentVerifyView(View):
 
             order = getattr(payment_obj, "order", None)
             if order is not None:
-                order.status = OrderStatusType.success.value
+                order.status = OrderStatusType.awaiting.value
                 order.save()
 
                 # 🔻 کم کردن موجودی محصولات از انبار

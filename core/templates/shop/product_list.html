@@ -255,42 +255,38 @@
                                     <div class="fill-card-brand my-1">{{object.category}}</div>
                                     <p class="card-text fill-description flex-grow-1">{{object.brief_description}}</p>
                                     <p class="card-price py-1 px-2 ">
-                                        <span class="fill-price-value">{% if object.min_discounted_price == None %}
+                                        <span class="fill-price-value text-dark">{% if object.min_discounted_price == None %}
                                             ناموجود{% else %}{{object.min_discounted_price|intcomma}} {% endif %}</span>
                                             {% if object.min_discounted_price == None %}
                                             {% else %}
-                                        <span class="money-icon"></span>
+                                        <span class="money-icon text-dark"></span>
                                         {% endif %}
                                     </p>
                                     <div dir="ltr"
-                                        class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center flex-column">
-
+                                        class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center">
                                         {% with object.color_inventories.all as colors %}
-                                        {% for inventory in colors %}
+                                            {% for inventory in colors|slice:":3" %}
+                                                {% if inventory.price != 0 and inventory.price != None %}
+                                                    {% if inventory.hex_color == "#ffffff" %}
+                                                        <span class="mx-1 one-color mt-1"
+                                                            style="background-color: {{ inventory.hex_color }}; border:1px solid gray"></span>
+                                                    {% else %}
+                                                        <span class="mx-1 one-color mt-1"
+                                                            style="background-color: {{ inventory.hex_color }};"></span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
 
-                                        {% if inventory.price == 0 or inventory.price == None %}
-
-                                        {% else %}
-                                        
-                                        {% if inventory.hex_color == "#ffffff" %}
-                                            <span class="mx-1 one-color mt-1"
-                                            style="background-color: {{ inventory.hex_color }}; border:1px solid gray">
-                                            <span class="">
-
-                                            </span>
-                                        </span>
-                                        {% else %}
-                                            
-
-                                        <span class="mx-1 one-color mt-1"
-                                            style="background-color: {{ inventory.hex_color }};">
-                                            <span class="">
-
-                                            </span>
-                                        </span>
-                                        {% endif %}
-                                        {% endif %}
-                                        {% endfor %}
+                                            {% if colors|length > 3 %}
+                                                <svg class="mt-1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 512 512"
+                                                    width="0.6em"
+                                                    height="0.6em">
+                                                    <path d="M417.4 224H288V94.6c0-16.9-14.3-30.6-32-30.6s-32 13.7-32 30.6V224H94.6C77.7 224 64 238.3 64 256s13.7 32 30.6 32H224v129.4c0 16.9 14.3 30.6 32 30.6s32-13.7 32-30.6V288h129.4c16.9 0 30.6-14.3 30.6-32s-13.7-32-30.6-32z"
+                                                        fill="currentColor"></path>
+                                                </svg>
+                                            {% endif %}
                                         {% endwith %}
 
                                     </div>

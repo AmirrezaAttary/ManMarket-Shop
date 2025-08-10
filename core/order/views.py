@@ -91,7 +91,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
                 # ✅ به‌روزرسانی وضعیت سفارش
                 order.payment = payment_obj
-                order.status = OrderStatusType.success.value
+                order.status = OrderStatusType.awaiting.value
                 order.save()
 
                 # ✅ کاهش موجودی محصولات
@@ -203,7 +203,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
             )
 
             order.payment = payment_obj
-            order.status = OrderStatusType.success.value
+            order.status = OrderStatusType.awaiting.value
             order.save()
 
             # کاهش موجودی محصولات

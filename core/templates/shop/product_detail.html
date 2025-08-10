@@ -11,13 +11,12 @@
 {% block meta_description %}
 
 {% if object.meta_description %}
-    <meta name="description"
-    content="{{object.meta_description}}"> 
+<meta name="description" content="{{object.meta_description}}">
 {% endif %}
-    
+
 
 {% endblock meta_description %}
-    
+
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/swiper.lib.css' %}" />
@@ -94,16 +93,21 @@
 
             <div class="col-lg-4 col-md-6 col-12">
                 <div class="product-info-area">
-                    <span class="product-category"
-                        style="font-size: 12px;display: flex;justify-content: center;color: black;"><a class="mx-2"
-                            href="{% url 'shop:product-list' %}?category={{object.category.slug}}">{{object.category}}</a>
-                        / <a class="mx-2"
-                            href="{% url 'shop:product-list' %}?category={{object.category.slug}}&brand={{object.brand.slug}}">{{object.brand}}</a></span>
+                    <a href="{% url 'shop:product-list' %}?category={{object.category.slug}}" class="product-category "
+                        style="font-size: 14px;font-weight: bold !important;">{{object.category}}</a>
+                    <span>/</span>
+                    <a href="{% url 'shop:product-list' %}?category={{object.category.slug}}&brand={{object.brand.slug}}"
+                        class="product-category "
+                        style="font-size: 14px;font-weight: bold !important;">{{object.brand}}</a>
                     <h1 class="product-title" style="font-size: 18px;">{{object.title}}</h1>
-                    <h1 class="card-title-2 my-3">
-                        {{object.brief_title}}
-                        <span class="line mx-1"></span>
-                    </h1>
+                    <div class="card-title-3">
+                        <h1 class="card-title-2 my-3 w-left">
+                            {{object.brief_title}}
+
+                            <span class="line mx-1"></span>
+                        </h1>
+                    </div>
+
 
                     <div class="product-rating align-items-center">
                         <span class="rating-value mx-1" style="font-size: 16px;">{{object.avg_rate}}</span>
@@ -136,7 +140,8 @@
                             class="btn-color color-option {% if color.color.id == default_color.color.id %}active-cs{% endif %}"
                             data-price="{{ color.get_price|intcomma }}" data-color-inventory-id="{{ color.id }}"
                             data-color-id="{{ color.color.id }}" data-color-value="{{ color.color }}"
-                            data-stock="{{ color.stock }}" style="font-size: 15px;">
+                            data-stock="{{ color.stock }}" data-orginal-price="{{ color.price|intcomma }}"
+                            data-discount-percent="{{ color.discount_percent }}%" style="font-size: 15px;">
                             {{ color.color }}
                         </button>
                         {% endif %}
@@ -177,15 +182,36 @@
                     </h5>
                     {% endif %}
                     <div class="panel-card">
+                        {% if default_color.discounted_price == None %}
+                        {% else %}
                         <div class="panel-section price-section">
-                            {% if default_color.discounted_price == None %}
-                            {% else %}
-                            <span style="font-size: 20px">
-                                قیمت : <span id="price-value">{{ default_color.get_price|intcomma }}</span>
-                            </span>
-                            <span class="money-icon mx-1"></span>
-                            {% endif %}
+                            <div class="d-flex justify-content-between w-100 align-items-center">
+                                <span style="font-size: 18px">
+                                    قیمت :
+                                </span>
+                                <span class="" style="font-size: 22px">
+                                    
+                                    <div class="d-flex justify-content-between w-100 align-items-center my-1">
+                                        <del class="d-flex justify-content-center text-danger fs-14"
+                                            >
+                                            <span id="original-price">{{ default_color.price|intcomma }}</span>
+                                            <span class="money-icon mx-1 text-danger" id="original-price-icon"></span>
+
+                                        </del>
+                                        <span style="text-decoration: none!important;"
+                                            class="theme-color rounded-3 text-light mx-1 py-1 px-1"
+                                            id="discounted-price">
+                                            {{ default_color.discount_percent }}%
+                                        </span>
+                                    </div>
+                                    
+                                    <span id="price-value">{{ default_color.get_price|intcomma }}</span>
+                                    <span class="money-icon mx-1"></span>
+                                </span>
+
+                            </div>
                         </div>
+                        {% endif %}
                         <div class="panel-section ">
 
                             <div class="w-100 d-flex justify-content-between align-items-baseline">
@@ -200,21 +226,26 @@
                                     </span>
                                     ارتباط با فروشنده
                                 </span>
-                                <span class="w-50 d-flex justify-content-center align-items-baseline">
-                                    <a href="{% url 'chat:start_chat' product_id=object.pk %}" class="icon-x p-1 mx-1 ">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.4em"
-                                            height="1.4em">
+                                <span class="w-50 d-flex justify-content-center align-items-center mb-1">
+                                    <a href="{% url 'chat:start_chat' product_id=object.pk %}" class="icon-x p-1 mx-1 "
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="گفتگو با فروشنده">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1.6em"
+                                            height="1.6em">
                                             <path fill="currentColor"
                                                 d="M8 2.19c3.13 0 5.68 2.25 5.68 5s-2.55 5-5.68 5a5.7 5.7 0 0 1-1.89-.29l-.75-.26l-.56.56a14 14 0 0 1-2 1.55a.13.13 0 0 1-.07 0v-.06a6.58 6.58 0 0 0 .15-4.29a5.25 5.25 0 0 1-.55-2.16c0-2.77 2.55-5 5.68-5M8 .94c-3.83 0-6.93 2.81-6.93 6.27a6.4 6.4 0 0 0 .64 2.64a5.53 5.53 0 0 1-.18 3.48a1.32 1.32 0 0 0 2 1.5a15 15 0 0 0 2.16-1.71a6.8 6.8 0 0 0 2.31.36c3.83 0 6.93-2.81 6.93-6.27S11.83.94 8 .94">
                                             </path>
-                                            <ellipse cx="5.2" cy="7.7" fill="currentColor" rx=".8" ry=".75"></ellipse>
-                                            <ellipse cx="8" cy="7.7" fill="currentColor" rx=".8" ry=".75"></ellipse>
-                                            <ellipse cx="10.8" cy="7.7" fill="currentColor" rx=".8" ry=".75"></ellipse>
+                                            <ellipse cx="5.2" cy="7.7" fill="currentColor" rx=".8" ry=".75">
+                                            </ellipse>
+                                            <ellipse cx="8" cy="7.7" fill="currentColor" rx=".8" ry=".75">
+                                            </ellipse>
+                                            <ellipse cx="10.8" cy="7.7" fill="currentColor" rx=".8" ry=".75">
+                                            </ellipse>
                                         </svg>
                                     </a>
-                                    <a href="tel:+989120983422" target="_blank" class="icon-x p-1 mx-1 ">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.4em"
-                                            height="1.4em">
+                                    <a href="tel:+989120983422" target="_blank" class="icon-x p-1 mx-1 "
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="تماس با فروشنده">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.6em"
+                                            height="1.6em">
                                             <path fill="currentColor"
                                                 d="m16.052 1.787l.966.261a7 7 0 0 1 4.93 4.934l.26.965l-1.93.521l-.261-.965a5 5 0 0 0-3.522-3.524l-.965-.262zM1 2h8.58l1.487 6.69l-1.86 1.86a14.1 14.1 0 0 0 4.243 4.242l1.86-1.859L22 14.42V23h-1a19.9 19.9 0 0 1-10.85-3.196a20.1 20.1 0 0 1-5.954-5.954A19.9 19.9 0 0 1 1 3zm2.027 2a17.9 17.9 0 0 0 2.849 8.764a18.1 18.1 0 0 0 5.36 5.36A17.9 17.9 0 0 0 20 20.973v-4.949l-4.053-.9l-2.174 2.175l-.663-.377a16.07 16.07 0 0 1-6.032-6.032l-.377-.663l2.175-2.174L7.976 4zm12.111 1.165l.966.261a3.5 3.5 0 0 1 2.465 2.467l.26.965l-1.93.521l-.261-.965a1.5 1.5 0 0 0-1.057-1.057l-.965-.261z">
                                             </path>
@@ -304,6 +335,10 @@
         </div>
         <div id="fullscreenGalleryModal" class="fullscreen-modal" role="dialog" aria-modal="true" aria-hidden="true">
             <button id="modalCloseButton" class="close-btn" aria-label="بستن">&times;</button>
+            <p class="w-center">
+                <span class="bg-dark px-2 py-2 box-in-slider-single-pr position-absolute text-light rounded-3">برای دیدن
+                    تصاویر دیگر از این محصول اسکرول کنید</span>
+            </p>
             <div id="verticalGalleryContainer" class="vertical-scroll-gallery">
             </div>
         </div>
@@ -429,48 +464,85 @@
 <script src="{% static 'js/splide.lib.js' %}"></script>
 <!--اینا همه مال سینگل پروداکته -->
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const colorButtons = document.querySelectorAll('.color-option');
-        const priceValueEl = document.getElementById('price-value');
-        const stockEl = document.getElementById('stock'); // اضافه شد
-        const addToCartBtn = document.getElementById('add-to-cart-btn');
-        const OBJECT_ID = '{{ object.id }}';
+document.addEventListener('DOMContentLoaded', () => {
+    const colorButtons = document.querySelectorAll('.color-option');
+    const priceValueEl = document.getElementById('price-value');
+    const originalPriceEl = document.getElementById('original-price');
+    const originalPriceIconEl = document.getElementById('original-price-icon');
+    const discountedPriceEl = document.getElementById('discounted-price');
+    const stockEl = document.getElementById('stock');
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    const OBJECT_ID = '{{ object.id }}';
 
-        colorButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (button.classList.contains('active-cs')) return;
+    colorButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (button.classList.contains('active-cs')) return;
 
-                colorButtons.forEach(btn => btn.classList.remove('active-cs'));
-                button.classList.add('active-cs');
+            colorButtons.forEach(btn => btn.classList.remove('active-cs'));
+            button.classList.add('active-cs');
 
-                const price = button.dataset.price;
-                const colorValue = button.dataset.colorValue;
-                const colorId = button.dataset.colorId;
-                const inventoryId = button.dataset.colorInventoryId;
-                const stock = button.dataset.stock; // مقدار استوک از دکمه
+            const price = button.dataset.price;
+            const orginalPrice = button.dataset.orginalPrice;
+            const discountPercent = button.dataset.discountPercent;
+            const colorValue = button.dataset.colorValue;
+            const colorId = button.dataset.colorId;
+            const inventoryId = button.dataset.colorInventoryId;
+            const stock = button.dataset.stock;
 
-                if (priceValueEl) {
-                    priceValueEl.textContent = price;
+            // قیمت نهایی
+            if (priceValueEl) {
+                priceValueEl.textContent = price;
+            }
+
+            // اگر تخفیف وجود داشت
+            if (parseInt(discountPercent) > 0) {
+                if (originalPriceEl) {
+                    originalPriceEl.textContent = orginalPrice;
+                    originalPriceEl.parentElement.style.display = '';
                 }
-
-                if (stockEl) {
-                    stockEl.textContent = `${stock} عدد در انبار موجود است`;
+                if (originalPriceIconEl) {
+                    originalPriceIconEl.style.display = '';
                 }
-
-                if (typeof updateSku === 'function') updateSku(colorValue);
-                if (typeof initSwiper === 'function' && typeof productImages !== 'undefined') {
-                    const filteredImages = productImages.filter(img => img.color === colorValue);
-                    initSwiper(filteredImages);
+                if (discountedPriceEl) {
+                    discountedPriceEl.textContent = discountPercent;
+                    discountedPriceEl.style.display = '';
                 }
-
-                if (addToCartBtn) {
-                    addToCartBtn.disabled = false;
-                    addToCartBtn.textContent = 'افزودن به سبد خرید';
-                    addToCartBtn.setAttribute('onclick', `addToCart('${OBJECT_ID}', '${colorId}', '${inventoryId}')`);
+            } else {
+                // پاک و مخفی کردن
+                if (originalPriceEl) {
+                    originalPriceEl.textContent = '';
+                    originalPriceEl.parentElement.style.display = 'none';
                 }
-            });
+                if (originalPriceIconEl) {
+                    originalPriceIconEl.style.display = 'none';
+                }
+                if (discountedPriceEl) {
+                    discountedPriceEl.textContent = '';
+                    discountedPriceEl.style.display = 'none';
+                }
+            }
+
+            // موجودی
+            if (stockEl) {
+                stockEl.textContent = `${stock} عدد در انبار موجود است`;
+            }
+
+            // به‌روزرسانی اسلایدر و SKU
+            if (typeof updateSku === 'function') updateSku(colorValue);
+            if (typeof initSwiper === 'function' && typeof productImages !== 'undefined') {
+                const filteredImages = productImages.filter(img => img.color === colorValue);
+                initSwiper(filteredImages);
+            }
+
+            // دکمه افزودن به سبد خرید
+            if (addToCartBtn) {
+                addToCartBtn.disabled = false;
+                addToCartBtn.textContent = 'افزودن به سبد خرید';
+                addToCartBtn.setAttribute('onclick', `addToCart('${OBJECT_ID}', '${colorId}', '${inventoryId}')`);
+            }
         });
     });
+});
 
 </script>
 <!--این اونیه که مال سینگل پروداکته -->
@@ -597,6 +669,13 @@
                 setTimeout(() => {
                     verticalGalleryContentEl.children[actualInitialIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 50);
+                setTimeout(
+                    () => {
+                        let HiddenS = document.getElementsByClassName('box-in-slider-single-pr')
+                        Array.from(HiddenS).forEach(element => {
+                            element.style.display = 'none'
+                        });
+                    }, 3000)
             }
             if (closeModalButton) closeModalButton.focus();
         } else {

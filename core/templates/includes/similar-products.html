@@ -8,12 +8,12 @@
             <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
 
         </h5>
-        <ul class="splide__list ">
+        <ul class="splide__list align-items-center">
             {% for product in similar_prodcuts %}
-            <li class="splide__slide SH-HS-related-product-item w-center ">
+            <li class="splide__slide SH-HS-related-product-item w-center h-100">
                 <a href="{{ product.get_absolute_url }}" class="SH-HS-product-link w-center">
                     <img src="{{ product.image.url }}" alt="{{ product.title }}" class="SH-HS-product-thumbnail">
-                    <h5 class="card-title mt-4 w-right text-dark">{{ product.title }}</h5>
+                    <h5 class="card-title mt-4 w-right text-dark ">{{ product.title|truncatechars:70 }}</h5>
                     <span class="SH-HS-product-price my-2"> 
                         {% with min_price=product.get_min_price %}
                         {% if min_price %}
