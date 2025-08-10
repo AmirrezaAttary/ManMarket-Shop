@@ -253,6 +253,16 @@
                                 <div class="card-body d-flex flex-column w-right">
                                     <h5 class="card-title"> {{object.title}}</h5>
                                     <div class="fill-card-brand my-1">{{object.category}}</div>
+                                    
+                                {% if object.has_discount %}
+                                <p class="card-price py-1 p-0">
+                                    <del class="fill-price-value theme-c cs-fs-se">{{ object.min_price|intcomma }}</del>
+                                    <span class="money-icon theme-c cs-fs-se"></span>
+                                    <span style="text-decoration: none!important;font-size: 0.65rem !important;" class="theme-color rounded-1 text-light p-cs-t cs-fs-se mx-1">
+                                        {{ object.min_discount_percent }}%
+                                    </span>
+                                </p>
+                                {% endif %}
                                     <p class="card-text fill-description flex-grow-1">{{object.brief_description}}</p>
                                     <p class="card-price py-1 px-2 ">
                                         <span class="fill-price-value text-dark">{% if object.min_discounted_price == None %}

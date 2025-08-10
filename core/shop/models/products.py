@@ -47,3 +47,16 @@ class ProductModel(models.Model):
     
     def get_absolute_url(self):
         return reverse("shop:product-detail", kwargs={"slug": self.slug})
+
+    def has_discount(self):
+        discounted_colors = self.color_inventories.filter(discount_percent__gt=0, stock__gt=0)
+        if not discounted_colors.exists():
+            return False
+        # پیدا کردن حداقل قیمت تخفیف خورده از بین این رنگ‌ها
+        min_discounted_price = min([color.get_price() for color in discounted_colors])
+        
+        # پایین‌ترین قیمت محصول (بدون تخفیف)
+        min_price = self.get_min_price()
+        
+        # اگر قیمت تخفیف‌خورده از حداقل قیمت محصول کمتر باشد، تخفیف واقعی داریم
+        return min_discounted_price < min_price

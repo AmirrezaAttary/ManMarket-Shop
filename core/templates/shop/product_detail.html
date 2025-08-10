@@ -191,6 +191,7 @@
                                 </span>
                                 <span class="" style="font-size: 22px">
                                     
+                                    {% if default_color.discount_percent %}  
                                     <div class="d-flex justify-content-between w-100 align-items-center my-1">
                                         <del class="d-flex justify-content-center text-danger fs-14"
                                             >
@@ -204,7 +205,21 @@
                                             {{ default_color.discount_percent }}%
                                         </span>
                                     </div>
-                                    
+                                    {% else %}
+                                    <div class="d-flex justify-content-between w-100 align-items-center my-1">
+                                        <del class="d-flex justify-content-center text-danger fs-14"
+                                            style="display: none;">
+                                            <span id="original-price"></span>
+                                            <span class="money-icon mx-1 text-danger" style="display: none;" id="original-price-icon"></span>
+
+                                        </del>
+                                        <span style="text-decoration: none!important; display: none;"
+                                            class="theme-color rounded-3 text-light mx-1 py-1 px-1"
+                                            id="discounted-price">
+                                            {{ default_color.discount_percent }}%
+                                        </span>
+                                    </div>
+                                    {% endif %}
                                     <span id="price-value">{{ default_color.get_price|intcomma }}</span>
                                     <span class="money-icon mx-1"></span>
                                 </span>
