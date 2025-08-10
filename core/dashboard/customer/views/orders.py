@@ -1,7 +1,7 @@
 from django.views.generic import ListView,DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.permissions import HasCustomerAccessPermission
-
+from django.shortcuts import redirect
 from dashboard.customer.forms import *
 from django.core.exceptions import FieldError
 from order.models import OrderModel,OrderStatusType
@@ -32,6 +32,13 @@ class CustomerOrderListView(LoginRequiredMixin, HasCustomerAccessPermission, Lis
             except FieldError:
                 pass
         return queryset
+    
+    
+    def get(self, request, *args, **kwargs):
+        if "status" not in request.GET:
+            return redirect(f"{request.path}?status={OrderStatusType.pending.value}")
+        return super().get(request, *args, **kwargs)
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

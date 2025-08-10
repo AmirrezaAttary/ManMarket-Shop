@@ -30,7 +30,21 @@
                         <div class="order-card-header-new">
                             <div><span class="order-id-new">سفارش #MAN-{{object.id}}</span> - <span
                                     class="order-date-new">{{object.jalali_created_date}}</span></div>
-                            <span class="order-status-badge-new cancelled-2">{{object.get_status_display}}</span>
+                                    
+                                    {% if object.status == 1 %}
+                                        <span class="order-status-badge-new cancelled-2">{{object.get_status_display}}</span>
+                                        
+                                    {% elif object.status == 2 %}
+                                    <span class="order-status-badge-new cancelled-3">{{object.get_status_display}}</span>
+                                    {% elif object.status == 3 %}
+                                    <span class="order-status-badge-new pending">{{object.get_status_display}}</span>
+                                    {% elif object.status == 4 %}
+                                    <span class="order-status-badge-new shipped">{{object.get_status_display}}</span>
+                                    {% elif object.status == 5 %}
+                                    <span class="order-status-badge-new delivered">{{object.get_status_display}}</span>
+                                    {% elif object.status == 6 %}
+                                    <span class="order-status-badge-new cancelled">{{object.get_status_display}}</span>
+                                    {% endif %}
                         </div>
                         <p class="order-items-preview">شامل: {{ object.order_items.first.product.title }}</p>
                         <div class="order-footer-new">
