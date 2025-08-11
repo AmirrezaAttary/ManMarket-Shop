@@ -86,16 +86,16 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='profile/',default='default/default-profile.webp')
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    birth_date = models.DateField(null=True, blank=True, help_text="تاریخ تولد را وارد کنید (مثلاً 1375-05-10)")
-    
-    def age(self):
-        """محاسبه‌ی سن کاربر بر اساس birth_date"""
-        if self.birth_date:
-            today = date.today()
-            return today.year - self.birth_date.year - (
-                (today.month, today.day) < (self.birth_date.month, self.birth_date.day)
-            )
-        return None
+    birth_date = models.CharField(max_length=10, null=True, blank=True, help_text="تاریخ تولد را وارد کنید (مثلاً 1375-05-10)")
+
+    # def age(self):
+    #     """محاسبه‌ی سن کاربر بر اساس birth_date"""
+    #     if self.birth_date:
+    #         today = date.today()
+    #         return today.year - self.birth_date.year - (
+    #             (today.month, today.day) < (self.birth_date.month, self.birth_date.day)
+    #         )
+    #     return None
 
     def get_fullname(self):
         name = " ".join(filter(None, [self.first_name, self.last_name]))

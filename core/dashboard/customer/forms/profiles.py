@@ -47,6 +47,7 @@ class CustomerProfileEditForm(forms.ModelForm):
         fields = [
             "first_name",
             "last_name",
+            "birth_date"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -56,6 +57,8 @@ class CustomerProfileEditForm(forms.ModelForm):
         self.fields['first_name'].widget.attrs['placeholder'] = 'نام خود را وارد نمایید'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی را وارد نمایید'
+        self.fields['birth_date'].widget.attrs['class'] = 'form-control'
+        self.fields['birth_date'].widget.attrs['placeholder'] = 'تاریخ تولد را وارد نمایید'
 
         if self.instance and self.instance.user:
             self.fields['phone_number'].initial = self.instance.user.phone_number

@@ -25,6 +25,7 @@ requests
 
 # sing with google
 django-jalali
+django-jalali-date
 django-allauth
 PyJWT
 cryptography

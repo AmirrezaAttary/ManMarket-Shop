@@ -19,3 +19,4 @@ django-celery-beat
 django-redis
 requests
 django-summernote 
+django-jalali-date

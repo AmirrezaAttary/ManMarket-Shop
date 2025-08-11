@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     "taggit",
     "django_jalali",
+    'jalali_date',
     'robots',
     'django_celery_beat',
     'django_summernote', 
