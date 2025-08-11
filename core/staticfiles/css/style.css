@@ -372,6 +372,7 @@ header {
 }
 
 .tol-mb {
+  margin-bottom: 2px !important;
   color: gray;
   font-size: 10px;
 }
@@ -387,6 +388,10 @@ header {
   transition: 0.3s;
   color: white !important;
   fill: white !important;
+}
+
+.ddd-sss {
+  margin-top: -5px !important;
 }
 
 .product {
@@ -12931,6 +12936,7 @@ html[dir=rtl] .wow-notification-close-new {
 .toast-meta {
   font-size: var(--fs-10);
   color: var(--sonic-silver);
+  margin-top: -2px;
 }
 
 /*HEADER*/
