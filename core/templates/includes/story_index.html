@@ -12,7 +12,7 @@
                     {% for story in storys %}
                     <div class="story-module-story-item mx-4 my-4" data-username="{{story.title}}"
                         data-avatar="{{story.icon.url}}"
-                        data-product-url="http://127.0.0.1:8000/product/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%A7%D9%BE%D9%84-%D9%85%D8%AF%D9%84-iPhone-16-Pro-Max-ZAA-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-1-%D8%AA%D8%B1%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-8-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/">
+                        data-product-url="{{story.product.get_absolute_url}}">
 
                         <div class="story-module-story-gradient-border">
                             <img src="{{story.icon.url}}" alt="{{story.title}}" class="story-module-story-avatar">
@@ -20,7 +20,7 @@
                         <span class="story-module-story-username">{{story.title}}</span>
 
                         <div class="story-module-media-list story-module-d-none">
-                            <video data-duration="15000" data-caption="لینک محصول در این ویدئو"
+                            <video data-duration="15000" data-caption="{{story.title_product}}"
                                 src="{{story.video.url}}"
                                 class="story-module-media-video"></video>
                         </div>

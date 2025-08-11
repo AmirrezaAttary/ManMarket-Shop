@@ -48,6 +48,7 @@ class Story(models.Model):
     status = models.IntegerField(
             choices=ReviewStatusType.choices, default=ReviewStatusType.pending.value, verbose_name='آیکون استوری')
     product = models.ForeignKey('shop.ProductModel', on_delete=models.CASCADE,null=True,blank=True)
+    title_product = models.CharField(max_length=255,default="لینک محصول")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

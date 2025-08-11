@@ -10,6 +10,7 @@ class StoryForm(forms.ModelForm):
             "video",
             "icon",
             'product',
+            'title_product',
         ] 
 
     def __init__(self, *args, **kwargs):
@@ -19,3 +20,4 @@ class StoryForm(forms.ModelForm):
         self.fields['icon'].widget.attrs['class'] = 'form-control'
         self.fields['status'].widget.attrs['class'] = 'form-select'
         self.fields['product'].widget.attrs['class'] = 'form-select'
+        self.fields['title_product'].widget.attrs['class'] = 'form-control'
