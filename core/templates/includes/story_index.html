@@ -5,21 +5,22 @@
         <span style="color: red;letter-spacing: -4px;font-size: 20px">------</span>
     </h5>
     <div class="story-module-main-wrapper">
-
         <div class="story-module-container">
             <div class="story-module-stories-wrapper">
                 <div class="story-module-stories-grid">
 
-
                     {% for story in storys %}
                     <div class="story-module-story-item mx-4 my-4" data-username="{{story.title}}"
-                        data-avatar="{{story.icon.url}}">
+                        data-avatar="{{story.icon.url}}"
+                        data-product-url="http://127.0.0.1:8000/product/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%A7%D9%BE%D9%84-%D9%85%D8%AF%D9%84-iPhone-16-Pro-Max-ZAA-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-1-%D8%AA%D8%B1%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-8-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA/">
+
                         <div class="story-module-story-gradient-border">
                             <img src="{{story.icon.url}}" alt="{{story.title}}" class="story-module-story-avatar">
                         </div>
                         <span class="story-module-story-username">{{story.title}}</span>
+
                         <div class="story-module-media-list story-module-d-none">
-                            <video data-duration="15000" data-caption="{{story.title}}"
+                            <video data-duration="15000" data-caption="لینک محصول در این ویدئو"
                                 src="{{story.video.url}}"
                                 class="story-module-media-video"></video>
                         </div>
@@ -27,11 +28,11 @@
                     {% endfor %}
 
 
-
                 </div>
             </div>
         </div>
     </div>
+
     <div class="story-module-story-modal">
         <div class="story-module-modal-content">
             <div class="story-module-modal-progress-bar-container">
@@ -45,6 +46,13 @@
             </div>
             <div class="story-module-modal-story-media">
             </div>
+            <button id="close-btn-story" class="text-light" aria-label="بستن استوری">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.3em" height="1.3em">
+                    <path fill="currentColor"
+                        d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z">
+                    </path>
+                </svg>
+            </button>
             <button class="story-module-nav-button story-module-nav-button-prev" aria-label="استوری قبلی">
                 <svg fill="currentColor" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"
                     role="presentation" data-icon="arrow-left">
@@ -62,7 +70,7 @@
                 </svg>
             </button>
             <div class="story-module-external-caption" id="story-module-external-caption">
-                <p id="story-module-caption-text"></p>
+                <a id="story-module-caption-text"></a>
             </div>
         </div>
     </div>

@@ -88,6 +88,19 @@
                         </button>
                     </a>
                     {% endif %}
+                                        <div class="not-x" type="button"  data-bs-toggle="tooltip" data-bs-custom-class="no-arrow-tooltip" data-bs-placement="auto" title="دریافت اعلان موجود شدن کالا">
+                        <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                width="1.4em"
+                                height="1.4em"
+                        >
+                            <path
+                                    fill="currentColor"
+                                    d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2m6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5zM7.58 4.08L6.15 2.65C3.75 4.48 2.17 7.3 2.03 10.5h2a8.45 8.45 0 0 1 3.55-6.42m12.39 6.42h2c-.15-3.2-1.73-6.02-4.12-7.85l-1.42 1.43a8.5 8.5 0 0 1 3.54 6.42"
+                            ></path>
+                        </svg>
+                    </div>
                 </div>
             </div>
 
@@ -1152,6 +1165,20 @@ document.addEventListener('DOMContentLoaded', () => {
             tabPane.scrollIntoView({ behavior: 'smooth', block: 'start' })
         })
     })
+
+let notX = document.querySelector('.not-x')
+
+notX.addEventListener('click' , function (){
+    Swal.fire({
+        title: 'به محض موجود شدن این کالا , از طریق پیامک یا ایمیل به شما اطلاع رسانی خواهد شد .',
+        icon: 'success',
+        position: 'center',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true,
+    });
+})
+
 </script>
 <!--این اونیه که مال سینگل پروداکته -->
 {% endblock extra_jss %}
