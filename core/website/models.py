@@ -47,6 +47,7 @@ class Story(models.Model):
     icon = models.ImageField(upload_to='stories/icons/', verbose_name='آیکون استوری')
     status = models.IntegerField(
             choices=ReviewStatusType.choices, default=ReviewStatusType.pending.value, verbose_name='آیکون استوری')
+    product = models.ForeignKey('shop.ProductModel', on_delete=models.CASCADE,null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
