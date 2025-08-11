@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
-from accounts.models import User, Profile, EmailOTP
+from accounts.models import User, Profile, EmailOTP,OTP
 from accounts.validators import validate_iranian_cellphone_number
 from django.core.exceptions import ValidationError
 
@@ -113,3 +113,33 @@ class EmailOTPVerifyForm(forms.Form):
                 return cleaned_data
 
         raise forms.ValidationError("کد وارد شده معتبر نیست یا منقضی شده.")
+
+
+
+# accounts/forms.py
+
+class OTPRequestForm(forms.Form):
+    phone_number = forms.CharField(label='شماره موبایل')
+
+    def clean_phone_number(self):
+        phone = self.cleaned_data['phone_number']
+        validate_iranian_cellphone_number(phone)
+        if not User.objects.filter(phone_number=phone).exists():
+            raise ValidationError("کاربری با این شماره وجود ندارد.")
+        return phone
+
+
+class OTPVerifyForm(forms.Form):
+    phone_number = forms.CharField(label='شماره موبایل')
+    code = forms.CharField(label='کد تایید')
+
+    def clean(self):
+        phone = self.cleaned_data.get('phone_number')
+        code = self.cleaned_data.get('code')
+        user = User.objects.filter(phone_number=phone).first()
+        if user:
+            otp = OTP.objects.filter(user=user, code=code, is_used=False).last()
+            if otp and otp.is_valid():
+                self.cleaned_data['user'] = user
+                return self.cleaned_data
+        raise ValidationError("کد وارد شده نامعتبر است یا منقضی شده.")

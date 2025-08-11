@@ -127,6 +127,18 @@ class EmailOTP(models.Model):
         return f"{self.user} - {self.code}"
 
 
+# accounts/models.py
+
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    def is_valid(self):
+        return not self.is_used and (timezone.now() - self.created_at).seconds < 300  # معتبر تا ۵ دقیقه
+
+
     
 @receiver(post_save,sender=User)
 def create_profile(sender,instance,created,**kwargs):

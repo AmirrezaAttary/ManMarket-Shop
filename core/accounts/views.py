@@ -1,5 +1,5 @@
 from django.contrib.auth import views as auth_views
-from accounts.forms import AuthenticationForm,RegisterForm,ResendActivationEmailForm,EmailOTPRequestForm, EmailOTPVerifyForm
+from accounts.forms import AuthenticationForm,RegisterForm,ResendActivationEmailForm,EmailOTPRequestForm, EmailOTPVerifyForm,OTPRequestForm,OTPVerifyForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib.auth.tokens import default_token_generator
@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth import get_user_model
-from accounts.utils import send_password_reset_email,send_email_otp
+from accounts.utils import send_password_reset_email,send_email_otp,send_otp
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib import messages  
@@ -15,7 +15,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views import View
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
-from accounts.models import User, EmailOTP
+from accounts.models import User, EmailOTP,OTP
 from django.core.mail import send_mail
 from django.views.generic import FormView
 from django.utils.encoding import force_str
@@ -177,3 +177,28 @@ class EmailOTPVerifyView(FormView):
         messages.success(self.request, "ورود شما با موفقیت انجام شد.")
         return redirect('dashboard:home')
 
+
+
+# accounts/views.py
+
+class OTPLoginRequestView(FormView):
+    template_name = 'accounts/otp_request.html'
+    form_class = OTPRequestForm
+
+    def form_valid(self, form):
+        phone = form.cleaned_data['phone_number']
+        user = User.objects.get(phone_number=phone)
+        send_otp(user)
+        return redirect('accounts:otp_verify')  # یا پاس دادن phone_number با session
+
+
+class OTPVerifyView(FormView):
+    template_name = 'accounts/otp_verify.html'
+    form_class = OTPVerifyForm
+
+    def form_valid(self, form):
+        user = form.cleaned_data['user']
+        login(self.request, user)
+        OTP.objects.filter(user=user, code=form.cleaned_data['code']).update(is_used=True)
+        messages.success(self.request, "ورود با موفقیت انجام شد.")
+        return redirect('dashboard:home')

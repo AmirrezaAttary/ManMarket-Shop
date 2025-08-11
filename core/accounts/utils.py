@@ -35,7 +35,7 @@ def send_activation_link(request, user):
 # accounts/utils.py
 
 from random import randint
-from .models import EmailOTP
+from .models import EmailOTP,OTP
 
 
 def send_email_otp(user):
@@ -45,3 +45,14 @@ def send_email_otp(user):
     subject = "کد ورود یکبار مصرف"
     message = f"کد ورود شما به سایت: {code}\nاین کد تا 2 دقیقه معتبر است."
     send_mail(subject, message, 'info@manmarket.ir', [user.email], fail_silently=False)
+    
+    
+    
+from random import randint
+
+def send_otp(user):
+    code = str(randint(100000, 999999))
+    OTP.objects.create(user=user, code=code)
+
+    # اینجا به جای SMS می‌تونی ایمیل هم بزنی یا کد رو لاگ کنی
+    print(f"[OTP برای {user.phone_number}]: {code}")
