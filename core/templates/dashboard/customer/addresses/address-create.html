@@ -2,6 +2,10 @@
 {% load static %}
 
 
+{% block title %}
+    ایجاد آدرس جدید
+{% endblock title %}
+    
 
 {% block content %}
 <div class="row">
@@ -11,7 +15,7 @@
             <header class="section-header-new border-0">
                 <h2><svg>
                         <use xlink:href="#icon-map-pin"></use>
-                    </svg>افزودن آدرس جدید</h2>
+                    </svg>آدرس‌های من</h2>
             </header>
 
             <div id="addressesListContainer" class="mt-4">
@@ -20,24 +24,27 @@
                 <div class="rounded-3 container">
                     <form action="." method="post">
                         {% csrf_token %}
-                        <label for="as" class="ws-cs-label">استان</label>
-                        {{form.state}}
-                        <label for="amount" class="ws-cs-label">شهر</label>
-                        {{form.city}}
-                        <label for="df" class="ws-cs-label">کد پستی</label>
-                        {{form.zip_code}}
-                        <label for="addressLine1Input" class="form-label-custom">آدرس کامل</label>
-                        {{form.address}}
-
-
-                        <button type="submit" class="theme-color text-light rounded-3">ثبت آدرس</button>
+                        <label for="as" class="ws-cs-label my-1 fs-14">استان مورد نظر خود را بنویسید</label>
+                        {{ form.state }}
+                        <label for="amount" class="ws-cs-label my-1 fs-14">شهر مورد نظر خود را بنویسید</label>
+                        {{ form.city }}
+                        <label for="df" class="ws-cs-label  my-1 fs-14">کد پستی</label>
+                        {{ form.zip_code }}
+                            
+                        <label for="addressLine1Input" class="form-label-custom my-1 fs-14">جزئیات آدرس</label>
+                        <textarea id="hghg" name="address" class="ws-cs-input form-label-custom" rows="3"
+                            placeholder="خیابان، کوچه، پلاک...">{{ form.address.value }}</textarea>
+                        <button type="submit" class="theme-color text-light rounded-3">ثبت آدرس جدید</button>
                     </form>
                 </div>
 
             </div>
         </section>
     </main>
-    </div>
-    </div>
-    
-    {% endblock %}
+</div>
+</div>
+</div>
+{% include 'dashboard/customer/sidebar_2.html' %}
+
+{% endblock %}
+
