@@ -22,6 +22,10 @@ class ChatRoom(models.Model):
     
     class Meta:
         ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(fields=['product', 'customer'], name='unique_product_customer_chat')
+        ]
+
 
 class Message(models.Model):
     chat_room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='chat_messages')

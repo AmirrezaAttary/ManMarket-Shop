@@ -25,13 +25,21 @@ class StartChatView(LoginRequiredMixin, View):
             return render(request, 'chat/no_admin.html', {'product': product})
 
         # جلوگیری از ساخت چت تکراری بین همین مشتری، محصول و ادمین
-        chat, created = ChatRoom.objects.get_or_create(
-            product=product,
-            customer=customer,
-            admin=admin
-        )
+        # بررسی اینکه آیا چت قبلاً وجود دارد یا خیر (بدون توجه به ادمین)
+        chat = ChatRoom.objects.filter(product=product, customer=customer).first()
+
+        if not chat:
+            admin = User.objects.filter(type=UserType.admin).first()
+            if not admin:
+                return render(request, 'chat/no_admin.html', {'product': product})
+            chat = ChatRoom.objects.create(
+                product=product,
+                customer=customer,
+                admin=admin
+            )
+
         return redirect('chat:chat_room', pk=chat.pk)
-    
+
 
 
 class ChatRoomDetailView(LoginRequiredMixin, View):
@@ -67,11 +75,5 @@ class ChatRoomDetailView(LoginRequiredMixin, View):
             )
         return redirect('chat:chat_room', pk=chat.pk)
     
-    
-class ChatRoomListView(LoginRequiredMixin, ListView):
-    template_name = 'chat/room_list.html'
-    
-    def get_queryset(self):
-        queryset =  ChatRoom.objects.filter(customer=self.request.user)
-        return queryset
+
     
