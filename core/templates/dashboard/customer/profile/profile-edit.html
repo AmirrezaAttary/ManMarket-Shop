@@ -152,7 +152,7 @@
                                 <use xlink:href="#icon-edit-pencil"></use>
                             </svg></button>
                         <div class="save-cancel-btns">
-                            <button type="submit" class="save-btn" title="ذخیره"><svg>
+                            <button type="button" class="save-btn" title="ذخیره"><svg>
                                     <use xlink:href="#icon-save-disk"></use>
                                 </svg></button>
                             <button type="button" class="cancel-btn" title="لغو"><svg>
@@ -165,6 +165,7 @@
                         
 
         </div>
+        <button type="submit" class="theme-color text-light rounded-3 mt-3 px-4 py-2">ثبت مشخصات</button>
     </form>
                         {% if request.user.email == None %}
                         <center>
