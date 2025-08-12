@@ -9617,7 +9617,7 @@ html[dir=rtl] .wow-notification-close-new {
 
 /* --- PAGE-SPECIFIC STYLES: Account Details (for demo) --- */
 .account-detail-row {
-  height: 60px;
+  height: 70px;
   display: flex;
   align-items: flex-start;
   padding: calc(var(--spacing-unit) * 1.5) 0;
@@ -10843,6 +10843,11 @@ html[dir=rtl] .wow-notification-close-new {
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-bottom: calc(var(--spacing-unit) * 0.5);
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  -webkit-line-clamp: 2 !important;
+  white-space: normal !important;
 }
 
 .product-card-minimal-info .price-text {
@@ -11161,6 +11166,8 @@ html[dir=rtl] .wow-notification-close-new {
 }
 
 .form-control-custom {
+  position: relative;
+  z-index: 100000000000000000000000000000000;
   width: 100%;
   padding: calc(var(--spacing-unit) * 1.2) calc(var(--spacing-unit) * 1.5);
   font-size: 0.9rem;
@@ -12009,6 +12016,23 @@ html[dir=rtl] .wow-notification-close-new {
 @media (max-width: 1024px) {
   .p-for-dl {
     padding: 0 7px;
+  }
+}
+.cs-po-ico {
+  top: 13%;
+  right: 40%;
+}
+
+@media (max-width: 1026px) {
+  .cs-po-ico {
+    top: 23% !important;
+    right: 60% !important;
+  }
+}
+@media (max-width: 510px) {
+  .cs-po-ico {
+    top: 4% !important;
+    right: 17% !important;
   }
 }
 .story-module-main-wrapper {

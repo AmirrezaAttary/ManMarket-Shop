@@ -16,8 +16,8 @@
                 <header class="section-header-new border-0">
                     <h2><svg><use xlink:href="#icon-heart-solid"></use></svg>سبک من</h2>
                 </header>
-                {% for object in object_list %}
                 <div id="wishlistContainer" class="mt-3 d-flex justify-content-around flex-wrap align-items-center">
+                {% for object in object_list %}
                     <div class="product-card-minimal col-md-5 mx-1 col-sm-5 px-2 col-12 my-2">
                         <img src="{{object.product.image.url}}" alt="" class="product-card-minimal-img">
                         <div class="product-card-minimal-info">
@@ -26,15 +26,15 @@
                             <p class="price-text">{{object.product.get_min_price|intcomma}}<small>تومان</small></p>
                             <div class="product-card-minimal-actions d-flex gap-2">
                                 <button type="submit" form="deleform" class="btn bg-cs py-1 px-1 py-2 px-2 fs-14">حذف</button>
-                                <a href="{% url 'shop:product-detail' slug=object.product.slug %}" class="btn theme-color py-1 px-1 py-2 px-2 text-light">مشاهده محصول</a>
+                                <a href="{% url 'shop:product-detail' slug=object.product.slug %}"><button  class="btn theme-color py-1 px-1 py-2 px-2 text-light">مشاهده </button></a>
                             </div>
                         </div>
                     </div>
+                    <form hidden action="{% url 'dashboard:customer:wishlist-delete' pk=object.pk %}" method="post" class="d-none" id="deleform">
+                        {% csrf_token %}
+                    </form>
+                    {% endfor %}
                 </div>
-                <form hidden action="{% url 'dashboard:customer:wishlist-delete' pk=object.pk %}" method="post" class="d-none" id="deleform">
-                    {% csrf_token %}
-                </form>
-                {% endfor %}
             </section>
         </main>
   </div>

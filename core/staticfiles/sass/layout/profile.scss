@@ -79,7 +79,7 @@ html[dir="rtl"] .wow-notification-new { transform: translateX(-100%); } html[dir
 .mobile-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.7rem; text-align: center; padding: calc(var(--spacing-unit)*1.2) 0; }
 .mobile-nav-item.active { color: var(--primary-accent); } .mobile-nav-item svg { width: 22px; height: 22px; margin-bottom: 2px; }
 /* --- PAGE-SPECIFIC STYLES: Account Details (for demo) --- */
-.account-detail-row { height: 60px; display: flex; align-items: flex-start; padding: calc(var(--spacing-unit)*1.5) 0; border-bottom: 1px solid var(--border-color); }
+.account-detail-row { height: 70px; display: flex; align-items: flex-start; padding: calc(var(--spacing-unit)*1.5) 0; border-bottom: 1px solid var(--border-color); }
 .account-detail-row:last-child { border-bottom: none; }
 .account-detail-label { font-size: 0.88rem; color: var(--text-secondary); width: 130px; flex-shrink: 0; padding-top: calc(var(--spacing-unit)*0.25); }
 .account-detail-value-wrapper { flex-grow: 1; display: flex; justify-content: space-between; align-items: flex-start; }
@@ -232,7 +232,11 @@ html[dir="rtl"] .wow-notification-new { transform: translateX(-100%); } html[dir
 .product-card-minimal-img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--border-radius-sm); flex-shrink: 0; }
 .product-card-minimal-info { flex-grow: 1; display: flex; flex-direction: column; }
 .product-card-minimal-info h6 { font-size: 1rem; font-weight: 600; margin-bottom: calc(var(--spacing-unit)*0.25); }
-.product-card-minimal-info .category-text { font-size: 0.8rem; color: var(--text-muted); margin-bottom: calc(var(--spacing-unit)*0.5); }
+.product-card-minimal-info .category-text {  font-size: 0.8rem; color: var(--text-muted); margin-bottom: calc(var(--spacing-unit)*0.5);     display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  -webkit-line-clamp: 2 !important;
+  white-space: normal !important;}
 .product-card-minimal-info .price-text { font-size: 0.95rem; font-weight: 500; color: var(--secondary-accent); margin-bottom: var(--spacing-unit); }
 .product-card-minimal-actions { margin-top: auto; }
 /* --- RESPONSIVE --- */
@@ -284,7 +288,8 @@ html[dir="rtl"] .wow-notification-new { transform: translateX(-100%); } html[dir
 .main-container { max-width: 1200px; margin: calc(var(--spacing-unit) * 3) auto; padding: 0 calc(var(--spacing-unit) * 2); }
 .btn-custom { padding: calc(var(--spacing-unit)*1.2) calc(var(--spacing-unit)*2.5); border-radius: var(--border-radius-md); font-weight: 500; font-size: 0.9rem; transition: var(--transition-cubic); border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-unit); }
 .btn-custom.btn-primary { background-color: var(--primary-accent); color: white; font-size: 15px }
-.form-control-custom { width: 100%; padding: calc(var(--spacing-unit)*1.2) calc(var(--spacing-unit)*1.5); font-size: 0.9rem; line-height: 1.5; color: var(--text-primary); background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: var(--border-radius-md); transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; }
+.form-control-custom {    position: relative;
+  z-index: 99999999999999999999999999999999; width: 100%; padding: calc(var(--spacing-unit)*1.2) calc(var(--spacing-unit)*1.5); font-size: 0.9rem; line-height: 1.5; color: var(--text-primary); background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: var(--border-radius-md); transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; }
 .form-control-custom:focus { border-color: var(--primary-accent); outline: 0; box-shadow: 0 0 0 0.2rem rgba(var(--primary-accent-rgb), 0.25); }
 .form-label-custom { font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); margin-bottom: calc(var(--spacing-unit)*0.75); display: block; }
 .form-group-custom { margin-bottom: calc(var(--spacing-unit)*2.5); position: relative; }
@@ -706,5 +711,24 @@ html[dir="rtl"] .wow-notification-close-new {
 @media (max-width: 1024px){
   .p-for-dl{
     padding: 0 7px;
+  }
+}
+
+
+.cs-po-ico{
+  top: 13%;
+  right: 40%;
+}
+
+@media (max-width: 1026px){
+  .cs-po-ico{
+    top: 23% !important;
+    right: 60% !important;
+  }
+}
+@media (max-width: 510px){
+  .cs-po-ico{
+    top: 4% !important;
+    right: 17% !important;
   }
 }
