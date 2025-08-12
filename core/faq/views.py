@@ -23,3 +23,13 @@ class TargetView(TemplateView):
 class ManOneSeenView(TemplateView):
     template_name = 'faq/man-one-seen.html'
     
+class TasisView(TemplateView):
+    template_name = 'faq/tasis.html'
+    
+    
+class AsasView(TemplateView):
+    template_name = 'faq/asas.html'
+    
+class AfzayeshView(TemplateView):
+    template_name = 'faq/afzayesh.html'
+

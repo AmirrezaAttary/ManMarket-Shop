@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 {% load jformat %}
 
 {% block title %}
@@ -10,18 +11,32 @@
  
     {% include 'dashboard/customer/sidebar.html' %}
     <!-- Main Content Area -->
-    <main class="profile-content-area-new">
-      <section class="profile-section-new">
-        <header class="section-header-new border-0">
-          <h2><svg>
-              <use xlink:href="#icon-heart-solid"></use>
-            </svg>سبک من</h2>
-        </header>
-        <div id="wishlistContainer" class="mt-3">
-          <!-- Wishlist items will be populated by JS -->
-        </div>
-      </section>
-    </main>
+        <main class="profile-content-area-new">
+            <section class="profile-section-new">
+                <header class="section-header-new border-0">
+                    <h2><svg><use xlink:href="#icon-heart-solid"></use></svg>سبک من</h2>
+                </header>
+                {% for object in object_list %}
+                <div id="wishlistContainer" class="mt-3 d-flex justify-content-around flex-wrap align-items-center">
+                    <div class="product-card-minimal col-md-5 mx-1 col-sm-5 px-2 col-12 my-2">
+                        <img src="{{object.product.image.url}}" alt="" class="product-card-minimal-img">
+                        <div class="product-card-minimal-info">
+                            <h6>{{object.product.title}}</h6>
+                            <p class="category-text">{{object.product.category}}</p>
+                            <p class="price-text">{{object.product.get_min_price|intcomma}}<small>تومان</small></p>
+                            <div class="product-card-minimal-actions d-flex gap-2">
+                                <button type="submit" form="deleform" class="btn bg-cs py-1 px-1 py-2 px-2 fs-14">حذف</button>
+                                <a href="{% url 'shop:product-detail' slug=object.product.slug %}" class="btn theme-color py-1 px-1 py-2 px-2 text-light">مشاهده محصول</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form hidden action="{% url 'dashboard:customer:wishlist-delete' pk=object.pk %}" method="post" class="d-none" id="deleform">
+                    {% csrf_token %}
+                </form>
+                {% endfor %}
+            </section>
+        </main>
   </div>
 </div>
 
@@ -31,80 +46,5 @@
 
 {% block extra_js %}
 <script src="{% static 'js/profile.js' %}"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const wishlistContainer = document.getElementById('wishlistContainer');
-    if (!wishlistContainer) return;
 
-    let wishlistItems = [
-      {% for object in object_list %}
-        { id: 'prod1', name: '{{object.product.title}}', price: 1200000, image: '{{object.product.image.url}}', category: '{{object.product.category}}', slug: '{% url 'shop:product-detail' slug=object.product.slug %}',
-          form:'{% url 'dashboard:customer:wishlist-delete' pk=object.pk %}'
-         },
-    {% endfor %} 
-      ];
-
-  function renderWishlist() {
-    wishlistContainer.innerHTML = '';
-    if (wishlistItems.length === 0) {
-      wishlistContainer.innerHTML = '<p class="text-muted text-center py-5">لیست علاقه‌مندی شما خالی است.</p>';
-      return;
-    }
-    const grid = document.createElement('div');
-    grid.className = 'row g-3';
-    wishlistItems.forEach(item => {
-      const col = document.createElement('div');
-      col.className = 'col-md-6';
-      col.id = `item-${item.id}`;
-      col.innerHTML = `
-                    <div class="product-card-minimal">
-                        <img src="${item.image}" alt="${item.name}" class="product-card-minimal-img">
-                        <div class="product-card-minimal-info">
-                            <h6>${item.name}</h6>
-                            <p class="category-text">${item.category}</p>
-                            <p class="price-text">${item.price.toLocaleString('fa-IR')} <small>تومان</small></p>
-                            <div class="product-card-minimal-actions d-flex gap-2">
-                                <button type="submit" form="deleform" class="btn-custom btn-secondary btn-sm remove-wishlist-btn" data-id="${item.id}">
-                                    <svg><use xlink:href="#icon-trash-can"></use></svg>حذف
-                                </button>
-                                <a href="${item.slug}">
-                                  <button  class="btn-custom btn-primary btn-sm">مشاهده محصول</button>
-                                  </a>
-                            </div>
-                        </div>
-                    </div>
-                    <form hidden id="deleform" action="${item.form}" method="post">{% csrf_token %}</form>`;
-      grid.appendChild(col);
-    });
-    wishlistContainer.appendChild(grid);
-  }
-
-  wishlistContainer.addEventListener('click', function (e) {
-    const button = e.target.closest('.remove-wishlist-btn');
-    if (button) {
-      const productId = button.dataset.id;
-      showToast({
-        type: 'warning',
-        title: 'تایید حذف',
-        message: 'آیا از حذف این محصول مطمئن هستید؟',
-        isConfirm: true,
-        onConfirm: () => {
-          const productCardWrapper = document.getElementById(`item-${productId}`);
-          if (productCardWrapper) {
-            productCardWrapper.style.transition = 'all 0.3s ease';
-            productCardWrapper.style.opacity = '0';
-            productCardWrapper.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-              wishlistItems = wishlistItems.filter(item => item.id !== productId);
-              renderWishlist();
-            }, 300);
-          }
-        }
-      });
-    }
-  });
-
-  renderWishlist();
-});
-</script>
 {% endblock extra_js %}
