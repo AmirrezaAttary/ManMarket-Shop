@@ -32,6 +32,32 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
     form_class = CheckOutForm
     success_url = reverse_lazy('order:completed')
 
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+
+        # بررسی تایید ایمیل و شماره تلفن
+        if not user.is_verified or not user.is_phone_verified:
+            messages.error(request, "برای ادامه خرید، ابتدا باید ایمیل و شماره تلفن خود را تأیید کنید.")
+            return redirect("dashboard:home")  # آدرس صفحه تایید را اینجا بگذار
+
+        # بررسی پروفایل کامل
+        profile = getattr(user, "user_profile", None)
+        if not profile or not profile.first_name or not profile.last_name:
+            messages.error(request, "لطفاً نام و نام خانوادگی خود را در پروفایل تکمیل کنید.")
+            return redirect("dashboard:home")
+        
+        # بررسی شماره موبایل
+        if not user.phone_number:
+            messages.error(request, "لطفاً شماره موبایل خود را وارد کنید.")
+            return redirect("dashboard:home")
+        
+        # بررسی آدرس
+        if not UserAddressModel.objects.filter(user=user).exists():
+            messages.error(request, "لطفاً ابتدا یک آدرس ثبت کنید.")
+            return redirect("dashboard:home")
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_form_kwargs(self):
         kwargs = super(OrderCheckOutView, self).get_form_kwargs()
         kwargs['request'] = self.request
