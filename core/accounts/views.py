@@ -1,5 +1,5 @@
 from django.contrib.auth import views as auth_views
-from accounts.forms import AuthenticationForm,RegisterForm,ResendActivationEmailForm,EmailOTPRequestForm, EmailOTPVerifyForm,OTPRequestForm,OTPVerifyForm
+from accounts.forms import CustomAuthenticationForm,RegisterForm,ResendActivationEmailForm,EmailOTPRequestForm, EmailOTPVerifyForm,OTPRequestForm,OTPVerifyForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib.auth.tokens import default_token_generator
@@ -22,11 +22,12 @@ from django.utils.encoding import force_str
 
 
 
-class LoginView(SuccessMessageMixin,auth_views.LoginView):
+class LoginView(SuccessMessageMixin, auth_views.LoginView):
     template_name = "accounts/login.html"
-    form_class = AuthenticationForm
+    form_class = CustomAuthenticationForm
     redirect_authenticated_user = True
     success_message = 'شما با موفقیت وارد من مارکت شدید'
+
     
 
 class RegisterView(TemplateView):

@@ -9,7 +9,8 @@ from django.core.exceptions import ValidationError
 class ResendActivationEmailForm(forms.Form):
     email = forms.EmailField(label="ایمیل", widget=forms.EmailInput(attrs={'class': 'form-control'}))
 
-class AuthenticationForm(BaseAuthenticationForm):
+class CustomAuthenticationForm(BaseAuthenticationForm):
+
     username = forms.CharField(
         label=_("ایمیل یا شماره تلفن"),
         widget=forms.TextInput(attrs={"autofocus": True}),
@@ -20,17 +21,28 @@ class AuthenticationForm(BaseAuthenticationForm):
         password = self.cleaned_data.get("password")
 
         if username and password:
+            # چک وجود کاربر بر اساس ایمیل یا شماره موبایل
+            try:
+                if '@' in username:
+                    user = User.objects.get(email=username)
+                elif username.isdigit():
+                    user = User.objects.get(phone_number=username)
+                else:
+                    raise User.DoesNotExist
+            except User.DoesNotExist:
+                raise forms.ValidationError(
+                    "کاربری با این مشخصات یافت نشد یا رمز اشتباه است."
+                )
+
             self.user_cache = authenticate(self.request, username=username, password=password)
             if self.user_cache is None:
-                raise forms.ValidationError("کاربری با این مشخصات یافت نشد یا رمز اشتباه است.")
+                raise forms.ValidationError(
+                    "کاربری با این مشخصات یافت نشد یا رمز اشتباه است."
+                )
             else:
                 self.confirm_login_allowed(self.user_cache)
+
         return self.cleaned_data
-
-    def get_user(self):
-        return self.user_cache
-
-        
 
 class RegisterForm(forms.Form):
     email_or_phone = forms.CharField(label="ایمیل یا شماره موبایل")
