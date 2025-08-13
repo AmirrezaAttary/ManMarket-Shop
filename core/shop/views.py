@@ -10,7 +10,7 @@ from django.db.models import (OuterRef,
                                 )
 from django.views.generic import ListView, DetailView,View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseGone, Http404
 from shop.models import (ProductModel, ProductStatusType,
                          ProductColorInventory,ProductCategoryModel,
                          ProductSpecification,Brand,WishlistProductModel)
@@ -148,6 +148,14 @@ class ShopDetailProductView(DetailView):
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
     context_object_name = 'product'
 
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            return HttpResponseGone("""<h1>410</h1>
+                                    این محصول دیگر موجود نیست.""")
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
 
