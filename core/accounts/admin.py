@@ -19,8 +19,8 @@ class CustomUserAdmin(UserAdmin):
     """
 
     model = User
-    list_display = ("id","email", "is_superuser", "is_active", "is_verified","phone_number")
-    list_filter = ("email", "is_superuser", "is_active", "is_verified")
+    list_display = ("id","email", "is_superuser", "is_active", "is_verified","is_phone_verified","phone_number")
+    list_filter = ("email", "is_superuser", "is_active", "is_verified",'is_phone_verified')
     search_fields = ("email",)  # اصلاح اینجا
     ordering = ("-id",)
     fieldsets = (
@@ -38,6 +38,7 @@ class CustomUserAdmin(UserAdmin):
                     "is_active",
                     "is_superuser",
                     "is_verified",
+                    "is_phone_verified",
                 ),
             },
         ),

@@ -23,7 +23,14 @@
                         <div class="product-card-minimal-info">
                             <h6>{{object.product.title}}</h6>
                             <p class="category-text">{{object.product.category}}</p>
+                            
+                            {% if object.product.get_min_price == None %}
+                                <p class="price-text">ناموجود</p>
+                            {% else %}
+                                
                             <p class="price-text">{{object.product.get_min_price|intcomma}}<small>تومان</small></p>
+                            {% endif %}
+
                             <div class="product-card-minimal-actions d-flex gap-2">
                                 <button type="submit" form="deleform" class="btn bg-cs py-1 px-1 py-2 px-2 fs-14">حذف</button>
                                 <a href="{% url 'shop:product-detail' slug=object.product.slug %}"><button  class="btn theme-color py-1 px-1 py-2 px-2 text-light">مشاهده </button></a>
