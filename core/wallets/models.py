@@ -7,7 +7,8 @@ class Wallet(models.Model):
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     def __str__(self):
-        return self.user.email
+        return str(self.user.email) if getattr(self.user, "email", None) else f"Wallet #{self.pk}"
+
     
 class WalletTransaction(models.Model):
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions')

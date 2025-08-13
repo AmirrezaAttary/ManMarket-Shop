@@ -71,7 +71,8 @@ class OrderModel(models.Model):
         return sum(item.price * item.quantity for item in self.order_items.all())
     
     def __str__(self):
-        return f"{self.user.email} - {self.id}"
+        user_email = getattr(self.user, "email", None) or "کاربر نامشخص"
+        return f"{user_email} - {self.id}"
     
     def get_status(self):
         return {

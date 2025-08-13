@@ -264,7 +264,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 # payment gateway settings
-MERCHANT_ID = config("MERCHANT_ID",default="4ced0a1e-4ad8-4309-9668-3ea3ae8e8897")
+MERCHANT_ID = config("MERCHANT_ID",default="0db95e76-ee4f-4546-a86e-7c12c95e662b")
 SANDBOX_MODE = config("SANDBOX_MODE", cast=bool, default=True)
 
 

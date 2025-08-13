@@ -152,8 +152,14 @@ class ShopDetailProductView(DetailView):
         try:
             self.object = self.get_object()
         except Http404:
-            return HttpResponseGone("""<h1>410</h1>
-                                    این محصول دیگر موجود نیست.""")
+            return HttpResponseGone("""<head>
+                                    <meta name="robots" content="noindex">
+                                    <title>محصول ناموجود</title>
+                                    </head>
+                                    <body>
+                                    <h1>410</h1>
+                                    <p>این محصول دیگر موجود نیست.</p>
+                                    </body>""")
         return super().dispatch(request, *args, **kwargs)
     
     def get_object(self, queryset=None):
