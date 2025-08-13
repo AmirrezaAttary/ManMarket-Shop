@@ -19,7 +19,7 @@ from accounts.models import User, EmailOTP,OTP
 from django.core.mail import send_mail
 from django.views.generic import FormView
 from django.utils.encoding import force_str
-
+import smtplib
 
 class LoginView(SuccessMessageMixin, auth_views.LoginView):
     template_name = "accounts/login.html"
@@ -157,7 +157,18 @@ class EmailOTPRequestView(FormView):
     def form_valid(self, form):
         email = form.cleaned_data['email']
         user = User.objects.get(email=email)
-        send_email_otp(user)
+        try:
+            send_email_otp(user)
+        except smtplib.SMTPDataError as e:
+            if b"You have reached the daily limit" in e.smtp_error:
+                messages.error(self.request, "فعلاً امکان ارسال کد از طریق ایمیل وجود ندارد. لطفاً بعداً تلاش کنید.")
+            else:
+                messages.error(self.request, "خطایی در ارسال ایمیل رخ داد. لطفاً دوباره تلاش کنید.")
+            return redirect('accounts:email_otp_request')
+        except Exception:
+            messages.error(self.request, "خطایی در ارسال ایمیل رخ داد. لطفاً دوباره تلاش کنید.")
+            return redirect('accounts:email_otp_request')
+
         self.request.session['otp_email'] = email  # ذخیره موقت
         return redirect('accounts:email_otp_verify')
 
