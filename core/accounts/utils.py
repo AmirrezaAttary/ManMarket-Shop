@@ -39,7 +39,7 @@ from .models import EmailOTP,OTP
 
 
 def send_email_otp(user):
-    code = str(randint(100000, 999999))
+    code = str(randint(10000, 99999))
     EmailOTP.objects.create(user=user, code=code)
 
     subject = "کد ورود یکبار مصرف"

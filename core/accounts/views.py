@@ -3,7 +3,7 @@ from accounts.forms import CustomAuthenticationForm,RegisterForm,ResendActivatio
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib.auth.tokens import default_token_generator
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 from django.views.generic.base import TemplateView
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth import get_user_model
@@ -19,7 +19,6 @@ from accounts.models import User, EmailOTP,OTP
 from django.core.mail import send_mail
 from django.views.generic import FormView
 from django.utils.encoding import force_str
-
 
 
 class LoginView(SuccessMessageMixin, auth_views.LoginView):
@@ -178,6 +177,20 @@ class EmailOTPVerifyView(FormView):
         messages.success(self.request, "ورود شما با موفقیت انجام شد.")
         return redirect('dashboard:home')
 
+
+
+class ResendEmailOTPView(View):
+    def post(self, request, *args, **kwargs):
+        email = request.session.get('otp_email')
+        if not email:
+            return JsonResponse({'status': 'error', 'message': 'ایمیل یافت نشد.'}, status=400)
+
+        try:
+            user = User.objects.get(email=email)
+            send_email_otp(user)
+            return JsonResponse({'status': 'ok', 'message': 'کد جدید ارسال شد.'})
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'کاربر یافت نشد.'}, status=404)
 
 
 # accounts/views.py

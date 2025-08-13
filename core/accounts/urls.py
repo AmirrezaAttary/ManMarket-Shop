@@ -17,4 +17,6 @@ urlpatterns = [
     path('login/email-otp/verify/', views.EmailOTPVerifyView.as_view(), name='email_otp_verify'),
     path('otp/request/', views.OTPLoginRequestView.as_view(), name='otp_request'),
     path('otp/verify/', views.OTPVerifyView.as_view(), name='otp_verify'),
+    path('email-otp-resend/', views.ResendEmailOTPView.as_view(), name='email_otp_resend'),
+
 ]
