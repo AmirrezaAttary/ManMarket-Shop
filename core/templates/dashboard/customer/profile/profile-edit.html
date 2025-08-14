@@ -199,6 +199,22 @@
                         <div class="account-detail-input-wrapper">
                             <input type="tel" name="phone_number" class="form-control-custom" value="{% if request.user.phone_number == None or request.user.phone_number == 'None' %}{% else %}{{request.user.phone_number}}{% endif %}">
                         </div>
+                        
+                        {% if request.user.is_phone_verified %}
+                        <div class="account-detail-actions" style="display: none;">
+                            <button type="button" class="edit-trigger-btn" title="ویرایش"><svg>
+                                    <use xlink:href="#icon-edit-pencil"></use>
+                                </svg></button>
+                            <div class="save-cancel-btns ">
+                                <button id="my-input-2" type="button" class="save-btn" title="ذخیره"><svg>
+                                        <use xlink:href="#icon-save-disk"></use>
+                                    </svg></button>
+                                <button type="button" class="cancel-btn" title="لغو"><svg>
+                                        <use xlink:href="#icon-cancel-circle"></use>
+                                    </svg></button>
+                            </div>
+                        </div>
+                        {% else %}
                         <div class="account-detail-actions">
                             <button type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>
@@ -212,6 +228,8 @@
                                     </svg></button>
                             </div>
                         </div>
+
+                        {% endif %}
                     </div>
                 </div>
                 <button type="submit" class="theme-color text-light rounded-3 mt-5 px-4 py-2">ثبت مشخصات</button>
