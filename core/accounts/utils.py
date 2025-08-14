@@ -32,7 +32,6 @@ def send_activation_link(request, user):
 
 
 
-# accounts/utils.py
 
 from random import randint
 from .models import EmailOTP,OTP
@@ -51,7 +50,7 @@ def send_email_otp(user):
 from random import randint
 
 def send_otp(user):
-    code = str(randint(100000, 999999))
+    code = str(randint(10000, 99999))
     OTP.objects.create(user=user, code=code)
 
     # اینجا به جای SMS می‌تونی ایمیل هم بزنی یا کد رو لاگ کنی
