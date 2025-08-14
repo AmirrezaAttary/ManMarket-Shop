@@ -6,6 +6,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
+from accounts.scripts import send_bulk_sms
 
 def send_email_async(subject, message, recipient_list):
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
@@ -47,11 +48,16 @@ def send_email_otp(user):
     
     
     
-from random import randint
+
 
 def send_otp(user):
     code = str(randint(10000, 99999))
     OTP.objects.create(user=user, code=code)
 
     # اینجا به جای SMS می‌تونی ایمیل هم بزنی یا کد رو لاگ کنی
-    print(f"[OTP برای {user.phone_number}]: {code}")
+    send_bulk_sms(
+    api_key="co6QLJNKUrO0x75n94cWToUcFxsD4TEQGaiNXqlhR9THVrh6B5bBdXDayfe0asCb",
+    line_number="30004007672729",
+    message_text=f"""فروشگاه اینترنتی من مارکت\nکد تایید:{code}\nمحرمانه نگه دارید!""",
+    mobiles=[f"{user.phone_number}"]
+)

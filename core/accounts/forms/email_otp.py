@@ -1,18 +1,36 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from accounts.models import User,EmailOTP
+from accounts.models import User,EmailOTP,OTP
+from accounts.validators import validate_iranian_cellphone_number
+import re
+from django.core.exceptions import ValidationError
 
-class EmailOTPRequestForm(forms.Form):
-    email = forms.EmailField(label='ایمیل')
+class OTPOrEmailRequestForm(forms.Form):
+    identifier = forms.CharField(label='ایمیل یا شماره موبایل')
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if not User.objects.filter(email=email).exists():
-            raise forms.ValidationError("کاربری با این ایمیل یافت نشد.")
-        return email
+    def clean_identifier(self):
+        value = self.cleaned_data['identifier'].strip()
 
+        # تشخیص ایمیل
+        if re.match(r"[^@]+@[^@]+\.[^@]+", value):
+            if not User.objects.filter(email=value).exists():
+                raise ValidationError("کاربری با این ایمیل یافت نشد.")
+            self.cleaned_data['type'] = 'email'
+            return value
 
+        # تشخیص شماره موبایل
+        try:
+            validate_iranian_cellphone_number(value)
+        except ValidationError:
+            raise ValidationError("لطفاً ایمیل معتبر یا شماره موبایل صحیح وارد کنید.")
 
+        if not User.objects.filter(phone_number=value).exists():
+            raise ValidationError("کاربری با این شماره موبایل یافت نشد.")
+
+        self.cleaned_data['type'] = 'phone'
+        return value
+    
+    
 class EmailOTPVerifyForm(forms.Form):
     email = forms.EmailField(label='ایمیل')
     code = forms.CharField(label='کد ارسالی به ایمیل')
