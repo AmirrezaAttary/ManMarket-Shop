@@ -11,7 +11,7 @@ class ChatRoom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.product.title} | {self.customer.email} ↔ {self.admin.email}"
+        return f"{self.product.title} | {self.customer.id} ↔ {self.admin.id}"
     
     def last_message(self):
         return self.chat_messages.order_by('-timestamp').first()
@@ -34,4 +34,4 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.sender.email}: {self.text[:30]}"
+        return f"{self.sender.id}: {self.text[:30]}"

@@ -1,0 +1,23 @@
+<!-- verify_otp.html -->
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تأیید کد</title>
+</head>
+<body>
+  <form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="user_id" value="{{ user_id }}">
+    <button type="submit">تأیید</button>
+  </form>
+
+  <form method="post" action="{% url 'accounts:resend_otp' %}">
+    {% csrf_token %}
+    <input type="hidden" name="user_id" value="{{ user_id }}">
+    <button type="submit">ارسال مجدد کد</button>
+  </form>
+</body>
+</html>

@@ -8,7 +8,7 @@ class CartModel(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.user.email
+        return f"{self.user}"
     
     def calculate_total_price(self):
         return sum(item.color_inventory.get_price() * item.quantity for item in self.cart_items.all())

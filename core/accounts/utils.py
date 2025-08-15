@@ -7,6 +7,8 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from accounts.scripts import send_bulk_sms
+from .models import EmailOTP,OTP_LOGIN,OTP
+from random import randint
 
 def send_email_async(subject, message, recipient_list):
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
@@ -34,8 +36,8 @@ def send_activation_link(request, user):
 
 
 
-from random import randint
-from .models import EmailOTP,OTP
+
+
 
 
 def send_email_otp(user):
@@ -61,3 +63,30 @@ def send_otp(user):
     message_text=f"""فروشگاه اینترنتی من مارکت\nکد تایید:{code}\nمحرمانه نگه دارید!""",
     mobiles=[f"{user.phone_number}"]
 )
+
+
+
+
+def send_email_otp(user):
+    """ارسال OTP به ایمیل کاربر و ذخیره در OTP_LOGIN"""
+    code = str(randint(10000, 99999))
+    OTP_LOGIN.objects.create(user=user, code=code)
+
+    subject = "کد ورود یکبار مصرف"
+    message = f"کد ورود شما به سایت: {code}\nاین کد تا 5 دقیقه معتبر است."
+    send_mail(subject, message, 'info@manmarket.ir', [user.email], fail_silently=False)
+
+
+def send_sms_otp(user):
+    """ارسال OTP به شماره موبایل کاربر و ذخیره در OTP_LOGIN"""
+    code = str(randint(10000, 99999))
+    OTP_LOGIN.objects.create(user=user, code=code)
+
+    send_bulk_sms(
+        api_key="co6QLJNKUrO0x75n94cWToUcFxsD4TEQGaiNXqlhR9THVrh6B5bBdXDayfe0asCb",
+        line_number="30004007672729",
+        message_text=f"""فروشگاه اینترنتی من مارکت
+کد تایید:{code}
+محرمانه نگه دارید!""",
+        mobiles=[f"{user.phone_number}"]
+    )

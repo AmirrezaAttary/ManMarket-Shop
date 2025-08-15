@@ -71,8 +71,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.email or f"User #{self.pk}"
-
+        if self.email:
+            return str(self.email)
+        elif self.phone_number:
+            return str(self.phone_number)
+        return f"User #{self.pk}"
 
     class Meta:
         ordering = ['-id']

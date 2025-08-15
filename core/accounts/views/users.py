@@ -7,11 +7,11 @@ from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth import get_user_model
-from accounts.utils import send_password_reset_email
-from django.contrib.auth import login
+from accounts.utils import send_password_reset_email,send_email_otp, send_sms_otp
 from django.shortcuts import redirect
 from django.contrib import messages  
 from django.contrib.messages.views import SuccessMessageMixin
+from accounts.models import OTP_LOGIN
 
 
 class LoginView(SuccessMessageMixin, auth_views.LoginView):
@@ -25,11 +25,6 @@ class LoginView(SuccessMessageMixin, auth_views.LoginView):
 class RegisterView(TemplateView):
     template_name = 'accounts/register.html'
 
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('dashboard:home')
-        return self.render_to_response({'form': RegisterForm()})
-
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('dashboard:home')
@@ -37,18 +32,21 @@ class RegisterView(TemplateView):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.backend = 'accounts.backends.EmailOrPhoneBackend'
-            login(request, user)
-            messages.success(request, 'ثبت‌نام شما با موفقیت انجام شد.')
-            return redirect(self.get_success_url())
+            otp = OTP_LOGIN.create_otp(user)
 
-        return self.render_to_response({'form': form})
-
-    def get_success_url(self):
-        return reverse_lazy('website:index')
+            if form.cleaned_data.get('is_email'):
+                send_email_otp(user)
+            else:
+                send_sms_otp(user)
 
 
-    
+            messages.info(request, "کد تأیید برای شما ارسال شد. لطفاً آن را وارد کنید.")
+            return redirect(reverse_lazy('accounts:verify_otp') + f"?user_id={user.id}")
+
+        request.session['otp_user_id'] = user.id
+        return redirect(reverse_lazy('accounts:verify_otp'))
+
+
 class LogoutView(auth_views.LogoutView):
     pass
 
