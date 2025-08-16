@@ -53,9 +53,8 @@
 
 
 
-            <form  method="post" action=".">
+            <form method="post" action=".">
                 {% csrf_token %}
-
                 <div class="account-detail-row is-editable align-items-center">
                     <div class="account-detail-label">نام</div>
                     <div class="account-detail-value-wrapper align-items-center">
@@ -105,8 +104,8 @@
                     <div class="account-detail-value-wrapper align-items-center">
                         <span class="account-detail-value">{% if request.user.user_profile.birth_date == "None" or request.user.user_profile.birth_date == None %}{% else %}{{request.user.user_profile.birth_date}}{% endif %}</span>
                         <div class="account-detail-input-wrapper">
-                            <input type="text" class="form-control" id="birthDate" name="birth_date"
-                                placeholder="تاریخ را انتخاب کنید" value="{% if request.user.user_profile.birth_date == "None" or request.user.user_profile.birth_date == None %}{% else %}{{request.user.user_profile.birth_date}}{% endif %}">
+                            <input type="text" value="{% if request.user.user_profile.birth_date == "None" or request.user.user_profile.birth_date == None %}{% else %}{{request.user.user_profile.birth_date}}{% endif %}" class="form-control" id="birthDate" name="birth_date"
+                                placeholder="تاریخ را انتخاب کنید">
                         </div>
                         <div class="account-detail-actions">
                             <button type="button" class="edit-trigger-btn" title="ویرایش"><svg>
@@ -123,54 +122,56 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="account-detail-row is-editable align-items-center position-relative">
 
                     <div class="account-detail-label">ایمیل</div>
-                    {% if request.user.is_authenticated and not request.user.is_verified %}
-                    <div class="position-absolute cs-po-ico d-flex align-items-center justify-content-center">
-                        <button type="submit" form="resend-activation-form"
-                            class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
-                            ارسال لینک تایید ایمیل
-                        </button>
-                    </div>
-                    {% else %}
+
                     <div class="position-absolute cs-po-ico-2 d-flex align-items-center justify-content-center">
+                        
+                        {% if request.user.is_verified  %}
                         <button type="button" class="bg-success px-2 py-1 rounded-3 text-nowrap text-light fs-14">
                             تایید شد
+                        </button>                            
+                        {% endif %}
+                        {% if request.user.is_authenticated and not request.user.is_verified %}
+                        <button form="resend-activation-form" type="submit" class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
+                           ارسال لینک تایید ایمیل
                         </button>
+                        {% endif %}
                     </div>
-                    {% endif %}
                     <div class="account-detail-value-wrapper align-items-center">
                         <span class="account-detail-value">{% if request.user.email == None or request.user.email == 'None' %}{% else %}{{request.user.email}}{% endif %}</span>
                         <div class="account-detail-input-wrapper">
-                            <input name="email" type="email" class="form-control-custom" value="{% if request.user.email == None or request.user.email == 'None' %}{% else %}{{request.user.email}}{% endif %}">
+                            <input type="email" name="email" class="form-control-custom" value="{% if request.user.email == None or request.user.email == 'None' %}{% else %}{{request.user.email}}{% endif %}">
                         </div>
-                        
-                        {% if request.user.is_verified %} 
+                        {% if request.user.is_verified  %}
                         <div class="account-detail-actions" style="display: none;">
                             <button id="my-input" type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns">
-                                <button type="button" class="save-btn" title="ذخیره"><svg>
+                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
+                                    class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
-                                <button type="button" class="cancel-btn" title="لغو"><svg>
+                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
+                                    class="cancel-btn" title="لغو"><svg>
                                         <use xlink:href="#icon-cancel-circle"></use>
                                     </svg></button>
                             </div>
                         </div>
                         {% else %}
-                        <div class="account-detail-actions">
+                        <div class="account-detail-actions" >
                             <button id="my-input" type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns">
-                                <button type="button" class="save-btn" title="ذخیره"><svg>
+                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
+                                    class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
-                                <button type="button" class="cancel-btn" title="لغو"><svg>
+                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
+                                    class="cancel-btn" title="لغو"><svg>
                                         <use xlink:href="#icon-cancel-circle"></use>
                                     </svg></button>
                             </div>
@@ -180,36 +181,37 @@
                 </div>
                 <div class="account-detail-row is-editable align-items-center position-relative">
                     <div class="account-detail-label">شماره همراه</div>
-                    {% if request.user.is_authenticated and not request.user.is_phone_verified %}
                     <div class="position-absolute cs-po-ico d-flex align-items-center justify-content-center">
-                        <button type="button"
-                            class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
-                            ارسال کد تایید شماره همراه
-                        </button>
-                    </div>
-                    {% else %}
-                    <div class="position-absolute cs-po-ico-2 d-flex align-items-center justify-content-center">
+                        
+                        {% if request.user.is_phone_verified %}
                         <button type="button" class="bg-success px-2 py-1 rounded-3 text-nowrap text-light fs-14">
                             تایید شد
+                        </button>                            
+                        {% endif %}
+
+                        {% if request.user.is_authenticated and not request.user.is_phone_verified %}
+                        <button class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
+                            ارسال کد تایید شماره همراه
                         </button>
+                        {% endif %}
                     </div>
-                    {% endif %}
                     <div class="account-detail-value-wrapper align-items-center">
                         <span class="account-detail-value">{% if request.user.phone_number == None or request.user.phone_number == 'None' %}{% else %}{{request.user.phone_number}}{% endif %}</span>
                         <div class="account-detail-input-wrapper">
                             <input type="tel" name="phone_number" class="form-control-custom" value="{% if request.user.phone_number == None or request.user.phone_number == 'None' %}{% else %}{{request.user.phone_number}}{% endif %}">
                         </div>
-                        
                         {% if request.user.is_phone_verified %}
                         <div class="account-detail-actions" style="display: none;">
                             <button type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns ">
-                                <button id="my-input-2" type="button" class="save-btn" title="ذخیره"><svg>
+                                <button id="my-input-2" style="position: relative !important;z-index: 99999 !important;"
+                                    type="button" class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
-                                <button type="button" class="cancel-btn" title="لغو"><svg>
+                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
+                                    class="cancel-btn" title="لغو"><svg>
                                         <use xlink:href="#icon-cancel-circle"></use>
                                     </svg></button>
                             </div>
@@ -220,33 +222,36 @@
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns ">
-                                <button id="my-input-2" type="button" class="save-btn" title="ذخیره"><svg>
+                                <button id="my-input-2" style="position: relative !important;z-index: 99999 !important;"
+                                    type="button" class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
-                                <button type="button" class="cancel-btn" title="لغو"><svg>
+                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
+                                    class="cancel-btn" title="لغو"><svg>
                                         <use xlink:href="#icon-cancel-circle"></use>
                                     </svg></button>
                             </div>
                         </div>
-
                         {% endif %}
                     </div>
                 </div>
                 <button type="submit" class="theme-color text-light rounded-3 mt-5 px-4 py-2">ثبت مشخصات</button>
             </form>
-    {% if request.user.email == None %}
-    <center>
-        <h5>لطفا یک ایمیل وارد کنید</h5>
-    </center>
 
-    {% elif request.user.is_authenticated and not request.user.is_verified %}
-    <center>
-        <form hidden action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
-            {% csrf_token %}
-            <input type="hidden" name="email" value="{{ request.user.email }}">
-        </form>
-    </center>
-    {% endif %}
+
+            {% if request.user.email == None %}
+            <center>
+                <h5>لطفا یک ایمیل وارد کنید</h5>
+            </center>
+
+            {% elif request.user.is_authenticated and not request.user.is_verified %}
+            <center>
+                <form hidden action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{ request.user.email }}">
+                </form>
+            </center>
+            {% endif %}
         </div>
     </section>
 </main>
