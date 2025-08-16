@@ -9,6 +9,7 @@ from django.http import JsonResponse
 
 from accounts.models import OTP_LOGIN, User
 from accounts.utils import send_email_otp, send_sms_otp  # همان‌هایی که ساختی
+from accounts.scripts import send_bulk_sms
 
 class OTPForm(forms.Form):
     code = forms.CharField(label="کد تأیید", max_length=5)
@@ -62,6 +63,10 @@ class VerifyOTPView(FormView):
         elif user.email:
             user.is_verified = True
         user.save()
+        if user.phone_number:
+            # اگر شماره تلفن دارد، پیامک خوش‌آمدگویی ارسال کن
+            send_bulk_sms("تبریک!\nشما به خانواده من مارکت پیوستید.\nاینجا جاییه که همیشه برات بهترین ها رو داریم ♥️\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است ツ",user.phone_number)
+
 
         login(self.request, user, backend='accounts.backends.EmailOrPhoneBackend')
         messages.success(self.request, "حساب شما با موفقیت تأیید شد.")
