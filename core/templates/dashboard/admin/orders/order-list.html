@@ -93,7 +93,7 @@
                                         {% for object in object_list %}
                                         <tr>
                                             <th scope="row">{{forloop.counter}}</th>
-                                            <td>{{object.id}}</td>
+                                            <td>{{object.order_number}}</td>
                                             <td>{{object.user.user_profile.get_fullname}}</td>
                                             <td>{{object.get_price|intcomma}}</td>
                                             <td>{{ object.created_date|jformat:"%Y/%m/%d - %H:%M" }}</td>

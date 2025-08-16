@@ -65,12 +65,12 @@ class AdminOrderEditView(LoginRequiredMixin, HasAdminAccessPermission, UpdateVie
     def send_status_sms(self, order, new_status):
         """ارسال پیامک متناسب با تغییر وضعیت سفارش"""
         status_messages = {
-            OrderStatusType.pending: f"مشتری گرامی،\nسفارش شما {order.id}\nدر وضعیت «در حال پرداخت» است\nو تا ۳۰ دقیقه معتبر خواهد بود\nمـــن مـــارکـــت",
-            OrderStatusType.awaiting: f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
-            OrderStatusType.success: f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
-            OrderStatusType.shipped: f"مشتری گرامی،\nسفارش شما {order.id} ارسال شد.\nکد رهگیری : {order.tracking_code or '---'}\nمـــن مـــارکـــت",
-            OrderStatusType.deliverd: f"مشتری گرامی،\nسفارش شما {order.id}\nبا موفقیت تحویل شد.\nمـــن مـــارکـــت",
-            OrderStatusType.failed: f"مشتری گرامی،\nسفارش شما {order.id} لغو شد.\nبرای اطلاعات بیشتر با پشتیبانی تماس بگیرید.\nمـــن مـــارکـــت",
+            OrderStatusType.pending: f"مشتری گرامی،\nسفارش شما {order.order_number}\nدر وضعیت «در حال پرداخت» است\nو تا ۳۰ دقیقه معتبر خواهد بود\nمـــن مـــارکـــت",
+            OrderStatusType.awaiting: f"مشتری گرامی،\nسفارش شما {order.order_number} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+            OrderStatusType.success: f"مشتری گرامی،\nسفارش شما {order.order_number} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+            OrderStatusType.shipped: f"مشتری گرامی،\nسفارش شما {order.order_number} ارسال شد.\nکد رهگیری : {order.tracking_code or '---'}\nمـــن مـــارکـــت",
+            OrderStatusType.deliverd: f"مشتری گرامی،\nسفارش شما {order.order_number}\nبا موفقیت تحویل شد.\nمـــن مـــارکـــت",
+            OrderStatusType.failed: f"مشتری گرامی،\nسفارش شما {order.order_number} لغو شد.\nبرای اطلاعات بیشتر با پشتیبانی تماس بگیرید.\nمـــن مـــارکـــت",
         }
 
         message_text = status_messages.get(new_status)

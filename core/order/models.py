@@ -85,6 +85,11 @@ class OrderModel(models.Model):
         return f"{self.state},{self.city},{self.address}"
     
     @property
+    def order_number(self):
+        """شماره سفارش به صورت تاریخ + ID"""
+        return f"{self.created_date.strftime('%Y%m%d')}{self.id}"
+    
+    @property
     def is_successful(self):
         return self.status == OrderStatusType.success.value
     

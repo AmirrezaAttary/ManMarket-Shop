@@ -38,7 +38,7 @@ class PaymentVerifyView(View):
                 order.status = OrderStatusType.awaiting.value
                 order.save()
                 send_bulk_sms(
-                    message_text = f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+                    message_text = f"مشتری گرامی،\nسفارش شما {order.order_number} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
                     mobiles=[f"{order.user.phone_number}"]
                 )
                 send_bulk_sms(
@@ -106,7 +106,7 @@ class PaymentVerifyView(View):
             order = getattr(payment_obj, "order", None)
             if order is not None:
                 send_bulk_sms(
-                    message_text = f"مشتری گرامی،\nسفارش شما {order.id} لغو شد.\nبرای اطلاعات بیشتر با پشتیبانی تماس بگیرید.\nمـــن مـــارکـــت",
+                    message_text = f"مشتری گرامی،\nسفارش شما {order.order_number} لغو شد.\nبرای اطلاعات بیشتر با پشتیبانی تماس بگیرید.\nمـــن مـــارکـــت",
                     mobiles=[f"{order.user.phone_number}"]
                 )
 

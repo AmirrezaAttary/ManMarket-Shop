@@ -134,7 +134,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
                 self.clear_cart(cart)
                 send_bulk_sms(
-                    message_text = f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+                    message_text = f"مشتری گرامی،\nسفارش شما {order.order_number} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
                     mobiles=[f"{order.user.phone_number}"]
                 )
                 send_bulk_sms(
