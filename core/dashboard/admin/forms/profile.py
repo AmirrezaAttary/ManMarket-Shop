@@ -49,7 +49,6 @@ class AdminProfileEditForm(forms.ModelForm):
             "first_name",
             "last_name",
         ]
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -57,6 +56,7 @@ class AdminProfileEditForm(forms.ModelForm):
         self.fields['first_name'].widget.attrs['placeholder'] = 'نام خود را وارد نمایید'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی را وارد نمایید'
+
 
         if self.instance and self.instance.user:
             self.fields['phone_number'].initial = self.instance.user.phone_number
@@ -66,6 +66,8 @@ class AdminProfileEditForm(forms.ModelForm):
             if self.instance.user.is_verified:
                 self.fields['email'].disabled = True
 
+            if self.instance.user.is_phone_verified:
+                self.fields['phone_number'].disabled = True
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -108,6 +110,7 @@ class AdminProfileEditForm(forms.ModelForm):
             if commit:
                 user.save()
         return profile
+
 
 
 
