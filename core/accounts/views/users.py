@@ -57,12 +57,16 @@ class RegisterView(TemplateView):
             else:
                 send_sms_otp(user)
 
+            # ✅ اینجا user وجود داره، پس درست ذخیره میشه
+            request.session['otp_user_id'] = user.id
 
             messages.info(request, "کد تأیید برای شما ارسال شد. لطفاً آن را وارد کنید.")
             return redirect(reverse_lazy('accounts:verify_otp') + f"?user_id={user.id}")
 
-        request.session['otp_user_id'] = user.id
-        return redirect(reverse_lazy('accounts:verify_otp'))
+        # اگر فرم معتبر نبود، نباید از user استفاده کنیم
+        messages.error(request, "این کاربر قبلاً ثبت‌نام کرده است.")
+        return redirect('accounts:register')
+
 
 
 class LogoutView(auth_views.LogoutView):

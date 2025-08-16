@@ -25,7 +25,7 @@ from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
 from shop.models import ProductColorInventory
 from accounts.models import UserType
-
+from accounts.scripts import send_bulk_sms
 
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
     template_name = "order/checkout.html"
@@ -133,6 +133,14 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                         continue
 
                 self.clear_cart(cart)
+                send_bulk_sms(
+                    message_text = f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+                    mobiles=[f"{order.user.phone_number}"]
+                )
+                send_bulk_sms(
+                    message_text = f"یک سفارش جدید در من مارکت ثبت شد !",
+                    mobiles=["09120983411"]
+                )
                 return reverse_lazy("order:completed")
 
             else:

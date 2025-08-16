@@ -1,12 +1,10 @@
 import requests
 
 
-def send_bulk_sms(api_key, line_number, message_text, mobiles, send_date_time=None):
+def send_bulk_sms(message_text, mobiles, send_date_time=None):
     """
     ارسال پیامک گروهی با استفاده از API sms.ir
 
-    :param api_key: کلید API دریافتی از sms.ir
-    :param line_number: شماره خط اختصاصی
     :param message_text: متن پیامک
     :param mobiles: لیست شماره موبایل‌ها
     :param send_date_time: تاریخ/ساعت ارسال (None برای ارسال فوری)
@@ -16,11 +14,11 @@ def send_bulk_sms(api_key, line_number, message_text, mobiles, send_date_time=No
 
     headers = {
         "Content-Type": "application/json",
-        "X-API-KEY": api_key
+        "X-API-KEY": "co6QLJNKUrO0x75n94cWToUcFxsD4TEQGaiNXqlhR9THVrh6B5bBdXDayfe0asCb"
     }
 
     payload = {
-        "lineNumber": line_number,
+        "lineNumber": "30004007672729",
         "messageText": message_text,
         "mobiles": mobiles,
         "sendDateTime": send_date_time

@@ -9,6 +9,7 @@ from wallets.models import WalletTransaction
 from cart.cart import CartSession
 from cart.models import CartModel
 from shop.models import ProductColorInventory
+from accounts.scripts import send_bulk_sms
 
 
 # Create your views here.
@@ -36,6 +37,14 @@ class PaymentVerifyView(View):
             if order is not None:
                 order.status = OrderStatusType.awaiting.value
                 order.save()
+                send_bulk_sms(
+                    message_text = f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+                    mobiles=[f"{order.user.phone_number}"]
+                )
+                send_bulk_sms(
+                    message_text = f"یک سفارش جدید در من مارکت ثبت شد !",
+                    mobiles=["09120983411"]
+                )
 
                 # 🔻 کم کردن موجودی محصولات از انبار
                 # ✅ کاهش موجودی محصولات بر اساس رنگ و تعداد سفارش
@@ -96,6 +105,11 @@ class PaymentVerifyView(View):
 
             order = getattr(payment_obj, "order", None)
             if order is not None:
+                send_bulk_sms(
+                    message_text = f"مشتری گرامی،\nسفارش شما {order.id} لغو شد.\nبرای اطلاعات بیشتر با پشتیبانی تماس بگیرید.\nمـــن مـــارکـــت",
+                    mobiles=[f"{order.user.phone_number}"]
+                )
+
                 order.status = OrderStatusType.failed.value
                 order.save()
                 return redirect(reverse_lazy("order:failed"))

@@ -58,8 +58,6 @@ def send_otp(user):
 
     # اینجا به جای SMS می‌تونی ایمیل هم بزنی یا کد رو لاگ کنی
     send_bulk_sms(
-    api_key="co6QLJNKUrO0x75n94cWToUcFxsD4TEQGaiNXqlhR9THVrh6B5bBdXDayfe0asCb",
-    line_number="30004007672729",
     message_text=f"""فروشگاه اینترنتی من مارکت\nکد تایید:{code}\nمحرمانه نگه دارید!""",
     mobiles=[f"{user.phone_number}"]
 )
@@ -83,8 +81,6 @@ def send_sms_otp(user):
     OTP_LOGIN.objects.create(user=user, code=code)
 
     send_bulk_sms(
-        api_key="co6QLJNKUrO0x75n94cWToUcFxsD4TEQGaiNXqlhR9THVrh6B5bBdXDayfe0asCb",
-        line_number="30004007672729",
         message_text=f"""فروشگاه اینترنتی من مارکت
 کد تایید:{code}
 محرمانه نگه دارید!""",

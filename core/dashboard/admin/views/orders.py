@@ -6,6 +6,7 @@ from django.urls import reverse
 from dashboard.admin.forms import *
 from django.core.exceptions import FieldError
 from order.models import OrderModel,OrderStatusType
+from accounts.scripts import send_bulk_sms
 
 
 class AdminOrderListView(LoginRequiredMixin, HasAdminAccessPermission, ListView):
@@ -42,13 +43,52 @@ class AdminOrderDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailV
         return OrderModel.objects.all()
     
     
-class AdminOrderEditView(LoginRequiredMixin, HasAdminAccessPermission,UpdateView):
+from django.contrib import messages
+
+class AdminOrderEditView(LoginRequiredMixin, HasAdminAccessPermission, UpdateView):
     template_name = "dashboard/admin/orders/order-edit.html"
     queryset = OrderModel.objects.all()
     form_class = OrederModelForm
-    
+
+    def form_valid(self, form):
+        order: OrderModel = form.save(commit=False)
+        old_status = self.get_object().status  # وضعیت قبلی
+        new_status = form.cleaned_data.get("status")
+
+        response = super().form_valid(form)  # ذخیره‌ی سفارش
+
+        if old_status != new_status:
+            self.send_status_sms(order, new_status)
+
+        return response
+
+    def send_status_sms(self, order, new_status):
+        """ارسال پیامک متناسب با تغییر وضعیت سفارش"""
+        status_messages = {
+            OrderStatusType.pending: f"مشتری گرامی،\nسفارش شما {order.id}\nدر وضعیت «در حال پرداخت» است\nو تا ۳۰ دقیقه معتبر خواهد بود\nمـــن مـــارکـــت",
+            OrderStatusType.awaiting: f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+            OrderStatusType.success: f"مشتری گرامی،\nسفارش شما {order.id} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+            OrderStatusType.shipped: f"مشتری گرامی،\nسفارش شما {order.id} ارسال شد.\nکد رهگیری : {order.tracking_code or '---'}\nمـــن مـــارکـــت",
+            OrderStatusType.deliverd: f"مشتری گرامی،\nسفارش شما {order.id}\nبا موفقیت تحویل شد.\nمـــن مـــارکـــت",
+            OrderStatusType.failed: f"مشتری گرامی،\nسفارش شما {order.id} لغو شد.\nبرای اطلاعات بیشتر با پشتیبانی تماس بگیرید.\nمـــن مـــارکـــت",
+        }
+
+        message_text = status_messages.get(new_status)
+        if message_text:
+            user_phone = order.user.phone_number
+            if user_phone:
+                result = send_bulk_sms(message_text, [user_phone])
+                if result.get("status") == 1:  # موفق
+                    messages.success(self.request, f"پیامک وضعیت سفارش {order.id} با موفقیت ارسال شد ✅")
+                else:
+                    messages.error(self.request, f"خطا در ارسال پیامک برای سفارش {order.id}: {result.get('message')}")
+            else:
+                messages.warning(self.request, f"سفارش {order.id} شماره موبایل ثبت‌شده ندارد ❌")
+
     def get_success_url(self):
         return reverse("dashboard:admin:order-detail", kwargs={'pk': self.kwargs['pk']})
+
+
     
   
 class AdminOrderInvoiceView(LoginRequiredMixin, HasAdminAccessPermission, DetailView):
