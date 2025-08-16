@@ -56,9 +56,10 @@ class VerifyOTPView(FormView):
         otp.save()
 
         user = otp.user
-        user.is_verified = True
         if user.phone_number:
             user.is_phone_verified = True
+        elif user.email:
+            user.is_verified = True
         user.save()
 
         login(self.request, user, backend='accounts.backends.EmailOrPhoneBackend')

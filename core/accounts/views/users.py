@@ -1,4 +1,5 @@
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LoginView as DjangoLoginView
 from accounts.forms import CustomAuthenticationForm,RegisterForm
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
@@ -14,11 +15,28 @@ from django.contrib.messages.views import SuccessMessageMixin
 from accounts.models import OTP_LOGIN
 
 
-class LoginView(SuccessMessageMixin, auth_views.LoginView):
+class LoginView(DjangoLoginView):
     template_name = "accounts/login.html"
-    form_class = CustomAuthenticationForm
-    redirect_authenticated_user = True
-    success_message = 'شما با موفقیت وارد من مارکت شدید'
+    authentication_form = CustomAuthenticationForm
+
+    def form_valid(self, form):
+        user = form.get_user()
+
+        # اگر کاربر تایید نشده بود → OTP بفرست و ریدایرکت کن
+        if not user.is_verified and not user.is_phone_verified:
+            otp = OTP_LOGIN.create_otp(user)
+
+            if user.phone_number:
+                send_sms_otp(user)
+            elif user.email:
+                send_email_otp(user)
+
+            self.request.session['otp_user_id'] = user.id
+            messages.info(self.request, "کد تأیید برای شما ارسال شد، لطفاً وارد کنید.")
+            return redirect(reverse_lazy("accounts:verify_otp"))
+
+        # اگر تایید شده بود → لاگین معمولی
+        return super().form_valid(form)
 
     
 

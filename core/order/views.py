@@ -36,8 +36,8 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         user = request.user
 
         # بررسی تایید ایمیل و شماره تلفن
-        if not user.is_verified or not user.is_phone_verified:
-            messages.error(request, "برای ادامه خرید، ابتدا باید ایمیل و شماره تلفن خود را تأیید کنید.")
+        if not user.is_phone_verified:
+            messages.error(request, "برای ادامه خرید، ابتدا باید شماره تلفن خود را تأیید کنید.")
             return redirect("dashboard:home")  # آدرس صفحه تایید را اینجا بگذار
 
         # بررسی پروفایل کامل
