@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, View
+from django.http import JsonResponse
 
 from accounts.models import OTP_LOGIN, User
 from accounts.utils import send_email_otp, send_sms_otp  # همان‌هایی که ساختی
@@ -71,27 +72,36 @@ class ResendOTPView(View):
     def post(self, request):
         uid = (request.POST.get('user_id')
                or request.session.get('otp_user_id'))
+
         if not uid:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"status": "error", "message": "شناسه کاربر نامعتبر است."}, status=400)
             messages.error(request, "شناسه کاربر نامعتبر است.")
             return redirect('accounts:register')
 
         try:
             user = User.objects.get(pk=uid)
         except User.DoesNotExist:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"status": "error", "message": "کاربر یافت نشد."}, status=404)
             messages.error(request, "کاربر یافت نشد.")
             return redirect('accounts:register')
 
-        # همه کدهای قبلی را بی‌اعتبار کن (امن‌تر)
         OTP_LOGIN.objects.filter(user=user, is_used=False).update(is_used=True)
 
-        # بر اساس نوع ثبت‌نام، ایمیل یا SMS
         if user.email:
             send_email_otp(user)
         elif user.phone_number:
             send_sms_otp(user)
         else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"status": "error", "message": "اطلاعات تماس کاربر ناقص است."}, status=400)
             messages.error(request, "اطلاعات تماس کاربر ناقص است.")
             return redirect('accounts:register')
 
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"status": "ok", "message": "کد جدید ارسال شد."})
+
         messages.info(request, "کد جدید ارسال شد.")
         return redirect(reverse_lazy('accounts:verify_otp'))
+

@@ -83,6 +83,7 @@
           method: "POST",
           headers: {
             "X-CSRFToken": "{{ csrf_token }}",
+            "X-Requested-With": "XMLHttpRequest",   // 👈 اینو اضافه کن
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
