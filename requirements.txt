@@ -40,3 +40,8 @@ django-summernote
 
 # chat in project
 channels
+
+
+# api
+djangorestframework
+djangorestframework-simplejwt
