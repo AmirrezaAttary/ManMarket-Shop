@@ -43,5 +43,5 @@ channels
 
 
 # api
-djangorestframework
-djangorestframework-simplejwt
+# djangorestframework
+# djangorestframework-simplejwt

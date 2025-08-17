@@ -74,8 +74,8 @@
                                         </g>
                                     </svg>پرداخت سفارش
                                 </a>
-                                {% else %}
-                                <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                                {% elif object.status == 5 %}
+                                <a href="{% url 'dashboard:customer:order-invoice' pk=object.pk %}" class="btn-custom btn-secondary btn-sm mx-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px"
                                         height="22px">
                                         <g fill="currentColor">

@@ -9,3 +9,12 @@ def mul(value, arg):
         return int(float(value) * float(arg))
     except (ValueError, TypeError):
         return ''
+
+
+@register.filter
+def div(value, arg):
+    """تقسیم"""
+    try:
+        return float(value) / float(arg)
+    except (ValueError, TypeError, ZeroDivisionError):
+        return ''
