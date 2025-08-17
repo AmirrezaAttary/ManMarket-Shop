@@ -9,7 +9,7 @@
 
 
 {% block meta_description %}
-
+<meta property="og:image" content="{{ object.image.url }}">
 {% if object.meta_description %}
 <meta name="description" content="{{object.meta_description}}">
 {% endif %}
