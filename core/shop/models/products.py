@@ -31,6 +31,14 @@ class ProductModel(models.Model):
         prices = self.color_inventories.filter(price__gt=0, stock__gt=0).order_by('price').values_list('price', flat=True)
         return prices[0] if prices else None
     
+    def get_min_discounted_price(self):
+        # لیست قیمت‌های تخفیف‌خورده برای رنگ‌های دارای موجودی
+        discounted_prices = [
+            color.get_price()  # get_price خودش تخفیف را محاسبه می‌کند
+            for color in self.color_inventories.filter(price__gt=0, stock__gt=0)
+        ]
+        return min(discounted_prices) if discounted_prices else None
+    
     class Meta:
         ordering = ["-created_date"]
         

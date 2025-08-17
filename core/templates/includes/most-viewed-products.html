@@ -65,7 +65,7 @@
                 </div>
             </div>
             <h3 class="Specifications px-3 ">{{product.title}}</h3>
-            <span class="cus-fs-1 mt-2 px-3 d-bx">{{product.get_min_price|intcomma}} <span class="money-icon"></span></span>
+            <span class="cus-fs-1 mt-2 px-3 d-bx">{{product.get_min_discounted_price|intcomma}} <span class="money-icon"></span></span>
             <a class="position-absolute  href-slide" href="{% url 'shop:product-detail' slug=product.slug %}"></a>
         </article>
         {% endfor %}

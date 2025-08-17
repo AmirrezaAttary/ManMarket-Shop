@@ -1,7 +1,7 @@
 from django import template
 from shop.models import ProductStatusType, ProductModel, WishlistProductModel
 
-from django.db.models import F
+from django.db.models import F, Max, Min, DecimalField, ExpressionWrapper
 register = template.Library()
 
 @register.inclusion_tag("includes/latest-product.html", takes_context=True)
@@ -27,10 +27,16 @@ def show_highest_discount_products(context):
     highest_discount_products = ProductModel.objects.filter(
         status=ProductStatusType.publish.value,
         color_inventories__price__gt=0,
-        color_inventories__stock__gt=0 # فیلتر محصولات دارای قیمت مثبت
+        color_inventories__stock__gt=0
     ).annotate(
-        discount=F('color_inventories__price') * (F('color_inventories__discount_percent') / 100)
-    ).order_by('-discount').distinct()[:12]  # distinct برای جلوگیری از تکرار محصول به‌خاطر رابطه many-to-one
+        min_price=Min(F('color_inventories__price')),
+        max_discount_percent=Max('color_inventories__discount_percent')
+    ).annotate(
+        discount_amount=ExpressionWrapper(
+            F('min_price') * F('max_discount_percent') / 100,
+            output_field=DecimalField()
+        )
+    ).order_by('-discount_amount')[:12]
 
     wishlist_items = WishlistProductModel.objects.filter(user=request.user).values_list("product__id", flat=True) if request.user.is_authenticated else []
 
