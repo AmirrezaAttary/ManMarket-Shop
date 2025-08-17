@@ -61,7 +61,7 @@
                                     مشاهده جزئیات
                                 </a>
                                 {% if object.status == 1 %}
-                                <a href="" class="btn-custom btn-secondary btn-sm mx-1">
+                                <a href="{% url 'order:retry-payment' order_id=object.pk %}" class="btn-custom btn-secondary btn-sm mx-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22px"
                                         height="22px">
                                         <g fill="currentColor">

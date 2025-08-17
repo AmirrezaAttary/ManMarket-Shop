@@ -17,7 +17,7 @@ from decimal import Decimal
 from order.models import CouponModel,OrderStatusType,TrackingType
 from django.http import JsonResponse
 from django.utils import timezone
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 # Create your views here.
 from payment.zarinpal_client import ZarinPalSandbox
 from payment.models import PaymentModel,PayemntStatusType,PayemntType
@@ -368,3 +368,31 @@ class ValidateCouponView(LoginRequiredMixin, HasCustomerAccessPermission, View):
                     total_price - (total_price * (coupon.discount_percent/100)))
                 total_tax = round((total_price * 10)/100)
         return JsonResponse({"message": message, "total_tax": total_tax, "total_price": total_price}, status=status_code)
+    
+    
+    
+class OrderRetryPaymentView(LoginRequiredMixin, View):
+    def get(self, request, order_id, *args, **kwargs):
+        order = get_object_or_404(OrderModel, id=order_id, user=request.user)
+
+        if order.status != OrderStatusType.pending.value:
+            messages.error(request, "این سفارش قابل پرداخت مجدد نیست.")
+            return redirect("order:detail", order_id=order.id)
+
+        zarinpal = ZarinPalSandbox()
+        callback_url = request.build_absolute_uri(reverse_lazy("payment:verify"))
+        response = zarinpal.payment_request(callback_url, int(order.total_price))
+
+        if response.get("data"):
+            payment_obj = PaymentModel.objects.create(
+                authority_id=response["data"]["authority"],
+                amount=order.total_price,
+                order=order,
+                payemnt_type=PayemntType.cart.value
+            )
+            order.payment = payment_obj
+            order.save()
+            return redirect(zarinpal.generate_payment_url(response["data"]["authority"]))
+
+        messages.error(request, "خطا در اتصال به درگاه پرداخت.")
+        return redirect("dashboard:customer:order-list")
