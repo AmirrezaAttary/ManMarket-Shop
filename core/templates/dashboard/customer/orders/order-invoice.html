@@ -55,7 +55,7 @@
                 <header class="invoice-header">
                     <div class="invoice-header-section text-right">
                         <b>صورت حساب آقا / خانم :</b> {{ object.user.user_profile.get_fullname }}<br>
-                        <b>شماره تماس :</b> {{ object.user.user_profile.phone }}<br>
+                        <b>شماره تماس :</b> {{ object.user.phone_number }}<br>
                         <b>آدرس :</b> {{ object.get_full_address }}
                     </div>
                     <div class="invoice-logo-section">
@@ -64,7 +64,7 @@
                         <p class="my-2">فروشگاه اینترنتی و حضوری</p>
                     </div>
                     <div class="invoice-header-section text-left">
-                        <b>تاریخ :</b> {{ object.created_date|date:"Y-m-d H:i" }}<br>
+                        <b>تاریخ :</b> {{ jalali_created_date }}<br>
                         <b>شماره فاکتور :</b> {{ object.id }}
                     </div>
                 </header>

@@ -72,3 +72,10 @@ class CustomerOrderInvoiceView(LoginRequiredMixin, HasCustomerAccessPermission, 
 
     def get_queryset(self):
         return OrderModel.objects.filter(user=self.request.user,status=OrderStatusType.deliverd.value)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # تبدیل تاریخ به شمسی برای هر سفارش
+        context["jalali_created_date"] = to_jalali(self.object.created_date)
+        context["jalali_updated_date"] = to_jalali(self.object.updated_date)
+        return context
