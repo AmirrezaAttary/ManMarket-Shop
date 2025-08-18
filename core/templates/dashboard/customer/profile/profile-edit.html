@@ -190,7 +190,7 @@
                         {% endif %}
 
                         {% if request.user.is_authenticated and not request.user.is_phone_verified %}
-                        <button class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
+                        <button form="send-phone-otp-form" type="submit" class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
                             ارسال کد تایید شماره همراه
                         </button>
                         {% endif %}
@@ -246,12 +246,18 @@
 
             {% elif request.user.is_authenticated and not request.user.is_verified %}
             <center>
-                <form hidden action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
+                <form hidden action="{% url 'accounts:resend_activation' %}" method="get" id="resend-activation-form">
                     {% csrf_token %}
                     <input type="hidden" name="email" value="{{ request.user.email }}">
                 </form>
             </center>
             {% endif %}
+
+
+            <form action="{% url 'accounts:send_phone_otp' %}" method="post" id="send-phone-otp-form">
+                {% csrf_token %}
+                <input type="hidden" name="phone_number" value="{{ request.user.phone_number }}">
+            </form>
         </div>
     </section>
 </main>

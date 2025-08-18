@@ -1,4 +1,4 @@
-from accounts.forms import OTPRequestForm,OTPVerifyForm
+from accounts.forms import OTPRequestForm,OTPVerifyForm,OTPForm
 from accounts.utils import send_otp
 from django.contrib.auth import login
 from django.shortcuts import redirect
@@ -7,6 +7,8 @@ from accounts.models import User,OTP
 from django.views.generic import FormView
 from django.http import JsonResponse
 from django.views import View
+import random
+from django.shortcuts import render
 
 
 class OTPLoginRequestView(FormView):
@@ -60,3 +62,51 @@ class ResendPhoneOTPView(View):
             return JsonResponse({'status': 'ok', 'message': 'کد جدید ارسال شد.'})
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'کاربر یافت نشد.'}, status=404)
+        
+        
+        
+        
+        
+        
+class SendPhoneOTPView(View):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_authenticated:
+            messages.error(request, "ابتدا وارد حساب کاربری شوید.")
+            return redirect("accounts:login")
+
+        phone_number = request.POST.get("phone_number")
+        if not phone_number:
+            messages.error(request, "شماره تلفن یافت نشد.")
+            return redirect("dashboard:customer:profile-edit")
+
+        if not user.phone_number or user.phone_number != phone_number:
+            messages.error(request, "شماره وارد شده معتبر نیست.")
+            return redirect("dashboard:customer:profile-edit")
+
+        send_otp(user)
+        messages.success(request, "کد تأیید برای شماره شما ارسال شد.")
+        return redirect("accounts:verify_phone")
+
+
+class VerifyPhoneView(FormView):
+    template_name = "accounts/verify_phone.html"
+    form_class = OTPForm
+
+    def form_valid(self, form):
+        user = self.request.user
+        code = form.cleaned_data["code"]
+
+        otp = OTP.objects.filter(user=user, code=code, is_used=False).last()
+        if otp and otp.is_valid():
+            otp.is_used = True
+            otp.save()
+
+            user.is_phone_verified = True
+            user.save()
+
+            messages.success(self.request, "شماره تلفن شما با موفقیت تأیید شد ✅")
+            return redirect("profile")
+        else:
+            messages.error(self.request, "کد وارد شده معتبر نیست یا منقضی شده است.")
+            return self.form_invalid(form)

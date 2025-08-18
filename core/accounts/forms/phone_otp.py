@@ -30,3 +30,7 @@ class OTPVerifyForm(forms.Form):
                 self.cleaned_data['user'] = user
                 return self.cleaned_data
         raise ValidationError("کد وارد شده نامعتبر است یا منقضی شده.")
+    
+    
+class OTPForm(forms.Form):
+    code = forms.CharField(max_length=6, label="کد تأیید")
