@@ -26,6 +26,7 @@ from django.contrib import messages
 from shop.models import ProductColorInventory
 from accounts.models import UserType
 from accounts.scripts import send_bulk_sms
+from django.db import transaction
 
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
     template_name = "order/checkout.html"
@@ -73,12 +74,14 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
         cart = CartModel.objects.get(user=user)
         order = self.create_order(address, tracking_type)  # 👈 ارسال روش ارسال
+        
 
         self.create_order_items(order, cart)
 
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
+        self.clear_cart(cart)
         return redirect(self.create_payment_url(order, cart))
 
 
@@ -326,6 +329,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
 
 
+
 class OrderCompletedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):
     template_name = "order/completed.html"
     
@@ -373,26 +377,56 @@ class ValidateCouponView(LoginRequiredMixin, HasCustomerAccessPermission, View):
     
 class OrderRetryPaymentView(LoginRequiredMixin, View):
     def get(self, request, order_id, *args, **kwargs):
-        order = get_object_or_404(OrderModel, id=order_id, user=request.user)
+        # فقط سفارش‌هایی که پرداخت نشده‌اند
+        order = get_object_or_404(
+            OrderModel,
+            id=order_id,
+            user=request.user,
+            status=OrderStatusType.pending.value
+        )
 
-        if order.status != OrderStatusType.pending.value:
-            messages.error(request, "این سفارش قابل پرداخت مجدد نیست.")
-            return redirect("order:detail", order_id=order.id)
+        try:
+            with transaction.atomic():
+                for item in order.order_items.all():
+                    try:
+                        color_inventory = ProductColorInventory.objects.select_for_update().get(
+                            product=item.product,
+                            color=item.color
+                        )
+                    except ProductColorInventory.DoesNotExist:
+                        messages.error(
+                            request,
+                            f"محصول '{item.product.title}' با رنگ {item.color.title} در انبار یافت نشد."
+                        )
+                        return redirect("dashboard:customer:order-list")
 
-        zarinpal = ZarinPalSandbox()
-        callback_url = request.build_absolute_uri(reverse_lazy("payment:verify"))
-        response = zarinpal.payment_request(callback_url, int(order.total_price))
+                    if color_inventory.stock < item.quantity:
+                        messages.error(
+                            request,
+                            f"موجودی محصول '{item.product.title}' با رنگ {item.color.title} کافی نیست."
+                        )
+                        return redirect("dashboard:customer:order-list")
 
-        if response.get("data"):
-            payment_obj = PaymentModel.objects.create(
-                authority_id=response["data"]["authority"],
-                amount=order.total_price,
-                order=order,
-                payemnt_type=PayemntType.cart.value
-            )
-            order.payment = payment_obj
-            order.save()
-            return redirect(zarinpal.generate_payment_url(response["data"]["authority"]))
+                # اگر موجودی کافی بود برو سراغ درگاه
+                zarinpal = ZarinPalSandbox()
+                callback_url = request.build_absolute_uri(reverse_lazy("payment:verify"))
+                response = zarinpal.payment_request(callback_url, int(order.total_price))
+
+                if response.get("data"):
+                    payment_obj = PaymentModel.objects.create(
+                        authority_id=response["data"]["authority"],
+                        amount=order.total_price,
+                        order=order,
+                        payemnt_type=PayemntType.cart.value
+                    )
+                    order.payment = payment_obj
+                    order.save()
+                    return redirect(zarinpal.generate_payment_url(response["data"]["authority"]))
+
+        except Exception as e:
+            messages.error(request, f"خطایی رخ داد: {str(e)}")
+            return redirect("dashboard:customer:order-list")
 
         messages.error(request, "خطا در اتصال به درگاه پرداخت.")
         return redirect("dashboard:customer:order-list")
+
