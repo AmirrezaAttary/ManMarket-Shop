@@ -27,6 +27,8 @@ from shop.models import ProductColorInventory
 from accounts.models import UserType
 from accounts.scripts import send_bulk_sms
 from django.db import transaction
+from order.tasks import check_order_pending_status
+
 
 class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
     template_name = "order/checkout.html"
@@ -81,6 +83,7 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
+        check_order_pending_status.apply_async(args=[order.id], countdown=180)
         self.clear_cart(cart)
         return redirect(self.create_payment_url(order, cart))
 
