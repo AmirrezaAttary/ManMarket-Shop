@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>تایید ایمیل</title>
+  <title>تایید موبایل</title>
   <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
@@ -31,7 +31,7 @@
             </svg>
           </div>
           <h2 class="ki-ta-title my-4">کد تایید را وارد کنید</h2>
-          <input type="hidden" name="email" value="{{form.email.value}}">
+          <input type="hidden" name="phone_number" value="{{form.phone_number.value}}">
           <div class="ki-ta-pin-input-container mt-3">
             <input name="code" type="tel" maxlength="1" class="ki-ta-pin-input rounded-3" autofocus>
             <input type="tel" maxlength="1" class="ki-ta-pin-input rounded-3">
@@ -80,7 +80,7 @@
       // وقتی دکمه ارسال دوباره کلیک شد
       resendBtn.addEventListener('click', () => {
         resendBtn.disabled = true;
-        fetch("{% url 'accounts:email_otp_resend' %}", {
+        fetch("{% url 'accounts:phone_otp_resend' %}", {
           method: "POST",
           headers: {
             "X-CSRFToken": "{{ csrf_token }}",
