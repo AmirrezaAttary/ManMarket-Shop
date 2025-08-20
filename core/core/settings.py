@@ -74,6 +74,10 @@ INSTALLED_APPS = [
     'wallets',
     'chat',
     
+    # rest api apps
+    'rest_framework',
+    
+    
     # other app for internet
     'channels',
     'django.contrib.humanize',
