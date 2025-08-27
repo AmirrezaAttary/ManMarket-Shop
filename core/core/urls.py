@@ -43,7 +43,7 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps_dict}, name='django.contrib.sitemaps.views.sitemap'),
 
     path('robots.txt', include('robots.urls')),
-    # path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls'))
 ]
 
 if settings.DEBUG:

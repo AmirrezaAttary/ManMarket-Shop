@@ -1,24 +1,17 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from blog.api.v1.serializers import PostSerializer
-from blog.models import Post
-
-data = {
-    "id":1,
-    "title" : "hello"
-}
+from blog.api.v1.serializers import PostSerializer,CategorySerializer
+from blog.models import Post, Category
+from rest_framework import viewsets
 
 
-@api_view(['GET',"POST"])
-def postList(requests):
-    posts = Post.objects.filter(status=True)
-    serializer = PostSerializer(posts,many=True)
-    return Response(serializer.data)
+class PostModelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+    search_fields = ["title", "content"]
+    ordering_fields = ["created_at"]
 
 
-
-@api_view(['GET',"PUT"])
-def postDetail(requests,id):
-    post = Post.objects.get(pk=id)
-    serializer = PostSerializer(post)
-    return Response(serializer.data)
+class CategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+    search_fields = ["name"]
+    ordering_fields = ["created_at"]
