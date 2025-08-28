@@ -10,19 +10,24 @@ from shop.models import (
     ProductSpecification
 )
 from shop.api.v1.serializers import (
-    ProductSerializer,
     ProductCategorySerializer,
     BrandSerializer,
     ColorSerializer,
     ProductColorInventorySerializer,
     ProductImageModelSerializer,
-    ProductSpecificationSerializer
+    ProductSpecificationSerializer,
+    ProductListSerializer,
+    ProductDetailSerializer
 )
 
 
 class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ProductSerializer
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ProductListSerializer
+        return ProductDetailSerializer
 
 
 class ProductCategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
