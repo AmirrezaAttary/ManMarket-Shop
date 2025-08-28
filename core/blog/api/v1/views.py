@@ -1,13 +1,15 @@
-from blog.api.v1.serializers import PostSerializer,CategorySerializer
-from blog.models import Post, Category
+from blog.api.v1.serializers import PostSerializerList,PostSerializerDetail,CategorySerializer
+from blog.models import Post, Category,BlogStatusType
 from rest_framework import viewsets
 
 
 class PostModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = PostSerializer
-    queryset = Post.objects.filter(status=True)
-    search_fields = ["title", "content"]
-    ordering_fields = ["created_at"]
+    queryset = Post.objects.filter(status=BlogStatusType.publish.value)
+    
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PostSerializerList
+        return PostSerializerDetail
 
 
 class CategoryModelViewSet(viewsets.ReadOnlyModelViewSet):

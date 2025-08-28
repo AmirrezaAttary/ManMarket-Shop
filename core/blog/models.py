@@ -33,6 +33,9 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return reverse('blog:blog-detail', args=[self.slug])
+    
+    def get_first_category(self):
+        return self.category.first() 
 
 
 class Category(models.Model):

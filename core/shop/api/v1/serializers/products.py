@@ -13,34 +13,21 @@ from shop.models import (
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductCategoryModel
-        fields = ["id", "title", "slug", "image"]
-
-
-class ProductListSerializer(serializers.ModelSerializer):
-    category = ProductCategorySerializer(read_only=True)  # نمایش کل اطلاعات کتگوری
-    min_price = serializers.ReadOnlyField(source="get_min_price")
-    min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
-    has_discount = serializers.ReadOnlyField()
-
-    class Meta:
-        model = ProductModel
         fields = [
             "id",
             "title",
-            "slug",
-            "image",
-            "avg_rate",
-            "category",
-            "min_price",
-            "min_discounted_price",
-            "has_discount",
+            "slug"
         ]
 
 
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
-        fields = "__all__"
+        fields = [
+            "id",
+            "title",
+            "slug",
+        ]
 
 
 
@@ -69,13 +56,40 @@ class ProductColorInventorySerializer(serializers.ModelSerializer):
 class ProductImageModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImageModel
-        fields = "__all__"
+        fields = [
+            "file",
+            "color",
+        ]
 
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSpecification
-        fields = "__all__"
+        fields = [
+            "name",
+            "value"
+        ]
+
+
+class ProductListSerializer(serializers.ModelSerializer):
+    category = ProductCategorySerializer(read_only=True)  # نمایش کل اطلاعات کتگوری
+    min_price = serializers.ReadOnlyField(source="get_min_price")
+    min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
+    has_discount = serializers.ReadOnlyField()
+
+    class Meta:
+        model = ProductModel
+        fields = [
+            "id",
+            "title",
+            "slug",
+            "image",
+            "avg_rate",
+            "category",
+            "min_price",
+            "min_discounted_price",
+            "has_discount",
+        ]
 
 
 

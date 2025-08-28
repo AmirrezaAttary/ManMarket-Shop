@@ -47,3 +47,4 @@ djangorestframework
 markdown
 django-filter
 djangorestframework-simplejwt
+django-taggit-serializer

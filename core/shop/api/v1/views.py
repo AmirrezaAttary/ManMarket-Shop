@@ -10,12 +10,9 @@ from shop.models import (
     ProductSpecification
 )
 from shop.api.v1.serializers import (
-    ProductCategorySerializer,
-    BrandSerializer,
+    CategorySerializer,
+    BrandsSerializer,
     ColorSerializer,
-    ProductColorInventorySerializer,
-    ProductImageModelSerializer,
-    ProductSpecificationSerializer,
     ProductListSerializer,
     ProductDetailSerializer
 )
@@ -31,12 +28,12 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ProductCategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ProductCategorySerializer
+    serializer_class = CategorySerializer
     queryset = ProductCategoryModel.objects.all()
 
 
 class BrandModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = BrandSerializer
+    serializer_class = BrandsSerializer 
     queryset = Brand.objects.all()
 
 
@@ -44,18 +41,3 @@ class ColorModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ColorSerializer
     queryset = Color.objects.all()
 
-
-class ProductColorInventoryViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ProductColorInventorySerializer
-    queryset = ProductColorInventory.objects.all()
-
-
-
-class ProductImageModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ProductImageModelSerializer
-    queryset = ProductImageModel.objects.all()
-
-
-class ProductSpecificationViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ProductSpecificationSerializer
-    queryset = ProductSpecification.objects.all()
