@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     # rest api apps
     'rest_framework',
     "django_filters",
+    "corsheaders",
     
     
     # other app for internet
@@ -110,6 +111,7 @@ AUTHENTICATION_BACKENDS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware", 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -302,3 +304,7 @@ CACHES = {
 # time setting
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 50000
+
+
+# API SETTINGS
+CORS_ALLOW_ALL_ORIGINS = True

@@ -19,13 +19,14 @@ from shop.api.v1.serializers import (
     SimilarProductSerializer,
 )
 from shop.api.v1.paginations import LargeResultsSetPagination
+from shop.api.v1.filterset import ProductFilter
 
 class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
     pagination_class = LargeResultsSetPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = ["title"]
-    filterset_fields = ["category","brand"]
+    filterset_class = ProductFilter
     search_fields = ["title"]
     ordering_fields = ["created_date"]
 

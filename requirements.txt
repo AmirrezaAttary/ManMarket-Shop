@@ -48,3 +48,4 @@ markdown
 django-filter
 djangorestframework-simplejwt
 django-taggit-serializer
+django-cors-headers

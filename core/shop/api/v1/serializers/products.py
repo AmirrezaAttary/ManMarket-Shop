@@ -68,7 +68,8 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
         model = ProductSpecification
         fields = [
             "name",
-            "value"
+            "value",
+            "status"
         ]
 
 
