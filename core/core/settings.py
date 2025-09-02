@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     
     # rest api apps
     'rest_framework',
+    "django_filters",
     
     
     # other app for internet

@@ -68,3 +68,14 @@ class ProductModel(models.Model):
         
         # اگر قیمت تخفیف‌خورده از حداقل قیمت محصول کمتر باشد، تخفیف واقعی داریم
         return min_discounted_price < min_price
+
+    def get_absolute_api_url(self):
+        return reverse("shop:api-v1-shop:product-detail", kwargs={"pk": self.pk})
+
+    def get_similar_products(self):
+        return ProductModel.objects.filter(
+            status=ProductStatusType.publish.value,
+            brand=self.brand,
+            color_inventories__price__gt=0,
+            color_inventories__stock__gt=0
+        ).exclude(id=self.id).distinct().order_by("-created_date")

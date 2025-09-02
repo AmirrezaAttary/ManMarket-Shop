@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 from shop.models import (
     ProductModel,   
     ProductCategoryModel,
@@ -76,6 +77,8 @@ class ProductListSerializer(serializers.ModelSerializer):
     min_price = serializers.ReadOnlyField(source="get_min_price")
     min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
     has_discount = serializers.ReadOnlyField()
+    relative_url = serializers.URLField(source="get_absolute_api_url", read_only=True)
+    absolute_url = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductModel
@@ -86,11 +89,16 @@ class ProductListSerializer(serializers.ModelSerializer):
             "image",
             "avg_rate",
             "category",
+            "relative_url",
+            "absolute_url",
             "min_price",
             "min_discounted_price",
             "has_discount",
         ]
 
+    def get_absolute_url(self, obj):
+        request = self.context.get("request")
+        return f"{request.build_absolute_uri(obj.pk)}/"
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -103,6 +111,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     min_price = serializers.ReadOnlyField(source="get_min_price")
     min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
     has_discount = serializers.ReadOnlyField()
+    similar_url = serializers.SerializerMethodField() 
 
     class Meta:
         model = ProductModel
@@ -129,7 +138,46 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "product_images",
             "color_inventories",
             # خروجی متدهای مدل
+            "similar_url",
             "min_price",
             "min_discounted_price",
             "has_discount",
         ]
+
+
+    def get_similar_url(self, obj):
+        request = self.context.get("request")
+        return reverse(
+            "shop:api-v1-shop:product-similar",   # اسم روت action مشابه‌ها
+            kwargs={"pk": obj.pk},
+            request=request,
+        )
+
+
+class SimilarProductSerializer(serializers.ModelSerializer):
+    relative_url = serializers.URLField(source="get_absolute_api_url", read_only=True)
+    absolute_url = serializers.SerializerMethodField()
+    min_price = serializers.ReadOnlyField(source="get_min_price")
+    min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
+
+    class Meta:
+        model = ProductModel
+        fields = [
+            "id",
+            "title",
+            "slug",
+            "image",
+            "avg_rate",
+            "relative_url",
+            "absolute_url",
+            "min_price",
+            "min_discounted_price",
+        ]
+    def get_absolute_url(self, obj):
+        request = self.context.get("request")
+        # اسم روت viewset مربوط به محصول رو استفاده کن
+        return reverse(
+            "shop:api-v1-shop:product-detail",  # اسم route توی router
+            kwargs={"pk": obj.pk},
+            request=request,
+        )

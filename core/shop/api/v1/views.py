@@ -1,31 +1,45 @@
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from shop.models import (
     ProductModel,
     ProductStatusType,
     ProductCategoryModel,
     Brand,
     Color,
-    ProductColorInventory,
-    ProductImageModel,
-    ProductSpecification
 )
 from shop.api.v1.serializers import (
     CategorySerializer,
     BrandsSerializer,
     ColorSerializer,
     ProductListSerializer,
-    ProductDetailSerializer
+    ProductDetailSerializer,
+    SimilarProductSerializer,
 )
-
+from shop.api.v1.paginations import LargeResultsSetPagination
 
 class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
+    pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ["title"]
+    filterset_fields = ["category","brand"]
+    search_fields = ["title"]
+    ordering_fields = ["created_date"]
 
     def get_serializer_class(self):
         if self.action == "list":
             return ProductListSerializer
         return ProductDetailSerializer
 
+    @action(detail=True, methods=["get"])
+    def similar(self, request, pk=None):
+        product = self.get_object()
+        similar_products = product.get_similar_products()
+        serializer = SimilarProductSerializer(similar_products, many=True, context={"request": request})
+        return Response(serializer.data)
 
 class ProductCategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
