@@ -7,9 +7,9 @@ from shop.models import (
     Color,
     ProductColorInventory,
     ProductImageModel,
-    ProductSpecification
+    ProductSpecification,
 )
-
+from review.models import ReviewModel,ReviewStatusType
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -102,6 +102,20 @@ class ProductListSerializer(serializers.ModelSerializer):
         return f"{request.build_absolute_uri(obj.pk)}/"
 
 
+class ReviewModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewModel
+        fields = [
+            "id",
+            "user",
+            "product",
+            "rate",
+            "description",
+            "created_date",
+            "updated_date",
+        ]
+
+
 class ProductDetailSerializer(serializers.ModelSerializer):
     category = ProductCategorySerializer(read_only=True)
     brand = BrandSerializer(read_only=True)
@@ -112,7 +126,9 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     min_price = serializers.ReadOnlyField(source="get_min_price")
     min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
     has_discount = serializers.ReadOnlyField()
-    similar_url = serializers.SerializerMethodField() 
+    similar_url = serializers.SerializerMethodField()
+    reviews = serializers.SerializerMethodField() 
+
 
     class Meta:
         model = ProductModel
@@ -138,6 +154,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "specifications",
             "product_images",
             "color_inventories",
+            "reviews",
             # خروجی متدهای مدل
             "similar_url",
             "min_price",
@@ -155,11 +172,19 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         )
 
 
+    def get_reviews(self, obj):
+        # فقط reviewهای تایید شده
+        accepted_reviews = obj.reviews.filter(status=ReviewStatusType.accepted)
+        return ReviewModelSerializer(accepted_reviews, many=True).data
+
+
+
 class SimilarProductSerializer(serializers.ModelSerializer):
     relative_url = serializers.URLField(source="get_absolute_api_url", read_only=True)
     absolute_url = serializers.SerializerMethodField()
     min_price = serializers.ReadOnlyField(source="get_min_price")
     min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
+    get_absolute_url = serializers.URLField(source="get_absolute_url", read_only=True)
 
     class Meta:
         model = ProductModel
@@ -173,6 +198,7 @@ class SimilarProductSerializer(serializers.ModelSerializer):
             "absolute_url",
             "min_price",
             "min_discounted_price",
+            "get_absolute_url",
         ]
     def get_absolute_url(self, obj):
         request = self.context.get("request")
