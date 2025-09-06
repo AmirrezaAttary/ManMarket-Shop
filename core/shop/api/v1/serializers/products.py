@@ -50,6 +50,7 @@ class ProductColorInventorySerializer(serializers.ModelSerializer):
             "price",
             "discount_percent",
             "hex_color",
+            "updated_date"
         ]
 
 

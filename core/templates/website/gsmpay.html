@@ -1,0 +1,515 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+خرید اقساط از من مارکت
+{% endblock title %}
+
+
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/swiper.lib.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sweet.alert.lib.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.theme.carousel.css' %}">
+  <link href="{% static 'css/video.lib.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+{% block extra_csss %}
+<link rel="stylesheet" href="{% static 'css/GH.css' %}">
+{% endblock extra_csss %}
+
+{% block content %}
+<main class="my-4 py-4">
+
+    <section class="hero-section">
+        <div class="hero-bg">
+            <div class="hero-container py-4 px-1 ">
+                <h3 class="text-light fw-bold">خرید از من مارکت، وام از GSMPay</h3>
+                <p class="text-light f-14 my-3">همین امروز می‌توانید بدون نیاز به ضامن تا ۵۰ میلیون تومان از جی‌اس‌ام پی
+                    وام بگیرید و گوشی دلخواه‌تان را از من مارکت بخرید.</p>
+
+                <div class="features-cards row mt-4">
+                    <div
+                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+                        <img src="{% static 'img/DN/verified.svg' %}" alt="مزیت ۱">
+                        <h4 class="text-light f-14">قیمت منصفانه</h4>
+                    </div>
+                    <div
+                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+                        <img src="{% static 'img/DN/express.svg' %}" alt="مزیت ۲">
+                        <h4 class="text-light f-14">ارسال سریع (زیر ۳ ساعت)</h4>
+                    </div>
+                    <div
+                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+                        <img class=" w-auto mb-3" src="{% static 'img/DN/main.logo2.png' %}" alt="مزیت ۳">
+                        <h4 class="text-light f-14">بیمه با تخفیف ویژه</h4>
+                    </div>
+                    <div
+                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+                        <img src="{% static 'img/DN/store.svg' %}" alt="مزیت ۴">
+                        <h4 class="text-light f-14">امکان تحویل حضوری کالا</h4>
+                    </div>
+                </div>
+
+                <a href="#productTab"
+                    class=" bg-gh bg-light btn-sub-gh text-dark fs-14 rounded-3 px-3 py-2 d-inline">محاسبه وام</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="gh-s-container">
+        <h2 class="gh-s-title f-14">مراحل خرید اقساطی از من مارکت</h2>
+
+        <div class="gh-s-timeline">
+            <div class="gh-s-step">
+                <div class="gh-s-circle f-14">1</div>
+                <div class="gh-s-content f-14">دریافت اعتبار از <a target="_blank" href="https://my.gsmpay.ir/auth/register?ref=69619455">GSMpay.ir</a></div>
+            </div>
+            <div class="gh-s-step">
+                <div class="gh-s-circle f-14">2</div>
+                <div class="gh-s-content f-14">انتخاب گوشی در <a href="{% url 'website:index' %}">manmarket.ir</a></div>
+            </div>
+            <div class="gh-s-step">
+                <div class="gh-s-circle f-14">3</div>
+                <div class="gh-s-content f-14">
+                    انجام فرآیند خرید و انتخاب شیوه با ارسال سریع
+                </div>
+            </div>
+            <div class="gh-s-step">
+                <div class="gh-s-circle f-14">4</div>
+                <div class="gh-s-content f-14">انتخاب گزینه پرداخت قسطی</div>
+            </div>
+            <div class="gh-s-step">
+                <div class="gh-s-circle f-14">5</div>
+                <div class="gh-s-content f-14">گوشی جدید مبارکه :)</div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <ul class="nav nav-tabs mb-0 b-none w-center justify-content-center flex-nowrap mx-1 px-1" id="productTab"
+        role="tablist">
+        <li class="nav-item " role="presentation">
+            <button class=" active text-nowrap text-dark d-flex justify-content-center align-items-center"
+                id="description-tab" data-bs-toggle="tab" data-bs-target="#descriptionPane" type="button" role="tab"
+                aria-controls="descriptionPane" aria-selected="true">
+                بلو بانک
+                <img class="icon-bank mx-2" alt="" src="{% static 'img/DN/blue-mlue.png' %}">
+            </button>
+        </li>
+        <li class="nav-item " role="presentation"><button
+                class="text-nowrap text-dark d-flex justify-content-center align-items-center" id="description-tab2"
+                data-bs-toggle="tab" data-bs-target="#descriptionPane2" type="button" role="tab"
+                aria-controls="descriptionPane" aria-selected="false">
+                های بانک
+                <img class="icon-bank mx-2" alt="" src="{% static 'img/DN/mlue-blue.png' %}">
+            </button></li>
+    </ul>
+
+    <div class="tab-content p-3" id="productTabContent">
+        <div class="tab-pane fade show active" id="descriptionPane" role="tabpanel" aria-labelledby="description-tab">
+            <!-- pagination :: start--------->
+            <div class="container d-flex align-items-center justify-content-between px-3 py-2 my-fix-class gap-3 f-14">
+                <div class="right-section">
+                    <div class="loan-type">نوع تسهیلات</div>
+                    <div class="bank-box">بلو بانک</div>
+
+                    <div class="range-container">
+                        <div class="value-display" id="loanValue">10,000,000 تومان</div>
+                        <div class="range-label ">
+                            <span>50,000,000 تومان</span>
+                            <span>5,000,000 تومان</span>
+                        </div>
+                        <input dir="ltr" class="" type="range" id="loanRange" min="5000000" max="50000000"
+                            step="5000000" value="5000000">
+                    </div>
+
+                    <div class="repayment-period">دوره بازپرداخت: 12 ماهه</div>
+                </div>
+                <div class="left-section ro-cs">
+                    <div class="repayment-title">بازپرداخت نهایی</div>
+                    <div class="final-repayment" id="finalRepayment">12,384,160 تومان</div>
+
+                    <div class="detail-box">
+                        <div class="detail-item">
+                            <span class="detail-label">مبلغ هر قسط:</span>
+                            <span class="detail-value" id="monthlyPayment">940,764 تومان</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">سود تسهیلات:</span>
+                            <span class="detail-value" id="interestAmount">2,384,160 تومان</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">مجموع اقساط:</span>
+                            <span class="detail-value" id="totalInstallments">11,289,160 تومان</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">سهم تامین‌کننده:</span>
+                            <span class="detail-value" id="supplierShare">1,155,000 تومان</span>
+                        </div>
+                    </div>
+
+                    <div class="note">مقادیر بر اساس دوره بازپرداخت 12 ماهه محاسبه شده است.</div>
+                </div>
+            </div>
+            <!-- pagination :: end------------>
+        </div>
+        <div class="tab-pane fade show " id="descriptionPane2" role="tabpanel" aria-labelledby="description-tab2">
+            <!-- pagination :: start--------->
+            <div class="container d-flex align-items-center justify-content-between px-3 py-2 my-fix-class gap-3 f-14">
+                <div class="right-section ">
+                    <div class="loan-type">نوع تسهیلات</div>
+                    <div class="bank-box bg-success">های بانک</div>
+                    <div class="w-100">
+                        <span class="f-14 value-display w-100 text-success" id="loanValue2">5,000,000</span>
+                    </div>
+                    <div class="range-label">
+                        <span>50,000,000 تومان</span>
+                        <span>5,000,000 تومان</span>
+                    </div>
+                    <input dir="ltr" class="f-14 ran-2-r" type="range" id="loanRange2" min="5000000" max="50000000"
+                        step="5000000" value="5000000">
+
+                    <div class="repayment-period mt-3">دوره بازپرداخت: 12 ماهه</div>
+
+                </div>
+                <div class="left-section ro-cs">
+                    <div class="f-14 repayment-title ">
+                        بازپرداخت نهایی
+                    </div>
+
+                    <span class="final-repayment" id="finalPayment2">
+                        ۶,۱۹۴,۵۸۱
+                    </span>
+
+                    <div class="detail-box">
+                        <p class="f-14 d-flex justify-content-between w-100 detail-label detail-item">مبلغ هر قسط:
+                            <span class="detail-value" id="installment2">۴۷۰,۳۸۲</span>
+                        </p>
+                        <p class="f-14 d-flex justify-content-between w-100 detail-label detail-item">سود تسهیلات :
+                            <span class="detail-value" id="interest2">۶۴۴,۵۸۱</span>
+                        </p>
+                        <p class="f-14  d-flex justify-content-between w-100 detail-label detail-item">مجموع اقساط:
+                            <span class="detail-value" id="totalInstallments2">۵,۶۴۴,۵۸۱</span>
+                        </p>
+                        <p class="f-14  d-flex justify-content-between w-100 detail-label detail-item">سهم تامین‌کننده:
+                            <span class="detail-value" id="supplier2">۵۵۰,۰۰۰</span>
+                        </p>
+                    </div>
+                    <div class="note mt-4">مقادیر بر اساس دوره بازپرداخت 12 ماهه محاسبه شده است.</div>
+                </div>
+            </div>
+            <!-- pagination :: end------------>
+        </div>
+    </div>
+
+
+
+    <section class="row align-items-center">
+        <div class="col-md-3 mt-0">
+            <h4 class="text-center">
+                محبوب ترین گوشی های <a href="{% url 'website:index' %}" class="theme-c"> من مارکت </a>
+            </h4>
+        </div>
+        <div class="col-md-9 mt-0">
+            <section class="blog mt-4">
+                <div class="container">
+                    <div class="blog-container w-center has-scrollbar">
+                        <div class="blog-card col-md-3 col-sm-6 col-12">
+                            <div class="col box-cs pc-s" data-price="45000000" data-category="موبایل" data-brand="اپل"
+                                data-id="p101">
+                                <a target="_blank" href="single.product.html"
+                                    class="fill-product-card-link d-block h-100">
+                                    <div class="bor-bot-1 card h-100 fill-product-card">
+                                        <img src="{% static 'img/iphone/green/1.webp' %}"
+                                            class="card-img-top fill-product-card-img" alt="گوشی آیفون 13">
+                                        <div class="card-body d-flex flex-column w-right">
+                                            <h5 class="card-title mt-4 text-dark">گوشی موبایل سامسونگ مدل Galaxy A06 دو
+                                                سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت</h5>
+                                            <div class="fill-card-brand mt-1 mb-2">موبایل</div>
+                                            <p class="card-price py-1 p-0">
+
+                                                <del class="fill-price-value theme-c cs-fs-se">46,000,000</del>
+                                                <span class="money-icon theme-c cs-fs-se"></span>
+                                                <span
+                                                    style="text-decoration: none!important;font-size: 0.65rem !important;"
+                                                    class="theme-color rounded-1 text-light p-cs-t cs-fs-se mx-1">
+                                                    12%
+                                                </span>
+                                            </p>
+                                            <p class="card-price py-1 px-2 ">
+                                                <span class="fill-price-value cs-fs-se-2 text-dark">45,000,000</span>
+                                                <span class="money-icon text-dark cs-fs-se-2"></span>
+                                            </p>
+                                            <div dir="ltr"
+                                                class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center">
+                                                <span class="mx-1 one-color mt-1">
+                                                    <span class="">
+
+                                                    </span>
+                                                </span>
+                                                <span class="mx-1 three-color mt-1">
+                                                    <span class="">
+
+                                                    </span>
+                                                </span>
+                                                <span class="mx-1 two-color mt-1">
+                                                    <span class="">
+
+                                                    </span>
+                                                </span>
+                                                <svg class="mt-1" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 512 512" width="0.6em" height="0.6em">
+                                                    <path
+                                                        d="M417.4 224H288V94.6c0-16.9-14.3-30.6-32-30.6s-32 13.7-32 30.6V224H94.6C77.7 224 64 238.3 64 256s13.7 32 30.6 32H224v129.4c0 16.9 14.3 30.6 32 30.6s32-13.7 32-30.6V288h129.4c16.9 0 30.6-14.3 30.6-32s-13.7-32-30.6-32z"
+                                                        fill="currentColor"></path>
+                                                </svg>
+                                            </div>
+                                            <span class="cs-sc-star align-items-center d-flex justify-content-center">
+                                                <svg class="star rated  cs-star mb-1 mx-1" viewBox="0 0 24 24">
+                                                    <polygon
+                                                        points="12 2 15 10 24 10 17 15 19 23 12 18 5 23 7 15 0 10 9 10" />
+                                                </svg>
+                                                5
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="{% url 'shop:product-list' %}">
+                        <button class=" bg-gh text-light theme-color rounded-3 px-3 py-2">مشاهده همه</button>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </section>
+
+
+    <div class="py-5">
+        <div class="row justify-content-center ">
+            <div class="col-md-12 col-lg-12 px-4">
+                <div class="text-center mb-4 f-14">
+                    <h2 class="title text-dark">سوالات متداول</h2>
+                </div>
+                <div class="accordion d-flex justify-content-start w-right flex-column" id="faqAccordion">
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button w-right f-14" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                چگونه می‌توانم گوشی دلخواهم را از من مارکت به‌صورت قسطی بخرم؟
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                برای خرید قسطی کافیست در جی‌اس‌ام پی ثبت نام کنید و فرایند دریافت اعتبار را با کلیک روی
+                                اعتبار سایت GSMPAY.IR از سایت جی‌اس‌ام پی دریافت کنید.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button w-right collapsed f-14" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
+                                aria-controls="collapseTwo">
+                                مدت زمان بازپرداخت وام چقدر است؟
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                شما می‌توانید در بازه ۱۲ ماهه وام دریافت شده را بازپس دهید.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
+                                aria-controls="collapseThree">
+                                برای دریافت وام نیاز به افتتاح حساب در چه بانکی دارم؟
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                در حال حاضر بلوبانک و های‌بانک تامین‌کننده‌های تسهیلات جی‌اس‌ام پی هستند. برای دریافت
+                                وام، افتتاح حساب در یکی از این دو بانک کافیست. افتتاح حساب به صورت الکترونیکی و در هر
+                                لحظه از شبانه‌روز ممکن است.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false"
+                                aria-controls="collapseFour">
+                                آیا خرید قسطی موبایل بدون ضامن از من مارکت امکان‌پذیر است؟
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                بله، در من مارکت برای خرید اقساطی نیازی به ضامن نیست. تنها یک برگ چک صیادی به نام خودتان
+                                به‌عنوان ضمانت کافی است.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false"
+                                aria-controls="collapseFive">
+                                اگر وام دریافت شده از مبلغ گوشی بیشتر باشد، مابه‌التفاوت را چگونه باید پرداخت کنم؟
+                            </button>
+                        </h2>
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                در فرایند خرید میزان اعتبار شما از مبلغ نهایی گوشی کسر می‌شود و باقی مانده مبلغ را
+                                می‌توانید آنلاین و با استفاده از کارت‌های عضو شتاب پرداخت کنید.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingSix">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false"
+                                aria-controls="collapseSix">
+                                اگر وام دریافت شده بیشتر از مبلغ گوشی باشد امکان استفاده از باقی‌مانده اعتبار وجود دارد؟
+                            </button>
+                        </h2>
+                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                بله می‌توانید با باقی مانده اعتبار خود از لوازم جانبی موجود در سایت خرید کنید یا در
+                                خریدهای بعدی روی یک گوشی دیگر آن را استفاده کنید.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingSeven">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false"
+                                aria-controls="collapseSeven">
+                                آیا می‌توان اعتبار دریافت شده یا باقی مانده آن پس از خرید را به پول نقد تبدیل کرد؟
+                            </button>
+                        </h2>
+                        <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                خیر امکان تبدیل اعتبار به پول نقد وجود ندارد اما باقی مانده آن در حساب کاربری جی‌اس‌ام
+                                پی شما باقی می‌ماند و می‌توانید از آن در خریدهای آینده استفاده کنید.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingEight">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false"
+                                aria-controls="collapseEight">
+                                آیا می‌توان کمتر از ۵۰ میلیون تومان اعتبار خرید گوشی گرفت؟
+                            </button>
+                        </h2>
+                        <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                بله، شما می‌توانید به میزان دلخواه تا سقف ۵۰ میلیون تومان، اعتبار خود را از جی‌اس‌ام پی
+                                دریافت کنید. برای مثال شما می‌توانید ۳۵ میلیون تومان وام دریافت کنید.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingNine">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false"
+                                aria-controls="collapseNine">
+                                حداقل و حداکثر مدت زمان پرداخت اقساط چقدر است؟
+                            </button>
+                        </h2>
+                        <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                در حال حاضر مدت بازپرداخت ۱۲ ماه است. البته در آینده طرح‌های بلند مدت دیگری نیز اضافه
+                                خواهد شد.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingTen">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false"
+                                aria-controls="collapseTen">
+                                چه مدارکی برای خرید اقساطی موبایل نیاز است؟
+                            </button>
+                        </h2>
+                        <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                کارت ملی، شماره شبای بانکی، چک صیادی و سیم‌کارت به نام شخص متقاضی.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item w-right">
+                        <h2 class="accordion-header" id="headingEleven">
+                            <button class="accordion-button w-right f-14 collapsed" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false"
+                                aria-controls="collapseEleven">
+                                آیا تحویل گوشی قسطی، فوری انجام می‌شود؟
+                            </button>
+                        </h2>
+                        <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven"
+                            data-bs-parent="#faqAccordion">
+                            <div class="accordion-body f-14">
+                                بله، پس از دریافت اعتبار، ثبت سفارش از طریق سایت من مارکت می‌توانید گوشی را بلافاصله از
+                                فروشگاه‌های من مارکت تحویل بگیرید. همچنین در شهرهای تحت پوشش، با انتخاب گزینه تحویل زیر
+                                ۳ ساعت، گوشی مستقیماً درب منزل شما ارسال خواهد شد.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock content %}
+
+
+
+
+{% block extra_js %}
+<script src="{% static 'js/GH.page.js' %}"></script>
+
+<!--THIS IS LIB FOR HOME PAGE-->
+<script src="{% static 'js/owl.js' %}"></script>
+<script src="{% static 'js/video.lib.js' %}"></script>
+<script src="{% static 'js/swiper.lib.js' %}"></script>
+<script src="{% static 'js/sweet.alert.lib.js' %}"></script>
+<!--THIS IS LIB FOR HOME PAGE-->
+
+
+<script src="{% static 'js/search.js' %}"></script>
+
+
+
+<!--THIS IS FOR SLIDERS IN HOME PAGE-->
+<script src="{% static 'js/slider.in.index.js' %}"></script>
+<script src="{% static 'js/story.js' %}"></script>
+{% endblock extra_js %}

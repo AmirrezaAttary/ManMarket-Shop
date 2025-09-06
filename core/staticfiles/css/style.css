@@ -19,8 +19,20 @@ body * {
   font-feature-settings: "lnum" on;
 }
 
+.w-10 {
+  width: 3rem;
+}
+
+.w-10-plus {
+  width: 4.4rem;
+}
+
 .man-d-b-2 {
   -webkit-overflow-scrolling: touch;
+}
+
+.f-14 {
+  font-size: 14px !important;
 }
 
 body {
@@ -331,7 +343,6 @@ header {
   }
 }
 .cus-fs-1 {
-  font-size: 15px !important;
   color: black;
 }
 
@@ -419,10 +430,17 @@ header {
   pointer-events: none;
 }
 
+.cs-mn-fonts {
+  font-size: 19px !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+}
+
 .d-bx {
   width: 100%;
   text-align: -webkit-left;
   white-space: nowrap !important;
+  font-size: 19px !important;
 }
 
 @media only screen and (max-width: 550px) {
@@ -6320,7 +6338,7 @@ button {
 }
 
 .cs-fs-se {
-  font-size: 12px !important;
+  font-size: 11px !important;
 }
 
 .fill-clear-filters-container {
@@ -9341,6 +9359,12 @@ input[type=number] {
   background-color: #e6411f;
 }
 
+.cs-width {
+  width: 3%;
+  height: auto;
+  object-fit: cover;
+}
+
 :root {
   --primary-accent: #ff7151;
   --primary-accent-darker: #EE5253;
@@ -11773,6 +11797,13 @@ html[dir=rtl] .wow-notification-close-new {
   font-size: 14px !important;
 }
 
+@supports (-webkit-touch-callout: none) {
+  #open-mn-btn,
+  a,
+  button {
+    color: #000 !important;
+  }
+}
 @media (max-width: 991.98px) {
   .profile-layout-grid {
     grid-template-columns: 1fr;
@@ -11785,11 +11816,22 @@ html[dir=rtl] .wow-notification-close-new {
     padding-left: 25px !important;
   }
 }
+.s-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @media (max-width: 700px) {
   .s-x {
     overflow-x: scroll !important;
     scrollbar-width: thin;
     scrollbar-color: #ccc transparent;
+    -webkit-overflow-scrolling: touch !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 500px;
   }
   .man-d-b-2 {
     -webkit-overflow-scrolling: touch;

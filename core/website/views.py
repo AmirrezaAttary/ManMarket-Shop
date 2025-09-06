@@ -24,5 +24,5 @@ class AboutView(TemplateView):
     template_name = 'faq/man-one-seen.html'
     
   
-# class CollectionView(TemplateView):
-#     template_name = 'website/collection.html'
+class GsmPayView(TemplateView):
+    template_name = 'website/gsmpay.html'
