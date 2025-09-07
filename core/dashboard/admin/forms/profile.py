@@ -43,12 +43,23 @@ class AdminProfileEditForm(forms.ModelForm):
         })
     )
 
+    code_melli = forms.CharField(
+        max_length=10,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control text-center',
+            'placeholder': 'کد ملی را وارد نمایید',
+        })
+    )
+
     class Meta:
         model = Profile
         fields = [
             "first_name",
             "last_name",
+            "birth_date"
         ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -56,16 +67,16 @@ class AdminProfileEditForm(forms.ModelForm):
         self.fields['first_name'].widget.attrs['placeholder'] = 'نام خود را وارد نمایید'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی را وارد نمایید'
-
+        self.fields['birth_date'].widget.attrs['class'] = 'form-control'
+        self.fields['birth_date'].widget.attrs['placeholder'] = 'تاریخ تولد را وارد نمایید'
 
         if self.instance and self.instance.user:
             self.fields['phone_number'].initial = self.instance.user.phone_number
             self.fields['email'].initial = self.instance.user.email
+            self.fields['code_melli'].initial = self.instance.user.code_melli
 
-            # ✅ اگر کاربر وریفای شده بود، فیلد ایمیل را غیرفعال کن
             if self.instance.user.is_verified:
                 self.fields['email'].disabled = True
-
             if self.instance.user.is_phone_verified:
                 self.fields['phone_number'].disabled = True
 
@@ -91,6 +102,17 @@ class AdminProfileEditForm(forms.ModelForm):
             raise ValidationError("شماره همراه وارد شده قبلاً ثبت شده است.")
         return phone
 
+    def clean_code_melli(self):
+        code = self.cleaned_data.get("code_melli")
+        if code in ["", None]:
+            return None
+        qs = User.objects.filter(code_melli=code)
+        if self.instance and self.instance.user:
+            qs = qs.exclude(pk=self.instance.user.pk)
+        if qs.exists():
+            raise ValidationError("کد ملی وارد شده قبلاً ثبت شده است.")
+        return code
+
     def save(self, commit=True):
         profile = super().save(commit=False)
         if commit:
@@ -100,17 +122,18 @@ class AdminProfileEditForm(forms.ModelForm):
         if user:
             phone = self.cleaned_data.get('phone_number')
             email = self.cleaned_data.get('email')
+            code_melli = self.cleaned_data.get('code_melli')
 
             user.phone_number = phone if phone else None
 
-            # ✅ فقط در صورتی که کاربر وریفای نشده بود ایمیل را به‌روزرسانی کن
             if not user.is_verified:
                 user.email = email if email else None
+
+            user.code_melli = code_melli if code_melli else None
 
             if commit:
                 user.save()
         return profile
-
 
 
 

@@ -59,6 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
     is_phone_verified = models.BooleanField(default=False)
+    code_melli = models.CharField(max_length=10,unique=True,null=True,blank=True)
     type = models.IntegerField(
         choices=UserType.choices, default=UserType.customer.value)
 

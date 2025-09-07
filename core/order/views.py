@@ -20,6 +20,7 @@ from django.utils import timezone
 from django.shortcuts import redirect, get_object_or_404
 # Create your views here.
 from payment.zarinpal_client import ZarinPalSandbox
+from payment.gsmpay_client import GSMPay
 from payment.models import PaymentModel,PayemntStatusType,PayemntType
 from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
@@ -30,7 +31,7 @@ from django.db import transaction
 from order.tasks import check_order_pending_status
 
 
-class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormView):
+class OrderCheckOutView(LoginRequiredMixin, FormView):
     template_name = "order/checkout.html"
     form_class = CheckOutForm
     success_url = reverse_lazy('order:completed')
@@ -38,23 +39,23 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
     def dispatch(self, request, *args, **kwargs):
         user = request.user
 
-        # بررسی تایید ایمیل و شماره تلفن
         if not user.is_phone_verified:
             messages.error(request, "برای ادامه خرید، ابتدا باید شماره تلفن خود را تأیید کنید.")
-            return redirect("dashboard:home")  # آدرس صفحه تایید را اینجا بگذار
+            return redirect("dashboard:home")
 
-        # بررسی پروفایل کامل
         profile = getattr(user, "user_profile", None)
         if not profile or not profile.first_name or not profile.last_name:
             messages.error(request, "لطفاً نام و نام خانوادگی خود را در پروفایل تکمیل کنید.")
             return redirect("dashboard:home")
-        
-        # بررسی شماره موبایل
+
         if not user.phone_number:
             messages.error(request, "لطفاً شماره موبایل خود را وارد کنید.")
             return redirect("dashboard:home")
-        
-        # بررسی آدرس
+
+        if not user.code_melli:
+            messages.error(request, "لطفاً شماره کد ملی خود را وارد کنید.")
+            return redirect("dashboard:home")
+
         if not UserAddressModel.objects.filter(user=user).exists():
             messages.error(request, "لطفاً ابتدا یک آدرس ثبت کنید.")
             return redirect("dashboard:home")
@@ -62,56 +63,55 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
-        kwargs = super(OrderCheckOutView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
 
     def form_valid(self, form):
-        payment_method = self.request.POST.get("payment_method")
         user = self.request.user
         cleaned_data = form.cleaned_data
         address = cleaned_data['address_id']
         coupon = cleaned_data['coupon']
-        tracking_type = cleaned_data['tracking_type']  # 👈 دریافت روش ارسال
+        tracking_type = cleaned_data['tracking_type']
 
         cart = CartModel.objects.get(user=user)
-        order = self.create_order(address, tracking_type)  # 👈 ارسال روش ارسال
-        
-
+        order = self.create_order(address, tracking_type)
         self.create_order_items(order, cart)
 
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
+
+        # بررسی وضعیت سفارش بعد از 3 دقیقه
         check_order_pending_status.apply_async(args=[order.id], countdown=180)
+
+        # پاکسازی اولیه سبد خرید (در صورت پرداخت موفق بعدا کاهش موجودی انجام می‌شود)
         self.clear_cart(cart)
+
         return redirect(self.create_payment_url(order, cart))
 
-
     def create_payment_url(self, order, cart):
+        user = self.request.user
         payment_method = self.request.POST.get("payment_method")
 
+        # ================= کیف پول =================
         if payment_method == "wallet":
-            wallet = Wallet.objects.get(user=self.request.user)
-            total_tax = round((order.total_price))
-
-            # ✅ افزودن هزینه‌ی ثابت
-            order.total_price += 50000
+            wallet = Wallet.objects.get(user=user)
+            order.total_price += 50000  # هزینه ثابت
 
             if wallet.balance >= order.total_price:
-                # پرداخت موفق   
                 wallet.balance -= order.total_price
                 wallet.save()
 
                 payment_obj = PaymentModel.objects.create(
-                    authority_id="WALLET-" + timezone.now().strftime("%Y%m%d%H%M%S"),
+                    authority_id=f"WALLET-{timezone.now().strftime('%Y%m%d%H%M%S')}",
                     amount=order.total_price,
                     status=PayemntStatusType.success,
                     wallet=wallet,
                     order=order,
-                    response_json={"data":{"code":100}},
-                    response_code = 100,
-                    payemnt_type = PayemntType.wallet.value
+                    payemnt_type=PayemntType.wallet.value,
+                    response_json={"data": {"code": 100}},
+                    response_code=100
                 )
 
                 WalletTransaction.objects.create(
@@ -121,79 +121,81 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
                     transaction_type='payment'
                 )
 
-                # ✅ به‌روزرسانی وضعیت سفارش
                 order.payment = payment_obj
                 order.status = OrderStatusType.awaiting.value
                 order.save()
-
-                # ✅ کاهش موجودی محصولات
-                for item in order.order_items.all():
-                    try:
-                        inventory = ProductColorInventory.objects.get(
-                            product=item.product,
-                            color=item.color
-                        )
-                        inventory.stock = max(0, inventory.stock - item.quantity)
-                        inventory.save()
-                    except ProductColorInventory.DoesNotExist:
-                        continue
-
-                self.clear_cart(cart)
-                send_bulk_sms(
-                    message_text = f"مشتری گرامی،\nسفارش شما {order.order_number} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
-                    mobiles=[f"{order.user.phone_number}"]
-                )
-                send_bulk_sms(
-                    message_text = f"یک سفارش جدید در من مارکت ثبت شد !",
-                    mobiles=["09120983411"]
-                )
+                self.update_inventory(order)
+                self.send_notifications(order)
                 return reverse_lazy("order:completed")
 
             else:
+                # ترکیبی کیف پول + درگاه
                 zarinpal = ZarinPalSandbox()
-                wallet = Wallet.objects.get(user=self.request.user)
                 wallet_value = wallet.balance
-                total_tax = round((order.total_price)) + 50000
+                total_price = order.total_price
+                final_price = int(total_price - wallet_value)
 
-                final_price = int(total_tax - wallet_value)
-                
                 callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
-                response = zarinpal.payment_request(callback_url,final_price)
-                print(response)
+                response = zarinpal.payment_request(callback_url, final_price)
                 payment_obj = PaymentModel.objects.create(
-                    authority_id = response['data']['authority'],
-                    amount = final_price,
+                    authority_id=response['data']['authority'],
+                    amount=final_price,
                     order=order,
                     wallet=wallet,
-                    payemnt_type = PayemntType.wallet_cart.value
+                    payemnt_type=PayemntType.wallet_cart.value
                 )
                 order.payment = payment_obj
                 order.save()
                 return zarinpal.generate_payment_url(response['data']['authority'])
-                
-                # messages.error(self.request, "موجودی کیف پول شما کافی نیست.")
-                # return reverse_lazy("order:checkout")
 
-
-
+        # ================= زرین پال =================
         if payment_method == "zarinpal":
             zarinpal = ZarinPalSandbox()
-            total_tax = round((order.total_price)) + 50000
-            order.total_price = total_tax 
-            
-
+            order.total_price += 50000
             callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
-            response = zarinpal.payment_request(callback_url,order.total_price)
+            response = zarinpal.payment_request(callback_url, order.total_price)
             payment_obj = PaymentModel.objects.create(
-                authority_id = response['data']['authority'],
-                amount = order.total_price,
+                authority_id=response['data']['authority'],
+                amount=order.total_price,
                 order=order,
-                payemnt_type = PayemntType.cart.value
+                payemnt_type=PayemntType.cart.value
             )
             order.payment = payment_obj
             order.save()
             return zarinpal.generate_payment_url(response['data']['authority'])
-        
+
+        # ================= حضوری =================
+        if payment_method == "person":
+            if user.type not in [UserType.admin, UserType.superuser]:
+                messages.error(self.request, "شما اجازه ثبت سفارش حضوری را ندارید.")
+                return reverse_lazy("order:checkout")
+
+            order.total_price += 50000
+            order.address = "تحویل حضوری در فروشگاه"
+            order.state = "خراسان رضوی"
+            order.city = "سبزوار"
+            order.zip_code = "0000000000"
+            order.tracking_type = TrackingType.person.value
+
+            payment_obj = PaymentModel.objects.create(
+                authority_id=f"PERSON-{timezone.now().strftime('%Y%m%d%H%M%S')}",
+                amount=order.total_price,
+                status=PayemntStatusType.success,
+                order=order,
+                payemnt_type=PayemntType.person.value,
+                response_json={"data": {"code": 100}},
+                response_code=100,
+                remainder=order.total_price
+            )
+            order.payment = payment_obj
+            order.status = OrderStatusType.awaiting.value
+            order.save()
+            self.update_inventory(order)
+            self.send_notifications(order)
+            return reverse_lazy("order:completed")
+
+
+        # ================= کارت به کارت مهاب =================
         if payment_method == "card_mahax":
             zarinpal = ZarinPalSandbox()
             total_price = round((order.total_price)) + 50000
@@ -214,60 +216,57 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
             order.save()
             return zarinpal.generate_payment_url(response['data']['authority'])
             
-            
-        if payment_method == "person":
-            user = self.request.user
-            if user.type not in [UserType.admin, UserType.superuser]:
-                messages.error(self.request, "شما اجازه ثبت سفارش حضوری را ندارید.")
-                return reverse_lazy("order:checkout")
 
-            order.total_price += 50000  # ✅ افزودن هزینه ثابت برای حضوری
+        # ================= GSMPay =================
+        if payment_method == "gsmpay":
+            gsmpay = GSMPay()
+            order.total_price += 50000
+            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            invoice_reference = f"ORDER-{order.id}-{timezone.now().strftime('%Y%m%d%H%M%S')}"
 
-            # 🟩 مقداردهی آدرس به صورت حضوری
-            order.address = "تحویل حضوری در فروشگاه"
-            order.state = "خراسان رضوی"
-            order.city = "سبزوار"
-            order.zip_code = "0000000000"
-            order.tracking_type = TrackingType.person.value
-
-            # ایجاد شی پرداخت حضوری
-            payment_obj = PaymentModel.objects.create(
-                authority_id="PERSON-" + timezone.now().strftime("%Y%m%d%H%M%S"),
-                amount=order.total_price,
-                status=PayemntStatusType.success,
-                order=order,
-                payemnt_type=PayemntType.person.value,
-                response_json={"data": {"code": 100}},
-                response_code=100,
-                remainder=order.total_price
+            response, status_code = gsmpay.create_payment(
+                callback_url=callback_url,
+                invoice_reference=invoice_reference,
+                invoice_amount=int(order.total_price),
+                invoice_date=timezone.now().isoformat(),
+                payer_mobile=user.phone_number,
+                payer_first_name=user.user_profile.first_name,
+                payer_last_name=user.user_profile.last_name,
+                payer_national_code=user.code_melli,
+                description=f"پرداخت سفارش #{order.id}",
+                items=[{
+                    "reference": str(item.id),
+                    "name": item.product.title,  # از title محصول استفاده می‌کنیم
+                    "is_product": True,
+                    "quantity": item.quantity,
+                    "unit_price": str(item.price),  # قیمت هر آیتم از OrderItemModel
+                    "unit_discount": "0",
+                    "unit_tax_amount": "0"
+                } for item in order.order_items.all()]
             )
 
-            order.payment = payment_obj
-            order.status = OrderStatusType.awaiting.value
-            order.save()
-
-            # کاهش موجودی محصولات
-            for item in order.order_items.all():
-                try:
-                    inventory = ProductColorInventory.objects.get(
-                        product=item.product,
-                        color=item.color
-                    )
-                    inventory.stock = max(0, inventory.stock - item.quantity)
-                    inventory.save()
-                except ProductColorInventory.DoesNotExist:
-                    continue
-
-            self.clear_cart(cart)
-            return reverse_lazy("order:completed")
+            if status_code == 201:
+                token = response['data']['token']
+                redirect_url = response['data']['redirect_url']
+                payment_obj = PaymentModel.objects.create(
+                    authority_id=token,
+                    amount=order.total_price,
+                    order=order,
+                    payemnt_type=PayemntType.gsmpay.value,
+                    response_json=response,
+                )
+                order.payment = payment_obj
+                order.save()
+                return redirect(redirect_url)
+            else:
+                messages.error(self.request, f"خطا در ایجاد پرداخت: {response}")
+                return reverse_lazy("order:checkout")
 
 
-        
-        
-        # برای روش‌های دیگر پرداخت (مثلاً زرین‌پال) باید else اضافه کنی
         messages.error(self.request, "روش پرداخت نامعتبر است.")
         return reverse_lazy("order:checkout")
 
+    # ================= متدهای کمکی =================
     def create_order(self, address, tracking_type):
         return OrderModel.objects.create(
             user=self.request.user,
@@ -275,19 +274,17 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
             state=address.state,
             city=address.city,
             zip_code=address.zip_code,
-            tracking_type=tracking_type,  # 👈 ذخیره نوع ارسال
+            tracking_type=tracking_type,
         )
-
 
     def create_order_items(self, order, cart):
         for item in cart.cart_items.all():
-            print(item.color)
             OrderItemModel.objects.create(
                 order=order,
                 product=item.product,
                 quantity=item.quantity,
                 price=item.color_inventory.get_price(),
-                color = item.color,
+                color=item.color,
             )
 
     def clear_cart(self, cart):
@@ -296,15 +293,31 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
 
     def apply_coupon(self, coupon, order, user, total_price):
         if coupon:
-            discount_amount = round(
-                (total_price * Decimal(coupon.discount_percent / 100)))
+            discount_amount = round(total_price * Decimal(coupon.discount_percent / 100))
             total_price -= discount_amount
-
             order.coupon = coupon
             coupon.used_by.add(user)
             coupon.save()
-
         order.total_price = total_price
+
+    def update_inventory(self, order):
+        for item in order.order_items.all():
+            try:
+                inventory = ProductColorInventory.objects.get(product=item.product, color=item.color)
+                inventory.stock = max(0, inventory.stock - item.quantity)
+                inventory.save()
+            except ProductColorInventory.DoesNotExist:
+                continue
+
+    def send_notifications(self, order):
+        send_bulk_sms(
+            message_text=f"مشتری گرامی،\nسفارش شما {order.order_number} تأیید شد\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
+            mobiles=[order.user.phone_number]
+        )
+        send_bulk_sms(
+            message_text="یک سفارش جدید در من مارکت ثبت شد !",
+            mobiles=["09120983411"]
+        )
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -312,25 +325,18 @@ class OrderCheckOutView(LoginRequiredMixin, HasCustomerAccessPermission, FormVie
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         cart = CartModel.objects.get(user=self.request.user)
-        context["addresses"] = UserAddressModel.objects.filter(
-            user=self.request.user)
-        total_price = cart.calculate_total_price()
-        
         wallet = Wallet.objects.get(user=self.request.user)
-        context['wallet'] = wallet
-        context["total_price"] = total_price
 
-        context['total_price_with_tax'] = total_price  + 50000
-        cart = CartSession(self.request.session)
-        total_payment_price = cart.get_total_payment_amount()
-        tot_payment_price = cart.get_tot_payment_amount()
-        sod = tot_payment_price - total_payment_price
-        context["sod"] = sod
-        cart_items = cart.get_cart_items()
-        context["cart_items"] = cart_items
+        context["addresses"] = UserAddressModel.objects.filter(user=self.request.user)
+        context["total_price"] = cart.calculate_total_price()
+        context["wallet"] = wallet
+        context['total_price_with_tax'] = cart.calculate_total_price() + 50000
+
+        cart_session = CartSession(self.request.session)
+        context["cart_items"] = cart_session.get_cart_items()
+        context["sod"] = cart_session.get_tot_payment_amount() - cart_session.get_total_payment_amount()
+
         return context
-
-
 
 
 class OrderCompletedView(LoginRequiredMixin, HasCustomerAccessPermission, TemplateView):

@@ -42,6 +42,15 @@ class CustomerProfileEditForm(forms.ModelForm):
         })
     )
 
+    code_melli = forms.CharField(
+        max_length=10,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control text-center',
+            'placeholder': 'کد ملی را وارد نمایید',
+        })
+    )
+
     class Meta:
         model = Profile
         fields = [
@@ -63,11 +72,10 @@ class CustomerProfileEditForm(forms.ModelForm):
         if self.instance and self.instance.user:
             self.fields['phone_number'].initial = self.instance.user.phone_number
             self.fields['email'].initial = self.instance.user.email
+            self.fields['code_melli'].initial = self.instance.user.code_melli
 
-            # ✅ اگر کاربر وریفای شده بود، فیلد ایمیل را غیرفعال کن
             if self.instance.user.is_verified:
                 self.fields['email'].disabled = True
-
             if self.instance.user.is_phone_verified:
                 self.fields['phone_number'].disabled = True
 
@@ -93,6 +101,32 @@ class CustomerProfileEditForm(forms.ModelForm):
             raise ValidationError("شماره همراه وارد شده قبلاً ثبت شده است.")
         return phone
 
+    def clean_code_melli(self):
+        code = self.cleaned_data.get("code_melli")
+        if code in ["", None]:
+            return None
+
+        if not code.isdigit() or len(code) != 10:
+            raise ValidationError("کد ملی باید دقیقاً ۱۰ رقم عددی باشد.")
+
+        if not self._validate_iranian_melli(code):
+            raise ValidationError("کد ملی وارد شده معتبر نیست.")
+
+        qs = User.objects.filter(code_melli=code)
+        if self.instance and self.instance.user:
+            qs = qs.exclude(pk=self.instance.user.pk)
+        if qs.exists():
+            raise ValidationError("کد ملی وارد شده قبلاً ثبت شده است.")
+        return code
+
+    def _validate_iranian_melli(self, code):
+        """اعتبارسنجی الگوریتمی کد ملی ایران"""
+        if code in [str(i)*10 for i in range(10)]:
+            return False
+        check = int(code[9])
+        s = sum(int(code[x]) * (10 - x) for x in range(9)) % 11
+        return (s < 2 and check == s) or (s >= 2 and check == 11 - s)
+
     def save(self, commit=True):
         profile = super().save(commit=False)
         if commit:
@@ -102,16 +136,15 @@ class CustomerProfileEditForm(forms.ModelForm):
         if user:
             phone = self.cleaned_data.get('phone_number')
             email = self.cleaned_data.get('email')
+            code_melli = self.cleaned_data.get('code_melli')
 
             user.phone_number = phone if phone else None
-
-            # ✅ فقط در صورتی که کاربر وریفای نشده بود ایمیل را به‌روزرسانی کن
             if not user.is_verified:
                 user.email = email if email else None
+            user.code_melli = code_melli if code_melli else None
 
             if commit:
                 user.save()
         return profile
-
 
         
