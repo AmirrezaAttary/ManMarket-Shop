@@ -236,10 +236,10 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 description=f"پرداخت سفارش #{order.id}",
                 items=[{
                     "reference": str(item.id),
-                    "name": item.product.title,  # از title محصول استفاده می‌کنیم
+                    "name": item.product.title,
                     "is_product": True,
                     "quantity": item.quantity,
-                    "unit_price": str(item.price),  # قیمت هر آیتم از OrderItemModel
+                    "unit_price": str(item.price),
                     "unit_discount": "0",
                     "unit_tax_amount": "0"
                 } for item in order.order_items.all()]
@@ -260,8 +260,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 return redirect(redirect_url)
             else:
                 messages.error(self.request, f"خطا در ایجاد پرداخت: {response}")
-                return reverse_lazy("order:checkout")
-
+                return redirect("order:checkout")
 
         messages.error(self.request, "روش پرداخت نامعتبر است.")
         return reverse_lazy("order:checkout")
