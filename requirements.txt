@@ -6,7 +6,7 @@ django-jalali
 
 django-taggit
 # database modules
-psycopg==3.1.12
+# psycopg==3.1.12
 
 django-debug-toolbar==4.2.0
 idna==3.6
