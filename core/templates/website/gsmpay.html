@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 خرید اقساط از من مارکت
@@ -21,90 +22,78 @@
 {% block content %}
 <main class="my-4 py-4">
 
-    <section class="hero-section">
-        <div class="hero-bg">
-            <div class="hero-container py-4 px-1 ">
-                <h3 class="text-light fw-bold">خرید از من مارکت، وام از GSMPay</h3>
-                <p class="text-light f-14 my-3">همین امروز می‌توانید بدون نیاز به ضامن تا ۵۰ میلیون تومان از جی‌اس‌ام پی
-                    وام بگیرید و گوشی دلخواه‌تان را از من مارکت بخرید.</p>
+  <section class="hero-section">
+    <div class="hero-bg">
+      <div class="hero-container py-4 px-1 ">
+        <h3 class="text-light fw-bold">خرید از من مارکت، وام از GSMPay</h3>
+        <p class="text-light f-14 my-3">همین امروز می‌توانید بدون نیاز به ضامن تا ۵۰ میلیون تومان از جی‌اس‌ام پی وام بگیرید و گوشی دلخواه‌تان را از من مارکت بخرید.</p>
 
-                <div class="features-cards row mt-4">
-                    <div
-                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
-                        <img src="{% static 'img/DN/verified.svg' %}" alt="مزیت ۱">
-                        <h4 class="text-light f-14">قیمت منصفانه</h4>
-                    </div>
-                    <div
-                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
-                        <img src="{% static 'img/DN/express.svg' %}" alt="مزیت ۲">
-                        <h4 class="text-light f-14">ارسال سریع (زیر ۳ ساعت)</h4>
-                    </div>
-                    <div
-                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
-                        <img class=" w-auto mb-3" src="{% static 'img/DN/main.logo2.png' %}" alt="مزیت ۳">
-                        <h4 class="text-light f-14">بیمه با تخفیف ویژه</h4>
-                    </div>
-                    <div
-                        class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
-                        <img src="{% static 'img/DN/store.svg' %}" alt="مزیت ۴">
-                        <h4 class="text-light f-14">امکان تحویل حضوری کالا</h4>
-                    </div>
-                </div>
-
-                <a href="#productTab"
-                    class=" bg-gh bg-light btn-sub-gh text-dark fs-14 rounded-3 px-3 py-2 d-inline">محاسبه وام</a>
-            </div>
+        <div class="features-cards row mt-4">
+          <div class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+            <img src="{% static 'img/DN/verified.svg' %}" alt="مزیت ۱">
+            <h4 class="text-light f-14">قیمت منصفانه</h4>
+          </div>
+          <div class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+            <img src="{% static 'img/DN/express.svg' %}" alt="مزیت ۲">
+            <h4 class="text-light f-14">ارسال سریع (زیر ۳ ساعت)</h4>
+          </div>
+          <div class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+            <img class=" w-auto mb-3" src="{% static 'img/DN/main.logo2.png' %}" alt="مزیت ۳">
+            <h4 class="text-light f-14">بیمه با تخفیف ویژه</h4>
+          </div>
+          <div class="feature-card col-md-2 col-sm-5 col-5 align-items-center d-flex justify-content-center flex-column ">
+            <img src="{% static 'img/DN/store.svg' %}" alt="مزیت ۴">
+            <h4 class="text-light f-14">امکان تحویل حضوری کالا</h4>
+          </div>
         </div>
-    </section>
 
-    <div class="gh-s-container">
-        <h2 class="gh-s-title f-14">مراحل خرید اقساطی از من مارکت</h2>
-
-        <div class="gh-s-timeline">
-            <div class="gh-s-step">
-                <div class="gh-s-circle f-14">1</div>
-                <div class="gh-s-content f-14">دریافت اعتبار از <a target="_blank" href="https://my.gsmpay.ir/auth/register?ref=69619455">GSMpay.ir</a></div>
-            </div>
-            <div class="gh-s-step">
-                <div class="gh-s-circle f-14">2</div>
-                <div class="gh-s-content f-14">انتخاب گوشی در <a href="{% url 'website:index' %}">manmarket.ir</a></div>
-            </div>
-            <div class="gh-s-step">
-                <div class="gh-s-circle f-14">3</div>
-                <div class="gh-s-content f-14">
-                    انجام فرآیند خرید و انتخاب شیوه با ارسال سریع
-                </div>
-            </div>
-            <div class="gh-s-step">
-                <div class="gh-s-circle f-14">4</div>
-                <div class="gh-s-content f-14">انتخاب گزینه پرداخت قسطی</div>
-            </div>
-            <div class="gh-s-step">
-                <div class="gh-s-circle f-14">5</div>
-                <div class="gh-s-content f-14">گوشی جدید مبارکه :)</div>
-            </div>
-        </div>
+        <a href="#productTab" class=" bg-gh bg-light btn-sub-gh text-dark fs-14 rounded-3 px-3 py-2 d-inline">محاسبه وام</a>
+      </div>
     </div>
+  </section>
+
+  <div class="gh-s-container">
+    <h2 class="gh-s-title f-14">مراحل خرید اقساطی از من مارکت</h2>
+
+    <div class="gh-s-timeline">
+      <div class="gh-s-step">
+        <div class="gh-s-circle f-14">1</div>
+        <div class="gh-s-content f-14">دریافت اعتبار از <a href="https://my.gsmpay.ir/auth/register?ref=69619455">GSMpay.ir</a></div>
+      </div>
+      <div class="gh-s-step">
+        <div class="gh-s-circle f-14">2</div>
+        <div class="gh-s-content f-14">انتخاب گوشی در <a href="{% url 'website:index' %}">manmarket.ir</a></div>
+      </div>
+      <div class="gh-s-step">
+        <div class="gh-s-circle f-14">3</div>
+        <div class="gh-s-content f-14">
+          انجام فرآیند خرید و انتخاب شیوه با ارسال سریع
+        </div>
+      </div>
+      <div class="gh-s-step">
+        <div class="gh-s-circle f-14">4</div>
+        <div class="gh-s-content f-14">انتخاب گزینه پرداخت قسطی</div>
+      </div>
+      <div class="gh-s-step">
+        <div class="gh-s-circle f-14">5</div>
+        <div class="gh-s-content f-14">گوشی جدید مبارکه :)</div>
+      </div>
+    </div>
+  </div>
 
 
 
-    <ul class="nav nav-tabs mb-0 b-none w-center justify-content-center flex-nowrap mx-1 px-1" id="productTab"
-        role="tablist">
+    <ul class="nav nav-tabs mb-0 b-none w-center justify-content-center flex-nowrap mx-1 px-1" id="productTab" role="tablist">
         <li class="nav-item " role="presentation">
-            <button class=" active text-nowrap text-dark d-flex justify-content-center align-items-center"
-                id="description-tab" data-bs-toggle="tab" data-bs-target="#descriptionPane" type="button" role="tab"
-                aria-controls="descriptionPane" aria-selected="true">
+            <button class=" active text-nowrap text-dark d-flex justify-content-center align-items-center" id="description-tab" data-bs-toggle="tab" data-bs-target="#descriptionPane" type="button" role="tab" aria-controls="descriptionPane" aria-selected="true">
                 بلو بانک
                 <img class="icon-bank mx-2" alt="" src="{% static 'img/DN/blue-mlue.png' %}">
             </button>
         </li>
-        <li class="nav-item " role="presentation"><button
-                class="text-nowrap text-dark d-flex justify-content-center align-items-center" id="description-tab2"
-                data-bs-toggle="tab" data-bs-target="#descriptionPane2" type="button" role="tab"
-                aria-controls="descriptionPane" aria-selected="false">
-                های بانک
-                <img class="icon-bank mx-2" alt="" src="{% static 'img/DN/mlue-blue.png' %}">
-            </button></li>
+        <li class="nav-item " role="presentation"><button class="text-nowrap text-dark d-flex justify-content-center align-items-center" id="description-tab2" data-bs-toggle="tab" data-bs-target="#descriptionPane2" type="button" role="tab" aria-controls="descriptionPane" aria-selected="false">
+            های بانک
+            <img class="icon-bank mx-2" alt="" src="{% static 'img/DN/mlue-blue.png' %}">
+        </button></li>
     </ul>
 
     <div class="tab-content p-3" id="productTabContent">
@@ -121,11 +110,13 @@
                             <span>50,000,000 تومان</span>
                             <span>5,000,000 تومان</span>
                         </div>
-                        <input dir="ltr" class="" type="range" id="loanRange" min="5000000" max="50000000"
-                            step="5000000" value="5000000">
+                        <input dir="ltr" class="" type="range" id="loanRange" min="5000000" max="50000000" step="5000000" value="5000000">
                     </div>
 
                     <div class="repayment-period">دوره بازپرداخت: 12 ماهه</div>
+
+                    <a class="text-light bank-box fs-14 rounded-3 px-4 py-2 mt-3" href="https://my.gsmpay.ir/auth/register?ref=69619455">درخواست اعتبار</a>
+
                 </div>
                 <div class="left-section ro-cs">
                     <div class="repayment-title">بازپرداخت نهایی</div>
@@ -149,10 +140,12 @@
                             <span class="detail-value" id="supplierShare">1,155,000 تومان</span>
                         </div>
                     </div>
-
                     <div class="note">مقادیر بر اساس دوره بازپرداخت 12 ماهه محاسبه شده است.</div>
                 </div>
+
+
             </div>
+
             <!-- pagination :: end------------>
         </div>
         <div class="tab-pane fade show " id="descriptionPane2" role="tabpanel" aria-labelledby="description-tab2">
@@ -168,10 +161,10 @@
                         <span>50,000,000 تومان</span>
                         <span>5,000,000 تومان</span>
                     </div>
-                    <input dir="ltr" class="f-14 ran-2-r" type="range" id="loanRange2" min="5000000" max="50000000"
-                        step="5000000" value="5000000">
+                    <input  dir="ltr" class="f-14 ran-2-r" type="range" id="loanRange2" min="5000000" max="50000000" step="5000000" value="5000000">
 
                     <div class="repayment-period mt-3">دوره بازپرداخت: 12 ماهه</div>
+                    <a class="text-light bg-success text-center fs-14 rounded-3 px-4 py-2 mt-3" href="https://my.gsmpay.ir/auth/register?ref=69619455">درخواست اعتبار</a>
 
                 </div>
                 <div class="left-section ro-cs">
@@ -180,8 +173,10 @@
                     </div>
 
                     <span class="final-repayment" id="finalPayment2">
-                        ۶,۱۹۴,۵۸۱
-                    </span>
+            ۶,۱۹۴,۵۸۱
+        </span>
+
+
 
                     <div class="detail-box">
                         <p class="f-14 d-flex justify-content-between w-100 detail-label detail-item">مبلغ هر قسط:
@@ -199,6 +194,7 @@
                     </div>
                     <div class="note mt-4">مقادیر بر اساس دوره بازپرداخت 12 ماهه محاسبه شده است.</div>
                 </div>
+
             </div>
             <!-- pagination :: end------------>
         </div>
@@ -207,286 +203,300 @@
 
 
     <section class="row align-items-center">
-        <div class="col-md-3 mt-0">
-            <h4 class="text-center">
-                محبوب ترین گوشی های <a href="{% url 'website:index' %}" class="theme-c"> من مارکت </a>
-            </h4>
-        </div>
-        <div class="col-md-9 mt-0">
-            <section class="blog mt-4">
-                <div class="container">
-                    <div class="blog-container w-center has-scrollbar">
-                        <div class="blog-card col-md-3 col-sm-6 col-12">
-                            <div class="col box-cs pc-s" data-price="45000000" data-category="موبایل" data-brand="اپل"
-                                data-id="p101">
-                                <a target="_blank" href="single.product.html"
-                                    class="fill-product-card-link d-block h-100">
-                                    <div class="bor-bot-1 card h-100 fill-product-card">
-                                        <img src="{% static 'img/iphone/green/1.webp' %}"
-                                            class="card-img-top fill-product-card-img" alt="گوشی آیفون 13">
-                                        <div class="card-body d-flex flex-column w-right">
-                                            <h5 class="card-title mt-4 text-dark">گوشی موبایل سامسونگ مدل Galaxy A06 دو
-                                                سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت</h5>
-                                            <div class="fill-card-brand mt-1 mb-2">موبایل</div>
-                                            <p class="card-price py-1 p-0">
-
-                                                <del class="fill-price-value theme-c cs-fs-se">46,000,000</del>
-                                                <span class="money-icon theme-c cs-fs-se"></span>
-                                                <span
-                                                    style="text-decoration: none!important;font-size: 0.65rem !important;"
-                                                    class="theme-color rounded-1 text-light p-cs-t cs-fs-se mx-1">
-                                                    12%
-                                                </span>
-                                            </p>
-                                            <p class="card-price py-1 px-2 ">
-                                                <span class="fill-price-value cs-fs-se-2 text-dark">45,000,000</span>
-                                                <span class="money-icon text-dark cs-fs-se-2"></span>
-                                            </p>
-                                            <div dir="ltr"
-                                                class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center">
-                                                <span class="mx-1 one-color mt-1">
-                                                    <span class="">
-
-                                                    </span>
-                                                </span>
-                                                <span class="mx-1 three-color mt-1">
-                                                    <span class="">
-
-                                                    </span>
-                                                </span>
-                                                <span class="mx-1 two-color mt-1">
-                                                    <span class="">
-
-                                                    </span>
-                                                </span>
-                                                <svg class="mt-1" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 512 512" width="0.6em" height="0.6em">
-                                                    <path
-                                                        d="M417.4 224H288V94.6c0-16.9-14.3-30.6-32-30.6s-32 13.7-32 30.6V224H94.6C77.7 224 64 238.3 64 256s13.7 32 30.6 32H224v129.4c0 16.9 14.3 30.6 32 30.6s32-13.7 32-30.6V288h129.4c16.9 0 30.6-14.3 30.6-32s-13.7-32-30.6-32z"
-                                                        fill="currentColor"></path>
-                                                </svg>
-                                            </div>
-                                            <span class="cs-sc-star align-items-center d-flex justify-content-center">
-                                                <svg class="star rated  cs-star mb-1 mx-1" viewBox="0 0 24 24">
-                                                    <polygon
-                                                        points="12 2 15 10 24 10 17 15 19 23 12 18 5 23 7 15 0 10 9 10" />
-                                                </svg>
-                                                5
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center mt-4">
-                    <a href="{% url 'shop:product-list' %}">
-                        <button class=" bg-gh text-light theme-color rounded-3 px-3 py-2">مشاهده همه</button>
-                    </a>
-                </div>
-            </section>
-        </div>
-    </section>
-
-
-    <div class="py-5">
-        <div class="row justify-content-center ">
-            <div class="col-md-12 col-lg-12 px-4">
-                <div class="text-center mb-4 f-14">
-                    <h2 class="title text-dark">سوالات متداول</h2>
-                </div>
-                <div class="accordion d-flex justify-content-start w-right flex-column" id="faqAccordion">
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button w-right f-14" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                چگونه می‌توانم گوشی دلخواهم را از من مارکت به‌صورت قسطی بخرم؟
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                برای خرید قسطی کافیست در جی‌اس‌ام پی ثبت نام کنید و فرایند دریافت اعتبار را با کلیک روی
-                                اعتبار سایت GSMPAY.IR از سایت جی‌اس‌ام پی دریافت کنید.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button w-right collapsed f-14" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false"
-                                aria-controls="collapseTwo">
-                                مدت زمان بازپرداخت وام چقدر است؟
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                شما می‌توانید در بازه ۱۲ ماهه وام دریافت شده را بازپس دهید.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false"
-                                aria-controls="collapseThree">
-                                برای دریافت وام نیاز به افتتاح حساب در چه بانکی دارم؟
-                            </button>
-                        </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                در حال حاضر بلوبانک و های‌بانک تامین‌کننده‌های تسهیلات جی‌اس‌ام پی هستند. برای دریافت
-                                وام، افتتاح حساب در یکی از این دو بانک کافیست. افتتاح حساب به صورت الکترونیکی و در هر
-                                لحظه از شبانه‌روز ممکن است.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingFour">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false"
-                                aria-controls="collapseFour">
-                                آیا خرید قسطی موبایل بدون ضامن از من مارکت امکان‌پذیر است؟
-                            </button>
-                        </h2>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                بله، در من مارکت برای خرید اقساطی نیازی به ضامن نیست. تنها یک برگ چک صیادی به نام خودتان
-                                به‌عنوان ضمانت کافی است.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingFive">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false"
-                                aria-controls="collapseFive">
-                                اگر وام دریافت شده از مبلغ گوشی بیشتر باشد، مابه‌التفاوت را چگونه باید پرداخت کنم؟
-                            </button>
-                        </h2>
-                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                در فرایند خرید میزان اعتبار شما از مبلغ نهایی گوشی کسر می‌شود و باقی مانده مبلغ را
-                                می‌توانید آنلاین و با استفاده از کارت‌های عضو شتاب پرداخت کنید.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingSix">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false"
-                                aria-controls="collapseSix">
-                                اگر وام دریافت شده بیشتر از مبلغ گوشی باشد امکان استفاده از باقی‌مانده اعتبار وجود دارد؟
-                            </button>
-                        </h2>
-                        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                بله می‌توانید با باقی مانده اعتبار خود از لوازم جانبی موجود در سایت خرید کنید یا در
-                                خریدهای بعدی روی یک گوشی دیگر آن را استفاده کنید.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingSeven">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false"
-                                aria-controls="collapseSeven">
-                                آیا می‌توان اعتبار دریافت شده یا باقی مانده آن پس از خرید را به پول نقد تبدیل کرد؟
-                            </button>
-                        </h2>
-                        <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                خیر امکان تبدیل اعتبار به پول نقد وجود ندارد اما باقی مانده آن در حساب کاربری جی‌اس‌ام
-                                پی شما باقی می‌ماند و می‌توانید از آن در خریدهای آینده استفاده کنید.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingEight">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false"
-                                aria-controls="collapseEight">
-                                آیا می‌توان کمتر از ۵۰ میلیون تومان اعتبار خرید گوشی گرفت؟
-                            </button>
-                        </h2>
-                        <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                بله، شما می‌توانید به میزان دلخواه تا سقف ۵۰ میلیون تومان، اعتبار خود را از جی‌اس‌ام پی
-                                دریافت کنید. برای مثال شما می‌توانید ۳۵ میلیون تومان وام دریافت کنید.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingNine">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false"
-                                aria-controls="collapseNine">
-                                حداقل و حداکثر مدت زمان پرداخت اقساط چقدر است؟
-                            </button>
-                        </h2>
-                        <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                در حال حاضر مدت بازپرداخت ۱۲ ماه است. البته در آینده طرح‌های بلند مدت دیگری نیز اضافه
-                                خواهد شد.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingTen">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false"
-                                aria-controls="collapseTen">
-                                چه مدارکی برای خرید اقساطی موبایل نیاز است؟
-                            </button>
-                        </h2>
-                        <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                کارت ملی، شماره شبای بانکی، چک صیادی و سیم‌کارت به نام شخص متقاضی.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item w-right">
-                        <h2 class="accordion-header" id="headingEleven">
-                            <button class="accordion-button w-right f-14 collapsed" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false"
-                                aria-controls="collapseEleven">
-                                آیا تحویل گوشی قسطی، فوری انجام می‌شود؟
-                            </button>
-                        </h2>
-                        <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven"
-                            data-bs-parent="#faqAccordion">
-                            <div class="accordion-body f-14">
-                                بله، پس از دریافت اعتبار، ثبت سفارش از طریق سایت من مارکت می‌توانید گوشی را بلافاصله از
-                                فروشگاه‌های من مارکت تحویل بگیرید. همچنین در شهرهای تحت پوشش، با انتخاب گزینه تحویل زیر
-                                ۳ ساعت، گوشی مستقیماً درب منزل شما ارسال خواهد شد.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-md-3 mt-0">
+      <h4 class="text-center">
+        محبوب ترین گوشی های <a href="{% url 'website:index' %}" class="theme-c"> من مارکت </a>
+      </h4>
     </div>
+    <div class="col-md-9 mt-0">
+      <section class="blog mt-4">
+        <div class="container">
+          <div class="blog-container w-center has-scrollbar">
+            
+            {% for object in object_list %}
+            <div class="blog-card col-md-3 col-sm-6 col-12">
+              <div class="col box-cs pc-s" data-price="{{object.price}}" data-category="{{object.category}}" data-brand="{{object.brand}}" data-id="{{object.id}}">
+                <a target="_blank" href="{{object.get_absolute_url}}" class="fill-product-card-link d-block h-100">
+                  <div class="bor-bot-1 card h-100 fill-product-card">
+                    <img src="{{object.image.url}}" class="card-img-top fill-product-card-img" alt="{{object.title}}">
+                    <div class="card-body d-flex flex-column w-right">
+                      <h5 class="card-title mt-4 text-dark">{{object.title}}</h5>
+                      <div class="fill-card-brand mt-1 mb-2">{{object.category}}</div>
+                      <p class="card-price py-1 p-0">
+                        
+                        {% if has_discount %}
+                        <del class="fill-price-value theme-c cs-fs-se">46,000,000</del>
+                        <span class="money-icon theme-c cs-fs-se"></span>
+                        <span style="text-decoration: none!important;font-size: 0.65rem !important;" class="theme-color rounded-1 text-light p-cs-t cs-fs-se mx-1">
+                          12%
+                        </span>
+                        {% endif %}
+                      </p>
+                      <p class="card-price py-1 px-2 ">
+                        <span class="fill-price-value cs-fs-se-2 text-dark">{{object.get_min_price|intcomma}}</span>
+                        <span class="money-icon text-dark cs-fs-se-2"></span>
+                      </p>
+                      <div dir="ltr" class="position-absolute d-flex justify-content-center colors-search mt-1 align-items-center">
+                      {% for inventory in object.priced_colors|slice:":3" %}
+                          <span class="mx-1 one-color mt-1"
+                                style="background-color: {{ inventory.hex_color }}; {% if inventory.hex_color == '#ffffff' %}border:1px solid gray{% endif %}"></span>
+                      {% endfor %}
+
+                      {% if object.priced_colors|length > 3 %}
+                              <svg class="mt-1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 512 512"
+                              width="0.6em"
+                              height="0.6em">
+                              <path d="M417.4 224H288V94.6c0-16.9-14.3-30.6-32-30.6s-32 13.7-32 30.6V224H94.6C77.7 224 64 238.3 64 256s13.7 32 30.6 32H224v129.4c0 16.9 14.3 30.6 32 30.6s32-13.7 32-30.6V288h129.4c16.9 0 30.6-14.3 30.6-32s-13.7-32-30.6-32z"
+                                    fill="currentColor"></path>
+                          </svg>
+                      {% endif %}
+
+                      </div>
+                      <span class="cs-sc-star align-items-center d-flex justify-content-center">
+                                    <svg class="star rated  cs-star mb-1 mx-1" viewBox="0 0 24 24"><polygon points="12 2 15 10 24 10 17 15 19 23 12 18 5 23 7 15 0 10 9 10"/></svg>
+                                    {{object.avg_rate}}
+                                </span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+              
+            {% endfor %}
+              
+
+          </div>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+          <a href="{% url 'shop:product-list' %}">
+            <button class=" bg-gh text-light theme-color rounded-3 px-3 py-2">مشاهده همه</button>
+          </a>
+        </div>
+      </section>
+    </div>
+  </section>
+
+
+  <div class="py-5">
+    <div class="row justify-content-center ">
+      <div class="col-md-12 col-lg-12 px-4">
+        <div class="text-center mb-4 f-14">
+          <h2 class="title text-dark">سوالات متداول</h2>
+        </div>
+          <div class="accordion d-flex justify-content-start w-right flex-column" id="faqAccordion">
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingOne">
+                      <button class="accordion-button w-right f-14" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          چگونه می‌توانم گوشی دلخواهم را از من مارکت به‌صورت قسطی بخرم؟
+                      </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          برای خرید قسطی کافیست در جی‌اس‌ام پی ثبت نام کنید و فرایند دریافت اعتبار را با کلیک روی اعتبار سایت GSMPAY.IR از سایت جی‌اس‌ام پی دریافت کنید.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingTwo">
+                      <button class="accordion-button w-right collapsed f-14" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                          مدت زمان بازپرداخت وام چقدر است؟
+                      </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          شما می‌توانید در بازه ۱۲ ماهه وام دریافت شده را بازپس دهید.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingThree">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          برای دریافت وام نیاز به افتتاح حساب در چه بانکی دارم؟
+                      </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          در حال حاضر بلوبانک و های‌بانک تامین‌کننده‌های تسهیلات جی‌اس‌ام پی هستند. برای دریافت وام، افتتاح حساب در یکی از این دو بانک کافیست. افتتاح حساب به صورت الکترونیکی و در هر لحظه از شبانه‌روز ممکن است.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingFour">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                          آیا خرید قسطی موبایل بدون ضامن از من مارکت امکان‌پذیر است؟
+                      </button>
+                  </h2>
+                  <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          بله، در من مارکت برای خرید اقساطی نیازی به ضامن نیست. تنها یک برگ چک صیادی به نام خودتان به‌عنوان ضمانت کافی است.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingFive">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                          اگر وام دریافت شده از مبلغ گوشی بیشتر باشد، مابه‌التفاوت را چگونه باید پرداخت کنم؟
+                      </button>
+                  </h2>
+                  <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          در فرایند خرید میزان اعتبار شما از مبلغ نهایی گوشی کسر می‌شود و باقی مانده مبلغ را می‌توانید آنلاین و با استفاده از کارت‌های عضو شتاب پرداخت کنید.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingSix">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                          اگر وام دریافت شده بیشتر از مبلغ گوشی باشد امکان استفاده از باقی‌مانده اعتبار وجود دارد؟
+                      </button>
+                  </h2>
+                  <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          بله می‌توانید با باقی مانده اعتبار خود از لوازم جانبی موجود در سایت خرید کنید یا در خریدهای بعدی روی یک گوشی دیگر آن را استفاده کنید.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingSeven">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                          آیا می‌توان اعتبار دریافت شده یا باقی مانده آن پس از خرید را به پول نقد تبدیل کرد؟
+                      </button>
+                  </h2>
+                  <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          خیر امکان تبدیل اعتبار به پول نقد وجود ندارد اما باقی مانده آن در حساب کاربری جی‌اس‌ام پی شما باقی می‌ماند و می‌توانید از آن در خریدهای آینده استفاده کنید.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingEight">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                          آیا می‌توان کمتر از ۵۰ میلیون تومان اعتبار خرید گوشی گرفت؟
+                      </button>
+                  </h2>
+                  <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          بله، شما می‌توانید به میزان دلخواه تا سقف ۵۰ میلیون تومان، اعتبار خود را از جی‌اس‌ام پی دریافت کنید. برای مثال شما می‌توانید ۳۵ میلیون تومان وام دریافت کنید.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingNine">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                          حداقل و حداکثر مدت زمان پرداخت اقساط چقدر است؟
+                      </button>
+                  </h2>
+                  <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          در حال حاضر مدت بازپرداخت ۱۲ ماه است. البته در آینده طرح‌های بلند مدت دیگری نیز اضافه خواهد شد.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingTen">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+                          چه مدارکی برای خرید اقساطی موبایل نیاز است؟
+                      </button>
+                  </h2>
+                  <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          کارت ملی، شماره شبای بانکی، چک صیادی و سیم‌کارت به نام شخص متقاضی.
+                      </div>
+                  </div>
+              </div>
+
+              <div class="accordion-item w-right">
+                  <h2 class="accordion-header" id="headingEleven">
+                      <button class="accordion-button w-right f-14 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+                          آیا تحویل گوشی قسطی، فوری انجام می‌شود؟
+                      </button>
+                  </h2>
+                  <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#faqAccordion">
+                      <div class="accordion-body f-14">
+                          بله، پس از دریافت اعتبار، ثبت سفارش از طریق سایت من مارکت می‌توانید گوشی را بلافاصله از فروشگاه‌های من مارکت تحویل بگیرید. همچنین در شهرهای تحت پوشش، با انتخاب گزینه تحویل زیر ۳ ساعت، گوشی مستقیماً درب منزل شما ارسال خواهد شد.
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+    <div class="px-5">
+        <h3 class="fs-16 mt-3 text-end">خرید قسطی موبایل در سایت من مارکت: معرفی سرویس خرید اقساطی گوشی</h3>
+        <p class="cs-fs-14 my-2">خرید قسطی گوشی جدیدترین روشی است که فروشگاه اینترنتی من مارکت برای کاربران خود در نظر گرفته است. من مارکت با بیش از ۱۹ سال فعالیت و به عنوان یکی از قدیمی‌ترین سایت‌های حوزه موبایل، سرویس خرید اقساطی خود را بدون نیاز به پیش پرداخت و در اقساط بلند مدت با هدف تسهیل خرید گوشی برای کاربران در شرایط اقتصادی کنونی در نظر گرفته است.</p>
+
+        <h2 class="fs-16 mt-3 text-end">مزایای خرید اقساطی موبایل در من مارکت</h2>
+        <p class="cs-fs-14 my-2">خرید گوشی قسطی از سایت من مارکت فرصتی برای تهیه گوشی‌های روز دنیا با شرایط آسان و بدون فشار مالی است. کاربران می‌توانند بدون نیاز به ضامن، تنها با چند مرحله ساده ثبت‌نام، گوشی مورد نظرشان را از فروشگاه اینترنتی من مارکت خریداری کنند. همچنین تحویل سریع، تنوع در برند و مدل و امکان استفاده از طرح‌های مختلف پرداخت، این سرویس را به گزینه‌ای ایده‌آل برای بسیاری از کاربران تبدیل کرده است.</p>
+
+        <h3 class="fs-16 mt-3 text-end">بدون نیاز به پیش‌پرداخت و تحویل سریع موبایل</h3>
+        <p class="cs-fs-14 my-2">یکی از بزرگ‌ترین مزایای این سرویس، خرید گوشی قسطی بدون پیش‌پرداخت برای گوشی‌های زیر ۵۰ میلیون تومان است و برای گوشی‌های بالا ۵۰ میلیون تومان مابه‌التفاوت آن را باید پرداخت کنید. برای گوشی‌های پایین‌تر از این قیمت شما می‌توانید گوشی را بدون پرداخت مبلغ اولیه خریداری و هزینه آن را در اقساط ۱۲ ماهه پرداخت کنید. این امکان به‌ویژه برای افرادی که نیاز فوری به گوشی دارند اما نقدینگی کافی ندارند، بسیار کاربردی است.</p>
+
+        <h3 class="fs-16 mt-3 text-end">امکان خرید با سود کم در طرح بلندمدت</h3>
+        <p class="cs-fs-14 my-2">طرح‌های اقساطی من مارکت با نرخ سود پایین ارائه می‌شوند. کاربران می‌توانند بسته به شرایط خود، طرح‌هایی با اقساط ۱۲ ماهه را انتخاب کنند.</p>
+
+        <h3 class="fs-16 mt-3 text-end">دریافت موبایل بدون نیاز به ضامن</h3>
+        <p class="cs-fs-14 my-2">بر خلاف بسیاری از سرویس‌های اقساطی که نیاز به معرفی ضامن دارند، در من مارکت تنها با ارائه مدارک شناسایی، اعتبارسنجی و یک برگ چک صیادی، می‌توانید اعتبار لازم را دریافت کرده و گوشی خود را تهیه کنید.</p>
+
+        <h2 class="fs-16 mt-3 text-end">شرایط و مدارک مورد نیاز برای خرید اقساطی موبایل</h2>
+        <p class="cs-fs-14 my-2">برای استفاده از سرویس خرید اقساطی در من مارکت، کاربران باید ابتدا در سایت جی‌اس‌ام‌پی ثبت‌نام کرده و فرآیند احراز هویت را کامل کنند. مدارک مورد نیاز شامل کارت ملی، استعلام بانکی و چک صیادی است. البته بسته به نوع طرح، ممکن است مدارک تکمیلی نیز درخواست شود اما روند کلی، ساده و سریع طراحی شده تا کاربران بتوانند در کمترین زمان اعتبار دریافت کنند.</p>
+
+        <h3 class="fs-16 mt-3 text-end">نحوه ثبت‌نام و احراز هویت در سرویس جی‌اس‌ام پی</h3>
+        <p class="cs-fs-14 my-2">برای شروع، کافی است در سایت «جی‌اس‌ام‌پی» ثبت‌نام کنید. مراحل ثبت‌نام شامل وارد کردن اطلاعات شخصی و انجام احراز هویت دیجیتال از طریق سایت انجام می‌شود.</p>
+
+        <h3 class="fs-16 mt-3 text-end">مدارک شناسایی و بانکی مورد نیاز</h3>
+        <p class="cs-fs-14 my-2">برای تکمیل ثبت‌نام نیاز به مدارک زیر دارید:</p>
+        <p class="cs-fs-14 my-2">کارت ملی هوشمند یا رسید آن<br>شماره شبای بانکی فعال به نام خودتان<br>سیم‌کارت به نام شخص متقاضی<br>چک صیادی</p>
+
+        <h3 class="fs-16 mt-3 text-end">سقف قیمت و مدت زمان تسویه اقساط</h3>
+        <p class="cs-fs-14 my-2">بسته به اعتبارسنجی انجام‌شده، سقف اعتبار برای هر کاربر تا ۵۰ میلیون تومان مشخص می‌شود و امکان تسویه در اقساط ۱۲ ماهه نیز وجود دارد. همچنین با اعتبار دریافتی می‌توان برای خرید موبایل قسطی و لوازم جانبی موبایل از فروشگاه‌های همکار استفاده کنید.</p>
+
+        <h2 class="fs-16 mt-3 text-end">خرید قسطی موبایل بدون پیش‌پرداخت</h2>
+        <p class="cs-fs-14 my-2">یکی از جذاب‌ترین ویژگی‌های سرویس خرید اقساطی من مارکت، امکان تهیه موبایل بدون نیاز به پرداخت اولیه است. کاربران می‌توانند تنها با اعتبارسنجی آنلاین، گوشی دلخواه خود را انتخاب کرده و در چند قسط بدون پیش‌پرداخت آن را پرداخت کنند.</p>
+
+        <h3 class="fs-16 mt-3 text-end">شرایط خرید موبایل اقساطی بدون پرداخت اولیه</h3>
+        <p class="cs-fs-14 my-2">در بسیاری از طرح‌های خرید قسطی از فروشگاه اینترنتی من مارکت، نیاز به پیش‌پرداخت وجود ندارد. تنها کافی است احراز هویت را انجام دهید و از بین انواع گوشی‌های موجود، محصول مورد نظر را انتخاب و سفارش خود را ثبت کنید.</p>
+
+        <h3 class="fs-16 mt-3 text-end">مزایای خرید موبایل بدون پیش‌پرداخت</h3>
+        <p class="cs-fs-14 my-2">شروع پرداخت ۳۰ روز پس از دریافت گوشی موبایل<br>امکان خرید گوشی‌های جدید و متنوع<br>افزایش قدرت خرید بدون فشار مالی اولیه</p>
+
+        <h2 class="fs-16 mt-3 text-end">خرید قسطی موبایل با چک</h2>
+        <p class="cs-fs-14 my-2">در طرح خرید اقساطی موبایل از من مارکت، ارائه یک برگ چک به‌عنوان ضمانت پرداخت، الزامی است. این چک برای اطمینان از بازپرداخت اقساط دریافت می‌شود و نقش ضمانتی دارد. در حال حاضر، خرید اقساطی بدون ارائه چک امکان‌پذیر نیست. با این حال، شرایط بازپرداخت انعطاف‌پذیر، نرخ سود مناسب و فرآیند ساده، این طرح را به گزینه‌ای مناسب برای بسیاری از کاربران تبدیل کرده است.</p>
+
+        <h2 class="fs-16 mt-3 text-end">خرید اقساطی گوشی فوری و تحویل سریع</h2>
+        <p class="cs-fs-14 my-2">پس از ثبت سفارش و طی مراحل ساده اعتبارسنجی، گوشی در کمترین زمان ممکن به دستتان می‌رسد. اگر مدارک کامل باشد، ظرف ۳ تا ۴ روز کاری اعتبار به حسابتان واریز می‌شود، گوشی خریداری شده و محصول درب منزل تحویل داده خواهد شد.</p>
+
+        <h3 class="fs-16 mt-3 text-end">امکان خرید فوری از نزدیک‌ترین فروشگاه‌های حضوری</h3>
+        <p class="cs-fs-14 my-2">در شهرهای تحت پوشش من مارکت، می‌توانید گوشی خود را از نزدیک‌ترین فروشگاه طرف قرارداد دریافت کنید. کافی است به فروشگاه معرفی‌شده مراجعه کرده یا گزینه تحویل سریع را انتخاب کنید تا گوشی کمتر از ۳ ساعت درب منزل شما تحویل گردد.</p>
+
+        <h3 class="fs-16 mt-3 text-end">دریافت سریع اعتبار زیر ۷ روز</h3>
+        <p class="cs-fs-14 my-2">فرآیند اعتبارسنجی معمولاً زیر ۷۲ ساعت انجام می‌شود و شما می‌توانید در کمتر از یک هفته، گوشی مورد نظر خود را دریافت کنید.</p>
+
+        <h2 class="fs-16 mt-3 text-end">طرح خرید اقساطی موبایل با کمترین سود</h2>
+        <p class="cs-fs-14 my-2">من مارکت با ارائه طرح‌های متنوع پرداخت اقساطی، تلاش کرده تا کمترین نرخ سود را در بین پلتفرم‌های مشابه داشته باشد. اقساط ۱۲ ماهه با بهره پایین باعث می‌شود کاربران با خیال راحت و هزینه‌ای مقرون‌به‌صرفه، گوشی جدید خود را تهیه کنند. این طرح‌ها به گونه‌ای طراحی شده‌اند که مناسب طیف گسترده‌ای از درآمدها باشند.</p>
+
+        <h3 class="fs-16 mt-3 text-end">انواع طرح‌های اقساطی با نرخ سود پایین</h3>
+        <p class="cs-fs-14 my-2">من مارکت چندین مدل طرح اقساطی دارد که در آن‌ها نرخ سود بین ۱.۵ تا ۲.۵ درصد ماهانه متغیر است. بسته به اعتبار، نوع گوشی و مدت بازپرداخت، می‌توانید مناسب‌ترین طرح را انتخاب کنید.</p>
+
+        <h3 class="fs-16 mt-3 text-end">اقساط بلند مدت ۱۲ ماهه</h3>
+        <p class="cs-fs-14 my-2">برای راحتی کاربران، اقساط تا ۱۲ ماهه هستند. این موضوع باعث می‌شود هزینه ماهانه کمتر و مدیریت مالی ساده‌تر شود.</p>
+    </div>
+
 
 </main>
 {% endblock content %}

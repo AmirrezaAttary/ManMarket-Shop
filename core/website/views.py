@@ -1,9 +1,10 @@
 
-from django.views.generic import TemplateView,CreateView
+from django.views.generic import TemplateView,CreateView,ListView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 from website.forms import ContatctForm
 from website.models import Contact
-from django.urls import reverse_lazy
+from shop.models import ProductModel,ProductStatusType
 # Create your views here.
 
 
@@ -24,5 +25,18 @@ class AboutView(TemplateView):
     template_name = 'faq/man-one-seen.html'
     
   
-class GsmPayView(TemplateView):
+class GsmPayView(ListView):
+    model = ProductModel
     template_name = 'website/gsmpay.html'
+
+    def get_queryset(self):
+        qs = ProductModel.objects.filter(
+            status=ProductStatusType.publish.value,
+            category__id=2,
+            color_inventories__price__gt=0,
+            color_inventories__stock__gt=0
+        ).distinct().order_by('-avg_rate')[:4]
+
+        for product in qs:
+            product.priced_colors = product.color_inventories.filter(price__gt=0, stock__gt=0)
+        return qs
