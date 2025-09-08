@@ -36,9 +36,9 @@
     <form action="{% url 'accounts:login' %}" method="post" id="loginForm">
         {% csrf_token %}
         <div class="mb-3 ">
-            <label for="email" class="form-label">ایمیل / شماره همراه</label>
+            <label for="email" class="form-label">شماره همراه</label>
             <input name="username" type="text" class="form-control" id="email" required>
-            <div class="invalid-feedback d-none" id="email-error">ایمیل / شماره تلفن شما معتبر نیست</div>
+            <div class="invalid-feedback d-none" id="email-error">شماره تلفن شما معتبر نیست</div>
         </div>
 
         <div class="logix-password-input-group mb-4">

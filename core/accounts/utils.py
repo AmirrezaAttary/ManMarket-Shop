@@ -58,7 +58,7 @@ def send_otp(user):
 
     # اینجا به جای SMS می‌تونی ایمیل هم بزنی یا کد رو لاگ کنی
     send_bulk_sms(
-    message_text=f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است ツ",
+    message_text=f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است .",
     mobiles=[f"{user.phone_number}"]
 )
 
@@ -71,7 +71,7 @@ def send_email_otp(user):
     OTP_LOGIN.objects.create(user=user, code=code)
 
     subject = "کد ورود یکبار مصرف"
-    message = f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است ツ"
+    message = f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است ."
     send_mail(subject, message, 'info@manmarket.ir', [user.email], fail_silently=False)
 
 
@@ -81,6 +81,6 @@ def send_sms_otp(user):
     OTP_LOGIN.objects.create(user=user, code=code)
 
     send_bulk_sms(
-        message_text=f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است ツ",
+        message_text=f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است .",
         mobiles=[f"{user.phone_number}"]
     )

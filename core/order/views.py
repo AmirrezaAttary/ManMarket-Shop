@@ -39,7 +39,11 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
     def dispatch(self, request, *args, **kwargs):
         user = request.user
 
-        if not user.is_phone_verified:
+        # اول چک کنیم که کاربر لاگین کرده باشه
+        if not user.is_authenticated:
+            return self.handle_no_permission()  # از LoginRequiredMixin استفاده می‌کنه
+
+        if not getattr(user, "is_phone_verified", False):
             messages.error(request, "برای ادامه خرید، ابتدا باید شماره تلفن خود را تأیید کنید.")
             return redirect("dashboard:home")
 
@@ -48,11 +52,11 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             messages.error(request, "لطفاً نام و نام خانوادگی خود را در پروفایل تکمیل کنید.")
             return redirect("dashboard:home")
 
-        if not user.phone_number:
+        if not getattr(user, "phone_number", None):
             messages.error(request, "لطفاً شماره موبایل خود را وارد کنید.")
             return redirect("dashboard:home")
 
-        if not user.code_melli:
+        if not getattr(user, "code_melli", None):
             messages.error(request, "لطفاً شماره کد ملی خود را وارد کنید.")
             return redirect("dashboard:home")
 

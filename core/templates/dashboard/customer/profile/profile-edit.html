@@ -67,7 +67,7 @@
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns">
-                                <button type="button" class="save-btn" title="ذخیره"><svg>
+                                <button type="submit" class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
                                 <button type="button" class="cancel-btn" title="لغو"><svg>
@@ -89,7 +89,7 @@
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns">
-                                <button type="button" class="save-btn" title="ذخیره"><svg>
+                                <button type="submit" class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
                                 <button type="button" class="cancel-btn" title="لغو"><svg>
@@ -111,7 +111,7 @@
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns">
-                                <button type="button" class="save-btn" title="ذخیره"><svg>
+                                <button type="submit" class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
                                 <button type="button" class="cancel-btn" title="لغو"><svg>
@@ -134,7 +134,7 @@
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns">
-                                <button type="button" class="save-btn" title="ذخیره"><svg>
+                                <button type="submit" class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
                                 <button type="button" class="cancel-btn" title="لغو"><svg>
@@ -148,25 +148,13 @@
 
                     <div class="account-detail-label">ایمیل</div>
 
-                    <div class="position-absolute cs-po-ico-2 d-flex align-items-center justify-content-center">
-                        
-                        {% if request.user.is_verified  %}
-                        <button type="button" class="bg-success px-2 py-1 rounded-3 text-nowrap text-light fs-14">
-                            تایید شد
-                        </button>                            
-                        {% endif %}
-                        {% if request.user.is_authenticated and not request.user.is_verified %}
-                        <button form="resend-activation-form" type="submit" class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
-                           ارسال لینک تایید ایمیل
-                        </button>
-                        {% endif %}
-                    </div>
+
                     <div class="account-detail-value-wrapper align-items-center">
                         <span class="account-detail-value">{% if request.user.email == None or request.user.email == 'None' %}{% else %}{{request.user.email}}{% endif %}</span>
                         <div class="account-detail-input-wrapper">
                             <input type="email" name="email" class="form-control-custom" value="{% if request.user.email == None or request.user.email == 'None' %}{% else %}{{request.user.email}}{% endif %}">
                         </div>
-                        {% if request.user.is_verified  %}
+                        
                         <div class="account-detail-actions" style="display: none;">
                             <button id="my-input" type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>
@@ -182,7 +170,7 @@
                                     </svg></button>
                             </div>
                         </div>
-                        {% else %}
+                        
                         <div class="account-detail-actions" >
                             <button id="my-input" type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>
@@ -198,7 +186,7 @@
                                     </svg></button>
                             </div>
                         </div>
-                        {% endif %}
+                        
                     </div>
                 </div>
                 <div class="account-detail-row is-editable align-items-center position-relative">
@@ -268,7 +256,7 @@
 
             {% elif request.user.is_authenticated and not request.user.is_verified %}
             <center>
-                <form hidden action="{% url 'accounts:resend_activation' %}" method="get" id="resend-activation-form">
+                <form hidden action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
                     {% csrf_token %}
                     <input type="hidden" name="email" value="{{ request.user.email }}">
                 </form>

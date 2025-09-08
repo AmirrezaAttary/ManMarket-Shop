@@ -1,18 +1,19 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView as DjangoLoginView
-from accounts.forms import CustomAuthenticationForm,RegisterForm
+from accounts.forms import *
+from accounts.models import User
+from django.utils import timezone
+from datetime import timedelta
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
-from django.contrib.auth.tokens import default_token_generator
-from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
-from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth import get_user_model
-from accounts.utils import send_password_reset_email,send_email_otp, send_sms_otp
+from accounts.utils import send_email_otp, send_sms_otp
 from django.shortcuts import redirect
 from django.contrib import messages  
 from django.contrib.messages.views import SuccessMessageMixin
 from accounts.models import OTP_LOGIN
+from django.views.generic.edit import FormView
+from accounts.utils import send_bulk_sms
 
 
 class LoginView(DjangoLoginView):
@@ -73,37 +74,85 @@ class LogoutView(auth_views.LogoutView):
     pass
 
 
-class PasswordResetView(auth_views.PasswordResetView):
-    template_name = 'accounts/password_reset.html'
-    email_template_name = 'email/password_reset_email.tpl'
-    subject_template_name = 'email/password_reset_subject.txt'
-    success_url = reverse_lazy('accounts:password_reset_done')
+class PasswordResetView(FormView):
+    template_name = "accounts/password_reset.html"
+    form_class = PasswordResetForm
 
-    
     def form_valid(self, form):
-        # دریافت ایمیل وارد شده
-        email = form.cleaned_data.get('email')
-        
-        # جستجو برای کاربری با ایمیل وارد شده
-        user = get_user_model().objects.filter(email=email).first()
-        if user:
-            token = default_token_generator.make_token(user)
-            uid = urlsafe_base64_encode(str(user.pk).encode())
-            reset_link = self.request.build_absolute_uri(f"/accounts/reset/{uid}/{token}/")
-            
-            # ارسال ایمیل به صورت غیر همزمان
-            send_password_reset_email(self.request, email, reset_link)
-        
-        # ارسال پاسخ موفقیت‌آمیز
-        return HttpResponseRedirect("/accounts/password_reset/done")
+        phone = form.cleaned_data['phone_number']
+        user = User.objects.filter(phone_number=phone).first()
+
+        if not user:
+            messages.error(self.request, "کاربری با این شماره موبایل پیدا نشد.")
+            return self.form_invalid(form)
+
+        otp = OTP_LOGIN.create_otp(user)
+
+        send_bulk_sms(
+            message_text=f"کد بازیابی رمز عبور: {otp.code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است.",
+            mobiles=[user.phone_number]
+        )
+
+        messages.success(self.request, "کد تایید برای شما ارسال شد.")
+        return redirect("accounts:password_reset_verify", phone=phone)
+
+
+class PasswordResetVerifyView(FormView):
+    template_name = "accounts/password_reset_verify.html"
+    form_class = PasswordResetVerifyForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.phone = kwargs.get("phone")
+        self.user = User.objects.filter(phone_number=self.phone).first()
+        if not self.user:
+            messages.error(request, "کاربری پیدا نشد.")
+            return redirect("accounts:password_reset")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        code = form.cleaned_data['code']
+        otp = OTP_LOGIN.objects.filter(user=self.user, code=code, is_used=False).order_by('-created_at').first()
+
+        if not otp or not otp.is_valid():
+            messages.error(self.request, "کد وارد شده معتبر نیست یا منقضی شده است.")
+            return self.form_invalid(form)
+
+        otp.is_used = True
+        otp.save(update_fields=["is_used"])
+
+        self.request.session["reset_user_id"] = self.user.id
+        return redirect("accounts:password_reset_confirm")
+    
+    
+
+class PasswordResetConfirmView(FormView):
+    template_name = "accounts/password_reset_confirm.html"
+    form_class = PasswordResetConfirmForm
+    success_url = "/accounts/login/"
+
+    def form_valid(self, form):
+        user_id = self.request.session.get("reset_user_id")
+        if not user_id:
+            messages.error(self.request, "جلسه شما منقضی شده است. دوباره تلاش کنید.")
+            return redirect("accounts:password_reset")
+
+        user = User.objects.get(id=user_id)
+        user.set_password(form.cleaned_data['new_password'])
+        user.save()
+
+        # پاک کردن session
+        self.request.session.pop("reset_user_id", None)
+
+        messages.success(self.request, "رمز عبور شما با موفقیت تغییر یافت.")
+        return super().form_valid(form)
 
 
 class PasswordResetDoneView(auth_views.PasswordResetDoneView):
     template_name = 'accounts/password_reset_done.html'
 
-class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    template_name = 'accounts/password_reset_confirm.html'
-    success_url = reverse_lazy('accounts:password_reset_complete')
+# class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+#     template_name = 'accounts/password_reset_confirm.html'
+#     success_url = reverse_lazy('accounts:password_reset_complete')
 
 class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'accounts/password_reset_complete.html'

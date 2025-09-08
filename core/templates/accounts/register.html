@@ -42,12 +42,12 @@
         <form method="post" action=".">
             {% csrf_token %}
 
-            <!-- ایمیل -->
+            <!-- شماره تلفن -->
             <div class="mb-3">
-                <label for="email" class="form-label">ایمیل</label>
+                <label for="email" class="form-label">شماره تلفن</label>
                 <input type="text" name="email_or_phone" class="form-control" id="email"
                     placeholder="مثال: yourname@example.com" required>
-                <div class="invalid-feedback d-none" id="email-error">لطفاً یک ایمیل معتبر وارد کنید.</div>
+                <div class="invalid-feedback d-none" id="email-error">لطفاً یک شماره تلفن معتبر وارد کنید.</div>
             </div>
 
             <!-- رمز عبور -->

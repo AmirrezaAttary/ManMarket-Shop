@@ -15,6 +15,8 @@ from django.core.mail import send_mail
 from django.views.generic import FormView
 from django.utils.encoding import force_str
 import smtplib
+from smtplib import SMTPException
+
 
 
 class ActivateAccountView(View):
@@ -51,23 +53,29 @@ class ResendActivationEmailView(FormView):
                     reverse_lazy('accounts:activate_account', kwargs={'uidb64': uid, 'token': token})
                 )
 
-                # ارسال ایمیل
-                send_mail(
-                    subject="فعال‌سازی حساب کاربری",
-                    message=f"برای فعال‌سازی حساب خود روی لینک زیر کلیک کنید:\n{activation_link}",
-                    from_email="info@manmarket.ir",
-                    recipient_list=[user.email],
-                    fail_silently=False,
-                )
-                messages.success(self.request, "لینک فعال‌سازی به ایمیل شما ارسال شد.")
+                try:
+                    send_mail(
+                        subject="فعال‌سازی حساب کاربری",
+                        message=f"برای فعال‌سازی حساب خود روی لینک زیر کلیک کنید:\n{activation_link}",
+                        from_email="info@manmarket.ir",
+                        recipient_list=[user.email],
+                        fail_silently=False,
+                    )
+                    messages.success(self.request, "لینک فعال‌سازی به ایمیل شما ارسال شد.")
+                except SMTPException as e:
+                    # خطای SMTP (مثلاً محدودیت روزانه یا قطعی سرور)
+                    messages.error(self.request, "مشکلی در ارسال ایمیل به وجود آمد. لطفاً بعداً دوباره تلاش کنید.")
+                    # لاگ گرفتن برای بررسی دقیق‌تر
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.error(f"خطا در ارسال ایمیل فعال‌سازی برای {user.email}: {e}")
+
             else:
                 messages.info(self.request, "حساب شما قبلاً فعال شده است.")
         except User.DoesNotExist:
             messages.error(self.request, "کاربری با این ایمیل یافت نشد.")
 
         return super().form_valid(form)
-    
-
 
 class OTPOrEmailRequestView(FormView):
     template_name = 'accounts/otp_or_email_request.html'
