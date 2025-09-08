@@ -82,13 +82,19 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
 
-        # بررسی وضعیت سفارش بعد از 3 دقیقه
         check_order_pending_status.apply_async(args=[order.id], countdown=180)
-
-        # پاکسازی اولیه سبد خرید (در صورت پرداخت موفق بعدا کاهش موجودی انجام می‌شود)
         self.clear_cart(cart)
 
-        return redirect(self.create_payment_url(order, cart))
+        payment_result = self.create_payment_url(order, cart)
+
+        # اگر متد خودش redirect برگرداند، مستقیماً همان را return کن
+        from django.http import HttpResponseRedirect
+        if isinstance(payment_result, HttpResponseRedirect):
+            return payment_result  
+
+        # در غیر این صورت فرض می‌کنیم URL است و redirect می‌کنیم
+        return redirect(payment_result)
+
 
     def create_payment_url(self, order, cart):
         user = self.request.user
