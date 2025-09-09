@@ -24,7 +24,7 @@
     <div class="sing-auth-card">
 
         <!-- دکمه بازگشت -->
-        <a class="mx-2 back-to d-inline position-absolute top-0 mt-2" href="{{ request.META.HTTP_REFERER }}"
+        <a class="mx-2 back-to d-inline position-absolute top-0 mt-2" href="{% url 'accounts:login' %}"
             style="right: 10px" aria-label="بازگشت به صفحه قبلی">
             <svg class="cs-svg theme-c" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="35" height="35">
                 <path fill="currentColor" fill-rule="evenodd"
@@ -42,12 +42,12 @@
         <form method="post" action=".">
             {% csrf_token %}
 
-            <!-- شماره تلفن -->
+            <!--  شماره همراه  -->
             <div class="mb-3">
-                <label for="email" class="form-label">شماره تلفن</label>
+                <label for="email" class="form-label"> شماره همراه </label>
                 <input type="text" name="email_or_phone" class="form-control" id="email"
-                    placeholder="مثال: yourname@example.com" required>
-                <div class="invalid-feedback d-none" id="email-error">لطفاً یک شماره تلفن معتبر وارد کنید.</div>
+                    placeholder="مثال: 09123456789" required>
+                <div class="invalid-feedback d-none" id="email-error">لطفاً یک  شماره همراه  معتبر وارد کنید.</div>
             </div>
 
             <!-- رمز عبور -->

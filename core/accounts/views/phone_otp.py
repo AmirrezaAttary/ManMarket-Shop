@@ -54,7 +54,7 @@ class ResendPhoneOTPView(View):
     def post(self, request, *args, **kwargs):
         phone = request.session.get('otp_phone')
         if not phone:
-            return JsonResponse({'status': 'error', 'message': 'شماره تلفن یافت نشد.'}, status=400)
+            return JsonResponse({'status': 'error', 'message': 'شماره همراهیافت نشد.'}, status=400)
 
         try:
             user = User.objects.get(phone_number=phone)
@@ -77,7 +77,7 @@ class SendPhoneOTPView(View):
 
         phone_number = request.POST.get("phone_number")
         if not phone_number:
-            messages.error(request, "شماره تلفن یافت نشد.")
+            messages.error(request, "شماره همراهیافت نشد.")
             return redirect("dashboard:customer:profile-edit")
 
         if not user.phone_number or user.phone_number != phone_number:
@@ -105,7 +105,7 @@ class VerifyPhoneView(FormView):
             user.is_phone_verified = True
             user.save()
 
-            messages.success(self.request, "شماره تلفن شما با موفقیت تأیید شد ✅")
+            messages.success(self.request, "شماره همراهشما با موفقیت تأیید شد ✅")
             return redirect("profile")
         else:
             messages.error(self.request, "کد وارد شده معتبر نیست یا منقضی شده است.")

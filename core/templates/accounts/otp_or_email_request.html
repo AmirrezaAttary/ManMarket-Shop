@@ -39,10 +39,10 @@
         <form method="post" action="." >
             {% csrf_token %}
             <div class="mb-3">
-                <label for="email" class="form-label">شماره تلفن</label>
+                <label for="email" class="form-label"> شماره همراه </label>
                 <input type="text" name="identifier" class="form-control" id="email"
                      required>
-                <div class="invalid-feedback d-none" id="email-error">شماره تلفن شما معتبر نیست </div>
+                <div class="invalid-feedback d-none" id="email-error"> شماره همراه  شما معتبر نیست </div>
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mt-3">ارسال کد یکبار مصرف </button>

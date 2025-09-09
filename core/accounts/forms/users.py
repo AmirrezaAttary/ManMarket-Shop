@@ -12,7 +12,7 @@ class ResendActivationEmailForm(forms.Form):
 class CustomAuthenticationForm(BaseAuthenticationForm):
 
     username = forms.CharField(
-        label=_("ایمیل یا شماره تلفن"),
+        label=_("ایمیل یا شماره همراه"),
         widget=forms.TextInput(attrs={"autofocus": True}),
     )
 
