@@ -16,11 +16,12 @@ class GSMPay:
         """
         ایجاد شناسه پرداخت (توکن)
         """
+        total_amount = (invoice_amount) * 10
         payload = {
             "merchant_code": self.merchant_code,
             "callback_url": callback_url,
             "invoice_reference": invoice_reference,
-            "invoice_amount": invoice_amount,
+            "invoice_amount": total_amount,
             "invoice_date": invoice_date,
             "payer_mobile": payer_mobile,
             "payer_first_name": payer_first_name,
