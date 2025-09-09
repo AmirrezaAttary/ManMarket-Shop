@@ -44,7 +44,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             return self.handle_no_permission()  # از LoginRequiredMixin استفاده می‌کنه
 
         if not getattr(user, "is_phone_verified", False):
-            messages.error(request, "برای ادامه خرید، ابتدا باید شماره همراهخود را تأیید کنید.")
+            messages.error(request, "برای ادامه خرید، ابتدا باید شماره همراه خود را تأیید کنید.")
             return redirect("dashboard:home")
 
         profile = getattr(user, "user_profile", None)
