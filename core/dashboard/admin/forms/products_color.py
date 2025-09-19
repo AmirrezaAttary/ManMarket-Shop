@@ -7,7 +7,7 @@ class ProductColorInventoryForm(forms.ModelForm):
         fields = [
             'color',
             'stock',
-            'discount_percent',
+            'final_price',
             'price',
             'hex_color'
         ] 
@@ -17,7 +17,7 @@ class ProductColorInventoryForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['color'].widget.attrs['class'] = 'form-control'
         self.fields['stock'].widget.attrs['class'] = 'form-control'
-        self.fields['discount_percent'].widget.attrs['class'] = 'form-control'
+        self.fields['final_price'].widget.attrs['class'] = 'form-control'
         self.fields['price'].widget.attrs['class'] = 'form-control'
         self.fields['hex_color'].widget.attrs['class'] = 'form-control'
 
