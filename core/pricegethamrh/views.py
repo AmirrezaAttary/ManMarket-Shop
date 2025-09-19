@@ -22,31 +22,34 @@ class GetColorAndPrice(View):
     def round_up_to_thousand(self, price):
         return math.ceil(price / 1000) * 1000
 
-    def process_data(self, product, data):
-        # لیست تمام رنگ‌های محصول در دیتابیس
+    def process_data(self, product, data, profit):
         existing_pcis = ProductColorInventory.objects.filter(product=product)
         existing_colors = {pci.color.title: pci for pci in existing_pcis}
-        
-        # لیست رنگ‌های دیده‌شده در دیتای جدید
         seen_colors = set()
 
         for key, value in data.items():
             color_title = value.get('color')
-            color_code = value.get('color_code', '#ffffff')  # پیش‌فرض سفید
+            color_code = value.get('color_code', '#ffffff')
 
             if not color_title:
                 continue
 
-            seen_colors.add(color_title)  # ثبت رنگ جدید
+            seen_colors.add(color_title)
 
-            color, _ = Color.objects.get_or_create(title=color_title)
+            # ایجاد یا گرفتن رنگ
+            color, created = Color.objects.get_or_create(title=color_title)
+
+            # به‌روزرسانی hex_color در مدل Color
+            if created or color.hex_color != color_code:
+                color.hex_color = color_code
+                color.save()
 
             try:
                 raw_price = int(value.get('price') or value.get('old_price') or 0)
             except (TypeError, ValueError):
                 raw_price = 0
 
-            discounted_price = int(raw_price * 2) / 100
+            discounted_price = int(raw_price * profit) / 100
             discounted_price += raw_price
 
             final_price = self.round_up_to_thousand(discounted_price)
@@ -70,7 +73,6 @@ class GetColorAndPrice(View):
                 pci.stock = value.get('quantity', 0)
                 pci.save()
 
-        # تنظیم موجودی و قیمت صفر برای رنگ‌هایی که در دیتای جدید نیستند
         for color_title, pci in existing_colors.items():
             if color_title not in seen_colors:
                 pci.price = 0
@@ -103,7 +105,7 @@ class GetColorAndPrice(View):
                     combined_data.update(kasra_data)
 
             # فقط یک بار پردازش داده‌های ترکیب‌شده
-            self.process_data(product, combined_data)
+            self.process_data(product, combined_data, p.profit)
 
         return HttpResponseRedirect(self.get_success_url())
 

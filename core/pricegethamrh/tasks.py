@@ -8,11 +8,9 @@ from .scripts import extract_product_data, get_kasrapars_product_data
 def round_up_to_thousand(price):
     return math.ceil(price / 1000) * 1000
 
-def process_data(product, data, source_name=""):
-    # واکشی رنگ‌های موجود برای این محصول
+def process_data(product, data, profit, source_name=""):
     existing_pcis = ProductColorInventory.objects.filter(product=product)
     existing_colors = {pci.color.title: pci for pci in existing_pcis}
-
     seen_colors = set()
 
     for key, value in data.items():
@@ -23,17 +21,22 @@ def process_data(product, data, source_name=""):
 
         seen_colors.add(color_title)
 
-        color, _ = Color.objects.get_or_create(title=color_title)
+        color, created = Color.objects.get_or_create(title=color_title)
+        color_code = value.get('color_code', '#ffffff')
+
+        # آپدیت hex_color در مدل Color
+        if created or color.hex_color != color_code:
+            color.hex_color = color_code
+            color.save()
 
         try:
             raw_price = int(value.get('price') or 0)
         except (TypeError, ValueError):
             raw_price = 0
 
-        discounted_price = int(raw_price * 2) / 100 + raw_price
+        discounted_price = int(raw_price * profit) / 100 + raw_price
         final_price = round_up_to_thousand(discounted_price)
 
-        color_code = value.get('color_code', '#ffffff')
         pci, created = ProductColorInventory.objects.get_or_create(
             product=product,
             color=color,
@@ -55,7 +58,6 @@ def process_data(product, data, source_name=""):
         else:
             print(f"🆕 [جدید] {product.title} | رنگ: {color_title} | منبع: {source_name} | قیمت: {final_price}")
 
-    # صفر کردن رنگ‌هایی که در داده‌ی جدید نیستند
     for color_title, pci in existing_colors.items():
         if color_title not in seen_colors:
             pci.price = 0
@@ -80,7 +82,6 @@ def update_all_hamrah_products():
             combined_data = {}
 
             try:
-                # دریافت از سایت همراه‌تل
                 if item.url:
                     print(f"➡️ دریافت از hamrahtel: {item.url}")
                     extra = extract_product_data(item.url)
@@ -89,7 +90,6 @@ def update_all_hamrah_products():
                     else:
                         print(f"⚠️ داده معتبری از hamrahtel دریافت نشد.")
 
-                # دریافت از سایت کسری‌پارس
                 if item.url_kasra:
                     print(f"➡️ دریافت از kasrapars: {item.url_kasra}")
                     extra_kasra = get_kasrapars_product_data(item.url_kasra)
@@ -99,7 +99,7 @@ def update_all_hamrah_products():
                         print(f"⚠️ داده معتبری از kasrapars دریافت نشد.")
 
                 if combined_data:
-                    process_data(product, combined_data, source_name="merged")
+                    process_data(product, combined_data, item.profit, source_name="merged")
 
             except Exception as e:
                 print(f"❌ خطا در پردازش محصول {product.title}")

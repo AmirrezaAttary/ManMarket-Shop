@@ -12,7 +12,7 @@ class PriceGetHamrhForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         # Bootstrap class
-        for field in ['product', 'url', 'url_kasra']:
+        for field in ['product', 'url', 'url_kasra', 'profit']:
             if field in self.fields:
                 self.fields[field].widget.attrs.update({
                     'class': 'form-control',
@@ -64,4 +64,4 @@ class PriceGetHamrhForm(forms.ModelForm):
 
     class Meta:
         model = PriceGetHamrh
-        fields = ['product', 'url', 'url_kasra']
+        fields = ['product', 'url', 'url_kasra', 'profit']
