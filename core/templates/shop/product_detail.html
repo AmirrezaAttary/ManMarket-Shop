@@ -2,6 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% load shop_tags %}
+{% load persian_filters %}
 
 {% block title %}
 {{ object.title }}
@@ -423,7 +424,7 @@
                                     <div class="SH-HS-comment-item">
                                         <div class="SH-HS-comment-header">
                                             <span
-                                                class="SH-HS-comment-date mx-1">{{review.created_date|timesince}}</span>
+                                                class="SH-HS-comment-date mx-1">{{ review.created_date|persian_timesince }}</span>
                                             <div class="SH-HS-comment-rating SH-HS-static-rating mx-1" data-rating="{{review.rate}}">
                                             </div>
                                         </div>
