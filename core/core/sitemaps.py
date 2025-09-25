@@ -1,4 +1,3 @@
-
 from django.contrib.sitemaps.views import sitemap
 from shop.sitemaps import ProductModelSitemap
 from website.sitemaps import StaticViewSitemap

@@ -42,6 +42,7 @@ def process_data(product, data, profit, source_name=""):
             color=color,
             defaults={
                 'price': final_price,
+                'final_price': final_price,   # 👈 برای بار اول ذخیره
                 'discount_percent': 0,
                 'hex_color': color_code,
                 'stock': value.get('quantity', 0)
@@ -49,14 +50,22 @@ def process_data(product, data, profit, source_name=""):
         )
 
         if not created:
+            price_changed = pci.price != final_price  # 👈 بررسی تغییر قیمت
+
             pci.price = final_price
-            pci.discount_percent = 0
             pci.stock = value.get('quantity', 0)
             pci.hex_color = color_code
+            pci.discount_percent = 0
+
+            if price_changed:  
+                # 👈 فقط وقتی قیمت تغییر کرده باشه final_price رو هم آپدیت کن
+                pci.final_price = final_price
+
             pci.save(force_update=True)
             print(f"✅ [ویرایش] {product.title} | رنگ: {color_title} | منبع: {source_name} | قیمت: {final_price}")
         else:
             print(f"🆕 [جدید] {product.title} | رنگ: {color_title} | منبع: {source_name} | قیمت: {final_price}")
+
 
     for color_title, pci in existing_colors.items():
         if color_title not in seen_colors:
