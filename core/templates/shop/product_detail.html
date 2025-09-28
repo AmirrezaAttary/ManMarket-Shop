@@ -5,7 +5,11 @@
 {% load persian_filters %}
 
 {% block title %}
+{% if object.meta_title %}
+    {{ object.meta_title }}
+{% else %}
 {{ object.title }}
+{% endif %}
 {% endblock title %}
 
 

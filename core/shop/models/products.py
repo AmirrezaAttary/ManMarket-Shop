@@ -11,6 +11,7 @@ class ProductModel(models.Model):
     category = models.ForeignKey("ProductCategoryModel", on_delete=models.SET_NULL, null=True)
     brand = models.ForeignKey("Brand", on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255)
+    meta_title = models.CharField(max_length=255,null=True,blank=True)
     brief_title = models.CharField(max_length=255, blank=True)
     slug = models.SlugField(allow_unicode=True, unique=True, max_length=200)
     image = models.ImageField(default="default/product-image.png",upload_to="product/img/")
