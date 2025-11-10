@@ -284,8 +284,16 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 callback_url=callback_url,
                 order_id=order.id
             )
+
+            # بررسی پاسخ دریافتی
+            if not response or "data" not in response or "token" not in response.get("data", {}):
+                # ثبت خطا برای لاگ و نمایش پیام مناسب
+                print("Refah payment error:", response)
+                messages.error(self.request, "خطا در ارتباط با درگاه رفاه. لطفاً دوباره تلاش کنید.")
+                return redirect("order:checkout")
+
             payment_obj = PaymentModel.objects.create(
-                authority_id=response['data']['token'],
+                authority_id=response["data"]["token"],
                 amount=order.total_price,
                 order=order,
                 payemnt_type=PayemntType.refah.value
@@ -294,8 +302,6 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             order.save()
             return refah.generate_payment_url(response["data"]["token"])
 
-        messages.error(self.request, "روش پرداخت نامعتبر است.")
-        return reverse_lazy("order:checkout")
 
     # ================= متدهای کمکی =================
     def create_order(self, address, tracking_type):
