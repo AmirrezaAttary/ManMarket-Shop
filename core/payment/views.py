@@ -156,7 +156,7 @@ class RefahCallbackView(View):
         order = getattr(payment_obj, "order", None)
 
         refah = RefahClient()
-        response = refah.verify_transaction(amount=payment_obj.amount, token=token)
+        response = refah.verify_transaction(amount=payment_obj.amount*10, token=token)
 
         # بررسی موفقیت
         is_success = False
