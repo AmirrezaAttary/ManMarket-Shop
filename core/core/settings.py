@@ -271,10 +271,18 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 # payment gateway settings
+
+# zarinpal client
 MERCHANT_ID = config("MERCHANT_ID",default="0db95e76-ee4f-4546-a86e-7c12c95e662b")
 SANDBOX_MODE = config("SANDBOX_MODE", cast=bool, default=True)
 
+# gsmpay client
 GSMPAY_MERCHANT_CODE = config("GSMPAY_MERCHANT_CODE",default="1f8c54e2-6bd2-4acf-b54c-cedce1ef942b")
+
+# refah client
+REFAH_USERNAME = "70072831"
+REFAH_PASSWORD = "PF%cv-GI"
+REFAH_TERMINAL = 70072831
 
 
 
