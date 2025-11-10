@@ -10,99 +10,108 @@ from wallets.models import WalletTransaction
 from .models import PaymentModel, PayemntStatusType, PayemntType
 from .zarinpal_client import ZarinPalSandbox
 from .gsmpay_client import GSMPay
+from .refah_client import RefahClient
 from order.models import OrderModel, OrderStatusType
 
 
 class PaymentVerifyView(View):
     """
-    تایید پرداخت آنلاین: زرین‌پال و GSMPay
+    تایید پرداخت از درگاه‌های مختلف (زرین‌پال، GSMPay، رفاه)
     """
 
     def get(self, request, *args, **kwargs):
-        authority_id = request.GET.get("Authority") or request.GET.get("token")
-        status = request.GET.get("Status")
+        token = request.GET.get("token") or request.GET.get("Authority")
+        status = request.GET.get("Status")  # فقط برای زرین‌پال استفاده می‌شود
 
-        payment_obj = get_object_or_404(PaymentModel, authority_id=authority_id)
+        if not token:
+            messages.error(request, "توکن پرداخت یافت نشد.")
+            return redirect(reverse_lazy("order:checkout"))
 
-        # 🔹 بررسی نوع درگاه
-        if payment_obj.payemnt_type in [PayemntType.cart.value, PayemntType.wallet_cart.value, PayemntType.cart_home.value]:
-            zarin_pal = ZarinPalSandbox()
-            response = zarin_pal.payment_verify(int(payment_obj.amount), payment_obj.authority_id)
+        payment_obj = get_object_or_404(PaymentModel, authority_id=token)
+        order = getattr(payment_obj, "order", None)
+        response = {}
+        verify_success = False
+
+        # ================= زرین پال =================
+        if payment_obj.payemnt_type in [
+            PayemntType.cart.value,
+            PayemntType.wallet_cart.value,
+            PayemntType.cart_home.value
+        ]:
+            zarinpal = ZarinPalSandbox()
+            response = zarinpal.payment_verify(int(payment_obj.amount), token)
+            if status == "OK" and response.get("data", {}).get("code") == 100:
+                verify_success = True
+
+        # ================= GSMPay =================
         elif payment_obj.payemnt_type == PayemntType.gsm_cart.value:
             gsmpay = GSMPay()
             response, status_code = gsmpay.verify_payment(
-                token=payment_obj.authority_id,
-                invoice_reference=f"ORDER-{payment_obj.order.id}",
+                token=token,
+                invoice_reference=f"ORDER-{order.id}",
                 invoice_amount=int(payment_obj.amount)
             )
+            if status_code == 200 and response.get("data", {}).get("is_paid"):
+                verify_success = True
+
+        # ================= رفاه =================
+        elif payment_obj.payemnt_type == PayemntType.refah.value:
+            refah = RefahClient()
+            response = refah.verify_transaction(amount=float(payment_obj.amount) * 10, token=token)
+
+            # پاسخ موفق از درگاه رفاه: {"data":{"code":0,...}} یا مشابه
+            if response and "data" in response and response["data"].get("code") == 0:
+                verify_success = True
+            elif response and response.get("code") == 0:
+                verify_success = True
+
         else:
             messages.error(request, "روش پرداخت نامعتبر است.")
             return redirect(reverse_lazy("order:checkout"))
 
-        # 🔹 پردازش موفقیت یا شکست پرداخت
-        is_success = False
-        if payment_obj.payemnt_type == PayemntType.gsm_cart.value:
-            if status_code == 200 and response.get("data", {}).get("is_paid"):
-                is_success = True
-        else:
-            if status == "OK" and response.get("data"):
-                is_success = True
-
-        if is_success:
+        # ================= پردازش پرداخت موفق =================
+        if verify_success:
             payment_obj.status = PayemntStatusType.success.value
-            payment_obj.ref_id = response.get("data", {}).get("ref_id") or payment_obj.authority_id
+            payment_obj.ref_id = response.get("data", {}).get("refId") or payment_obj.authority_id
             payment_obj.response_code = response.get("data", {}).get("code")
             payment_obj.response_json = response
             payment_obj.save()
 
-            order = getattr(payment_obj, "order", None)
+            # پرداخت سفارش
             if order:
                 order.status = OrderStatusType.awaiting.value
                 order.save()
 
-                # کاهش موجودی محصولات
+                # کاهش موجودی انبار
                 for item in order.order_items.all():
                     try:
                         inventory = ProductColorInventory.objects.get(
-                            product=item.product,
-                            color=item.color
+                            product=item.product, color=item.color
                         )
-                        if inventory.stock >= item.quantity:
-                            inventory.stock -= item.quantity
-                            inventory.save()
-                        else:
-                            messages.error(
-                                request,
-                                f"موجودی محصول '{item.product.title}' کافی نیست. سفارش لغو شد."
-                            )
-                            order.status = OrderStatusType.failed.value
-                            order.save()
-                            payment_obj.status = PayemntStatusType.failed.value
-                            payment_obj.save()
-                            return redirect(reverse_lazy("order:failed"))
+                        inventory.stock = max(0, inventory.stock - item.quantity)
+                        inventory.save()
                     except ProductColorInventory.DoesNotExist:
                         continue
 
-                # پردازش پرداخت ترکیبی کیف پول
-                if payment_obj.payemnt_type == PayemntType.wallet_cart.value:
+                # در صورت پرداخت ترکیبی، صفر کردن کیف پول
+                if payment_obj.payemnt_type == PayemntType.wallet_cart.value and payment_obj.wallet:
                     wallet = payment_obj.wallet
-                    if wallet:
-                        WalletTransaction.objects.create(
-                            wallet=wallet,
-                            amount=wallet.balance,
-                            description=f"پرداخت جزئی از سفارش #{order.id}",
-                            transaction_type='payment'
-                        )
-                        wallet.balance = 0
-                        wallet.save()
+                    WalletTransaction.objects.create(
+                        wallet=wallet,
+                        amount=wallet.balance,
+                        description=f"پرداخت جزئی از سفارش #{order.id}",
+                        transaction_type='payment'
+                    )
+                    wallet.balance = 0
+                    wallet.save()
 
-                # پیامک مشتری و مدیر
+                # پیامک‌ها
                 send_bulk_sms(
-                    message_text=f"مشتری گرامی،\nسفارش شما {order.order_number} تأیید شد.\nدر حال آماده‌سازی است.\nمـــن مـــارکـــت",
-                    mobiles=[f"{order.user.phone_number}"]
+                    message_text=f"مشتری گرامی، سفارش شما {order.order_number} با موفقیت ثبت شد.\nمـــن مـــارکـــت",
+                    mobiles=[order.user.phone_number]
                 )
                 send_bulk_sms(
-                    message_text="یک سفارش جدید در من مارکت ثبت شد !",
+                    message_text="✅ سفارش جدید در من‌مارکت ثبت شد.",
                     mobiles=["09120983411"]
                 )
 
@@ -114,36 +123,35 @@ class PaymentVerifyView(View):
 
                 return redirect(reverse_lazy("order:completed"))
 
-            # پردازش شارژ کیف پول
-            wallet = getattr(payment_obj, "wallet", None)
-            if wallet:
+            # در صورت شارژ کیف پول
+            if payment_obj.wallet:
+                wallet = payment_obj.wallet
                 wallet.balance += payment_obj.amount
                 wallet.save()
                 WalletTransaction.objects.create(
                     wallet=wallet,
                     amount=payment_obj.amount,
-                    description="شارژ کیف پول از طریق پرداخت آنلاین",
+                    description="شارژ کیف پول با پرداخت آنلاین",
                     transaction_type='charge'
                 )
                 return redirect(reverse_lazy("wallets:charge_success"))
 
-        # پرداخت ناموفق
+        # ================= پرداخت ناموفق =================
         payment_obj.status = PayemntStatusType.failed.value
         payment_obj.response_json = response
         payment_obj.save()
 
-        order = getattr(payment_obj, "order", None)
         if order:
-            send_bulk_sms(
-                message_text=f"مشتری گرامی،\nسفارش شما {order.order_number} لغو شد.\nبرای اطلاعات بیشتر با پشتیبانی تماس بگیرید.\nمـــن مـــارکـــت",
-                mobiles=[f"{order.user.phone_number}"]
-            )
             order.status = OrderStatusType.failed.value
             order.save()
+            send_bulk_sms(
+                message_text=f"پرداخت سفارش {order.order_number} ناموفق بود.\nدر صورت کسر وجه، تا ۲۴ ساعت بازگشت می‌یابد.",
+                mobiles=[order.user.phone_number]
+            )
             return redirect(reverse_lazy("order:failed"))
 
-        wallet = getattr(payment_obj, "wallet", None)
-        if wallet:
+        if payment_obj.wallet:
             return redirect(reverse_lazy("wallets:charge_failed"))
 
-        return redirect("/")
+        messages.error(request, "پرداخت با خطا مواجه شد.")
+        return redirect(reverse_lazy("order:checkout"))
