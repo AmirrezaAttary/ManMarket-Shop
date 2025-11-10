@@ -16,12 +16,52 @@ from order.models import OrderModel, OrderStatusType
 
 class PaymentVerifyView(View):
     """
-    تایید پرداخت از درگاه‌های مختلف (زرین‌پال، GSMPay، رفاه)
+    تایید پرداخت از درگاه‌های مختلف:
+    - زرین‌پال
+    - GSMPay
+    - رفاه (POST)
     """
 
+    def post(self, request, *args, **kwargs):
+        """
+        مخصوص دریافت POST از درگاه رفاه
+        """
+        token = request.POST.get("Token")
+        status = request.POST.get("status")
+        order_id = request.POST.get("OrderId")
+
+        if not token or not status or not order_id:
+            messages.error(request, "اطلاعات تراکنش ناقص است.")
+            return redirect(reverse_lazy("order:checkout"))
+
+        payment_obj = get_object_or_404(PaymentModel, authority_id=token)
+        order = getattr(payment_obj, "order", None)
+        response = {}
+        verify_success = False
+
+        if payment_obj.payemnt_type != PayemntType.refah.value:
+            messages.error(request, "روش پرداخت نامعتبر است.")
+            return redirect(reverse_lazy("order:checkout"))
+
+        # تایید تراکنش با RefahClient
+        refah = RefahClient()
+        # مقدار amount در RefahClient بر اساس داکیومنت *10 هست
+        response = refah.verify_transaction(amount=float(payment_obj.amount) * 10, token=token)
+
+        # بررسی موفقیت تراکنش
+        if response and "data" in response and response["data"].get("code") == 0:
+            verify_success = True
+        elif response and response.get("code") == 0:
+            verify_success = True
+
+        return self._process_payment_result(request, payment_obj, order, verify_success, response)
+
     def get(self, request, *args, **kwargs):
+        """
+        مخصوص GET از سایر درگاه‌ها (زرین‌پال و GSMPay)
+        """
         token = request.GET.get("token") or request.GET.get("Authority")
-        status = request.GET.get("Status")  # فقط برای زرین‌پال استفاده می‌شود
+        status = request.GET.get("Status")  # فقط برای زرین‌پال
 
         if not token:
             messages.error(request, "توکن پرداخت یافت نشد.")
@@ -54,22 +94,16 @@ class PaymentVerifyView(View):
             if status_code == 200 and response.get("data", {}).get("is_paid"):
                 verify_success = True
 
-        # ================= رفاه =================
-        elif payment_obj.payemnt_type == PayemntType.refah.value:
-            refah = RefahClient()
-            response = refah.verify_transaction(amount=float(payment_obj.amount) * 10, token=token)
-
-            # پاسخ موفق از درگاه رفاه: {"data":{"code":0,...}} یا مشابه
-            if response and "data" in response and response["data"].get("code") == 0:
-                verify_success = True
-            elif response and response.get("code") == 0:
-                verify_success = True
-
         else:
             messages.error(request, "روش پرداخت نامعتبر است.")
             return redirect(reverse_lazy("order:checkout"))
 
-        # ================= پردازش پرداخت موفق =================
+        return self._process_payment_result(request, payment_obj, order, verify_success, response)
+
+    def _process_payment_result(self, request, payment_obj, order, verify_success, response):
+        """
+        پردازش نهایی بعد از تایید یا عدم تایید تراکنش
+        """
         if verify_success:
             payment_obj.status = PayemntStatusType.success.value
             payment_obj.ref_id = response.get("data", {}).get("refId") or payment_obj.authority_id
@@ -77,7 +111,7 @@ class PaymentVerifyView(View):
             payment_obj.response_json = response
             payment_obj.save()
 
-            # پرداخت سفارش
+            # ================= پردازش سفارش =================
             if order:
                 order.status = OrderStatusType.awaiting.value
                 order.save()
@@ -93,7 +127,7 @@ class PaymentVerifyView(View):
                     except ProductColorInventory.DoesNotExist:
                         continue
 
-                # در صورت پرداخت ترکیبی، صفر کردن کیف پول
+                # پرداخت ترکیبی با کیف پول
                 if payment_obj.payemnt_type == PayemntType.wallet_cart.value and payment_obj.wallet:
                     wallet = payment_obj.wallet
                     WalletTransaction.objects.create(
@@ -105,7 +139,7 @@ class PaymentVerifyView(View):
                     wallet.balance = 0
                     wallet.save()
 
-                # پیامک‌ها
+                # پیامک به مشتری و مدیر
                 send_bulk_sms(
                     message_text=f"مشتری گرامی، سفارش شما {order.order_number} با موفقیت ثبت شد.\nمـــن مـــارکـــت",
                     mobiles=[order.user.phone_number]
@@ -123,7 +157,7 @@ class PaymentVerifyView(View):
 
                 return redirect(reverse_lazy("order:completed"))
 
-            # در صورت شارژ کیف پول
+            # شارژ کیف پول
             if payment_obj.wallet:
                 wallet = payment_obj.wallet
                 wallet.balance += payment_obj.amount
