@@ -1,4 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -135,6 +137,7 @@ class PaymentVerifyView(View):
 # =========================================
 # ویو مخصوص رفاه
 # =========================================
+@method_decorator(csrf_exempt, name='dispatch')
 class RefahCallbackView(View):
     """
     دریافت POST از درگاه رفاه و تایید تراکنش
@@ -162,5 +165,5 @@ class RefahCallbackView(View):
         elif response and int(response.get("code", -1)) == 0:
             is_success = True
 
-        # استفاده از متد پردازش مشابه سایر درگاه‌ها
+        # پردازش نتیجه مشابه سایر درگاه‌ها
         return PaymentVerifyView().process_payment_result(request, payment_obj, order, is_success, response)
