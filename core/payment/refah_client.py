@@ -22,8 +22,8 @@ class RefahClient:
             "password": self.password,
             "amount": float(amount),
             "callBack": callback_url,
-            "cellNo": cell_no or "",
-            "additionalData": additional_data or "",
+            # "cellNo": cell_no or "",
+            # "additionalData": additional_data or "",
             "terminalNumber": int(self.terminal_number),
             "orderId": str(order_id)
         }
