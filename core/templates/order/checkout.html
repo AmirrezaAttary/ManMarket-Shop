@@ -297,6 +297,20 @@
                                 </div>
                             </label>
                         </div>
+                        <div class="shop-cs-selectable-option">
+                            <input type="radio" name="payment_method" form="address-form" value="refah"
+                                id="refah">
+                            <label for="refah" class="shop-cs-selectable-label">
+                                <span class="shop-cs-custom-tick-container">
+                                    <svg class="shop-cs-tick-icon" viewBox="0 0 16 16">
+                                        <path d="M4.5 8.5l2.5 2.5 5-5"></path>
+                                    </svg>
+                                </span>
+                                <div class="shop-cs-payment-details">
+                                    <strong>پرداخت با درگاه پرداخت بانک رفاه</strong>
+                                </div>
+                            </label>
+                        </div>
                         {% if request.user.type == 2 or request.user.type == 3 %}
                         <div class="shop-cs-selectable-option">
                             <input type="radio" name="payment_method" form="address-form" value="person"

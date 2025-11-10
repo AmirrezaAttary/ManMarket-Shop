@@ -27,7 +27,8 @@ class AdminProfileEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessM
     success_message = "بروز رسانی پروفایل با موفقیت انجام شد"
     
     def get_object(self, queryset=None):
-        return Profile.objects.get(user=self.request.user)
+        profile, created = Profile.objects.get_or_create(user=self.request.user)
+        return profile
 
 class AdminProfileImageEditView(LoginRequiredMixin, HasAdminAccessPermission,SuccessMessageMixin,UpdateView):
     http_method_names=["post"]

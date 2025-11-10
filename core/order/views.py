@@ -21,6 +21,7 @@ from django.shortcuts import redirect, get_object_or_404
 # Create your views here.
 from payment.zarinpal_client import ZarinPalSandbox
 from payment.gsmpay_client import GSMPay
+from payment.refah_client import RefahClient
 from payment.models import PaymentModel,PayemntStatusType,PayemntType
 from wallets.models import Wallet,WalletTransaction
 from django.contrib import messages
@@ -271,6 +272,27 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             else:
                 messages.error(self.request, f"خطا در ایجاد پرداخت: {response}")
                 return redirect("order:checkout")
+
+
+        # ================= Refah =================
+        if payment_method == "refah":
+            refah = RefahClient()
+            order.total_price += 50000
+            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            response = refah.purchase_request(
+                amount=order.total_price,
+                callback_url=callback_url,
+                order_id=order.id
+            )
+            payment_obj = PaymentModel.objects.create(
+                authority_id=response['data']['token'],
+                amount=order.total_price,
+                order=order,
+                payemnt_type=PayemntType.refah.value
+            )
+            order.payment = payment_obj
+            order.save()
+            return refah.generate_payment_url(response["data"]["token"])
 
         messages.error(self.request, "روش پرداخت نامعتبر است.")
         return reverse_lazy("order:checkout")

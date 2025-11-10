@@ -9,8 +9,9 @@ class PayemntType(models.IntegerChoices):
     wallet = 2, "پرداخت با کیف پول"
     cart_home = 3, "پرداخت در محل"
     wallet_cart = 4, "ترکیبی کیف پول و درگاه"
-    gsm_cart = 5, "پرداخت اقساطی"
+    gsm_cart = 5, "پرداخت اقساطی با جی اس ام"
     person = 6 , "پرداخت حضوری"
+    refah = 7,"پرداخت با درگاه بانک رفاه"
 
 class PayemntStatusType(models.IntegerChoices):
     pending = 1, "در انتظار"
