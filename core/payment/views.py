@@ -160,7 +160,7 @@ class RefahCallbackView(View):
 
         # بررسی موفقیت
         is_success = False
-        if response and "data" in response and int(response["data"].get("code", -1)) == 0:
+        if response and "data" in response and int(response["success"]) == True:
             is_success = True
         elif response and int(response.get("code", -1)) == 0:
             is_success = True
