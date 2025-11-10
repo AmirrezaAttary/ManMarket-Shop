@@ -278,7 +278,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         if payment_method == "refah":
             refah = RefahClient()
             # order.total_price += 50000
-            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            callback_url = f"{self.request.build_absolute_uri(reverse_lazy("payment:verify"))}/"
             response = refah.purchase_request(
                 amount=order.total_price,
                 callback_url=callback_url,
