@@ -20,7 +20,7 @@ class RefahClient:
         payload = {
             "userName": self.user_name,
             "password": self.password,
-            "amount": float(amount),
+            "amount": float(amount) * 10,
             "callBack": callback_url,
             # "cellNo": cell_no or "",
             # "additionalData": additional_data or "",
