@@ -64,6 +64,7 @@ class RefahClient:
 
 
         data = response.json()
+        print(data)
         return data
 
     def generate_payment_url(self, token):
