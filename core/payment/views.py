@@ -61,7 +61,7 @@ class PaymentVerifyView(View):
         """
         if is_success:
             payment_obj.status = PayemntStatusType.success.value
-            payment_obj.ref_id = response.get("data", {}).get("refId") or ""
+            payment_obj.ref_id = response.get("data", {}).get("refId")
             payment_obj.response_code = response.get("data", {}).get("code")
             payment_obj.response_json = response
             payment_obj.save()
