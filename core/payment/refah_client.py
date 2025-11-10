@@ -41,7 +41,7 @@ class RefahClient:
         except json.JSONDecodeError:
             return {"success": False, "message": "Invalid JSON response", "raw": response.text}
 
-        return data
+        return data 
 
     def verify_transaction(self, amount, token):
         """
@@ -62,11 +62,9 @@ class RefahClient:
             data=json.dumps(payload)
         )
 
-        try:
-            data = response.json()
-        except json.JSONDecodeError:
-            return {"success": False, "message": "Invalid JSON response", "raw": response.text}
 
+        data = response.json()
+        print(data)
         return data
 
     def generate_payment_url(self, token):
