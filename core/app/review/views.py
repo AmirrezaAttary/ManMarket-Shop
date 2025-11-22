@@ -14,7 +14,8 @@ class SubmitReviewView(CreateView):
     form_class = SubmitReviewForm
 
     def form_valid(self, form):
-        # form.instance.user = self.request.user
+        if self.request.user.is_authenticated:
+            form.instance.user = self.request.user
         form.save()
         # Assuming your form has a 'product_slug' field
         product = form.cleaned_data['product']
