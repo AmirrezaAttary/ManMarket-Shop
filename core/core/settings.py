@@ -59,20 +59,20 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     
     # created my app
-    'website',
-    'accounts',
-    'shop',
-    'cart',
-    'blog',
-    'order',
-    'dashboard',
-    'payment',
-    'pricegethamrh',
-    'getspecification',
-    'faq',
-    'review',
-    'wallets',
-    'chat',
+    'app.website',
+    'app.accounts',
+    'app.shop',
+    'app.cart',
+    'app.blog',
+    'app.order',
+    'app.dashboard',
+    'app.payment',
+    'app.pricegethamrh',
+    'app.getspecification',
+    'app.faq',
+    'app.review',
+    'app.wallets',
+    'app.chat',
     
     # rest api apps
     'rest_framework',
@@ -102,7 +102,7 @@ INSTALLED_APPS = [
 SITE_ID = 2
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.backends.EmailOrPhoneBackend',
+    'app.accounts.backends.EmailOrPhoneBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
@@ -115,7 +115,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'accounts.middleware.restrict_admin.RestrictAdminMiddleware',
+    'app.accounts.middleware.restrict_admin.RestrictAdminMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
@@ -135,10 +135,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.cart_processor',
-                'shop.context_processors.wishlist_total_items',
-                'shop.context_processors.brand_list_image',
-                'shop.context_processors.category_list_image',
+                'app.cart.context_processors.cart_processor',
+                'app.shop.context_processors.wishlist_total_items',
+                'app.shop.context_processors.brand_list_image',
+                'app.shop.context_processors.category_list_image',
             ],
         },
     },
@@ -268,6 +268,9 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+# sms.ir webservice
+SMSAPIKEY = "co6QLJNKUrO0x75n94cWToUcFxsD4TEQGaiNXqlhR9THVrh6B5bBdXDayfe0asCb"
+SMSLINENUMBER = "30004007672729"
 
 
 # payment gateway settings
