@@ -1,6 +1,6 @@
 # accounts/backends.py
 from django.contrib.auth.backends import ModelBackend
-from accounts.models import User
+from .models import User
 
 
 class EmailOrPhoneBackend(ModelBackend):

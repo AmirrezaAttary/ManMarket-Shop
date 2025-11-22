@@ -8,13 +8,13 @@ from .models import ReviewModel
 from django.contrib import messages
 
 
-class SubmitReviewView(LoginRequiredMixin, CreateView):
+class SubmitReviewView(CreateView):
     http_method_names = ["post"]
     model = ReviewModel
     form_class = SubmitReviewForm
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        # form.instance.user = self.request.user
         form.save()
         # Assuming your form has a 'product_slug' field
         product = form.cleaned_data['product']
@@ -27,6 +27,6 @@ class SubmitReviewView(LoginRequiredMixin, CreateView):
                 messages.error(self.request,error)
         return redirect(self.request.META.get('HTTP_REFERER'))
 
-    def get_queryset(self):
-        # You can customize the queryset if needed
-        return ReviewModel.objects.filter(user=self.request.user)
+    # def get_queryset(self):
+    #     # You can customize the queryset if needed
+    #     return ReviewModel.objects.filter(user=self.request.user)
