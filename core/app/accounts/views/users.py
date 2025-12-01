@@ -11,7 +11,7 @@ from ..utils import send_email_otp, send_sms_otp
 from django.shortcuts import redirect
 from django.contrib import messages  
 from django.contrib.messages.views import SuccessMessageMixin
-from ..models import OTP_LOGIN
+from ..models import OTP
 from django.views.generic.edit import FormView
 from ..utils import send_bulk_sms
 
@@ -24,8 +24,8 @@ class LoginView(DjangoLoginView):
         user = form.get_user()
 
         # اگر کاربر تایید نشده بود → OTP بفرست و ریدایرکت کن
-        if not user.is_verified and not user.is_phone_verified:
-            otp = OTP_LOGIN.create_otp(user)
+        if not user.is_verified:
+            otp = OTP.create_otp(user)
 
             if user.phone_number:
                 send_sms_otp(user)
@@ -51,7 +51,7 @@ class RegisterView(TemplateView):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            otp = OTP_LOGIN.create_otp(user)
+            otp = OTP.create_otp(user)
 
             if form.cleaned_data.get('is_email'):
                 send_email_otp(user)
@@ -86,7 +86,7 @@ class PasswordResetView(FormView):
             messages.error(self.request, "کاربری با این شماره موبایل پیدا نشد.")
             return self.form_invalid(form)
 
-        otp = OTP_LOGIN.create_otp(user)
+        otp = OTP.create_otp(user)
 
         send_bulk_sms(
             message_text=f"کد بازیابی رمز عبور: {otp.code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است.",
@@ -111,7 +111,7 @@ class PasswordResetVerifyView(FormView):
 
     def form_valid(self, form):
         code = form.cleaned_data['code']
-        otp = OTP_LOGIN.objects.filter(user=self.user, code=code, is_used=False).order_by('-created_at').first()
+        otp = OTP.objects.filter(user=self.user, code=code, is_used=False).order_by('-created_at').first()
 
         if not otp or not otp.is_valid():
             messages.error(self.request, "کد وارد شده معتبر نیست یا منقضی شده است.")

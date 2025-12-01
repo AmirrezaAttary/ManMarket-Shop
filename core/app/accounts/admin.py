@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Profile,EmailOTP,OTP,OTP_LOGIN
+from .models import Profile,OTP
 from django.contrib.auth import get_user_model
 from django.utils.html import format_html
 from django.utils.timezone import now
@@ -13,66 +13,92 @@ from django.utils.timezone import now
 User = get_user_model()
 
 
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
     """
-    Custom admin panel for user management with add and change forms plus password
+    Custom admin panel for user management based on phone_number
     """
-
     model = User
-    list_display = ("id","email", "is_superuser", "is_active", "is_verified","is_phone_verified","phone_number")
-    list_filter = ("email", "is_superuser", "is_active", "is_verified",'is_phone_verified')
-    search_fields = ("email",)  # اصلاح اینجا
+
+    # ستون‌ها در لیست کاربران
+    list_display = (
+        "id",
+        "phone_number",
+        "is_superuser",
+        "is_active",
+        "is_verified",
+        
+    )
+
+    # فیلترها
+    list_filter = (
+        "is_superuser",
+        "is_active",
+        "is_verified",
+        
+    )
+
+    search_fields = ("phone_number",)
     ordering = ("-id",)
+
+    # فیلدهای فقط خواندنی
+    readonly_fields = ("last_login", "created_date", "updated_date")
+
+    # فرم تغییر کاربر
     fieldsets = (
         (
             "Authentication",
             {
-                "fields": ("email", "password","phone_number","code_melli"),
+                "fields": ("phone_number", "password", "email", "code_melli"),
             },
         ),
         (
-            "permissions",
+            "Permissions",
             {
                 "fields": (
                     "is_staff",
                     "is_active",
                     "is_superuser",
                     "is_verified",
-                    "is_phone_verified",
+                    
                 ),
             },
         ),
         (
-            "group permissions",
+            "Group Permissions",
             {
-                "fields": ("groups", "user_permissions","type"),
+                "fields": ("groups", "user_permissions", "type"),
             },
         ),
         (
-            "important date",
+            "Important Dates",
             {
-                "fields": ("last_login",),
+                "fields": ("last_login", "created_date", "updated_date"),
             },
         ),
     )
+
+    # فرم افزودن کاربر
     add_fieldsets = (
         (
             None,
             {
                 "classes": ("wide",),
                 "fields": (
-                    "email",
+                    "phone_number",
                     "password1",
                     "password2",
                     "is_staff",
                     "is_active",
                     "is_superuser",
                     "is_verified",
-                    "type"
+                    "type",
                 ),
             },
         ),
     )
+
+
 
 class CustomProfileAdmin(admin.ModelAdmin):
     list_display = ("id","user", "first_name","last_name")
@@ -80,7 +106,7 @@ class CustomProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Profile,CustomProfileAdmin)
-admin.site.register(User, CustomUserAdmin)
+# admin.site.register(User, CustomUserAdmin)
 
 from django.contrib.sessions.models import Session
 class SessionAdmin(admin.ModelAdmin):
@@ -97,67 +123,10 @@ admin.site.register(Session, SessionAdmin)
 
 
 
-@admin.register(EmailOTP)
-class EmailOTPAdmin(admin.ModelAdmin):
-    list_display = ('user', 'code', 'created_at', 'is_used', 'valid_status')
-    list_filter = ('is_used', 'created_at')
-    search_fields = ('user__email', 'code')
-    ordering = ('-created_at',)
-
-    def valid_status(self, obj):
-        """نمایش وضعیت معتبر بودن OTP"""
-        if obj.is_valid():
-            return format_html('<span style="color: green;">✅ معتبر</span>')
-        else:
-            return format_html('<span style="color: red;">❌ منقضی</span>')
-    valid_status.short_description = 'وضعیت اعتبار'
-
-    def get_queryset(self, request):
-        """لود پیشرفته با select_related برای کاربر"""
-        return super().get_queryset(request).select_related('user')
-
-    readonly_fields = ('user', 'code', 'created_at', 'is_used')
-
-    fieldsets = (
-        (None, {
-            'fields': ('user', 'code', 'is_used', 'created_at')
-        }),
-    )
-
-
 
 
 @admin.register(OTP)
 class EmailOTPAdmin(admin.ModelAdmin):
-    list_display = ('user', 'code', 'created_at', 'is_used', 'valid_status')
-    list_filter = ('is_used', 'created_at')
-    search_fields = ('user__phone_number', 'code')
-    ordering = ('-created_at',)
-
-    def valid_status(self, obj):
-        """نمایش وضعیت معتبر بودن OTP"""
-        if obj.is_valid():
-            return format_html('<span style="color: green;">✅ معتبر</span>')
-        else:
-            return format_html('<span style="color: red;">❌ منقضی</span>')
-    valid_status.short_description = 'وضعیت اعتبار'
-
-    def get_queryset(self, request):
-        """لود پیشرفته با select_related برای کاربر"""
-        return super().get_queryset(request).select_related('user')
-
-    readonly_fields = ('user', 'code', 'created_at', 'is_used')
-
-    fieldsets = (
-        (None, {
-            'fields': ('user', 'code', 'is_used', 'created_at')
-        }),
-    )
-
-
-
-@admin.register(OTP_LOGIN)
-class OTP_LOGIN_Admin(admin.ModelAdmin):
     list_display = ('user', 'code', 'created_at', 'is_used', 'valid_status')
     list_filter = ('is_used', 'created_at')
     search_fields = ('user__phone_number', 'code')

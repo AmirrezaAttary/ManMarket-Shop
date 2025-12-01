@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView, View
 from django.http import JsonResponse
 
-from ..models import OTP_LOGIN, User
+from ..models import OTP, User
 from ..utils import send_email_otp, send_sms_otp  # همان‌هایی که ساختی
 from ..scripts import send_bulk_sms
 
@@ -41,10 +41,10 @@ class VerifyOTPView(FormView):
 
         # آخرین OTP استفاده‌نشده‌ی کاربر را پیدا کن
         try:
-            otp = (OTP_LOGIN.objects
+            otp = (OTP.objects
                    .filter(user_id=user_id, is_used=False)
                    .latest('created_at'))
-        except OTP_LOGIN.DoesNotExist:
+        except OTP.DoesNotExist:
             form.add_error('code', 'کدی برای این کاربر پیدا نشد. لطفاً دوباره کد بگیرید.')
             return self.form_invalid(form)
 
@@ -59,7 +59,7 @@ class VerifyOTPView(FormView):
 
         user = otp.user
         if user.phone_number:
-            user.is_phone_verified = True
+            user.is_verified = True
         elif user.email:
             user.is_verified = True
         user.save()
@@ -92,7 +92,7 @@ class ResendOTPView(View):
             messages.error(request, "کاربر یافت نشد.")
             return redirect('accounts:register')
 
-        OTP_LOGIN.objects.filter(user=user, is_used=False).update(is_used=True)
+        OTP.objects.filter(user=user, is_used=False).update(is_used=True)
 
         if user.email:
             send_email_otp(user)

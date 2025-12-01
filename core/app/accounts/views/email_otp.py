@@ -1,4 +1,4 @@
-from ..forms import ResendActivationEmailForm,OTPOrEmailRequestForm, EmailOTPVerifyForm
+from ..forms import ResendActivationEmailForm
 from django.urls import reverse_lazy
 from django.contrib.auth.tokens import default_token_generator
 from django.http import JsonResponse
@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.views import View
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
-from ..models import User, EmailOTP,OTP
+from ..models import User,OTP
 from django.core.mail import send_mail
 from django.views.generic import FormView
 from django.utils.encoding import force_str
@@ -78,71 +78,14 @@ class ResendActivationEmailView(FormView):
         return super().form_valid(form)
 
 class OTPOrEmailRequestView(FormView):
-    template_name = 'accounts/otp_or_email_request.html'
-    form_class = OTPOrEmailRequestForm
-
-    def form_valid(self, form):
-        identifier = form.cleaned_data['identifier']
-        method_type = form.cleaned_data['type']
-
-        try:
-            if method_type == 'email':
-                user = User.objects.get(email=identifier)
-                send_email_otp(user)
-                self.request.session['otp_email'] = identifier
-                return redirect('accounts:email_otp_verify')
-
-            elif method_type == 'phone':
-                user = User.objects.get(phone_number=identifier)
-                send_otp(user)
-                self.request.session['otp_phone'] = identifier
-                return redirect('accounts:otp_verify')
-
-        except smtplib.SMTPDataError as e:
-            if b"You have reached the daily limit" in e.smtp_error:
-                messages.error(self.request, "فعلاً امکان ارسال ایمیل وجود ندارد. لطفاً بعداً تلاش کنید.")
-            else:
-                messages.error(self.request, "خطایی در ارسال ایمیل رخ داد. لطفاً دوباره تلاش کنید.")
-            return redirect('accounts:otp_or_email_request')
-
-        except Exception as e:
-            messages.error(self.request, "خطایی در ارسال کد رخ داد. لطفاً دوباره تلاش کنید.")
-            return redirect('accounts:otp_or_email_request')
-
-        messages.error(self.request, "ورودی نامعتبر است.")
-        return redirect('accounts:otp_or_email_request')
+    pass
 
 
 
 
 
 class EmailOTPVerifyView(FormView):
-    template_name = 'accounts/email_otp_verify.html'
-    form_class = EmailOTPVerifyForm
-
-    def get_initial(self):
-        email = self.request.session.get('otp_email')
-        if not email:
-            return {}
-        return {'email': email}
-
-    def form_valid(self, form):
-        # ایمیل رو از سشن بگیریم نه از POST
-        email = self.request.session.get('otp_email')
-        if not email:
-            messages.error(self.request, "اطلاعات شما منقضی شده است. دوباره تلاش کنید.")
-            return redirect('accounts:otp_or_email_request')
-
-        user = form.cleaned_data['user']
-        user.backend = 'accounts.backends.EmailOrPhoneBackend'
-        login(self.request, user)
-        EmailOTP.objects.filter(user=user, code=form.cleaned_data['code']).update(is_used=True)
-
-        # پاک کردن از سشن
-        del self.request.session['otp_email']
-
-        messages.success(self.request, "ورود شما با موفقیت انجام شد.")
-        return redirect('dashboard:home')
+    pass
 
 
 

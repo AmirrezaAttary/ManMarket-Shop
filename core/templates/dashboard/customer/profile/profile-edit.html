@@ -193,13 +193,13 @@
                     <div class="account-detail-label">شماره همراه</div>
                     <div class="position-absolute cs-po-ico d-flex align-items-center justify-content-center">
                         
-                        {% if request.user.is_phone_verified %}
+                        {% if request.user.is_verified %}
                         <button type="button" class="bg-success px-2 py-1 rounded-3 text-nowrap text-light fs-14">
                             تایید شد
                         </button>                            
                         {% endif %}
 
-                        {% if request.user.is_authenticated and not request.user.is_phone_verified %}
+                        {% if request.user.is_authenticated and not request.user.is_verified %}
                         <button form="send-phone-otp-form" type="submit" class="theme-color px-2 py-1 rounded-3 text-nowrap text-light">
                             ارسال کد تایید شماره همراه
                         </button>
@@ -210,7 +210,7 @@
                         <div class="account-detail-input-wrapper">
                             <input type="tel" name="phone_number" class="form-control-custom" value="{% if request.user.phone_number == None or request.user.phone_number == 'None' %}{% else %}{{request.user.phone_number}}{% endif %}">
                         </div>
-                        {% if request.user.is_phone_verified %}
+                        {% if request.user.is_verified %}
                         <div class="account-detail-actions" style="display: none;">
                             <button type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>

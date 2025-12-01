@@ -7,7 +7,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from .scripts import send_bulk_sms
-from .models import EmailOTP,OTP_LOGIN,OTP
+from .models import OTP,OTP
 from random import randint
 
 def send_email_async(subject, message, recipient_list):
@@ -42,7 +42,7 @@ def send_activation_link(request, user):
 
 def send_email_otp(user):
     code = str(randint(10000, 99999))
-    EmailOTP.objects.create(user=user, code=code)
+    
 
     subject = "کد ورود یکبار مصرف"
     message = f"کد ورود شما به سایت: {code}\nاین کد تا 2 دقیقه معتبر است."
@@ -66,9 +66,9 @@ def send_otp(user):
 
 
 def send_email_otp(user):
-    """ارسال OTP به ایمیل کاربر و ذخیره در OTP_LOGIN"""
+    """ارسال OTP به ایمیل کاربر و ذخیره در OTP"""
     code = str(randint(10000, 99999))
-    OTP_LOGIN.objects.create(user=user, code=code)
+    OTP.objects.create(user=user, code=code)
 
     subject = "کد ورود یکبار مصرف"
     message = f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است ."
@@ -76,9 +76,9 @@ def send_email_otp(user):
 
 
 def send_sms_otp(user):
-    """ارسال OTP به شماره موبایل کاربر و ذخیره در OTP_LOGIN"""
+    """ارسال OTP به شماره موبایل کاربر و ذخیره در OTP"""
     code = str(randint(10000, 99999))
-    OTP_LOGIN.objects.create(user=user, code=code)
+    OTP.objects.create(user=user, code=code)
 
     send_bulk_sms(
         message_text=f"کد تایید: {code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است .",

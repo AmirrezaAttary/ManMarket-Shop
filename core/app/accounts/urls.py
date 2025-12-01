@@ -28,8 +28,8 @@ urlpatterns = [
     path('otp/verify/', views.OTPVerifyView.as_view(), name='otp_verify'),
     path('email-otp-resend/', views.ResendEmailOTPView.as_view(), name='email_otp_resend'),
     path('phone-otp-resend/', views.ResendPhoneOTPView.as_view(), name='phone_otp_resend'),
-    path('verify-otp/', views.VerifyOTPView.as_view(), name='verify_otp'),
-    path('resend-otp/', views.ResendOTPView.as_view(), name='resend_otp'),
+    # path('verify-otp/', views.VerifyOTPView.as_view(), name='verify_otp'),
+    # path('resend-otp/', views.ResendOTPView.as_view(), name='resend_otp'),
     path("send-phone-otp/", views.SendPhoneOTPView.as_view(), name="send_phone_otp"),
     path("verify-phone/", views.VerifyPhoneView.as_view(), name="verify_phone"),
 ]

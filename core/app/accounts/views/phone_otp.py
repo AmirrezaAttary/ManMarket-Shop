@@ -102,7 +102,7 @@ class VerifyPhoneView(FormView):
             otp.is_used = True
             otp.save()
 
-            user.is_phone_verified = True
+            user.is_verified = True
             user.save()
 
             messages.success(self.request, "شماره همراه شما با موفقیت تأیید شد ✅")

@@ -77,7 +77,7 @@ class AdminProfileEditForm(forms.ModelForm):
 
             if self.instance.user.is_verified:
                 self.fields['email'].disabled = True
-            if self.instance.user.is_phone_verified:
+            if self.instance.user.is_verified:
                 self.fields['phone_number'].disabled = True
 
     def clean_email(self):
