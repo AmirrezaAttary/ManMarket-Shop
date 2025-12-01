@@ -55,7 +55,7 @@
                             </div>
                         </form>
                         {% if request.user.is_authenticated and not request.user.is_verified %}
-                                <form action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
+                                <form action="" method="post" id="resend-activation-form">
                                     {% csrf_token %}
                                     <input type="hidden" name="email" value="{{ request.user.email }}">
                                     <button type="submit" class="btn btn-warning">ارسال مجدد لینک تایید</button>

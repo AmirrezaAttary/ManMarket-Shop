@@ -40,6 +40,7 @@ class OTPVerifyView(FormView):
 
         user = form.cleaned_data['user']
         user.backend = 'accounts.backends.EmailOrPhoneBackend'
+        user.is_verified = True
         login(self.request, user)
         OTP.objects.filter(user=user, code=form.cleaned_data['code']).update(is_used=True)
 

@@ -29,7 +29,7 @@
           </div>
           <h2 class="ki-ta-title my-4">کد تایید را وارد کنید</h2>
 
-          <input type="hidden" name="user_id" id="user-id" value="{{ user_id }}">
+          <input type="hidden" name="phone_number" id="user-id" value="{{form.phone_number.value}}">
           <div class="ki-ta-pin-input-container mt-3">
             <input name="code" type="tel" maxlength="1" class="ki-ta-pin-input rounded-3" autofocus>
             <input type="tel" maxlength="1" class="ki-ta-pin-input rounded-3">
@@ -79,7 +79,7 @@
       // دکمه ارسال دوباره
       resendBtn.addEventListener('click', () => {
         resendBtn.disabled = true;
-        fetch("{% url 'accounts:resend_otp' %}", {
+        fetch("", {
           method: "POST",
           headers: {
             "X-CSRFToken": "{{ csrf_token }}",

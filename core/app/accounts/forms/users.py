@@ -11,11 +11,6 @@ class ResendActivationEmailForm(forms.Form):
 
 class CustomAuthenticationForm(BaseAuthenticationForm):
 
-    username = forms.CharField(
-        label=_("ایمیل یا شماره همراه"),
-        widget=forms.TextInput(attrs={"autofocus": True}),
-    )
-
     def clean(self):
         username = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
