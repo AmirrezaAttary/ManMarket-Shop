@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.views import LoginView as DjangoLoginView
+from django.contrib.auth import views as auth_views
 from ..models import OTP
 from ..forms import CustomAuthenticationForm
 from ..scripts import send_bulk_sms
@@ -33,3 +34,7 @@ class LoginView(DjangoLoginView):
 
         # اگر تایید شده بود → ورود معمولی
         return super().form_valid(form)
+
+
+class LogoutView(auth_views.LogoutView):
+    pass

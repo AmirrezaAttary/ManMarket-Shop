@@ -1,14 +1,13 @@
-from ..forms import OTPRequestForm,OTPVerifyForm,OTPForm
-from ..utils import send_otp
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.contrib import messages  
-from ..models import User,OTP
 from django.views.generic import FormView
 from django.http import JsonResponse
 from django.views import View
-import random
-from django.shortcuts import render
+from ..models import User,OTP
+from ..forms import OTPRequestForm,OTPVerifyForm,OTPForm
+from ..scripts import send_bulk_sms
+
 
 
 class OTPLoginRequestView(FormView):
@@ -18,7 +17,9 @@ class OTPLoginRequestView(FormView):
     def form_valid(self, form):
         phone = form.cleaned_data['phone_number']
         user = User.objects.get(phone_number=phone)
-        send_otp(user)
+        otp = OTP.create_otp(user)
+        send_bulk_sms(f"کد ورود شما: {otp.code}",[phone])
+        self.request.session['otp_phone'] = user.phone_number
         return redirect('accounts:otp_verify')  # یا پاس دادن phone_number با session
 
 
@@ -59,7 +60,7 @@ class ResendPhoneOTPView(View):
 
         try:
             user = User.objects.get(phone_number=phone)
-            send_otp(user)  # این همون تابعی باشه که کد SMS می‌فرسته
+            # send_otp(user)  # این همون تابعی باشه که کد SMS می‌فرسته
             return JsonResponse({'status': 'ok', 'message': 'کد جدید ارسال شد.'})
         except User.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'کاربر یافت نشد.'}, status=404)
@@ -85,7 +86,7 @@ class SendPhoneOTPView(View):
             messages.error(request, "شماره وارد شده معتبر نیست.")
             return redirect("dashboard:customer:profile-edit")
 
-        send_otp(user)
+        # send_otp(user)
         messages.success(request, "کد تأیید برای شماره شما ارسال شد.")
         return redirect("accounts:verify_phone")
 

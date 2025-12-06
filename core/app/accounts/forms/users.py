@@ -9,6 +9,8 @@ from django.core.exceptions import ValidationError
 class ResendActivationEmailForm(forms.Form):
     email = forms.EmailField(label="ایمیل", widget=forms.EmailInput(attrs={'class': 'form-control'}))
 
+
+
 class CustomAuthenticationForm(BaseAuthenticationForm):
 
     def clean(self):
@@ -31,32 +33,26 @@ class CustomAuthenticationForm(BaseAuthenticationForm):
 
 
 class RegisterForm(forms.Form):
-    email_or_phone = forms.CharField(label="ایمیل یا شماره موبایل")
+    phone_number = forms.CharField(label="شماره موبایل")
     password1 = forms.CharField(label='رمز عبور', widget=forms.PasswordInput)
     password2 = forms.CharField(label='تکرار رمز عبور', widget=forms.PasswordInput)
 
-    def clean_email_or_phone(self):
-        value = self.cleaned_data['email_or_phone'].strip()
+    def clean_phone_number(self):
+        phone = self.cleaned_data['phone_number'].strip()
+        current_user = self.initial.get('user')
+
+        # اعتبارسنجی شماره موبایل
+        validate_iranian_cellphone_number(phone)
+
+        # چک کردن تکراری نبودن
         user_qs = User.objects.all()
-        current_user = self.initial.get('user')  # کاربر جاری برای فرم ویرایش
+        if current_user:
+            user_qs = user_qs.exclude(pk=current_user.pk)
 
-        if '@' in value:
-            # ایمیل
-            if current_user:
-                user_qs = user_qs.exclude(pk=current_user.pk)
-            if user_qs.filter(email__iexact=value).exists():
-                raise ValidationError("این ایمیل قبلاً ثبت شده است.")
-            self.cleaned_data['is_email'] = True
-        else:
-            # شماره موبایل
-            validate_iranian_cellphone_number(value)
-            if current_user:
-                user_qs = user_qs.exclude(pk=current_user.pk)
-            if user_qs.filter(phone_number=value).exists():
-                raise ValidationError("این شماره موبایل قبلاً ثبت شده است.")
-            self.cleaned_data['is_email'] = False
+        if user_qs.filter(phone_number=phone).exists():
+            raise ValidationError("این شماره موبایل قبلاً ثبت شده است.")
 
-        return value
+        return phone
 
     def clean_password2(self):
         p1 = self.cleaned_data.get('password1')
@@ -66,15 +62,13 @@ class RegisterForm(forms.Form):
         return p2
 
     def save(self, commit=True):
-        email_or_phone = self.cleaned_data['email_or_phone']
+        phone_number = self.cleaned_data['phone_number']
         password = self.cleaned_data['password1']
-        is_email = self.cleaned_data.get('is_email', True)
 
-        if is_email:
-            user = User.objects.create_user(email=email_or_phone, password=password)
-        else:
-            # مشخصاً مقدار email را برابر با None قرار می‌دهیم
-            user = User.objects.create_user(email=None, phone_number=email_or_phone, password=password)
-
+        # چون ایمیل دیگر نداریم، برابر None قرار می‌دهیم
+        user = User.objects.create_user(
+            email=None,
+            phone_number=phone_number,
+            password=password
+        )
         return user
-

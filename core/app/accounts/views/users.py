@@ -1,54 +1,11 @@
-from django.contrib.auth import views as auth_views
-from django.contrib.auth.views import LoginView as DjangoLoginView
-from ..forms import *
-from ..models import User
-from django.utils import timezone
-from datetime import timedelta
-from django.contrib.auth import views as auth_views
-from django.urls import reverse_lazy
-from django.views.generic.base import TemplateView
-from ..utils import send_email_otp, send_sms_otp
 from django.shortcuts import redirect
-from django.contrib import messages  
-from django.contrib.messages.views import SuccessMessageMixin
-from ..models import OTP
+from django.contrib import messages
+from django.contrib.auth import views as auth_views
 from django.views.generic.edit import FormView
-from ..utils import send_bulk_sms
+from ..forms import *
+from ..models import User , OTP
+from ..scripts import send_bulk_sms
 
-
-
-
-class RegisterView(TemplateView):
-    template_name = 'accounts/register.html'
-
-    def post(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('dashboard:home')
-
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            otp = OTP.create_otp(user)
-
-            if form.cleaned_data.get('is_email'):
-                send_email_otp(user)
-            else:
-                send_sms_otp(user)
-
-            # ✅ اینجا user وجود داره، پس درست ذخیره میشه
-            request.session['otp_user_id'] = user.id
-
-            messages.info(request, "کد تأیید برای شما ارسال شد. لطفاً آن را وارد کنید.")
-            return redirect(reverse_lazy('accounts:verify_otp') + f"?user_id={user.id}")
-
-        # اگر فرم معتبر نبود، نباید از user استفاده کنیم
-        messages.error(request, "این کاربر قبلاً ثبت‌نام کرده است.")
-        return redirect('accounts:register')
-
-
-
-class LogoutView(auth_views.LogoutView):
-    pass
 
 
 class PasswordResetView(FormView):
@@ -127,9 +84,6 @@ class PasswordResetConfirmView(FormView):
 class PasswordResetDoneView(auth_views.PasswordResetDoneView):
     template_name = 'accounts/password_reset_done.html'
 
-# class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-#     template_name = 'accounts/password_reset_confirm.html'
-#     success_url = reverse_lazy('accounts:password_reset_complete')
 
 class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'accounts/password_reset_complete.html'
