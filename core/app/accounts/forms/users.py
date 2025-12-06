@@ -6,10 +6,6 @@ from ..models import User
 from ..validators import validate_iranian_cellphone_number
 from django.core.exceptions import ValidationError
 
-class ResendActivationEmailForm(forms.Form):
-    email = forms.EmailField(label="ایمیل", widget=forms.EmailInput(attrs={'class': 'form-control'}))
-
-
 
 class CustomAuthenticationForm(BaseAuthenticationForm):
 

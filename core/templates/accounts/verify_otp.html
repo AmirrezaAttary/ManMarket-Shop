@@ -79,7 +79,7 @@
       // دکمه ارسال دوباره
       resendBtn.addEventListener('click', () => {
         resendBtn.disabled = true;
-        fetch("", {
+        fetch("{% url 'accounts:phone_otp_resend' %}", {
           method: "POST",
           headers: {
             "X-CSRFToken": "{{ csrf_token }}",

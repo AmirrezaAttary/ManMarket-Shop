@@ -75,8 +75,6 @@ class CustomerProfileEditForm(forms.ModelForm):
             self.fields['code_melli'].initial = self.instance.user.code_melli
 
             if self.instance.user.is_verified:
-                self.fields['email'].disabled = True
-            if self.instance.user.is_verified:
                 self.fields['phone_number'].disabled = True
 
     def clean_email(self):
@@ -139,8 +137,7 @@ class CustomerProfileEditForm(forms.ModelForm):
             code_melli = self.cleaned_data.get('code_melli')
 
             user.phone_number = phone if phone else None
-            if not user.is_verified:
-                user.email = email if email else None
+            user.email = email if email else None
             user.code_melli = code_melli if code_melli else None
 
             if commit:

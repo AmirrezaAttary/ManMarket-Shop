@@ -24,17 +24,12 @@
                                     <input type="text" class="form-control" name="last_name"
                                         value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
                                 </div>
-                                {% if request.user.is_authenticated and not request.user.is_verified %}
+                                
                                 <div class="col-md-6 mb-3">
                                     <input type="email" class="form-control" name="email"
                                         value="{{request.user.email}}" placeholder="ایمیل">
                                 </div>
-                                {% else %}
-                                <div class="col-md-6 mb-3">
-                                    <input type="email" class="form-control" name="email"
-                                        value="{{request.user.email}}" placeholder="ایمیل" disabled>
-                                </div>
-                                {% endif %}
+
                                 <div class="col-md-6 mb-3">
                                     <input type="text" class="form-control" name="phone_number"
                                         value="{{request.user.phone_number}}" placeholder="شماره همراه">

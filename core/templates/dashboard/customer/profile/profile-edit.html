@@ -155,12 +155,12 @@
                             <input type="email" name="email" class="form-control-custom" value="{% if request.user.email == None or request.user.email == 'None' %}{% else %}{{request.user.email}}{% endif %}">
                         </div>
                         
-                        <div class="account-detail-actions" style="display: none;">
+                        <div class="account-detail-actions">
                             <button id="my-input" type="button" class="edit-trigger-btn" title="ویرایش"><svg>
                                     <use xlink:href="#icon-edit-pencil"></use>
                                 </svg></button>
                             <div class="save-cancel-btns">
-                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
+                                <button type="submit" style="position: relative !important;z-index: 99999 !important;"
                                     class="save-btn" title="ذخیره"><svg>
                                         <use xlink:href="#icon-save-disk"></use>
                                     </svg></button>
@@ -171,21 +171,6 @@
                             </div>
                         </div>
                         
-                        <div class="account-detail-actions" >
-                            <button id="my-input" type="button" class="edit-trigger-btn" title="ویرایش"><svg>
-                                    <use xlink:href="#icon-edit-pencil"></use>
-                                </svg></button>
-                            <div class="save-cancel-btns">
-                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
-                                    class="save-btn" title="ذخیره"><svg>
-                                        <use xlink:href="#icon-save-disk"></use>
-                                    </svg></button>
-                                <button type="button" style="position: relative !important;z-index: 99999 !important;"
-                                    class="cancel-btn" title="لغو"><svg>
-                                        <use xlink:href="#icon-cancel-circle"></use>
-                                    </svg></button>
-                            </div>
-                        </div>
                         
                     </div>
                 </div>
@@ -248,26 +233,6 @@
                 <button type="submit" class="theme-color text-light rounded-3 mt-5 px-4 py-2">ثبت مشخصات</button>
             </form>
 
-
-            {% if request.user.email == None %}
-            <center>
-                <h5>لطفا یک ایمیل وارد کنید</h5>
-            </center>
-
-            {% elif request.user.is_authenticated and not request.user.is_verified %}
-            <center>
-                <form hidden action="{% url 'accounts:resend_activation' %}" method="post" id="resend-activation-form">
-                    {% csrf_token %}
-                    <input type="hidden" name="email" value="{{ request.user.email }}">
-                </form>
-            </center>
-            {% endif %}
-
-
-            <form action="{% url 'accounts:send_phone_otp' %}" method="post" id="send-phone-otp-form">
-                {% csrf_token %}
-                <input type="hidden" name="phone_number" value="{{ request.user.phone_number }}">
-            </form>
         </div>
     </section>
 </main>
