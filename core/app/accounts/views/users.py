@@ -23,7 +23,7 @@ class PasswordResetView(FormView):
         otp = OTP.create_otp(user)
 
         send_bulk_sms(
-            message_text=f"کد بازیابی رمز عبور: {otp.code}\nمحرمانه نگه دارید!\nمـــن مـــارکـــت  - ارزش شما برای ما بـیـنـهـایـت است.",
+            message_text=f"کد بازیابی رمز عبور: {otp.code}\nمحرمانه نگه دارید.\nمن مارکت -ارزش شما برای ما بینهایـت است.",
             mobiles=[user.phone_number]
         )
 

@@ -7,7 +7,6 @@ class ProductStatusType(models.IntegerChoices):
 
 
 class ProductModel(models.Model):
-    user = models.ForeignKey("accounts.User",on_delete=models.PROTECT)
     category = models.ForeignKey("ProductCategoryModel", on_delete=models.SET_NULL, null=True)
     brand = models.ForeignKey("Brand", on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=255)
