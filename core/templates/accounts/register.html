@@ -1,5 +1,5 @@
 {% load static %}
-{% load socialaccount %}
+
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -97,22 +97,7 @@
         <div class="sing-divider">یا</div>
 
         <!-- دکمه ثبت‌نام با گوگل -->
-        <form action="{% provider_login_url 'google' %}" method="post" id="google">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-secondary w-100" aria-label="ثبت نام با گوگل">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="me-2">
-                    <path fill="#4285F4"
-                        d="M22.56 12.25c0-.78-.07-1.5-.18-2.22H12v4.46h6.41c-.29 1.45-1.12 2.68-2.34 3.47v2.92h3.76c2.2-2.03 3.48-4.97 3.48-8.63z" />
-                    <path fill="#34A853"
-                        d="M12 23c3.04 0 5.58-1 7.44-2.73l-3.76-2.92c-1.09.73-2.52 1.15-4.06 1.15-3.13 0-5.78-2.11-6.73-4.93H1.47v2.99C3.44 20.38 7.33 23 12 23z" />
-                    <path fill="#FBBC05"
-                        d="M4.27 14.34c-.21-.65-.33-1.34-.33-2.06s.12-1.41.33-2.06V7.29H.51C.19 8.04 0 8.97 0 10c0 1.03.19 1.96.51 2.71l3.76 4.34z" />
-                    <path fill="#EA4335"
-                        d="M12 4.19c1.78 0 3.29.62 4.5 1.77l3.35-3.35C17.58 1.48 15.04 0 12 0 7.37 0 3.48 2.66 1.47 6.55l3.76 2.99C6.22 6.3 8.87 4.19 12 4.19z" />
-                </svg>
-                ثبت‌نام با گوگل
-            </button>
-        </form>
+
 
         <!-- لینک ورود -->
         <div class="form-text mt-3 text-center">

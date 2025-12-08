@@ -35,7 +35,6 @@ urlpatterns = [
     path('pricegethamrh/', include('app.pricegethamrh.urls')),
     path('getspecification/', include('app.getspecification.urls')),
     path('faq/', include('app.faq.urls')),
-    path('accounts_c/', include('allauth.urls')),
     path('wallets/', include('app.wallets.urls')),
     path('chat/', include('app.chat.urls')),
     path('summernote/', include('django_summernote.urls')),

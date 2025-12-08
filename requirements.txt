@@ -24,11 +24,11 @@ django-redis
 requests
 
 # sing with google
-django-jalali
-django-jalali-date
-django-allauth
-PyJWT
-cryptography
+# django-jalali
+# django-jalali-date
+# django-allauth
+# PyJWT
+# cryptography
 
 
 # seo

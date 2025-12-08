@@ -91,20 +91,14 @@ INSTALLED_APPS = [
     'django_summernote', 
     
     # add sigin up with google
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
 
-    'allauth.socialaccount.providers.google',
 ]
 
 
 SITE_ID = 2
 
 AUTHENTICATION_BACKENDS = [
-    'app.accounts.backends.EmailOrPhoneBackend',
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 
@@ -118,7 +112,6 @@ MIDDLEWARE = [
     'app.accounts.middleware.restrict_admin.RestrictAdminMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
     
 ]
 
@@ -244,29 +237,6 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL= '/'
 
-
-
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # چون username نداریم
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-SOCIALACCOUNT_QUERY_EMAIL = True
-# SOCIALACCOUNT_ADAPTER = 'accounts.adapter.MySocialAccountAdapter'  # اگر تعریفش کردی
-ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_SIGNUP_REDIRECT_URL = '/dashboard/home/'
-
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
 
 # sms.ir webservice
 SMSAPIKEY = "co6QLJNKUrO0x75n94cWToUcFxsD4TEQGaiNXqlhR9THVrh6B5bBdXDayfe0asCb"
