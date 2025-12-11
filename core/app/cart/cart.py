@@ -26,7 +26,7 @@ class CartSession:
         self.save()
         
     def add_product(self, product_id, color_id, color_inventory_id):
-        from shop.models import ProductColorInventory  # اگر بالای فایل import نکردی
+        from ..shop.models import ProductColorInventory  # اگر بالای فایل import نکردی
 
         color_inventory = ProductColorInventory.objects.filter(
             id=color_inventory_id,

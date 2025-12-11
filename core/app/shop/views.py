@@ -106,7 +106,7 @@ class ShopListProductView(ListView):
         ).order_by('discounted_price')
 
         queryset = queryset.annotate(
-            min_discounted_price=Subquery(discounted_inventory.values('discounted_price')[:1]),
+            min_discounted_price=Subquery(discounted_inventory.values('final_price')[:1]),
             min_discount_percent=Subquery(discounted_inventory.values('discount_percent')[:1])
         )
 
