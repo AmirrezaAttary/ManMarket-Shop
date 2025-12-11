@@ -119,23 +119,41 @@ class AdminProductDeleteView(LoginRequiredMixin, HasAdminAccessPermission, Succe
     success_url = reverse_lazy("dashboard:admin:product-list")
     success_message = "حذف محصول با موفقیت انجام شد"
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        # جلوگیری از ProtectedError
         from ....order.models import OrderItemModel
-        if OrderItemModel.objects.filter(product=self.object).exists():
-            messages.error(
-                request,
-                "❌ امکان حذف این محصول وجود ندارد زیرا داخل یک سفارش استفاده شده است. "
-                "لطفاً محصول را غیرفعال کنید."
-            )
-            return redirect(self.success_url)
+        from ....cart.models import CartItemModel
+        from ....shop.models import ProductColorInventory
 
-        # اگر داخل سفارش نبود → حذف واقعی انجام شود
+        # اگر داخل سفارش استفاده شده باشد
+        if OrderItemModel.objects.filter(product=self.object).exists():
+            messages.error(request,
+                "❌ امکان حذف این محصول وجود ندارد زیرا داخل سفارش استفاده شده است. لطفاً محصول را غیرفعال کنید."
+            )
+            return redirect(request.path)   # ← همین صفحه
+
+        # اگر داخل سبد خرید باشد
+        if CartItemModel.objects.filter(product=self.object).exists():
+            messages.error(request,
+                "❌ امکان حذف این محصول وجود ندارد زیرا در سبد خرید کاربران وجود دارد."
+            )
+            return redirect(request.path)
+
+        # اگر رنگ/موجودی دارد
+        if ProductColorInventory.objects.filter(product=self.object).exists():
+            messages.error(request,
+                "❌ این محصول دارای رنگ/موجودی است و قابل حذف نیست."
+            )
+            return redirect(request.path)
+
+        # حذف واقعی
+        self.object.delete()
         messages.success(request, self.success_message)
-        return super().delete(request, *args, **kwargs)
-    
+        return redirect(self.success_url)
+
+
+
     
     
 class AdminProductAddImageView(LoginRequiredMixin, HasAdminAccessPermission, View):
