@@ -118,6 +118,23 @@ class AdminProductDeleteView(LoginRequiredMixin, HasAdminAccessPermission, Succe
     queryset = ProductModel.objects.all()
     success_url = reverse_lazy("dashboard:admin:product-list")
     success_message = "حذف محصول با موفقیت انجام شد"
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        # جلوگیری از ProtectedError
+        from ....order.models import OrderItemModel
+        if OrderItemModel.objects.filter(product=self.object).exists():
+            messages.error(
+                request,
+                "❌ امکان حذف این محصول وجود ندارد زیرا داخل یک سفارش استفاده شده است. "
+                "لطفاً محصول را غیرفعال کنید."
+            )
+            return redirect(self.success_url)
+
+        # اگر داخل سفارش نبود → حذف واقعی انجام شود
+        messages.success(request, self.success_message)
+        return super().delete(request, *args, **kwargs)
     
     
     
