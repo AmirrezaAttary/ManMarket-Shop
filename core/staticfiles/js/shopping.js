@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const persianNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
     const toPersianNum = (n) => n.toString().replace(/\d/g, d => persianNumbers[d]);
 
     const parsePrice = (priceString) => {
         if (!priceString) return 0;
-        const englishNumString = priceString.toString().replace(/[۰-۹]/g, d => persianNumbers.indexOf(d))
+        const englishNumString = priceString.toString().replace(/[0-9]/g, d => persianNumbers.indexOf(d))
             .replace(/,|تومان|\(|\)|-/g, '').trim();
         return parseInt(englishNumString, 10) || 0;
     };
@@ -224,14 +224,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     finalTotal -= walletAmount;
                     walletAmount = 0;
                 }
-                finalAmountEl.innerHTML = formatPrice(finalTotal) + ' <span class="shop-cs-price-unit">تومان</span>';
+                finalAmountEl.innerHTML = formatPrice(finalTotal) + '<span class="shop-cs-price-unit">تومان</span>';
                 if (walletTextEl) {
-                    walletTextEl.textContent = 'موجودی: ' + formatPrice(walletAmount) + ' تومان';
+                    walletTextEl.textContent = 'موجودی: ' + formatPrice(walletAmount) + 'تومان';
                 }
             } else {
-                finalAmountEl.innerHTML = formatPrice(originalTotal) + ' <span class="shop-cs-price-unit">تومان</span>';
+                finalAmountEl.innerHTML = formatPrice(originalTotal) + '<span class="shop-cs-price-unit">تومان</span>';
                 if (walletTextEl) {
-                    walletTextEl.textContent = 'موجودی: ' + formatPrice(originalWalletAmount) + ' تومان';
+                    walletTextEl.textContent = 'موجودی: ' + formatPrice(originalWalletAmount) + 'تومان';
                 }
             }
         });

@@ -39,7 +39,10 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         user = request.user
-
+        cart = CartModel.objects.filter(user=user).first()
+        if not cart or cart.cart_items.count() == 0:
+            messages.error(request, "سبد خرید شما خالی است.")
+            return redirect("shop:product-list")
         # اول چک کنیم که کاربر لاگین کرده باشه
         if not user.is_authenticated:
             return self.handle_no_permission()  # از LoginRequiredMixin استفاده می‌کنه
@@ -63,7 +66,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
 
         if not UserAddressModel.objects.filter(user=user).exists():
             messages.error(request, "لطفاً ابتدا یک آدرس ثبت کنید.")
-            return redirect("dashboard:home")
+            return redirect("dashboard:customer:address-create")
 
         return super().dispatch(request, *args, **kwargs)
 
