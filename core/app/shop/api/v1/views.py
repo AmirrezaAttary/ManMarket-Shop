@@ -1,3 +1,5 @@
+from django.db.models import Case, When, Value, IntegerField, Min
+from django.db.models import Q
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -22,13 +24,46 @@ from .paginations import LargeResultsSetPagination
 from .filterset import ProductFilter
 
 class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
     pagination_class = LargeResultsSetPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = ["title"]
     filterset_class = ProductFilter
     search_fields = ["title"]
     ordering_fields = ["created_date"]
+
+    def get_queryset(self):
+        base_qs = ProductModel.objects.filter(
+            status=ProductStatusType.publish.value
+        )
+
+        # ✅ فقط برای list
+        if self.action == "list":
+            return (
+                base_qs
+                .annotate(
+                    has_stock_and_price=Case(
+                        When(
+                            color_inventories__stock__gt=0,
+                            color_inventories__price__gt=0,
+                            then=Value(1)
+                        ),
+                        default=Value(0),
+                        output_field=IntegerField()
+                    ),
+                )
+                .distinct()
+                .order_by(
+                    "-has_stock_and_price",
+                    "-created_date"
+                )
+            )
+
+        # ✅ برای retrieve / similar / detail
+        return base_qs
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ProductListSerializer
+        return ProductDetailSerializer
 
     def get_serializer_class(self):
         if self.action == "list":
