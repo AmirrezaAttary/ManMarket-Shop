@@ -311,6 +311,8 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         return OrderModel.objects.create(
             user=self.request.user,
             address=address.address,
+            name=address.name,
+            phone_number=address.phone_number,
             state=address.state,
             city=address.city,
             zip_code=address.zip_code,

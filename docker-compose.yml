@@ -23,8 +23,7 @@ services:
       - 8000:8000
     environment:
       - DEBUG=True
-    env_file:
-      - ./envs/dev/django/.env
+
     restart: always
     depends_on:
       - redis

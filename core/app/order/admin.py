@@ -9,6 +9,8 @@ class OrderModelAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "user",
+        "name",
+        "phone_number",
         "total_price",
         "coupon",
         "status",
@@ -51,6 +53,8 @@ class UserAddressModelAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "user",
+        "name",
+        "phone_number",
         "state",
         "city",
         "zip_code",

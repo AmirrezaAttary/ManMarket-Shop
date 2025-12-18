@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from decimal import Decimal
+from ..accounts.validators import validate_iranian_cellphone_number
 
 class TrackingType(models.IntegerChoices):
     post = 1 , "ارسال با پست عادی"
@@ -20,6 +21,8 @@ class OrderStatusType(models.IntegerChoices):
 
 class UserAddressModel(models.Model):
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)
+    name = models.CharField(max_length=250,default="")
+    phone_number = models.CharField(max_length=12,default="",validators=[validate_iranian_cellphone_number])
     
     address = models.CharField(max_length=250)
     state = models.CharField(max_length=50)
@@ -46,7 +49,9 @@ class CouponModel(models.Model):
 # Create your models here.
 class OrderModel(models.Model):
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE,related_name='order_user')
-    
+    name = models.CharField(max_length=250,default="")
+    phone_number = models.CharField(max_length=250,default="")
+
     # order address information
     address = models.CharField(max_length=250)
     state = models.CharField(max_length=50)
