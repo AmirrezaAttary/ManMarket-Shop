@@ -39,18 +39,23 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         user = request.user
+
+        if not user.is_authenticated:
+            messages.error(request, "برای ادامه خرید باید وارد شوید.")
+            return self.handle_no_permission()
+
+        # ابتدا بررسی سبد خرید
         cart = CartModel.objects.filter(user=user).first()
         if not cart or cart.cart_items.count() == 0:
             messages.error(request, "سبد خرید شما خالی است.")
             return redirect("shop:product-list")
-        # اول چک کنیم که کاربر لاگین کرده باشه
-        if not user.is_authenticated:
-            return self.handle_no_permission()  # از LoginRequiredMixin استفاده می‌کنه
 
+        # بررسی احراز هویت شماره موبایل
         if not getattr(user, "is_verified", False):
             messages.error(request, "برای ادامه خرید، ابتدا باید شماره همراه خود را تأیید کنید.")
             return redirect("dashboard:home")
 
+        # بررسی اطلاعات پروفایل
         profile = getattr(user, "user_profile", None)
         if not profile or not profile.first_name or not profile.last_name:
             messages.error(request, "لطفاً نام و نام خانوادگی خود را در پروفایل تکمیل کنید.")
@@ -69,6 +74,8 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             return redirect("dashboard:customer:address-create")
 
         return super().dispatch(request, *args, **kwargs)
+
+        
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
