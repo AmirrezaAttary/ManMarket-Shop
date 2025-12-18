@@ -96,7 +96,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         order.save()
 
         check_order_pending_status.apply_async(args=[order.id], countdown=180)
-        # self.clear_cart(cart)
+        self.clear_cart(cart)
 
         payment_result = self.create_payment_url(order, cart)
 
