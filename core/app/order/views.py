@@ -44,15 +44,18 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             messages.error(request, "برای ادامه خرید باید وارد شوید.")
             return self.handle_no_permission()
 
+        # بررسی سبد خرید
         cart = CartModel.objects.filter(user=user).first()
         if not cart or cart.cart_items.count() == 0:
             messages.error(request, "سبد خرید شما خالی است.")
             return redirect("shop:product-list")
 
+        # بررسی احراز هویت شماره موبایل
         if not getattr(user, "is_verified", False):
             messages.error(request, "برای ادامه خرید، ابتدا باید شماره همراه خود را تأیید کنید.")
             return redirect("dashboard:home")
 
+        # بررسی اطلاعات پروفایل
         profile = getattr(user, "user_profile", None)
         if not profile or not profile.first_name or not profile.last_name:
             messages.error(request, "لطفاً نام و نام خانوادگی خود را در پروفایل تکمیل کنید.")
@@ -85,59 +88,23 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         tracking_type = cleaned_data['tracking_type']
 
         cart = CartModel.objects.get(user=user)
-
-        # =================== اجرای امن پرداخت ===================
-        try:
-            payment_result, order_created = self.safe_create_payment(user, address, tracking_type, cart, coupon)
-        except Exception as e:
-            print("Checkout error:", e)
-            messages.error(self.request, "خطا در ایجاد پرداخت. لطفاً دوباره تلاش کنید.")
-            return redirect("order:checkout")
-
-        # اگر پرداخت موفق بود، ادامه مراحل
-        if order_created:
-            check_order_pending_status.apply_async(args=[payment_result.id], countdown=180)
-            self.clear_cart(cart)
-
-        # redirect مناسب
-        from django.http import HttpResponseRedirect
-        if isinstance(payment_result, HttpResponseRedirect):
-            return payment_result
-        return redirect(payment_result)
-
-    def safe_create_payment(self, user, address, tracking_type, cart, coupon):
-        """
-        تابع کمکی برای ایجاد سفارش و پرداخت بصورت امن
-        در صورت KeyError یا خطا، هیچ سفارشی ساخته نمی‌شود و سبد پاک نمی‌شود
-        """
-        payment_method = self.request.POST.get("payment_method")
-        order_created = False
-
-        # ابتدا سفارش را ایجاد می‌کنیم ولی هنوز سبد را پاک نمی‌کنیم
         order = self.create_order(address, tracking_type)
-        order_created = True
         self.create_order_items(order, cart)
 
         total_price = order.calculate_total_price()
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
 
-        # ایجاد URL پرداخت امن
-        try:
-            payment_url = self.create_payment_url(order, cart)
-        except KeyError as e:
-            # اگر کلید authority یا token وجود نداشت، سفارش را حذف می‌کنیم و خطا می‌دهیم
-            order.delete()
-            order_created = False
-            raise e
+        check_order_pending_status.apply_async(args=[order.id], countdown=180)
+        self.clear_cart(cart)
 
-        return payment_url, order_created
+        payment_result = self.create_payment_url(order, cart)
 
-    # ====================== بقیه متدها همانند قبل ======================
-    # create_payment_url, create_order, create_order_items, clear_cart, apply_coupon
-    # update_inventory, send_notifications, form_invalid, get_context_data
-    # کد آنها بدون تغییر است، فقط مطمئن شوید در create_payment_url
-    # قبل از دسترسی به 'authority' یا 'token' از get استفاده شود و خطا مدیریت شود
+        from django.http import HttpResponseRedirect
+        if isinstance(payment_result, HttpResponseRedirect):
+            return payment_result  
+
+        return redirect(payment_result)
 
     def create_payment_url(self, order, cart):
         user = self.request.user
