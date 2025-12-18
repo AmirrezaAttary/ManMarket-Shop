@@ -24,6 +24,16 @@
                 <div class="rounded-3 container">
                     <form action="." method="post">
                         {% csrf_token %}
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="width: 50%;">
+                                <label for="as" class="ws-cs-label my-1 fs-14">نام و نام خانوادگی گیرنده</label>
+                                {{ form.name }}
+                            </div>
+                            <div style="width: 50%;">
+                                <label for="as" class="ws-cs-label my-1 fs-14">شماره موبایل گیرنده</label>
+                                {{ form.phone_number }}
+                            </div>
+                        </div>
                         <label for="as" class="ws-cs-label my-1 fs-14">استان مورد نظر خود را بنویسید</label>
                         {{ form.state }}
                         <label for="amount" class="ws-cs-label my-1 fs-14">شهر مورد نظر خود را بنویسید</label>

@@ -9,6 +9,8 @@ class UserAddressForm(forms.ModelForm):
             "state",
             "city",
             "zip_code",
+            "name",
+            "phone_number"
         ]
     
     def __init__(self, *args, **kwargs):
@@ -16,5 +18,9 @@ class UserAddressForm(forms.ModelForm):
         self.fields['state'].widget.attrs['class'] = 'form-control-custom my-1 fs-14'
         self.fields['city'].widget.attrs['class'] = 'form-control-custom my-1 fs-14'
         self.fields['zip_code'].widget.attrs['class'] = 'form-control-custom my-1 fs-14'
+        self.fields['name'].widget.attrs['class'] = 'form-control-custom my-1 fs-14'
+        self.fields['name'].widget.attrs['style'] = 'max-width: 99%'
+        self.fields['phone_number'].widget.attrs['class'] = 'form-control-custom my-1 fs-14'
+        self.fields['phone_number'].widget.attrs['style'] = 'max-width: 99%'
         self.fields['address'].widget.attrs['class'] = 'ws-cs-input form-label-custom'
         self.fields['address'].widget.attrs['rows'] = '3'
