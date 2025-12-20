@@ -21,7 +21,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         ]
 
 
-class BrandSerializer(serializers.ModelSerializer):
+class ProductBrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = [
@@ -32,14 +32,14 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 
-class ColorSerializer(serializers.ModelSerializer):
+class ProductColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
         fields = "__all__"
 
 
 class ProductColorInventorySerializer(serializers.ModelSerializer):
-    color = ColorSerializer(read_only=True)  # به جای فقط id، کل اطلاعات رنگ رو میاره
+    color = ProductColorSerializer(read_only=True)  # به جای فقط id، کل اطلاعات رنگ رو میاره
 
     class Meta:
         model = ProductColorInventory
@@ -119,7 +119,7 @@ class ReviewModelSerializer(serializers.ModelSerializer):
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     category = ProductCategorySerializer(read_only=True)
-    brand = BrandSerializer(read_only=True)
+    brand = ProductBrandSerializer(read_only=True)
     specifications = ProductSpecificationSerializer(many=True, read_only=True)
     product_images = ProductImageModelSerializer(many=True, read_only=True)
     color_inventories = ProductColorInventorySerializer(many=True, read_only=True)

@@ -49,3 +49,7 @@ django-filter
 djangorestframework-simplejwt
 django-taggit-serializer
 django-cors-headers
+
+
+# api doc
+drf-yasg[validation]

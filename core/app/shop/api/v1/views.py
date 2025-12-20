@@ -15,7 +15,7 @@ from ...models import (
 from .serializers import (
     CategorySerializer,
     BrandsSerializer,
-    ColorSerializer,
+    ProductColorSerializer,
     ProductListSerializer,
     ProductDetailSerializer,
     SimilarProductSerializer,
@@ -88,6 +88,6 @@ class BrandModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ColorModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ColorSerializer
+    serializer_class = ProductColorSerializer
     queryset = Color.objects.all()
 
