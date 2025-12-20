@@ -1,14 +1,14 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from ...models import Post, Category,BlogStatusType
-from .serializers import (
+from app.blog.models import Post, Category,BlogStatusType
+from app.blog.api.v1.serializers import (
     PostSerializerList,
     PostSerializerDetail,
-    CategorySerializer
+    PostCategorySerializer
     )
 
-from .paginations import LargeResultsSetPagination
+from app.blog.api.v1.paginations import LargeResultsSetPagination
 
 class PostModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Post.objects.filter(status=BlogStatusType.publish.value)
@@ -25,7 +25,7 @@ class PostModelViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = CategorySerializer
+    serializer_class = PostCategorySerializer
     queryset = Category.objects.all()
     search_fields = ["name"]
     ordering_fields = ["created_at"]

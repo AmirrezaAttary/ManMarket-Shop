@@ -1,9 +1,13 @@
-from django.urls import path,re_path
+from django.urls import path,re_path,include
 from . import views
+from .api.v1 import urls as api_urls
 
 app_name = "order"
 
 urlpatterns = [
+    # api order
+    path('v1/', include(api_urls)),
+    
     path("validate-coupon/",views.ValidateCouponView.as_view(),name="validate-coupon"),
     path("checkout/",views.OrderCheckOutView.as_view(),name="checkout"),
     path("completed/",views.OrderCompletedView.as_view(),name="completed"),

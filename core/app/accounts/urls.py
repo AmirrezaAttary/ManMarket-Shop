@@ -1,9 +1,13 @@
-from django.urls import path
+from django.urls import path,include
+from .api.v1 import urls as api_urls
 from . import views
 
 app_name = 'accounts'
 
 urlpatterns = [
+    # api accounts
+    path('v1/', include(api_urls)),
+
     # User authentication
     path('login/', views.LoginView.as_view(), name="login"),
     path('register/', views.RegisterView.as_view(), name="register"),

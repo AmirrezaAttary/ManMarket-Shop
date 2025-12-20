@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from taggit.serializers import (TagListSerializerField, TaggitSerializer)   
-from ...models import Post,Category,PostProduct
-from ....shop.models import ProductModel
+from app.blog.models import Post,Category
+from app.shop.models import ProductModel
 
 # class PostSerializer(serializers.Serializer):
 #     id =  serializers.IntegerField()
 #     title = serializers.CharField(max_length=250)
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class PostCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
@@ -50,10 +50,7 @@ class PostSerializerList(serializers.ModelSerializer):
         return None
 
 
-class PostProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostProduct
-        fields = "__all__"
+
 
 
 
@@ -71,18 +68,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 
-class PostProductSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
 
-    class Meta:
-        model = PostProduct
-        fields = ["product"]
 
 
 class PostSerializerDetail(serializers.ModelSerializer):
-    category = CategorySerializer(many=True)
+    category = PostCategorySerializer(many=True)
     tags = TagListSerializerField()
-    post_products = PostProductSerializer(many=True, read_only=True)  # 👈 تغییر دادیم
+
 
     class Meta:
         model = Post
@@ -95,5 +87,5 @@ class PostSerializerDetail(serializers.ModelSerializer):
             "category",
             "tags",
             "created_at",
-            "post_products"  # 👈 اینجا هم
+
         ]
