@@ -426,13 +426,15 @@
                                 <div class="h-300">
                                     {% for review in reviews %}
                                     <div class="SH-HS-comment-item">
+                                        <p class="SH-HS-comment-text pb-2">{{review.name}}</p>
                                         <div class="SH-HS-comment-header">
                                             <span
                                                 class="SH-HS-comment-date mx-1">{{ review.created_date|persian_timesince }}</span>
                                             <div class="SH-HS-comment-rating SH-HS-static-rating mx-1" data-rating="{{review.rate}}">
                                             </div>
                                         </div>
-                                        <p class="SH-HS-comment-text">{{review.description}}</p>
+                                        <label for="">دیدگاه:</label>
+                                        <div class="SH-HS-comment-text border rounded-2 p-1">{{review.description|safe}}</div>
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -451,6 +453,10 @@
                                             <i class="fas fa-star" data-value="4"></i>
                                             <i class="fas fa-star" data-value="5"></i>
                                             <input type="hidden" name="rate" id="userRating" value="0">
+                                        </div>
+                                        <div style="display: flex;justify-content: center; align-items: center;">
+                                            <label for="commentText" class="form-label" style="width: 50%;">نام و نام خانوادگی:</label>
+                                            <input type="text" name="name" class="form-control">
                                         </div>
                                     </div>
                                     <div class="mb-3">

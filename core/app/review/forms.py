@@ -5,7 +5,7 @@ from ..shop.models import ProductModel,ProductStatusType
 class SubmitReviewForm(forms.ModelForm):
     class Meta:
         model = ReviewModel
-        fields = ['product','rate', 'description']
+        fields = ['product','rate', 'description',"name"]
         error_messages = {
             'description': {
                 'required': 'فیلد توضیحات اجباری است',
