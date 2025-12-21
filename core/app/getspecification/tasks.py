@@ -2,7 +2,9 @@ from celery import shared_task
 import time
 from ..shop.models import ProductSpecification
 from .models import PriceSpecification
-from .scripts import getspecificationDigikala
+from .scripts import getspecificationDigikala, getCommentsDigikala
+from ..review.models import ReviewModel
+
 
 @shared_task
 def fetch_and_save_specifications(product_id):
@@ -32,3 +34,6 @@ def all_specifications_updated(results):
     print("✅ همه مشخصات آپدیت شدند.")
     for result in results:
         print(result)
+
+
+

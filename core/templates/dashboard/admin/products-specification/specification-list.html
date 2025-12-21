@@ -93,6 +93,10 @@
                                             href="{% url 'getspecification:specification' pk=object.product.id %}">
                                             <i class="bi-eye">get specification</i>
                                         </a>
+                                        <a class="btn btn-sm btn-icon btn-ghost-primary"
+                                            href="{% url 'getspecification:get-comments' pk=object.product.id %}">
+                                            <i class="bi-eye">get comments</i>
+                                        </a>
                                     </td>
                                 </tr>
 

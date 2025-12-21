@@ -16,6 +16,7 @@ class SpecificationForm(forms.ModelForm):
         self.fields['product'].required = True
         self.fields['product'].error_messages = {'required': 'لطفاً یک محصول انتخاب کنید.'}
         self.fields['product'].widget.attrs['class'] = 'form-control'
+        self.fields['number_comments'].widget.attrs['class'] = 'form-control'
 
         self.fields['url'].required = True
         self.fields['url'].error_messages = {'required': 'لینک محصول را وارد کنید.'}
@@ -38,7 +39,7 @@ class SpecificationForm(forms.ModelForm):
 
     class Meta:
         model = PriceSpecification
-        fields = ['product', 'url']
+        fields = ['product', 'url',"number_comments"]
 
 
             

@@ -1,36 +1,10 @@
 import re
 import requests
-import jdatetime
-import datetime
-
-
-def getspecificationDigikala(url):
-    match = re.search(r"dkp-(\d+)", url)
-    if match:
-        product_url = match.group(1)
-        api_url = f'https://api.digikala.com/v2/product/{product_url}/'
-        response = requests.get(api_url)
-        response_json = response.json()
-        data_specifications = response_json['data']['product']['specifications']
-
-        item_list = {}
-        for item in data_specifications:
-            all_item = item['attributes']
-            for items in all_item:
-                values = items.get('values', [])
-                if values:
-                    # تبدیل لیست به رشته با جداکننده‌ی " / "
-                    item_list[items['title']] = " / ".join(values)
-        return item_list
-   
-
-import re
-import requests
 import datetime
 import jdatetime
 import html
 
-
+# نگاشت ماه‌های فارسی به میلادی
 PERSIAN_MONTHS = {
     "فروردین": 1,
     "اردیبهشت": 2,
@@ -46,7 +20,7 @@ PERSIAN_MONTHS = {
     "اسفند": 12,
 }
 
-
+# تبدیل تاریخ جلالی به میلادی
 def jalali_str_to_gregorian(date_str: str):
     """
     '28 آذر 1404' -> datetime.datetime
@@ -71,33 +45,36 @@ def jalali_str_to_gregorian(date_str: str):
 
     return datetime.datetime.combine(gregorian_date, datetime.time.min)
 
-
-ZWNJ = "\u200c"  # نیم‌فاصله
-
+# جایگزینی نام برند
 REPLACE_PATTERN = re.compile(
     r"(دیجی‌کالا|دیجی کالا|دی جی کالا|digikala)",
     re.IGNORECASE
 )
 
-
 def normalize_text(text: str) -> str:
+    """
+    نرمال‌سازی متن:
+    - تبدیل حروف عربی به فارسی
+    - جایگزینی نام برند با فاصله عادی
+    """
     if not text:
         return ""
 
-    text = text.replace("\\u200c", ZWNJ)
+    # تبدیل escape نیم‌فاصله یا کاراکترهای خاص به فاصله عادی
+    text = text.replace("\\u200c", " ").replace("\u200c", " ")
 
-    text = (
-        text
-        .replace("ي", "ی")
-        .replace("ك", "ک")
-    )
+    # نرمال‌سازی حروف عربی → فارسی
+    text = text.replace("ي", "ی").replace("ك", "ک")
 
-    text = REPLACE_PATTERN.sub(f"من{ZWNJ}مارکت", text)
+    # جایگزینی نام برند با فاصله
+    text = REPLACE_PATTERN.sub("من مارکت", text)
 
     return text
 
-
 def text_to_html(text: str) -> str:
+    """
+    تبدیل متن به HTML امن با حفظ خطوط و پاراگراف‌ها
+    """
     if not text:
         return ""
 
@@ -112,8 +89,10 @@ def text_to_html(text: str) -> str:
 
     return f"<p>{text}</p>"
 
-
-def getCommentsDigikala(url, number_comments=10):
+def getCommentsDigikala(url, number_comments=15):
+    """
+    دریافت کامنت‌ها از دیجی‌کالا و تبدیل مناسب متن و تاریخ
+    """
     match = re.search(r"dkp-(\d+)", url)
     if not match:
         return []
@@ -145,12 +124,10 @@ def getCommentsDigikala(url, number_comments=10):
             raw_body = normalize_text(comment.get("body", ""))
 
             results.append({
-                "name": normalize_text(comment.get("user_name", "")),
-                "description": text_to_html(raw_body),  # 👈 اینجا اعمال شد
+                "name": normalize_text(comment.get("user_name", "")),  # فاصله عادی
+                "description": text_to_html(raw_body),                # HTML امن
                 "rate": comment.get("rate", 0),
-                "created_at": jalali_str_to_gregorian(
-                    comment.get("created_at", "")
-                )
+                "created_at": jalali_str_to_gregorian(comment.get("created_at", ""))
             })
 
         if page >= pager.get("total_pages", 1):
@@ -161,4 +138,5 @@ def getCommentsDigikala(url, number_comments=10):
     return results
 
 
-print(getCommentsDigikala("https://www.digikala.com/product/dkp-16736269/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B3%D8%A7%D9%85%D8%B3%D9%88%D9%86%DA%AF-%D9%85%D8%AF%D9%84-s24-fe-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-256-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-8-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88%DB%8C%D8%AA%D9%86%D8%A7%D9%85/",100))
+
+

@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.db.models import Avg
+from django.utils import timezone
 # Create your models here.
 
 
@@ -22,7 +23,7 @@ class ReviewModel(models.Model):
                                MinValueValidator(0), MaxValueValidator(5)])
     status = models.IntegerField(
         choices=ReviewStatusType.choices, default=ReviewStatusType.pending.value)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(default=timezone.now)  
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:

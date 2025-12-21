@@ -6,6 +6,9 @@ from .tasks import fetch_and_save_specifications, all_specifications_updated
 from .models import PriceSpecification
 from celery import chord
 
+from .scripts import getCommentsDigikala
+from ..review.models import ReviewModel
+
 
 
 class GetSpecification(View):
@@ -54,3 +57,32 @@ class GetAllSpecifications(View):
         chord(header)(all_specifications_updated.s())
 
         return HttpResponseRedirect(reverse("dashboard:admin:product-list"))
+    
+
+
+class GetComment(View):
+
+    def post(self, request, *args, **kwargs):
+        return self.handle_request(request)
+
+    def get(self, request, *args, **kwargs):
+        return self.handle_request(request)
+
+    def handle_request(self, request):
+        product_id = self.kwargs.get("pk")
+        product_comment = PriceSpecification.objects.filter(product_id=product_id).first()
+        comments = getCommentsDigikala(url=product_comment.url,number_comments=product_comment.number_comments)
+        for comment in comments:
+            ReviewModel.objects.create(
+                product_id=product_id,
+                name=comment['name'],
+                description=comment['description'],
+                rate=comment['rate'],
+                created_date=comment['created_at'],
+            )
+        return HttpResponseRedirect(reverse("dashboard:admin:product-list"))
+
+    def get_success_url(self, product_spec_id):
+        if product_spec_id:
+            return reverse("dashboard:admin:specification-edit", kwargs={"pk": product_spec_id})
+        return reverse("dashboard:admin:product-list")  # یا هر آدرس دیگری

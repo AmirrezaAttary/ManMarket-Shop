@@ -35,12 +35,12 @@ body * {
   font-size: 14px !important;
 }
 
-body {
+/* body {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
+} */
 
 :root {
   --spanish-gray: hsl(0, 0%, 60%);
