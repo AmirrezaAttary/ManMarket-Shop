@@ -26,6 +26,7 @@ class GetColorAndPrice(View):
     # 🔹 صفر کردن کامل محصول
     def reset_product_inventory(self, product):
         ProductColorInventory.objects.filter(product=product).update(
+            final_price=0,
             price=0,
             stock=0,
             discount_percent=0
@@ -67,6 +68,7 @@ class GetColorAndPrice(View):
                 color=color,
                 defaults={
                     "price": final_price,
+                    "final_price" : final_price,
                     "discount_percent": 0,
                     "hex_color": color_code,
                     "stock": item.get("quantity", 0),
@@ -75,6 +77,7 @@ class GetColorAndPrice(View):
 
             if not created:
                 pci.price = final_price
+                pci.final_price = final_price
                 pci.discount_percent = 0
                 pci.hex_color = color_code
                 pci.stock = item.get("quantity", 0)
@@ -83,6 +86,7 @@ class GetColorAndPrice(View):
         # 🔻 رنگ‌هایی که دیگه وجود ندارن
         for color_title, pci in existing_colors.items():
             if color_title not in seen_colors:
+                pci.final_price=0
                 pci.price = 0
                 pci.stock = 0
                 pci.save()

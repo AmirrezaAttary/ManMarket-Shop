@@ -3,6 +3,8 @@
 {% load humanize %}
 {% load shop_tags %}
 {% load persian_filters %}
+{% load datetime_tags %}
+
 
 {% block title %}
 {% if object.meta_title %}
@@ -336,7 +338,7 @@
                                 </svg>
                             </div>
                             <span class="section-text" style="font-size: 14px;">آخرین بروز رسانی قیمت : 
-                                {{default_color.updated_date|persian_timesince}} 
+                                {{ default_color.updated_date|pretty_persian_datetime }} 
                             </span>
                         </div>
                         <div class="panel-action">

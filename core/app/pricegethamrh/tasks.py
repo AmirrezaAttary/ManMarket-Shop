@@ -8,121 +8,120 @@ from .scripts import extract_product_data, get_kasrapars_product_data
 def round_up_to_thousand(price):
     return math.ceil(price / 1000) * 1000
 
-def process_data(product, data, profit, source_name=""):
+def reset_product_inventory(product):
+    ProductColorInventory.objects.filter(product=product).update(
+        final_price=0,
+        price=0,
+        stock=0,
+        discount_percent=0
+    )
+
+
+
+def process_data(product, variants, profit, source_name=""):
     existing_pcis = ProductColorInventory.objects.filter(product=product)
     existing_colors = {pci.color.title: pci for pci in existing_pcis}
     seen_colors = set()
 
-    for key, value in data.items():
-        color_title = value.get('color')
+    for item in variants:
+        color_title = item.get("color")
+        color_code = item.get("color_code") or "#ffffff"
+
         if not color_title:
-            print(f"⚠️ رنگی برای variant {key} از {source_name} یافت نشد.")
             continue
 
         seen_colors.add(color_title)
 
         color, created = Color.objects.get_or_create(title=color_title)
-        color_code = value.get('color_code', '#ffffff')
 
-        # آپدیت hex_color در مدل Color
         if created or color.hex_color != color_code:
             color.hex_color = color_code
-            color.save()
+            color.save(update_fields=["hex_color"])
 
         try:
-            raw_price = int(value.get('price') or 0)
+            raw_price = int(item.get("price") or 0)
         except (TypeError, ValueError):
             raw_price = 0
 
-        discounted_price = int(raw_price * profit) / 100 + raw_price
-        final_price = round_up_to_thousand(discounted_price)
+        final_price = (
+            round_up_to_thousand(raw_price + (raw_price * profit / 100))
+            if raw_price else 0
+        )
 
         pci, created = ProductColorInventory.objects.get_or_create(
             product=product,
             color=color,
             defaults={
-                'price': final_price,
-                'final_price': final_price,   # 👈 برای بار اول ذخیره
-                'discount_percent': 0,
-                'hex_color': color_code,
-                'stock': value.get('quantity', 0)
+                "price": final_price,
+                "final_price": final_price,
+                "discount_percent": 0,
+                "hex_color": color_code,
+                "stock": item.get("quantity", 0),
             }
         )
 
         if not created:
-            price_changed = pci.price != final_price  # 👈 بررسی تغییر قیمت
-
+            price_changed = pci.price != final_price
+        
             pci.price = final_price
-            pci.stock = value.get('quantity', 0)
+            pci.stock = item.get("quantity", 0)
             pci.hex_color = color_code
             pci.discount_percent = 0
 
-            if price_changed:  
-                # 👈 فقط وقتی قیمت تغییر کرده باشه final_price رو هم آپدیت کن
+            if price_changed:
                 pci.final_price = final_price
 
-            pci.save(force_update=True)
-            print(f"✅ [ویرایش] {product.title} | رنگ: {color_title} | منبع: {source_name} | قیمت: {final_price}")
-        else:
-            print(f"🆕 [جدید] {product.title} | رنگ: {color_title} | منبع: {source_name} | قیمت: {final_price}")
+            pci.save()
 
+        print(
+            f"✅ {product.title} | {color_title} | {source_name} | {final_price}"
+        )
 
+    # رنگ‌های حذف‌شده
     for color_title, pci in existing_colors.items():
         if color_title not in seen_colors:
             pci.price = 0
             pci.stock = 0
             pci.save()
-            print(f"🔁 [غیرفعال] {product.title} | رنگ: {color_title} | قیمت و موجودی صفر شد.")
+
 
 @shared_task
 def update_all_hamrah_products():
-    r = redis.Redis(host='redis', port=6379, db=2)
-    try:
-        products = PriceGetHamrh.objects.select_related('product').all()
+    r = redis.Redis(host="redis", port=6379, db=2)
 
-        for item in products:
+    try:
+        items = PriceGetHamrh.objects.select_related("product").all()
+
+        for item in items:
             product = item.product
             if not product:
-                print(f"⚠️ محصولی برای رکورد {item.id} یافت نشد.")
                 continue
-
-            print(f"🔄 پردازش محصول: {product.id} | {product.title}")
-
-            combined_data = {}
 
             try:
+                combined_variants = []
+
                 if item.url:
-                    print(f"➡️ دریافت از hamrahtel: {item.url}")
-                    extra = extract_product_data(item.url)
-                    if isinstance(extra, dict) and extra:
-                        combined_data.update(extra)
-                    else:
-                        print(f"⚠️ داده معتبری از hamrahtel دریافت نشد.")
+                    hamrah_data = extract_product_data(item.url)
+                    if isinstance(hamrah_data, list):
+                        combined_variants.extend(hamrah_data)
 
                 if item.url_kasra:
-                    print(f"➡️ دریافت از kasrapars: {item.url_kasra}")
-                    extra_kasra = get_kasrapars_product_data(item.url_kasra)
-                    if isinstance(extra_kasra, dict) and extra_kasra:
-                        combined_data.update(extra_kasra)
-                    else:
-                        print(f"⚠️ داده معتبری از kasrapars دریافت نشد.")
+                    kasra_data = get_kasrapars_product_data(item.url_kasra)
+                    if isinstance(kasra_data, list):
+                        combined_variants.extend(kasra_data)
 
-                if combined_data:
-                    process_data(product, combined_data, item.profit, source_name="merged")
+                if combined_variants:
+                    process_data(product, combined_variants, item.profit)
+                else:
+                    reset_product_inventory(product)
 
             except Exception as e:
-                print(f"❌ خطا در پردازش محصول {product.title}")
                 import traceback
                 traceback.print_exc()
-                ProductColorInventory.objects.filter(product=product).update(price=0)
-                r.set("hamrah_update_status", f"error: General error for {product.title}", ex=300)
+                reset_product_inventory(product)
                 continue
-
-        r.set("hamrah_update_status", "done", ex=300)
-        print("✅ بروزرسانی کامل انجام شد.")
 
     except Exception as e:
         import traceback
         traceback.print_exc()
         r.set("hamrah_update_status", f"error: {str(e)}", ex=300)
-        print(f"❌ خطای کلی: {e}")

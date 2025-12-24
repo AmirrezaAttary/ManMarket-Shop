@@ -7,27 +7,38 @@ def normalize_variants(variants):
     result = []
 
     for variant in variants:
-        color_name = None
-        color_code = None
+        try:
+            pricing = variant.get("pricing") or {}
+            price_obj = pricing.get("price") or {}
+            gross = price_obj.get("gross") or {}
+            amount = gross.get("amount")
 
-        # پیدا کردن attribute رنگ
-        for attr in variant.get("attributes", []):
-            if attr["attribute"]["slug"] == "color" and attr["values"]:
-                color_name = attr["values"][0]["name"].strip()
-                color_code = attr["values"][0]["value"]
+            if amount is None:
+                continue  # ⬅️ این variant رو رد کن
 
-        item = {
-            "color": color_name or variant.get("name"),
-            "color_code": color_code,
-            "price": int(
-                variant["pricing"]["price"]["gross"]["amount"]
-            ),
-            "quantity": variant.get("quantityAvailable", 0)
-        }
+            color_name = None
+            color_code = None
 
-        result.append(item)
+            for attr in variant.get("attributes", []):
+                if attr.get("attribute", {}).get("slug") == "color":
+                    values = attr.get("values") or []
+                    if values:
+                        color_name = values[0].get("name")
+                        color_code = values[0].get("value")
 
-    return result
+            result.append({
+                "color": color_name or variant.get("name"),
+                "color_code": color_code,
+                "price": int(amount),
+                "quantity": variant.get("quantityAvailable") or 0,
+            })
+
+        except Exception:
+            # ⬅️ اگر یک variant خراب بود، کل محصول خراب نشه
+            continue
+
+    return result if result else None
+
 
 
 def extract_product_data(url):
@@ -91,7 +102,7 @@ def extract_product_data(url):
     except requests.exceptions.RequestException:
         return None
     if response.status_code != 200:
-        return f"HTTP Error: {response.status_code}"
+        return None
 
     data = response.json()
 
