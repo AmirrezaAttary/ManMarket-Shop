@@ -1,14 +1,15 @@
 from django.views import View
 from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib import messages  
+from django.shortcuts import redirect
+import math
 
 from ..shop.models import  ProductColorInventory, Color
 from .scripts import extract_product_data, get_kasrapars_product_data
 from ..pricegethamrh.models import PriceGetHamrh
-from django.urls import reverse
 from .tasks import update_all_hamrah_products
-from django.contrib import messages  
-from django.shortcuts import redirect
-import math
+
 
 
 class GetColorAndPrice(View):
@@ -22,63 +23,69 @@ class GetColorAndPrice(View):
     def round_up_to_thousand(self, price):
         return math.ceil(price / 1000) * 1000
 
-    def process_data(self, product, data, profit):
+    # 🔹 صفر کردن کامل محصول
+    def reset_product_inventory(self, product):
+        ProductColorInventory.objects.filter(product=product).update(
+            price=0,
+            stock=0,
+            discount_percent=0
+        )
+
+    def process_data(self, product, variants, profit):
+        """
+        variants => list of dicts
+        """
         existing_pcis = ProductColorInventory.objects.filter(product=product)
         existing_colors = {pci.color.title: pci for pci in existing_pcis}
         seen_colors = set()
 
-        for key, value in data.items():
-            color_title = value.get('color')
-            color_code = value.get('color_code', '#ffffff')
+        for item in variants:
+            color_title = item.get("color")
+            color_code = item.get("color_code") or "#ffffff"
 
             if not color_title:
                 continue
 
             seen_colors.add(color_title)
 
-            # ایجاد یا گرفتن رنگ
             color, created = Color.objects.get_or_create(title=color_title)
 
-            # به‌روزرسانی hex_color در مدل Color
             if created or color.hex_color != color_code:
                 color.hex_color = color_code
-                color.save()
+                color.save(update_fields=["hex_color"])
 
             try:
-                raw_price = int(value.get('price') or value.get('old_price') or 0)
+                raw_price = int(item.get("price") or 0)
             except (TypeError, ValueError):
                 raw_price = 0
 
-            discounted_price = int(raw_price * profit) / 100
-            discounted_price += raw_price
-
-            final_price = self.round_up_to_thousand(discounted_price)
-            discount = 0
+            discounted_price = raw_price + (raw_price * profit / 100)
+            final_price = self.round_up_to_thousand(discounted_price) if raw_price else 0
 
             pci, created = ProductColorInventory.objects.get_or_create(
                 product=product,
                 color=color,
                 defaults={
-                    'price': final_price,
-                    'discount_percent': discount,
-                    'hex_color': color_code,
-                    'stock': value.get('quantity', 0)
+                    "price": final_price,
+                    "discount_percent": 0,
+                    "hex_color": color_code,
+                    "stock": item.get("quantity", 0),
                 }
             )
 
             if not created:
                 pci.price = final_price
-                pci.discount_percent = discount
+                pci.discount_percent = 0
                 pci.hex_color = color_code
-                pci.stock = value.get('quantity', 0)
+                pci.stock = item.get("quantity", 0)
                 pci.save()
 
+        # 🔻 رنگ‌هایی که دیگه وجود ندارن
         for color_title, pci in existing_colors.items():
             if color_title not in seen_colors:
                 pci.price = 0
                 pci.stock = 0
                 pci.save()
-
 
     def handle_request(self, request):
         product_id = self.kwargs.get("pk")
@@ -89,30 +96,43 @@ class GetColorAndPrice(View):
 
         for p in products:
             product = p.product
+            combined_variants = []
 
-            combined_data = {}
-
-            # بررسی و پردازش URL سایت همراه‌تل
+            # ✅ همراه‌تل
             if p.url:
-                extra_data = extract_product_data(p.url)
-                if isinstance(extra_data, dict):
-                    combined_data.update(extra_data)
+                hamrah_data = extract_product_data(p.url)
 
-            # بررسی و پردازش URL سایت کسری‌پارس
+                if hamrah_data is None:
+                    # ❗ اگر None بود → صفر کن
+                    self.reset_product_inventory(product)
+                    continue
+
+                if isinstance(hamrah_data, list):
+                    combined_variants.extend(hamrah_data)
+
+            # ✅ کسرا بعداً
             if p.url_kasra:
                 kasra_data = get_kasrapars_product_data(p.url_kasra)
-                if isinstance(kasra_data, dict):
-                    combined_data.update(kasra_data)
 
-            # فقط یک بار پردازش داده‌های ترکیب‌شده
-            self.process_data(product, combined_data, p.profit)
+                if kasra_data is None:
+                    self.reset_product_inventory(product)
+                    continue
+
+                if isinstance(kasra_data, list):
+                    combined_variants.extend(kasra_data)
+
+            if combined_variants:
+                self.process_data(product, combined_variants, p.profit)
+            else:
+                self.reset_product_inventory(product)
 
         return HttpResponseRedirect(self.get_success_url())
 
-
     def get_success_url(self):
-        return reverse("dashboard:admin:product-edit", kwargs={"pk": self.kwargs.get("pk")})
-    
+        return reverse(
+            "dashboard:admin:product-edit",
+            kwargs={"pk": self.kwargs.get("pk")}
+        )  
     
 class UpdateAllHamrahProductsView(View):
     def post(self, request, *args, **kwargs):
