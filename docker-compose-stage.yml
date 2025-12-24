@@ -75,15 +75,15 @@ services:
       - certbot_www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 6h & wait $${!}; certbot renew --webroot -w /var/www/certbot --quiet --deploy-hook \"nginx -s reload\"; done'"
 
-  # certbot_init:
-  #   image: certbot/certbot
-  #   container_name: certbot_init
-  #   depends_on:
-  #     - nginx
-  #   volumes:
-  #     - certbot_conf:/etc/letsencrypt
-  #     - certbot_www:/var/www/certbot
-  #   command: certonly --webroot -w /var/www/certbot --force-renewal --email programmer.amirrezaattary@gmail.com -d manmarket.ir -d www.manmarket.ir --agree-tos --no-eff-email
+  certbot_init:
+    image: certbot/certbot
+    container_name: certbot_init
+    depends_on:
+      - nginx
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email programmer.amirrezaattary@gmail.com -d manmarket.ir -d www.manmarket.ir --agree-tos --no-eff-email
 
 volumes:
   static_volume:
