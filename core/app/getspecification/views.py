@@ -1,15 +1,13 @@
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from concurrent.futures import ThreadPoolExecutor
+
 
 from .tasks import fetch_and_save_specifications, all_specifications_updated
 from .models import PriceSpecification
 from celery import chord
-
-from .scripts import getCommentsDigikala
-from ..review.models import ReviewModel
-
-
+from .utils import process_comments
 
 class GetSpecification(View):
 
@@ -62,6 +60,9 @@ class GetAllSpecifications(View):
 
 class GetComment(View):
 
+    # تعداد همزمان threadها را محدود می‌کنیم
+    executor = ThreadPoolExecutor(max_workers=3)  # حداکثر ۳ پردازش همزمان
+
     def post(self, request, *args, **kwargs):
         return self.handle_request(request)
 
@@ -71,18 +72,20 @@ class GetComment(View):
     def handle_request(self, request):
         product_id = self.kwargs.get("pk")
         product_comment = PriceSpecification.objects.filter(product_id=product_id).first()
-        comments = getCommentsDigikala(url=product_comment.url,number_comments=product_comment.number_comments)
-        for comment in comments:
-            ReviewModel.objects.create(
-                product_id=product_id,
-                name=comment['name'],
-                description=comment['description'],
-                rate=comment['rate'],
-                created_date=comment['created_at'],
+
+        if product_comment:
+            # پردازش در پس‌زمینه بدون مسدود کردن کاربر
+            self.executor.submit(
+                process_comments,
+                product_id,
+                product_comment.number_comments,
+                product_comment.url
             )
-        return HttpResponseRedirect(reverse("dashboard:admin:product-list"))
+
+        # پاسخ فوری به کاربر
+        return HttpResponseRedirect(reverse("dashboard:admin:review-list"))
 
     def get_success_url(self, product_spec_id):
         if product_spec_id:
             return reverse("dashboard:admin:specification-edit", kwargs={"pk": product_spec_id})
-        return reverse("dashboard:admin:product-list")  # یا هر آدرس دیگری
+        return reverse("dashboard:admin:review-list")
