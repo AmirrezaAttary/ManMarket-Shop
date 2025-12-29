@@ -65,6 +65,16 @@
                 </div>
             </div>
             <h3 class="Specifications px-3 ">{{product.title}}</h3>
+            {% if product.has_discount %}
+            <div class="d-flex align-items-center justify-content-end">
+                <del class="cus-fs-5 mt-2 px-3  c-d text-danger">{{product.min_price_template|intcomma}} </del>
+                <span style="text-decoration: none!important;"
+                    class="theme-color rounded-3 text-light mx-1 py-1 px-1"
+                    id="discounted-price">
+                    {{product.min_discount_percent}}%
+                </span>
+            </div>
+            {% endif %}
             <span class="cus-fs-1 mt-2 px-3 d-bx">{{product.get_min_discounted_price|intcomma}} <span class="money-icon"></span></span>
             <a class="position-absolute  href-slide" href="{% url 'shop:product-detail' slug=product.slug %}"></a>
         </article>

@@ -79,3 +79,24 @@ class ProductModel(models.Model):
             color_inventories__price__gt=0,
             color_inventories__stock__gt=0
         ).exclude(id=self.id).distinct().order_by("-created_date")
+    
+
+    def get_min_discounted_price_template(self):
+        inventory = (
+            self.color_inventories
+            .filter(price__gt=0, stock__gt=0)
+            .order_by("final_price")
+            .first()
+        )
+        return inventory
+
+    @property
+    def min_price_template(self):
+        inventory = self.get_min_discounted_price_template()
+        return inventory.price if inventory else None
+
+
+    @property
+    def min_discount_percent(self):
+        inventory = self.get_min_discounted_price_template()
+        return inventory.discount_percent if inventory else None
