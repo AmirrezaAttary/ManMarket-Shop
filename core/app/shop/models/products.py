@@ -97,6 +97,6 @@ class ProductModel(models.Model):
 
 
     @property
-    def min_discount_percent(self):
+    def min_discount_percent_template(self):
         inventory = self.get_min_discounted_price_template()
         return inventory.discount_percent if inventory else None

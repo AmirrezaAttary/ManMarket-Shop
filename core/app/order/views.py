@@ -31,6 +31,94 @@ from ..accounts.scripts import send_bulk_sms
 from django.db import transaction
 from .tasks import check_order_pending_status
 
+class CheckoutAddressView(LoginRequiredMixin, TemplateView):
+    template_name = "order/checkout_address.html"
+
+    def post(self, request, *args, **kwargs):
+        address_id = request.POST.get("address_id")
+
+        if not UserAddressModel.objects.filter(id=address_id, user=request.user).exists():
+            messages.error(request, "آدرس نامعتبر است")
+            return redirect("order:checkout-address")
+
+        request.session['checkout'] = {
+            'address_id': address_id
+        }
+
+        return redirect("order:checkout-shipping")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["addresses"] = UserAddressModel.objects.filter(user=self.request.user)
+        cart_session = CartSession(self.request.session)
+        context["cart_items"] = cart_session.get_cart_items()
+        cart = CartModel.objects.get(user=self.request.user)
+        context["total_price"] = cart.calculate_total_price()
+        context['total_price_with_tax'] = cart.calculate_total_price() + 50000
+        context["sod"] = cart_session.get_tot_payment_amount() - cart_session.get_total_payment_amount()
+
+        return context
+
+class CheckoutShippingView(LoginRequiredMixin, TemplateView):
+    template_name = "order/checkout_shipping.html"
+
+    def post(self, request, *args, **kwargs):
+        tracking_type = request.POST.get("tracking_type")
+
+        checkout = request.session.get("checkout", {})
+        checkout["tracking_type"] = tracking_type
+        request.session["checkout"] = checkout
+
+        return redirect("order:checkout-payment")
+    
+
+class CheckoutPaymentView(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        payment_method = request.POST.get("payment_method")
+        checkout = request.session.get("checkout")
+
+        if not checkout:
+            messages.error(request, "فرآیند خرید نامعتبر است")
+            return redirect("order:checkout-address")
+
+        address = get_object_or_404(
+            UserAddressModel,
+            id=checkout["address_id"],
+            user=request.user
+        )
+
+        cart = CartModel.objects.get(user=request.user)
+
+        with transaction.atomic():
+            order = OrderModel.objects.create(
+                user=request.user,
+                address=address.address,
+                name=address.name,
+                phone_number=address.phone_number,
+                state=address.state,
+                city=address.city,
+                zip_code=address.zip_code,
+                tracking_type=checkout["tracking_type"],
+            )
+
+            for item in cart.cart_items.all():
+                OrderItemModel.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.color_inventory.get_price(),
+                    color=item.color,
+                )
+
+            order.total_price = order.calculate_total_price()
+            order.save()
+
+        # اینجا دقیقاً از متد فعلی خودت استفاده کن
+        return OrderCheckOutView().create_payment_url(order, cart)
+
+
+
 
 class OrderCheckOutView(LoginRequiredMixin, FormView):
     template_name = "order/checkout.html"
