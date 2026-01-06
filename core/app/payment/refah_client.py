@@ -73,4 +73,5 @@ class RefahClient:
         """
         ساخت لینک هدایت کاربر به صفحه پرداخت
         """
-        return f"{self._payment_page_url}?token={token}"
+        url = f"{self._payment_page_url}?token={token}"
+        return url
