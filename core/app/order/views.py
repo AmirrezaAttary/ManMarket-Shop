@@ -412,21 +412,21 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 order_id=order.id
             )
 
-            token = response.get('data', {}).get('token')
-            if not token:
+            refahToken = response.get('data', {}).get('token')
+            if not refahToken:
                 print("Refah payment error:", response)
                 messages.error(request, "خطا در ارتباط با درگاه رفاه. لطفاً دوباره تلاش کنید.")
                 return redirect("order:checkout-shipping")
 
             payment_obj = PaymentModel.objects.create(
-                authority_id=token,
+                authority_id=refahToken,
                 amount=order.total_price,
                 order=order,
                 payemnt_type=PayemntType.refah.value
             )
             order.payment = payment_obj
             order.save()
-            return refah.generate_payment_url(token)
+            return refah.generate_payment_url(refahToken)
 
     # ================= متدهای کمکی =================
     def create_order(self, address, tracking_type):
