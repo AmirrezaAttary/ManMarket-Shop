@@ -413,6 +413,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             )
 
             refahToken = response.get('data', {}).get('token')
+            print(refahToken)
             if not refahToken:
                 print("Refah payment error:", response)
                 messages.error(request, "خطا در ارتباط با درگاه رفاه. لطفاً دوباره تلاش کنید.")
