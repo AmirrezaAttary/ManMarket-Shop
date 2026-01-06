@@ -427,7 +427,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             )
             order.payment = payment_obj
             order.save()
-            return refah.generate_payment_url(refahToken)
+            return redirect(refah.generate_payment_url(refahToken))
 
     # ================= متدهای کمکی =================
     def create_order(self, address, tracking_type):
