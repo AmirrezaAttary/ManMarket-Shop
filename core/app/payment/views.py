@@ -14,7 +14,7 @@ from .zarinpal_client import ZarinPalSandbox
 from .gsmpay_client import GSMPay
 from .refah_client import RefahClient
 from ..order.models import OrderModel, OrderStatusType
-
+from ..cart.cart import CartSession
 # =========================================
 # ویو عمومی برای سایر درگاه‌ها
 # =========================================
@@ -55,11 +55,17 @@ class PaymentVerifyView(View):
 
         return self.process_payment_result(request, payment_obj, order, is_success, response)
 
+    def clear_cart(self, cart):
+        cart.cart_items.all().delete()
+        CartSession(self.request.session).clear()
+        
     def process_payment_result(self, request, payment_obj, order, is_success, response):
         """
         پردازش نتیجه پرداخت برای همه درگاه‌ها
         """
         if is_success:
+            cart = CartModel.objects.get(user=request.user)
+            self.clear_cart(cart)
             payment_obj.status = PayemntStatusType.success.value
             payment_obj.ref_id = response.get("data", {}).get("refId")
             payment_obj.response_code = response.get("data", {}).get("code")
