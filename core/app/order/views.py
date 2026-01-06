@@ -30,7 +30,7 @@ from ..accounts.models import UserType
 from ..accounts.scripts import send_bulk_sms
 from django.db import transaction
 from .tasks import check_order_pending_status
-from ..payment.services import PaymentService
+
 
 class CheckoutAddressView(LoginRequiredMixin, TemplateView):
     template_name = "order/checkout_address.html"
@@ -65,7 +65,7 @@ class CheckoutShippingView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         tracking_type = request.POST.get("tracking_type")
-
+        
         checkout = request.session.get("checkout", {})
         
         checkout["tracking_type"] = tracking_type
@@ -88,49 +88,48 @@ class CheckoutShippingView(LoginRequiredMixin, TemplateView):
         return context
     
 
-class CheckoutPaymentView(LoginRequiredMixin, View):
-
+class CheckoutPaymentView(LoginRequiredMixin, View): 
     def post(self, request, *args, **kwargs):
+        payment_method = request.POST.get("payment_method")
+        tracking_type = request.POST.get("tracking_type")
         checkout = request.session.get("checkout")
+        if not checkout: 
+            messages.error(request, "فرآیند خرید نامعتبر است") 
+            return redirect("order:checkout-address") 
 
-        if not checkout:
-            messages.error(request, "فرآیند خرید نامعتبر است")
-            return redirect("order:checkout-address")
+        address = get_object_or_404(UserAddressModel, id=checkout["address_id"], user=request.user) 
+        cart = CartModel.objects.get(user=request.user) 
 
-        address = get_object_or_404(
-            UserAddressModel,
-            id=checkout["address_id"],
-            user=request.user
-        )
-
-        cart = CartModel.objects.get(user=request.user)
-
-        with transaction.atomic():
+        with transaction.atomic(): 
+            # ایجاد سفارش
             order = OrderModel.objects.create(
                 user=request.user,
                 address=address.address,
-                name=address.name,
-                phone_number=address.phone_number,
-                state=address.state,
-                city=address.city,
-                zip_code=address.zip_code,
-                tracking_type=checkout["tracking_type"],
-            )
+                name=address.name, 
+                phone_number=address.phone_number, 
+                state=address.state, 
+                city=address.city, 
+                zip_code=address.zip_code, 
+                tracking_type=tracking_type,
+            ) 
 
-            for item in cart.cart_items.all():
+            # ایجاد آیتم‌های سفارش
+            for item in cart.cart_items.all(): 
                 OrderItemModel.objects.create(
-                    order=order,
-                    product=item.product,
-                    quantity=item.quantity,
-                    price=item.color_inventory.get_price(),
+                    order=order, 
+                    product=item.product, 
+                    quantity=item.quantity, 
+                    price=item.color_inventory.get_price(), 
                     color=item.color,
                 )
 
-            order.total_price = order.calculate_total_price()
+            # محاسبه کل مبلغ بعد از ایجاد همه آیتم‌ها
+            order.total_price = order.calculate_total_price() 
             order.save()
 
-        payment_service = PaymentService(request)
-        return payment_service.pay(order, cart)
+        # فراخوانی متد پرداخت
+        return OrderCheckOutView().create_payment_url(request=request, order=order, cart=cart)
+
 
 
 
@@ -254,16 +253,16 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 total_price = order.total_price
                 final_price = int(total_price - wallet_value)
                 if final_price <= 0:
-                    messages.error(self.request, "خطا در محاسبه مبلغ قابل پرداخت.")
-                    return redirect("order:checkout")
+                    messages.error(request, "خطا در محاسبه مبلغ قابل پرداخت.")
+                    return redirect("order:checkout-shipping")
 
-                callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+                callback_url = request.build_absolute_uri(reverse_lazy("payment:verify"))
                 response = zarinpal.payment_request(callback_url, final_price)
                 authority = response.get('data', {}).get('authority')
                 if not authority:
                     print("Zarinpal wallet+cart error:", response)
-                    messages.error(self.request, "خطا در ایجاد پرداخت. لطفاً دوباره تلاش کنید.")
-                    return redirect("order:checkout")
+                    messages.error(request, "خطا در ایجاد پرداخت. لطفاً دوباره تلاش کنید.")
+                    return redirect("order:checkout-shipping")
 
                 payment_obj = PaymentModel.objects.create(
                     authority_id=authority,
@@ -285,8 +284,8 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             authority = response.get('data', {}).get('authority')
             if not authority:
                 print("Zarinpal error:", response)
-                messages.error(self.request, "خطا در ایجاد پرداخت. لطفاً دوباره تلاش کنید.")
-                return redirect("order:checkout")
+                messages.error(request, "خطا در ایجاد پرداخت. لطفاً دوباره تلاش کنید.")
+                return redirect("order:checkout-shipping")
 
             payment_obj = PaymentModel.objects.create(
                 authority_id=authority,
@@ -301,8 +300,8 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         # ================= حضوری =================
         if payment_method == "person":
             if user.type not in [UserType.admin, UserType.superuser]:
-                messages.error(self.request, "شما اجازه ثبت سفارش حضوری را ندارید.")
-                return reverse_lazy("order:checkout")
+                messages.error(request, "شما اجازه ثبت سفارش حضوری را ندارید.")
+                return reverse_lazy("order:checkout-shipping")
 
             order.total_price += 50000
             order.address = "تحویل حضوری در فروشگاه"
@@ -336,13 +335,13 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             remainder = total_price - total_tax
             order.total_price = total_tax
 
-            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            callback_url = request.build_absolute_uri(reverse_lazy("payment:verify"))
             response = zarinpal.payment_request(callback_url, order.total_price)
             authority = response.get('data', {}).get('authority')
             if not authority:
                 print("Card Mahax error:", response)
-                messages.error(self.request, "خطا در ایجاد پرداخت کارت به کارت. لطفاً دوباره تلاش کنید.")
-                return redirect("order:checkout")
+                messages.error(request, "خطا در ایجاد پرداخت کارت به کارت. لطفاً دوباره تلاش کنید.")
+                return redirect("order:checkout-shipping")
 
             payment_obj = PaymentModel.objects.create(
                 authority_id=authority,
@@ -359,7 +358,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         if payment_method == "gsmpay":
             gsmpay = GSMPay()
             order.total_price += 50000
-            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            callback_url = request.build_absolute_uri(reverse_lazy("payment:verify"))
             invoice_reference = f"ORDER-{order.id}-{timezone.now().strftime('%Y%m%d%H%M%S')}"
             response, status_code = gsmpay.create_payment(
                 callback_url=callback_url,
@@ -386,7 +385,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 token = response.get('data', {}).get('token')
                 redirect_url = response.get('data', {}).get('redirect_url')
                 if not token or not redirect_url:
-                    messages.error(self.request, "خطا در ایجاد پرداخت GSMPay.")
+                    messages.error(request, "خطا در ایجاد پرداخت GSMPay.")
                     return redirect("order:checkout")
 
                 payment_obj = PaymentModel.objects.create(
@@ -400,13 +399,13 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 order.save()
                 return redirect(redirect_url)
             else:
-                messages.error(self.request, f"خطا در ایجاد پرداخت: {response}")
-                return redirect("order:checkout")
+                messages.error(request, f"خطا در ایجاد پرداخت: {response}")
+                return redirect("order:checkout-shipping")
 
         # ================= Refah =================
         if payment_method == "refah":
             refah = RefahClient()
-            callback_url = self.request.build_absolute_uri(reverse_lazy('payment:refah_callback'))
+            callback_url = request.build_absolute_uri(reverse_lazy('payment:refah_callback'))
             response = refah.purchase_request(
                 amount=order.total_price,
                 callback_url=callback_url,
@@ -416,8 +415,8 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             token = response.get('data', {}).get('token')
             if not token:
                 print("Refah payment error:", response)
-                messages.error(self.request, "خطا در ارتباط با درگاه رفاه. لطفاً دوباره تلاش کنید.")
-                return redirect("order:checkout")
+                messages.error(request, "خطا در ارتباط با درگاه رفاه. لطفاً دوباره تلاش کنید.")
+                return redirect("order:checkout-shipping")
 
             payment_obj = PaymentModel.objects.create(
                 authority_id=token,
