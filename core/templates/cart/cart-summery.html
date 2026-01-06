@@ -153,7 +153,7 @@ cart summery
 
             {% if cart.get_total_quantity == 0 %}
             <div class="tooltip-container">
-                <a href="{% url 'order:checkout' %}">
+                <a href="{% url 'order:checkout-address' %}">
                     <button style="background-color: gray; width: 290px;" class="checkout-btn more-shop" disabled>
                         ادامه فرآیند خرید
                     </button>
@@ -161,7 +161,7 @@ cart summery
                 <span class="tooltip-text">ابتدا محصولی به سبد خرید اضافه کنید</span>
             </div>
             {% else %}
-            <a href="{% url 'order:checkout' %}">
+            <a href="{% url 'order:checkout-address' %}">
                 <button class="checkout-btn more-shop">
                     ادامه فرآیند خرید
                 </button>

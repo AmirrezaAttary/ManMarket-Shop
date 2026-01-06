@@ -30,6 +30,7 @@ from ..accounts.models import UserType
 from ..accounts.scripts import send_bulk_sms
 from django.db import transaction
 from .tasks import check_order_pending_status
+from ..payment.services import PaymentService
 
 class CheckoutAddressView(LoginRequiredMixin, TemplateView):
     template_name = "order/checkout_address.html"
@@ -44,7 +45,7 @@ class CheckoutAddressView(LoginRequiredMixin, TemplateView):
         request.session['checkout'] = {
             'address_id': address_id
         }
-
+        print(request.session['checkout']['address_id'])
         return redirect("order:checkout-shipping")
 
     def get_context_data(self, **kwargs):
@@ -66,16 +67,30 @@ class CheckoutShippingView(LoginRequiredMixin, TemplateView):
         tracking_type = request.POST.get("tracking_type")
 
         checkout = request.session.get("checkout", {})
+        
         checkout["tracking_type"] = tracking_type
         request.session["checkout"] = checkout
 
         return redirect("order:checkout-payment")
+
+    def get_context_data(self, **kwargs):
+        address_id = self.request.session.get("checkout").get('address_id')
+        context = super().get_context_data(**kwargs)
+        cart_session = CartSession(self.request.session)
+        context["cart_items"] = cart_session.get_cart_items()
+        cart = CartModel.objects.get(user=self.request.user)
+        context["total_price"] = cart.calculate_total_price()
+        context['total_price_with_tax'] = cart.calculate_total_price() + 50000
+        context["sod"] = cart_session.get_tot_payment_amount() - cart_session.get_total_payment_amount()
+        wallet = Wallet.objects.get(user=self.request.user)
+        context["addresses"] = UserAddressModel.objects.filter(id=address_id)
+        context["wallet"] = wallet
+        return context
     
 
 class CheckoutPaymentView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
-        payment_method = request.POST.get("payment_method")
         checkout = request.session.get("checkout")
 
         if not checkout:
@@ -114,8 +129,8 @@ class CheckoutPaymentView(LoginRequiredMixin, View):
             order.total_price = order.calculate_total_price()
             order.save()
 
-        # اینجا دقیقاً از متد فعلی خودت استفاده کن
-        return OrderCheckOutView().create_payment_url(order, cart)
+        payment_service = PaymentService(request)
+        return payment_service.pay(order, cart)
 
 
 
@@ -194,9 +209,9 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
 
         return redirect(payment_result)
 
-    def create_payment_url(self, order, cart):
-        user = self.request.user
-        payment_method = self.request.POST.get("payment_method")
+    def create_payment_url(self, request, order, cart):
+        user = request.user
+        payment_method = request.POST.get("payment_method")
 
         # ================= کیف پول =================
         if payment_method == "wallet":
@@ -230,7 +245,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 order.save()
                 self.update_inventory(order)
                 self.send_notifications(order)
-                return reverse_lazy("order:completed")
+                return redirect("order:completed")
 
             else:
                 # ترکیبی کیف پول + درگاه
@@ -259,13 +274,13 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
                 )
                 order.payment = payment_obj
                 order.save()
-                return zarinpal.generate_payment_url(authority)
+                return redirect(zarinpal.generate_payment_url(authority))
 
         # ================= زرین پال =================
         if payment_method == "zarinpal":
             zarinpal = ZarinPalSandbox()
             order.total_price += 50000
-            callback_url = self.request.build_absolute_uri(reverse_lazy("payment:verify"))
+            callback_url = request.build_absolute_uri(reverse_lazy("payment:verify"))
             response = zarinpal.payment_request(callback_url, order.total_price)
             authority = response.get('data', {}).get('authority')
             if not authority:
@@ -281,7 +296,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             )
             order.payment = payment_obj
             order.save()
-            return zarinpal.generate_payment_url(authority)
+            return redirect(zarinpal.generate_payment_url(authority))
 
         # ================= حضوری =================
         if payment_method == "person":
@@ -311,7 +326,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             order.save()
             self.update_inventory(order)
             self.send_notifications(order)
-            return reverse_lazy("order:completed")
+            return redirect("order:completed")
 
         # ================= کارت به کارت مهاب =================
         if payment_method == "card_mahax":
@@ -338,7 +353,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             )
             order.payment = payment_obj
             order.save()
-            return zarinpal.generate_payment_url(authority)
+            return redirect(zarinpal.generate_payment_url(authority))
 
         # ================= GSMPay =================
         if payment_method == "gsmpay":
