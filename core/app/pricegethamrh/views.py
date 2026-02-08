@@ -8,7 +8,7 @@ import math
 from ..shop.models import  ProductColorInventory, Color
 from .scripts import extract_product_data, get_kasrapars_product_data
 from ..pricegethamrh.models import PriceGetHamrh
-from .tasks import update_all_hamrah_products
+# from .tasks import update_all_hamrah_products
 
 
 
@@ -138,8 +138,8 @@ class GetColorAndPrice(View):
             kwargs={"pk": self.kwargs.get("pk")}
         )  
     
-class UpdateAllHamrahProductsView(View):
-    def post(self, request, *args, **kwargs):
-        messages.add_message(request, messages.INFO, 'در حال آپدیت رنگ وقیمت محصولات ...')
-        update_all_hamrah_products.delay()
-        return redirect(reverse("dashboard:admin:colors-list"))
+# class UpdateAllHamrahProductsView(View):
+#     def post(self, request, *args, **kwargs):
+#         messages.add_message(request, messages.INFO, 'در حال آپدیت رنگ وقیمت محصولات ...')
+#         update_all_hamrah_products.delay()
+#         return redirect(reverse("dashboard:admin:colors-list"))

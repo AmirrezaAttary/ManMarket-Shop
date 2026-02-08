@@ -5,5 +5,5 @@ app_name = "pricegethamrh"
 
 urlpatterns = [
     path("getcolor/<int:pk>/",views.GetColorAndPrice.as_view(),name="getcolor"),
-    path("update-all-hamrah/", views.UpdateAllHamrahProductsView.as_view(), name="update-all-hamrah"),
+    # path("update-all-hamrah/", views.UpdateAllHamrahProductsView.as_view(), name="update-all-hamrah"),
 ]

@@ -17,10 +17,10 @@ python-decouple==3.8
 
 
 # api for models
-celery
-Redis
-django-celery-beat
-django-redis
+# celery
+# Redis
+# django-celery-beat
+# django-redis
 requests
 
 # sing with google

@@ -13,7 +13,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.core.exceptions import FieldError
 from ....pricegethamrh.models import PriceGetHamrh
-import redis
+# import redis
 from django.http import JsonResponse
 
 # def check_hamrah_status(request):
@@ -37,16 +37,16 @@ class AdminGetColorListView(LoginRequiredMixin, HasAdminAccessPermission, ListVi
     model = PriceGetHamrh.objects.all()
 
     def get(self, request, *args, **kwargs):
-        r = redis.Redis(host='redis', port=6379, db=2)
-        status = r.get("hamrah_update_status")  
+        # r = redis.Redis(host='redis', port=6379, db=2)
+        # status = r.get("hamrah_update_status")  
 
-        if status:
-            status = status.decode()
-            if status == "done":
-                messages.success(request, "✅ قیمت و رنگ محصولات با موفقیت آپدیت شد.")
-            elif status.startswith("error:"):
-                messages.error(request, f"❌ خطا در آپدیت: {status}")
-            r.delete("hamrah_update_status")
+        # if status:
+        #     status = status.decode()
+        #     if status == "done":
+        #         messages.success(request, "✅ قیمت و رنگ محصولات با موفقیت آپدیت شد.")
+        #     elif status.startswith("error:"):
+        #         messages.error(request, f"❌ خطا در آپدیت: {status}")
+        #     r.delete("hamrah_update_status")
 
         return super().get(request, *args, **kwargs)  # ✅ بسیار مهم!
 

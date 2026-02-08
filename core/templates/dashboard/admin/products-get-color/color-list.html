@@ -63,9 +63,12 @@
                                     همه</i></button>
                         </div>
                     </form>
+                    {% comment "get color is null" %}
                     <form hidden id="get_color" method="post" action="{% url 'pricegethamrh:update-all-hamrah' %}">
                         {% csrf_token %}
                     </form>
+                    {% endcomment %}
+
 
                 </div>
 
@@ -93,10 +96,13 @@
                                         <a class="btn btn-sm btn-icon btn-ghost-secondary"
                                             href="{% url 'dashboard:admin:colors-edit' pk=object.id %}"><i
                                                 class="bi-pencil-square">eidt</i></a>
+                                                {% comment "get color is null" %}
                                         <a class="btn btn-sm btn-icon btn-ghost-primary"
                                             href="{% url 'pricegethamrh:getcolor' pk=object.product.id %}">
                                             <i class="bi-eye">get color</i>
-                                        </a>
+                                        </a>          
+                                                {% endcomment %}
+
                                         <a target="_blank" class="btn btn-sm btn-icon btn-ghost-primary"
                                             href="{% url 'dashboard:admin:product-edit' pk=object.product.id %}">
                                             <i class="bi-eye">show in admin</i>

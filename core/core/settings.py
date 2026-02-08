@@ -87,7 +87,7 @@ INSTALLED_APPS = [
     "django_jalali",
     'jalali_date',
     'robots',
-    'django_celery_beat',
+    # 'django_celery_beat',
     'django_summernote', 
     
     # api doc
@@ -270,18 +270,25 @@ PASSWORD_RESET_TIMEOUT_DAYS = 2
 
 # celery settings
 
-CELERY_BROKER_URL = "redis://redis:6379/0"
-CELERY_RESULT_BACKEND = 'redis://redis:6379/3'
+# CELERY_BROKER_URL = "redis://redis:6379/0"
+# CELERY_RESULT_BACKEND = 'redis://redis:6379/3'
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
+
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://redis:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 
 
 # time setting
