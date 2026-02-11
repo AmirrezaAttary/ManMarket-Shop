@@ -29,7 +29,7 @@ from ..shop.models import ProductColorInventory
 from ..accounts.models import UserType
 from ..accounts.scripts import send_bulk_sms
 from django.db import transaction
-from .tasks import check_order_pending_status
+# from .tasks import check_order_pending_status
 
 
 class CheckoutAddressView(LoginRequiredMixin, TemplateView):
@@ -59,6 +59,8 @@ class CheckoutAddressView(LoginRequiredMixin, TemplateView):
         context["sod"] = cart_session.get_tot_payment_amount() - cart_session.get_total_payment_amount()
 
         return context
+
+
 
 class CheckoutShippingView(LoginRequiredMixin, TemplateView):
     template_name = "order/checkout_shipping.html"
@@ -197,7 +199,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         self.apply_coupon(coupon, order, user, total_price)
         order.save()
 
-        check_order_pending_status.apply_async(args=[order.id], countdown=180)
+        # check_order_pending_status.apply_async(args=[order.id], countdown=180)
         self.clear_cart(cart)
 
         payment_result = self.create_payment_url(order, cart)
@@ -406,6 +408,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
         if payment_method == "refah":
             refah = RefahClient()
             callback_url = request.build_absolute_uri(reverse_lazy('payment:refah_callback'))
+
             response = refah.purchase_request(
                 amount=order.total_price,
                 callback_url=callback_url,
@@ -414,6 +417,7 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
 
             refahToken = response.get('data', {}).get('token')
             print(refahToken)
+
             if not refahToken:
                 print("Refah payment error:", response)
                 messages.error(request, "خطا در ارتباط با درگاه رفاه. لطفاً دوباره تلاش کنید.")
@@ -427,7 +431,10 @@ class OrderCheckOutView(LoginRequiredMixin, FormView):
             )
             order.payment = payment_obj
             order.save()
-            return redirect(refah.generate_payment_url(refahToken))
+
+            from urllib.parse import quote
+            redirect_url = quote(refah.generate_payment_url(refahToken), safe=':/?&=')
+            return redirect(redirect_url)
 
     # ================= متدهای کمکی =================
     def create_order(self, address, tracking_type):

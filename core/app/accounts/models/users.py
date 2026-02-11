@@ -49,7 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(
         max_length=12,
         unique=True,
-        validators=[validate_iranian_cellphone_number]
+        validators=[validate_iranian_cellphone_number],
+        default='09120000000'
     )
     
     is_staff = models.BooleanField(default=False)
