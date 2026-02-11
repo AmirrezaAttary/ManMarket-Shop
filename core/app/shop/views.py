@@ -148,19 +148,7 @@ class ShopDetailProductView(DetailView):
     queryset = ProductModel.objects.filter(status=ProductStatusType.publish.value)
     context_object_name = 'product'
 
-    def dispatch(self, request, *args, **kwargs):
-        try:
-            self.object = self.get_object()
-        except Http404:
-            return HttpResponseGone("""<head>
-                                    <meta name="robots" content="noindex">
-                                    <title>محصول ناموجود</title>
-                                    </head>
-                                    <body>
-                                    <h1>410</h1>
-                                    <p>این محصول دیگر موجود نیست.</p>
-                                    </body>""")
-        return super().dispatch(request, *args, **kwargs)
+
     
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)

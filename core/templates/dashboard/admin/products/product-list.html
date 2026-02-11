@@ -121,7 +121,11 @@
                                             href="{% url 'shop:product-detail' slug=object.slug %}"><i
                                                 class="bi-eye">نمایش</i></a>
                                         {% endif %}
-
+                                        
+                                        {% comment %}
+                                            
+                                        
+                                            
                                         {% if object.id in specification_get_color_product_ids %}
                                         <a class="btn btn-sm btn-icon btn-ghost-primary"
                                             href="{% url 'getspecification:specification' pk=object.id %}">
@@ -135,6 +139,8 @@
                                             <i class="bi-eye">گرفتن رنگ وقیمت</i>
                                         </a>
                                         {% endif %}
+
+                                        {% endcomment %}
 
                                         
 
