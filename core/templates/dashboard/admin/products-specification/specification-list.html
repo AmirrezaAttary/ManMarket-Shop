@@ -57,10 +57,15 @@
                                 style="background-color: #f96747;border-color: #f96747;"><i
                                     class="bi-search">اعمال</i></button>
                         </div>
+                        
+                        {% comment %}
+                            
+                        
+                            
                         <a href="{% url 'getspecification:get-all-specifications' %}" class="btn btn-primary">
                             گرفتن مشخصات همه محصولات
                         </a>
-
+                        {% endcomment %}
                     </form>
 
                 </div>
@@ -89,10 +94,16 @@
                                         <a class="btn btn-sm btn-icon btn-ghost-secondary"
                                             href="{% url 'dashboard:admin:specification-edit' pk=object.id %}"><i
                                                 class="bi-pencil-square">eidt</i></a>
+                                                
+                                                {% comment %}
+                                                    
+                                                
+                                                    
                                         <a class="btn btn-sm btn-icon btn-ghost-primary"
                                             href="{% url 'getspecification:specification' pk=object.product.id %}">
                                             <i class="bi-eye">get specification</i>
                                         </a>
+                                        {% endcomment %}
                                         <a class="btn btn-sm btn-icon btn-ghost-primary"
                                             href="{% url 'getspecification:get-comments' pk=object.product.id %}">
                                             <i class="bi-eye">get comments</i>
