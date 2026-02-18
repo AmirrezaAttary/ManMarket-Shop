@@ -8,7 +8,7 @@ class WishlistViewSet(viewsets.ModelViewSet):
     serializer_class = WishlistProductModelSerializers
     permission_classes = [IsCustomer]
     pagination_class = LargeResultsSetPagination
-    http_method_names = ['get', 'head', 'options','delete']
+    # http_method_names = ['get', 'head', 'options','delete']
 
     def get_queryset(self):
         user = self.request.user
