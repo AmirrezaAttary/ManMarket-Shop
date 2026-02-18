@@ -10,6 +10,9 @@ router = DefaultRouter()
 router.register(r'order', views.OrderViewSet, basename='order')
 router.register(r'address', views.UserAddressModelViewSet, basename='address')
 router.register(r'wishlist', views.WishlistViewSet, basename='wishlist')
+router.register(r"wallet", views.WalletViewSet, basename="wallet")
+router.register(r"wallet/transactions", views.WalletTransactionViewSet, basename="wallet-transactions")
+
 
 
 urlpatterns = [
