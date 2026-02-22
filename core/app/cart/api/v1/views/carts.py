@@ -7,10 +7,11 @@ from ..serializers import (
     CartSerializer,
 )
 from ..permissions import IsCustomer
+from rest_framework.permissions import IsAuthenticated
 
 class CartRetrieveAPIView(RetrieveAPIView):
     serializer_class = CartSerializer
-    # permission_classes = [IsCustomer]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return CartModel.objects.filter(user=self.request.user)
