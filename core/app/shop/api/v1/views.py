@@ -35,8 +35,8 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
             status=ProductStatusType.publish.value
         )
 
-        # ✅ فقط برای list
         if self.action == "list":
+            # ترتیب: اول محصولات با stock>0 و price>0، بعد بر اساس جدیدترین
             return (
                 base_qs
                 .annotate(
@@ -48,22 +48,16 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
                         ),
                         default=Value(0),
                         output_field=IntegerField()
-                    ),
+                    )
                 )
                 .distinct()
                 .order_by(
-                    "-has_stock_and_price",
-                    "-created_date"
+                    "-has_stock_and_price",  # محصولات با موجودی و قیمت اول
+                    "-created_date"          # سپس جدیدترین‌ها
                 )
             )
 
-        # ✅ برای retrieve / similar / detail
         return base_qs
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return ProductListSerializer
-        return ProductDetailSerializer
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -76,6 +70,7 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
         similar_products = product.get_similar_products()
         serializer = SimilarProductSerializer(similar_products, many=True, context={"request": request})
         return Response(serializer.data)
+
 
 class ProductCategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
