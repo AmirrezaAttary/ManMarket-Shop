@@ -7,6 +7,7 @@ class CartItemAddProductSerializers(serializers.ModelSerializer):
         fields = [
             "cart",
             "product",
+            "color",
             "color_inventory",
             "quantity",
         ]

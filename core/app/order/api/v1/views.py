@@ -46,7 +46,7 @@ class OrderCheckOutAPIView(GenericAPIView):
             OrderItemModel.objects.create(
                 order=order,
                 product=item.product,
-                color_inventory=item.color_inventory,
+                color=item.color_inventory.color,   # ✅ درست
                 quantity=item.quantity,
                 price=item.color_inventory.get_price()
             )
