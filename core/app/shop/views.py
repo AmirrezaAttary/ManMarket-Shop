@@ -16,6 +16,9 @@ from .models import (ProductModel, ProductStatusType,
                          ProductSpecification,Brand,WishlistProductModel)
 from ..review.models import ReviewModel,ReviewStatusType
 from ..cart.models import CartItemModel
+from urllib.parse import unquote
+from django.shortcuts import get_object_or_404
+
 # Create your views here.
 
 
@@ -151,12 +154,12 @@ class ShopDetailProductView(DetailView):
 
     
     def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        slug = unquote(slug)  
 
-        # هر بار که صفحه دیده می‌شود، 1 واحد به بازدید افزوده می‌شود
-        ProductModel.objects.filter(pk=obj.pk).update(product_view=F('product_view') + 1)
-        
-        return obj
+        queryset = queryset or self.get_queryset()
+        return get_object_or_404(queryset, slug=slug)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = context['product']

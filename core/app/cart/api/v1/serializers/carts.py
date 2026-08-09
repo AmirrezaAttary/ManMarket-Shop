@@ -5,6 +5,7 @@ from ....models import CartModel, CartItemModel
 
 class CartItemSerializerCart(serializers.ModelSerializer):
     product_title = serializers.CharField(source="product.title", read_only=True)
+    product_slug = serializers.CharField(source="product.slug", read_only=True)
     color_name = serializers.CharField(source="color.name", read_only=True)
     price = serializers.SerializerMethodField()
 
@@ -13,6 +14,7 @@ class CartItemSerializerCart(serializers.ModelSerializer):
         fields = [
             "id",
             "product",
+            "product_slug",
             "product_title",
             "color_name",
             "color_inventory",

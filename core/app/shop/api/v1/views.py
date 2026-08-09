@@ -22,6 +22,8 @@ from .serializers import (
 )
 from .paginations import LargeResultsSetPagination
 from .filterset import ProductFilter
+from urllib.parse import unquote
+from rest_framework.generics import get_object_or_404
 
 class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = LargeResultsSetPagination
@@ -29,6 +31,20 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = ProductFilter
     search_fields = ["title"]
     ordering_fields = ["created_date"]
+    lookup_field = "slug"
+    
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        slug = self.kwargs.get(lookup_url_kwarg)
+
+        # اصلاح double-encoding احتمالی
+        if isinstance(slug, str):
+            slug = unquote(slug)
+
+        obj = get_object_or_404(queryset, **{self.lookup_field: slug})
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def get_queryset(self):
         base_qs = ProductModel.objects.filter(
@@ -65,7 +81,7 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
         return ProductDetailSerializer
 
     @action(detail=True, methods=["get"])
-    def similar(self, request, pk=None):
+    def similar(self, request, slug=None):
         product = self.get_object()
         similar_products = product.get_similar_products()
         serializer = SimilarProductSerializer(similar_products, many=True, context={"request": request})
@@ -75,11 +91,13 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
 class ProductCategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
     queryset = ProductCategoryModel.objects.all()
+    lookup_field = "slug"
 
 
 class BrandModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BrandsSerializer 
     queryset = Brand.objects.all()
+    lookup_field = "slug"
 
 
 class ColorModelViewSet(viewsets.ReadOnlyModelViewSet):

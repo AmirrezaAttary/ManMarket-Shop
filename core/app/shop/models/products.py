@@ -77,7 +77,7 @@ class ProductModel(models.Model):
         return min_discounted_price < min_price
 
     def get_absolute_api_url(self):
-        return reverse("shop:api-v1-shop:product-detail", kwargs={"pk": self.pk})
+        return reverse("shop:api-v1-shop:product-detail", kwargs={"slug": self.slug})
 
     def get_similar_products(self):
         return ProductModel.objects.filter(

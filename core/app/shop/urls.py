@@ -10,6 +10,6 @@ urlpatterns = [
     path('add-or-remove-wishlist/', views.AddOrRemoveWishlistView.as_view(), name='add-or-remove-wishlist'),
     path("rss/feed/", LatestNewsFeed()),
     path('',views.ShopListProductView.as_view(),name='product-list'),
-    re_path(r"^(?P<slug>.+)/$",views.ShopDetailProductView.as_view(),name='product-detail'),
+    re_path(r"^(?P<slug>.+)/$$",views.ShopDetailProductView.as_view(),name='product-detail'),
     
 ]

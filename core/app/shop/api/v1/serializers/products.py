@@ -87,6 +87,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+            "brief_title",
             "slug",
             "image",
             "avg_rate",
@@ -98,9 +99,13 @@ class ProductListSerializer(serializers.ModelSerializer):
             "has_discount",
         ]
 
+
+        
     def get_absolute_url(self, obj):
         request = self.context.get("request")
-        return f"{request.build_absolute_uri(obj.pk)}/"
+        return request.build_absolute_uri(obj.get_absolute_api_url())
+
+
 
 
 class ReviewModelSerializer(serializers.ModelSerializer):
@@ -167,8 +172,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     def get_similar_url(self, obj):
         request = self.context.get("request")
         return reverse(
-            "shop:api-v1-shop:product-similar",   # اسم روت action مشابه‌ها
-            kwargs={"pk": obj.pk},
+            "shop:api-v1-shop:product-similar",
+            kwargs={"slug": obj.slug},   # ✅ درست
             request=request,
         )
 
