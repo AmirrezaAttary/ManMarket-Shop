@@ -11,6 +11,7 @@ from ...models import (
     ProductCategoryModel,
     Brand,
     Color,
+    MegaMenu
 )
 from .serializers import (
     CategorySerializer,
@@ -19,11 +20,16 @@ from .serializers import (
     ProductListSerializer,
     ProductDetailSerializer,
     SimilarProductSerializer,
+    MegaMenuSerializer
 )
 from .paginations import LargeResultsSetPagination
 from .filterset import ProductFilter
 from urllib.parse import unquote
 from rest_framework.generics import get_object_or_404
+from rest_framework.generics import ListAPIView
+
+
+
 
 class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = LargeResultsSetPagination
@@ -104,3 +110,10 @@ class ColorModelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProductColorSerializer
     queryset = Color.objects.all()
 
+class MegaMenuViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = MegaMenu.objects.select_related(
+        "category",
+        "brand"
+    ).all()
+
+    serializer_class = MegaMenuSerializer
