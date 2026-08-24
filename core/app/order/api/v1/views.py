@@ -68,7 +68,7 @@ class OrderCheckOutAPIView(GenericAPIView):
 
         # ایجاد پرداخت زرین‌پال
         zarinpal = ZarinPalSandbox()
-        total_price += 50000  # هزینه ارسال ثابت
+        total_price += 150000  # هزینه ارسال ثابت
         callback_url = request.build_absolute_uri(reverse("payment:api-v1-payment:verify"))
         response = zarinpal.payment_request(callback_url, int(total_price))
 

@@ -12,4 +12,10 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return OrderModel.objects.filter(user=user).order_by('-created_date')
+        qs = OrderModel.objects.filter(user=user).order_by('-created_date')
+        if self.action == 'retrieve':
+            qs = qs.prefetch_related(
+                'order_items__product',
+                'order_items__color',
+            ).select_related('payment', 'coupon')
+        return qs
