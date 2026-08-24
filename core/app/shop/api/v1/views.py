@@ -27,6 +27,9 @@ from .filterset import ProductFilter
 from urllib.parse import unquote
 from rest_framework.generics import get_object_or_404
 from rest_framework.generics import ListAPIView
+from django.db.models import Count, Max, Min, Q
+
+from ...models import Brand, Color
 
 
 
@@ -92,6 +95,59 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
         similar_products = product.get_similar_products()
         serializer = SimilarProductSerializer(similar_products, many=True, context={"request": request})
         return Response(serializer.data)
+    @action(detail=False, methods=["get"], url_path="filter-options")
+    def filter_options(self, request):
+        category_slug = request.query_params.get("category")
+
+        qs = ProductModel.objects.filter(status=ProductStatusType.publish.value)
+        if category_slug:
+            qs = qs.filter(category__slug=category_slug)
+
+        price_agg = qs.aggregate(
+            min_price=Min(
+                "color_inventories__final_price",
+                filter=Q(color_inventories__stock__gt=0, color_inventories__price__gt=0),
+            ),
+            max_price=Max(
+                "color_inventories__final_price",
+                filter=Q(color_inventories__stock__gt=0, color_inventories__price__gt=0),
+            ),
+        )
+
+        brands = (
+            Brand.objects.filter(productmodel__in=qs)          # ← اسم related رو چک کن
+            .annotate(product_count=Count("productmodel", filter=Q(productmodel__in=qs), distinct=True))
+            .filter(product_count__gt=0)
+            .values("id", "title", "slug", "product_count")
+            .distinct()
+            .order_by("-product_count")
+        )
+
+        colors = (
+            Color.objects.filter(product_inventories__product__in=qs)
+            .annotate(
+                product_count=Count(
+                    "product_inventories__product",
+                    filter=Q(product_inventories__product__in=qs),
+                    distinct=True,
+                )
+            )
+            .filter(product_count__gt=0)
+            .values("id", "title", "hex_color", "product_count")
+            .distinct()
+            .order_by("-product_count")
+        )
+
+        return Response({
+            "price_range": {
+                "min": price_agg["min_price"] or 0,
+                "max": price_agg["max_price"] or 0,
+            },
+            "brands": list(brands),
+            "colors": list(colors),
+            "in_stock_count": qs.filter(color_inventories__stock__gt=0).distinct().count(),
+            "discounted_count": qs.filter(color_inventories__discount_percent__gt=0).distinct().count(),
+        })
 
 
 class ProductCategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
