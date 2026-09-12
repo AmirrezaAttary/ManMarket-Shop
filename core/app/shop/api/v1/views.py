@@ -1,4 +1,4 @@
-from django.db.models import Case, When, Value, IntegerField, Min
+from django.db.models import Case, When, Value, IntegerField, Min, Exists, OuterRef
 from django.db.models import Q
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
@@ -11,7 +11,8 @@ from ...models import (
     ProductCategoryModel,
     Brand,
     Color,
-    MegaMenu
+    MegaMenu,
+    ProductColorInventory,
 )
 from .serializers import (
     CategorySerializer,
@@ -62,20 +63,29 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
 
         if self.action == "list":
             # ترتیب: اول محصولات با stock>0 و price>0، بعد بر اساس جدیدترین
+            #
+            # نکته‌ی مهم: قبلاً این annotate با Case/When مستقیم روی
+            # color_inventories__stock و color_inventories__price حساب می‌شد
+            # که باعث JOIN با جدول ProductColorInventory می‌شد. چون یک محصول
+            # می‌تونه چند تا ProductColorInventory داشته باشه، این JOIN باعث
+            # می‌شد یک محصول با رنگ‌های مختلف (یکی موجود/باقیمت، یکی نه) چند بار
+            # با annotate متفاوت توی queryset تکرار بشه و distinct() هم نمی‌تونست
+            # این ردیف‌های تکراری رو یکی کنه (چون مقدار annotate باهاشون فرق داشت).
+            # نتیجه: صفحه‌بندی به هم می‌ریخت و محصولات قیمت‌دار/بدون‌قیمت به
+            # صورت نامنظم بین صفحات پخش می‌شدن.
+            #
+            # با Exists(OuterRef(...)) این annotate از طریق یک subquery جدا
+            # محاسبه میشه (نه JOIN)، پس هیچ ردیف تکراری‌ای ساخته نمیشه و
+            # نیازی هم به distinct() نیست.
+            has_available_inventory = ProductColorInventory.objects.filter(
+                product=OuterRef("pk"),
+                stock__gt=0,
+                price__gt=0,
+            )
+
             return (
                 base_qs
-                .annotate(
-                    has_stock_and_price=Case(
-                        When(
-                            color_inventories__stock__gt=0,
-                            color_inventories__price__gt=0,
-                            then=Value(1)
-                        ),
-                        default=Value(0),
-                        output_field=IntegerField()
-                    )
-                )
-                .distinct()
+                .annotate(has_stock_and_price=Exists(has_available_inventory))
                 .order_by(
                     "-has_stock_and_price",  # محصولات با موجودی و قیمت اول
                     "-created_date"          # سپس جدیدترین‌ها
@@ -148,6 +158,7 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
             "in_stock_count": qs.filter(color_inventories__stock__gt=0).distinct().count(),
             "discounted_count": qs.filter(color_inventories__discount_percent__gt=0).distinct().count(),
         })
+
 
 
 class ProductCategoryModelViewSet(viewsets.ReadOnlyModelViewSet):
