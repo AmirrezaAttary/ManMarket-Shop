@@ -23,6 +23,17 @@ urlpatterns = [
     ),
     path("jwt/refresh/", TokenRefreshView.as_view(), name="jwt-refresh"),
     path("jwt/verify/", TokenVerifyView.as_view(), name="jwt-verify"),
+    # login with OTP
+    path(
+        "otp/request/",
+        views.OTPRequestAPIView.as_view(),
+        name="otp-request",
+    ),
+    path(
+        "otp/verify/",
+        views.OTPVerifyAPIView.as_view(),
+        name="otp-verify",
+    ),
     # change password
     path(
         "change-password/",
