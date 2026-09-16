@@ -10,7 +10,7 @@ def cancel_expired_orders():
     expiration_time = timezone.now() - timedelta(minutes=30)
     expired_orders = OrderModel.objects.filter(
         status=OrderStatusType.pending.value,
-        created_date__lt=expiration_time
+        created_date__lte=expiration_time
     )
     for order in expired_orders:
         order.status = OrderStatusType.failed.value

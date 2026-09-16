@@ -25,6 +25,11 @@ class PaymentVerifyAPIView(APIView):
 
         payment_obj = get_object_or_404(PaymentModel, authority_id=authority_id)
 
+        # پرداخت‌های قدیمی که هنگام «پرداخت مجدد» باطل شده‌اند
+        # نباید دوباره سفارش را موفق کنند.
+        if payment_obj.status != PayemntStatusType.pending.value:
+            return redirect(failed_url)
+
         if payment_obj.payemnt_type not in [
             PayemntType.cart.value,
             PayemntType.cart_home.value,
