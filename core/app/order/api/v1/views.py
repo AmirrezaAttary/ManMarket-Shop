@@ -40,7 +40,7 @@ class OrderCheckOutAPIView(GenericAPIView):
             city=address.city,
             zip_code=address.zip_code,
             tracking_type=tracking_type,
-            status=OrderStatusType.awaiting.value
+            status=OrderStatusType.pending.value
         )
 
         # ایجاد آیتم‌های سفارش
