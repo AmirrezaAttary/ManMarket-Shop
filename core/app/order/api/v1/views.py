@@ -33,6 +33,8 @@ class OrderCheckOutAPIView(GenericAPIView):
         # ایجاد سفارش
         order = OrderModel.objects.create(
             user=user,
+            name=address.name,
+            phone_number=address.phone_number,
             address=address.address,
             state=address.state,
             city=address.city,
