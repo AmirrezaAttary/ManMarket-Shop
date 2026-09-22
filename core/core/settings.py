@@ -85,7 +85,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     "taggit",
     "django_jalali",
-    'jalali_date',
 
     # 'django_celery_beat',
     'django_summernote', 
@@ -231,8 +230,9 @@ if SHOW_DEBUGGER_TOOLBAR:
 
 
 AUTH_USER_MODEL = 'accounts.User'
-LOGIN_REDIRECT_URL = 'dashboard:home'
-LOGOUT_REDIRECT_URL= '/'
+LOGIN_REDIRECT_URL = 'dashboard:admin:profile-edit'
+LOGIN_URL = 'accounts:login'
+LOGOUT_REDIRECT_URL = 'accounts:login'
 
 
 # sms.ir webservice

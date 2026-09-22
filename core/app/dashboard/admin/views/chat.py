@@ -5,14 +5,15 @@ from ...admin.forms import AdminReplyForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 from ....accounts.models import UserType
+from ...permissions import HasAdminAccessPermission
 
-class ChatRoomListView(ListView):
+class ChatRoomListView(HasAdminAccessPermission, ListView):
     model = ChatRoom
     queryset = ChatRoom.objects.all()
     template_name = 'dashboard/admin/chat/chat_room_list.html'
     
     
-class ChatRoomDetailView(DetailView):
+class ChatRoomDetailView(HasAdminAccessPermission, DetailView):
     model = ChatRoom
     template_name = 'dashboard/admin/chat/chat_room_detail.html'
     
@@ -22,7 +23,7 @@ class ChatRoomDetailView(DetailView):
         return context
 
 
-class ChatRoomSendView(LoginRequiredMixin, FormView):
+class ChatRoomSendView(HasAdminAccessPermission, LoginRequiredMixin, FormView):
     template_name = 'dashboard/admin/chat/chat_room_send.html'
     form_class = AdminReplyForm
 

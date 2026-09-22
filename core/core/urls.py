@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from app.dashboard.views import ProjectEntryView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
@@ -39,8 +40,11 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    # The project is now admin-panel only: root is the secure entry point.
+    path('', ProjectEntryView.as_view(), name='project-entry'),
     path('admin/', admin.site.urls),
 
+    path('accounts/', include('app.accounts.urls')),
     path("dashboard/", include('app.dashboard.urls')),
 
     path('summernote/', include('django_summernote.urls')),

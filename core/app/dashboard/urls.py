@@ -1,7 +1,6 @@
 from django.urls import path,include
 
 from . admin import urls as admin_urls
-from . customer import urls as customer_urls
 from .api.v1 import urls as api_urls
 
 app_name = "dashboard"
@@ -16,7 +15,7 @@ urlpatterns = [
     path("admin/",include(admin_urls)),
     
     # # include customer urls
-    path("customer/",include(customer_urls)),
+    # path("customer/",include(customer_urls)),
 ]
 
 

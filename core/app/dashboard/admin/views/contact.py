@@ -4,24 +4,25 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from ....website.models import Contact
+from ...permissions import HasAdminAccessPermission
 
 
 
-class ContactListView(LoginRequiredMixin, ListView):
+class ContactListView(HasAdminAccessPermission, LoginRequiredMixin, ListView):
     model = Contact
     template_name = 'dashboard/admin/contact/contact_list.html'
     context_object_name = 'contacts'
     paginate_by = 12  # ← تعداد آیتم در هر صفحه
 
 
-class ContactDetailView(LoginRequiredMixin, DetailView):
+class ContactDetailView(HasAdminAccessPermission, LoginRequiredMixin, DetailView):
     model = Contact
     template_name = 'dashboard/admin/contact/contact_detail.html'
     context_object_name = 'contact'
     
 
   
-class ContactDeleteView(LoginRequiredMixin, DeleteView):
+class ContactDeleteView(HasAdminAccessPermission, LoginRequiredMixin, DeleteView):
     model = Contact
     template_name = 'dashboard/admin/contact/contact_confirm_delete.html'
     success_url = reverse_lazy('dashboard:admin:contact-list')

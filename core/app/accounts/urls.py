@@ -1,9 +1,10 @@
-from django.urls import path,include
-from .api.v1 import urls as api_urls
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from .views import AdminLoginView
 
-app_name = 'accounts'
+app_name = "accounts"
 
 urlpatterns = [
-    # api accounts
-    path('v1/', include(api_urls)),
+    path("login/", AdminLoginView.as_view(), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
 ]
