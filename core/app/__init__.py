@@ -11,7 +11,6 @@ from .dashboard import *
 from .payment import *
 from .pricegethamrh import *
 from .getspecification import *
-from .faq import *
 from .review import *
 from .wallets import *
 from .chat import *

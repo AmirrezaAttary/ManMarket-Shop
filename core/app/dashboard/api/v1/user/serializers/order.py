@@ -1,6 +1,3 @@
-from datetime import timedelta
-
-from django.utils import timezone
 from rest_framework import serializers
 from app.order.models import OrderModel, OrderItemModel
 from app.shop.models import ProductModel, Color  # مسیر رو با ساختار پروژه‌ت چک کن
@@ -45,41 +42,10 @@ class UserOrderSerializer(serializers.ModelSerializer):
     final_price = serializers.SerializerMethodField()
     full_address = serializers.SerializerMethodField()
     tracking_url = serializers.SerializerMethodField()
-    can_retry_payment = serializers.SerializerMethodField()
-    payment_expires_at = serializers.SerializerMethodField()
-    remaining_payment_seconds = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderModel
         fields = '__all__'
-
-    def get_can_retry_payment(self, obj):
-        if obj.status != 1:
-            return False
-
-        expires_at = obj.created_date + timedelta(minutes=30)
-        if timezone.now() >= expires_at:
-            return False
-
-        for item in obj.order_items.all():
-            inventory = item.product.color_inventories.filter(
-                color_id=item.color_id
-            ).first()
-            if not inventory or inventory.stock < item.quantity:
-                return False
-
-        return True
-
-    def get_payment_expires_at(self, obj):
-        if obj.status != 1:
-            return None
-        return obj.created_date + timedelta(minutes=30)
-
-    def get_remaining_payment_seconds(self, obj):
-        if obj.status != 1:
-            return 0
-        expires_at = obj.created_date + timedelta(minutes=30)
-        return max(0, int((expires_at - timezone.now()).total_seconds()))
 
     def to_representation(self, instance):
         request = self.context.get("request")

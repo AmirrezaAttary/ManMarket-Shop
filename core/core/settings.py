@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     'app.payment',
     'app.pricegethamrh',
     'app.getspecification',
-    'app.faq',
     'app.review',
     'app.wallets',
     'app.chat',
@@ -87,7 +86,7 @@ INSTALLED_APPS = [
     "taggit",
     "django_jalali",
     'jalali_date',
-    'robots',
+
     # 'django_celery_beat',
     'django_summernote', 
     
@@ -111,7 +110,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'app.accounts.middleware.restrict_admin.RestrictAdminMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
@@ -130,10 +128,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'app.cart.context_processors.cart_processor',
-                'app.shop.context_processors.wishlist_total_items',
-                'app.shop.context_processors.brand_list_image',
-                'app.shop.context_processors.category_list_image',
+
             ],
         },
     },

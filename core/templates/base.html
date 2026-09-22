@@ -25,20 +25,6 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/logo/logo_header3.png' %}">
-    <script type="application/ld+json">
-    {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "ManMarket",
-    "alternateName": ["من مارکت", "lk lhv;j", "lkz,vj"],
-    "url": "https://manmarket.ir",
-    "logo": "https://manmarket.ir/static/images/logo.png",
-    "sameAs": [
-        "https://www.instagram.com/manmarket_ir",
-        "https://t.me/manmarket"
-    ]
-    }
-    </script>
 
     {% block extra_csss %}
 
@@ -97,9 +83,7 @@
     <!--Header End---->
 
 
-    <!--search modal __ :: start-->
-    {% include 'base/section-base.html' %}
-    <!--search modal __ :: end---->
+
 
 
 
@@ -133,93 +117,6 @@
 
     {% endblock extra_jss %}
 
-    
-   
-        
-    
-        
-
-        
-
-
-    <script>
-        function addToCart(product_id, color_id, color_inventory_id) {
-            console.log(product_id)
-            $.ajax({
-                url: "{%  url 'cart:session-add-product' %}",
-                method: 'POST',
-                data: {
-                    product_id: product_id,
-                    color_id: color_id,
-                    color_inventory_id: color_inventory_id,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-
-                },
-                success: function (response) {
-                    $("#total-cart-item-count").html(response.total_quantity)
-                    console.log(response);
-                    window.location.reload();
-                    // do something with the response data
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                    // handle the error case
-                }
-            });
-        }
-    </script>
-    <script>
-        function addToWishlist(element, product_id) {
-
-            //console.log(product_id)
-            $.ajax({
-                url: "{%  url 'shop:add-or-remove-wishlist' %}",
-                method: 'POST',
-                data: {
-                    product_id: product_id,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-
-                },
-                success: function (response) {
-
-                    Toastify({
-                        text: response.message,
-                        className: `info`,
-                        style: {
-                            background: "#f96747",
-                        }
-                    }).showToast();
-                    $(element).toggleClass('active');
-                    setTimeout(
-                        () => {
-                            window.location.reload();
-                        }
-                        , 1000)
-
-                    // do something with the response data
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                    // handle the error case
-                }
-            });
-        }
-    </script>
-
-<!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X0L4YDCGX7"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-X0L4YDCGX7');
-    </script>
-<script type="text/javascript">
-  window.heapReadyCb=window.heapReadyCb||[],window.heap=window.heap||[],heap.load=function(e,t){window.heap.envId=e,window.heap.clientConfig=t=t||{},window.heap.clientConfig.shouldFetchServerConfig=!1;var a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src="https://cdn.us.heap-api.com/config/"+e+"/heap_config.js";var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(a,r);var n=["init","startTracking","stopTracking","track","resetIdentity","identify","getSessionId","getUserId","getIdentity","addUserProperties","addEventProperties","removeEventProperty","clearEventProperties","addAccountProperties","addAdapter","addTransformer","addTransformerFn","onReady","addPageviewProperties","removePageviewProperty","clearPageviewProperties","trackPageview"],i=function(e){return function(){var t=Array.prototype.slice.call(arguments,0);window.heapReadyCb.push({name:e,fn:function(){heap[e]&&heap[e].apply(heap,t)}})}};for(var p=0;p<n.length;p++)heap[n[p]]=i(n[p])};
-  heap.load("1782453044");
-</script>
-<script src="https://analytics.ahrefs.com/analytics.js" data-key="2yXF9vj4uK52es25BeV9JA" async></script>
 
     {% include 'messages.html' %}
 

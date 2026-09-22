@@ -5,6 +5,3 @@ class CartConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'app.cart'
 
-    def ready(self):
-        from . import signals
-        return super().ready()
