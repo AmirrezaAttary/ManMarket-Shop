@@ -29,19 +29,6 @@ from urllib.parse import unquote
 from rest_framework.generics import get_object_or_404
 from rest_framework.generics import ListAPIView
 from django.db.models import Count, Max, Min, Q
-from django.db.models import (
-    Case,
-    When,
-    Value,
-    IntegerField,
-    Min,
-    Max,
-    Exists,
-    OuterRef,
-    Count,
-    Q,
-    F,
-)
 
 from ...models import Brand, Color
 
@@ -106,20 +93,6 @@ class ProductModelViewSet(viewsets.ReadOnlyModelViewSet):
             )
 
         return base_qs
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        # افزایش بازدید محصول
-        ProductModel.objects.filter(pk=instance.pk).update(
-            product_view=models.F("product_view") + 1
-        )
-
-        # مقدار جدید را روی instance اعمال می‌کنیم
-        instance.refresh_from_db(fields=["product_view"])
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
     def get_serializer_class(self):
         if self.action == "list":

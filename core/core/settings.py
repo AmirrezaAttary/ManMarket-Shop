@@ -230,7 +230,7 @@ if SHOW_DEBUGGER_TOOLBAR:
 
 
 AUTH_USER_MODEL = 'accounts.User'
-LOGIN_REDIRECT_URL = 'dashboard:admin:profile-edit'
+LOGIN_REDIRECT_URL = 'dashboard:admin:home'
 LOGIN_URL = 'accounts:login'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 

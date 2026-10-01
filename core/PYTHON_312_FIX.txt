@@ -1,8 +1,0 @@
-Python 3.12 compatibility fix
---------------------------------
-The project does not require django-jalali-date. It was removed from
-INSTALLED_APPS and requirements.txt because its template-tag module imports
-the removed stdlib package distutils on Python 3.12.
-
-The project uses django-jalali (django_jalali) and jdatetime for Jalali date
-handling where needed.
