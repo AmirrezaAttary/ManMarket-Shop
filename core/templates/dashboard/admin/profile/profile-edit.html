@@ -1,48 +1,37 @@
-{% extends 'base.html' %}
-
+{% extends 'dashboard/admin/layout.html' %}
 
 {% block content %}
-<br><br><br>
 <main>
-    <div class="container">
+    <div >
         <section class="user-panel">
-            <div class="row">
-                {% include 'dashboard/admin/sidebar.html' %}
-                <div class="col-md-9">
-                    <div class="user-panel-content">
-                        <h6 class="">
+            <div class="user-panel-content">
+                        <h6 >
                             ویرایش پروفایل
                         </h6>
-                        <form action="." method="post" class="mt-3">
+                        <form action="." method="post" class="mt-4">
                             {% csrf_token %}
-                            <div class="row profile-input">
-                                <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="first_name"
-                                        value="{{request.user.user_profile.first_name}}" placeholder="نام">
+                            <div class="grid grid-cols-12 gap-x-4 profile-input">
+                                <div class="col-span-12 md:col-span-6 mb-4">
+                                    <input type="text" name="first_name" value="{{request.user.user_profile.first_name}}" placeholder="نام">
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="last_name"
-                                        value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
+                                <div class="col-span-12 md:col-span-6 mb-4">
+                                    <input type="text" name="last_name" value="{{request.user.user_profile.last_name}}" placeholder="نام خانوادگی">
                                 </div>
                                 
-                                <div class="col-md-6 mb-3">
-                                    <input type="email" class="form-control" name="email"
-                                        value="{{request.user.email}}" placeholder="ایمیل">
+                                <div class="col-span-12 md:col-span-6 mb-4">
+                                    <input type="email" name="email" value="{{request.user.email}}" placeholder="ایمیل">
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="phone_number"
-                                        value="{{request.user.phone_number}}" placeholder="شماره همراه">
+                                <div class="col-span-12 md:col-span-6 mb-4">
+                                    <input type="text" name="phone_number" value="{{request.user.phone_number}}" placeholder="شماره همراه">
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <input type="text" class="form-control" name="code_melli"
-                                        value="{{request.user.code_melli}}" placeholder="کد ملی">
+                                <div class="col-span-12 md:col-span-6 mb-4">
+                                    <input type="text" name="code_melli" value="{{request.user.code_melli}}" placeholder="کد ملی">
                                 </div>
 
-
-                                <div class="col-12 text-start">
-                                    <button class="btn bg-light theme-color rounded-1 text-dark">
+                                <div class="col-span-12 text-start">
+                                    <button class="btn bg-slate-50 theme-color rounded-1 text-slate-800">
                                         انصراف</button>
                                     <button class="btn theme-color rounded-1 text-light">
                                         ذخیره اطلاعات</button>
@@ -57,16 +46,16 @@
                         </form>
                         {% endif %}
                         <form action="{% url 'dashboard:admin:download_database' %}" method="get">
-                            <button type="submit">📥 دانلود بک‌آپ دیتابیس</button>
+                            <button type="submit" class="btn btn-primary">📥 دانلود بک‌آپ دیتابیس</button>
                         </form>
                         <br>
                         <form action="{% url 'dashboard:admin:download_media' %}" method="get">
-                            <button type="submit">📥 دانلود بک‌آپ فایل ها مدیا</button>
+                            <button type="submit" class="btn btn-primary">📥 دانلود بک‌آپ فایل ها مدیا</button>
                         </form>
                     </div>
                 </div>
-            </div>
+            
         </section>
-    </div>
+    
 </main>
 {% endblock content %}

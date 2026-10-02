@@ -1,16 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
-
 
 {% block extra_css %}
 
 {% endblock %}
 
-
-
 {% block breadcrumb %}
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb breadcrumb-light mb-0">
+    <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">حساب</li>
         <li class="breadcrumb-item">داشبورد ادمین</li>
         <li class="breadcrumb-item">تخفیف ها</li>
@@ -22,10 +19,9 @@
 {% endblock %}
 
 {% block content %}
-<br><br><br><br>
 <div class="card">
     <!-- Header -->
-    <div class="card-header border-bottom">
+    <div class="card-header">
         <h5 class="card-header-title">ایجاد کد تخفیف</h5>
     </div>
     <!-- End Header -->
@@ -34,33 +30,32 @@
     <form action="." method="post" >
         {% csrf_token %}
         <div class="card-body">
-            <div class="row d-flex ">
-                <div class="col-md-6 mb-3">
+            <div class="grid grid-cols-12 gap-x-4 flex">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>کد تخفیف</label>
                     {{form.code}}
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>درصد تخفیف</label>
                     {{form.discount_percent}}
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>محدودیت نفرات استفاده</label>
                     {{form.max_limit_usage}}
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>تاریخ انقضا</label>
                     {{form.expiration_date}}
                 </div>
 
             </div>
 
-
             </div>
             <div class="card-footer">
-                <div class=" d-flex pt-5 justify-content-end">
-                    <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:coupon-list' %}">بازگشت</a>
-                    <button class="btn btn-primary ms-3" type="submit">ایجاد کد تخفیف</button>
+                <div class="flex pt-6 justify-end">
+                    <a class="btn btn-secondary" href="{% url 'dashboard:admin:coupon-list' %}">بازگشت</a>
+                    <button class="btn btn-primary" type="submit">ایجاد کد تخفیف</button>
                 </div>
             </div>
     </form>

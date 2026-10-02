@@ -1,0 +1,85 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block title %}پنل مدیریت{% endblock title %} | من مارکت</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/logo/logo_header3.png' %}">
+  <link rel="preload" href="{% static 'Peyda.font/Peyda/02-Farsi_Namerals/WebFonts/fonts/woff2/PeydaWebFaNum-Medium.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
+  {% block extra_css %}{% endblock extra_css %}
+  {% block extra_csss %}{% endblock extra_csss %}
+</head>
+
+<body class="min-h-screen">
+  {% include 'dashboard/admin/_sprite.html' %}
+
+  {# پس‌زمینه‌ی تیره‌ی منوی موبایل #}
+  <div id="navOverlay" class="fixed inset-0 z-40 hidden bg-slate-900/50 backdrop-blur-[2px] lg:hidden" aria-hidden="true"></div>
+
+  {% include 'dashboard/admin/sidebar.html' %}
+
+  <div class="lg:ps-72">
+    {# ---------- نوار بالا ---------- #}
+    <header class="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-slate-200 bg-white/90 px-4 backdrop-blur sm:px-6 lg:px-8">
+      <button id="navToggle" type="button" class="btn btn-ghost-secondary btn-icon lg:hidden" aria-label="باز کردن منو" aria-controls="sidebar" aria-expanded="false">
+        <svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-bars"/></svg>
+      </button>
+      <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2 lg:hidden">
+        <img src="{% static 'img/main.logo2.png' %}" alt="من مارکت" class="h-8 w-auto">
+      </a>
+      <div class="hidden min-w-0 flex-1 lg:block">
+        <p class="truncate text-sm font-semibold text-slate-900">{% block page_title %}پنل مدیریت{% endblock page_title %}</p>
+      </div>
+      <div class="flex-1 lg:hidden"></div>
+      <a href="manmarket.ir" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">
+        <svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-external"/></svg>
+        <span class="hidden sm:inline">مشاهده سایت</span>
+      </a>
+    </header>
+
+    {# ---------- محتوا ---------- #}
+    <main class="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      {% block breadcrumb %}{% endblock breadcrumb %}
+      <div class="space-y-6">
+        {% block content %}{% endblock content %}
+      </div>
+    </main>
+  </div>
+
+  <script src="{% static 'js/sweet.alert.lib.js' %}"></script>
+  <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+  <script src="{% static 'vendor/toastify/toastify.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  {% block extra_js %}{% endblock extra_js %}
+  {% block extra_js_no_compress %}{% endblock extra_js_no_compress %}
+  {% block extra_jss %}{% endblock extra_jss %}
+
+  <script>
+    /* منوی کشویی موبایل */
+    (function () {
+      var sidebar = document.getElementById('sidebar');
+      var overlay = document.getElementById('navOverlay');
+      var toggle = document.getElementById('navToggle');
+      if (!sidebar || !overlay || !toggle) return;
+      function setOpen(open) {
+        sidebar.classList.toggle('translate-x-full', !open);
+        sidebar.classList.toggle('translate-x-0', open);
+        overlay.classList.toggle('hidden', !open);
+        document.body.classList.toggle('no-scroll', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      toggle.addEventListener('click', function () { setOpen(sidebar.classList.contains('translate-x-full')); });
+      overlay.addEventListener('click', function () { setOpen(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+      var closeBtn = document.getElementById('navClose');
+      if (closeBtn) closeBtn.addEventListener('click', function () { setOpen(false); });
+      window.addEventListener('resize', function () { if (window.innerWidth >= 1024) setOpen(false); });
+    })();
+  </script>
+
+  {% include 'messages.html' %}
+</body>
+</html>

@@ -1,13 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
-
 
 {% block extra_css %}
 
 {% endblock %}
 {% block breadcrumb %}
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb breadcrumb-light mb-0">
+    <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item">حساب</li>
         <li class="breadcrumb-item">داشبورد ادمین</li>
         <li class="breadcrumb-item">تخفیف ها</li>
@@ -19,12 +18,11 @@
 {% endblock %}
 
 {% block content %}
-<br><br><br><br>
-<div class="row">
+<div class="flex flex-col gap-2">
     <div>
-        <div class="card mb-5">
+        <div class="card mb-6">
             <!-- Header -->
-            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+            <div class="card-header flex justify-between items-center">
                 <h5 class="card-header-title">ویرایش کد تخفیف</h5>
             </div>
             <!-- End Header -->
@@ -33,32 +31,31 @@
             <form action="." method="post">
                 {% csrf_token %}
                 <div class="card-body">
-                    <div class="row d-flex ">
-                        <div class="col-md-6 mb-3">
+                    <div class="grid grid-cols-12 gap-x-4 flex">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>کد تخفیف</label>
                             {{form.code}}
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>درصد تخفیف</label>
                             {{form.discount_percent}}
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>محدودیت نفرات استفاده</label>
                             {{form.max_limit_usage}}
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>تاریخ انقضا</label>
                             {{form.expiration_date}}
                         </div>
 
                     </div>
                     <div class="card-footer">
-                        <div class=" d-flex pt-5 justify-content-end">
-                            <a class="btn btn-danger ms-3"
-                                href="{% url 'dashboard:admin:coupon-delete' pk=object.pk %}">حذف</a>
-                            <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:coupon-list' %}">بازگشت</a>
-                            <button class="btn btn-primary ms-3" type="submit">ثبت تغییرات</button>
+                        <div class="flex pt-6 justify-end">
+                            <a class="btn btn-danger" href="{% url 'dashboard:admin:coupon-delete' pk=object.pk %}">حذف</a>
+                            <a class="btn btn-secondary" href="{% url 'dashboard:admin:coupon-list' %}">بازگشت</a>
+                            <button class="btn btn-primary" type="submit">ثبت تغییرات</button>
                         </div>
                     </div>
             </form>
@@ -68,15 +65,15 @@
 </div>
 
 <div>
-    <div class="card mb-5">
+    <div class="card mb-6">
         <!-- Table -->
-        <div class="card-header border-bottom ">
+        <div class="card-header">
             <h5 class="card-header-title">لیست استفاده کنندگان</h5>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead class="thead-light">
+            <div class="table-wrap">
+                <table class="table stack">
+                    <thead >
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">کاربر</th>
@@ -86,8 +83,8 @@
                     <tbody>
                         {% for user in object.used_by.all %}
                         <tr>
-                            <th scope="row">{{forloop.counter}}</th>
-                            <td>{{user.email}}</td>
+                            <th scope="row" data-label="#">{{forloop.counter}}</th>
+                            <td data-label="کاربر">{{user.email}}</td>
 
                         </tr>
                         {% endfor %}
@@ -98,7 +95,8 @@
         </div>
     </div>
 
-</div>ّ
+</div>
+</div>
 {% endblock %}
 
 {% block extra_js %}

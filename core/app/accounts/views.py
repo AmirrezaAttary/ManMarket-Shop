@@ -22,4 +22,4 @@ class AdminLoginView(LoginView):
     redirect_authenticated_user = True
 
     def get_success_url(self):
-        return str(reverse_lazy("dashboard:admin:profile-edit"))
+        return str(reverse_lazy("dashboard:admin:home"))

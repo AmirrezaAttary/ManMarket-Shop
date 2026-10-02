@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 
 {% block extra_css %}
@@ -18,41 +18,38 @@
 {% endblock %}
 
 {% block content %}
-<br><br><br><br>
-<div class="row" style="justify-content: center;">
+<div class="grid grid-cols-12 gap-x-4" style="justify-content: center;">
     <!-- Card -->
-    <div class="col-md-9 mb-9">
+    <div class="col-span-12 md:col-span-9">
         <!-- Card -->
         <div class="card">
             <!-- Header -->
-            <div class="card-header border-bottom">
-                <form action="." class="row">
+            <div class="card-header">
+                <form action="." class="mb-6 grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] items-end gap-3">
 
                     <!-- Input Card -->
-                    <div class="col-md-3 py-1">
-                        <input type="text" class="form-control form-control-sm" placeholder="جستو جوی نظرات" name="q"
-                            id="search-query-filter">
+                    <div class="min-w-0">
+                        <input type="text" placeholder="جستو جوی نظرات" name="q" id="search-query-filter">
 
                     </div>
-                    <div class="col-md-3 py-1">
-                        <select class="form-select form-select-sm" id="status-type-filter" name="status">
+                    <div class="min-w-0">
+                        <select id="status-type-filter" name="status">
                             <option value="" selected>وضعیت</option>
                             {% for status_type in status_types %}
                             <option value="{{status_type.0}}">{{status_type.1}}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-3 py-1">
-                        <select class="form-select form-select-sm" id="order-by-filter">
+                    <div class="min-w-0">
+                        <select id="order-by-filter">
                             <option value="" selected>مرتب سازی</option>
                             <option value="-created_date">جدیدترین</option>
                             <option value="created_date">قدیمی ترین</option>
                         </select>
                     </div>
 
-
-                    <div class="col-md-2 py-1">
-                        <select class="form-select form-select-sm" id="page-size-filter">
+                    <div class="min-w-0">
+                        <select id="page-size-filter">
                             <option value="" selected>تعداد</option>
                             <option value="5">5</option>
                             <option value="10">10</option>
@@ -62,9 +59,8 @@
                         </select>
                     </div>
 
-                    <div class="col-md-1 py-1">
-                        <button type="submit" class="btn btn-sm btn-icon btn-primary btn-search"><i
-                                class="bi-search"></i></button>
+                    <div class="min-w-0">
+                        <button type="submit" class="btn btn-primary btn-sm w-full"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-search"/></svg><span>جستجو</span></button>
                     </div>
                 </form>
             </div>
@@ -75,20 +71,19 @@
 
                 <!-- Tab Content -->
                 <div class="tab-content" id="accountOrdersTabContent">
-                    <div class="tab-pane fade show active" id="accountOrdersOne" role="tabpanel"
-                        aria-labelledby="accountOrdersOne-tab">
+                    <div class="tab-pane fade show active" id="accountOrdersOne" role="tabpanel" aria-labelledby="accountOrdersOne-tab">
                         <!-- Select Group -->
-                        <div class="d-sm-flex align-items-sm-center mb-5">
-                            <div class="mb-2 mb-sm-0 me-3">
-                                <span><strong class="text-dark">{{ total_items}} نظر</strong></span>
+                        <div class="sm:flex sm:items-center mb-6">
+                            <div class="mb-2 sm:mb-0 me-4">
+                                <span><strong class="text-slate-800">{{ total_items}} نظر</strong></span>
                             </div>
                         </div>
                         <!-- End Select Group -->
-                        <div class="row">
+                        <div class="flex flex-col gap-2">
                             <!-- Table -->
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead class="thead-light">
+                            <div class="table-wrap">
+                                <table class="table stack">
+                                    <thead >
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">محصول</th>
@@ -103,90 +98,31 @@
                                     <tbody>
                                         {% for object in object_list %}
                                         <tr>
-                                            <th scope="row">{{forloop.counter}}</th>
-                                            <td>{{object.product.title}}</td>
-                                            <td>{{object.user.user_profile.get_fullname}}</td>
-                                            <td>{{object.rate}}</td>
-                                            <td>{{object.created_date|date:"Y-m-d h:i"}}</td>
-                                            <td><span
-                                                    class="badge bg-{{object.get_status.title}}">{{object.get_status.label}}</span>
+                                            <th scope="row" data-label="#">{{forloop.counter}}</th>
+                                            <td data-label="محصول">{{object.product.title}}</td>
+                                            <td data-label="نام و نام خانوادگی">{{object.user.user_profile.get_fullname}}</td>
+                                            <td data-label="امتیاز">{{object.rate}}</td>
+                                            <td data-label="تاریخ ثبت">{{object.created_date|date:"Y-m-d h:i"}}</td>
+                                            <td data-label="وضعیت"><span class="badge bg- {{object.get_status.title}}">{{object.get_status.label}}</span>
                                             </td>
-                                            <td class="d-flex">
-                                                <a class="btn btn-sm btn-icon btn-ghost-secondary"
-                                                    href="{% url 'dashboard:admin:review-edit' pk=object.pk %}"><i
-                                                        class="bi-pencil-square">ویرایش</i></a>
+                                            <td class="flex" data-label="عملیات">
+                                                <a class="btn btn-ghost-secondary btn-sm" href="{% url 'dashboard:admin:review-edit' pk=object.pk %}"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-edit"/></svg><span>ویرایش</span></a>
 
                                             </td>
                                         </tr>
                                         {% endfor %}
-
 
                                     </tbody>
                                 </table>
                             </div>
                             <!-- End Table -->
 
-
-                            <!-- Pagination -->
-
-                            <div class="row pt-5 mt-3">
-                                {% if page_obj.has_other_pages %}
-                                <!-- Pagination -->
-                                <nav aria-label="Page navigation">
-                                    <ul class="pagination justify-content-center">
-                                        {% if page_obj.has_previous %}
-                                        <li class="page-item">
-                                            <button class="page-link"
-                                                onclick="changePage(`{{ page_obj.previous_page_number }}`)"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">
-                                                    <i class="bi-chevron-double-right small"></i>
-                                                </span>
-                                            </button>
-                                        </li>
-                                        {% endif %}
-                                        {{page_obj.page_range}}
-                                        {% for i in page_obj.paginator.page_range %}
-                                        {% if page_obj.number == i %}
-                                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
-                                        {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %} <li
-                                            class="page-item">
-                                            <button class="page-link" onclick="changePage(`{{i}}`)">{{ i }}</button>
-                                            </li>
-
-                                            {% endif %}
-
-                                            {% endfor %}
-
-
-                                            {% if page_obj.has_next %}
-                                            <li class="page-item">
-                                                <button class="page-link"
-                                                    onclick="changePage(`{{ page_obj.next_page_number }}`)"
-                                                    aria-label="Previous">
-                                                    <span aria-hidden="true">
-                                                        <i class="bi-chevron-double-left small"></i>
-                                                    </span>
-                                                </button>
-                                            </li>
-                                            {% endif %}
-
-                                    </ul>
-                                </nav>
-                                {% endif %}
-                                <!-- End Pagination -->
-                            </div>
+                            {% include 'dashboard/admin/_pagination.html' %}
                             <!-- End Pagination -->
-
-
 
                         </div>
 
-
-
-
                     </div>
-
 
                 </div>
                 <!-- End Tab Content -->

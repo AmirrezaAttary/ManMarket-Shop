@@ -21,7 +21,7 @@ class ProjectEntryView(View):
         if not request.user.is_authenticated:
             return redirect(reverse_lazy("accounts:login"))
         if request.user.type in (UserType.admin.value, UserType.superuser.value):
-            return redirect(reverse_lazy("dashboard:admin:profile-edit"))
+            return redirect(reverse_lazy("dashboard:admin:home"))
         raise PermissionDenied("این پروژه فقط برای ادمین و سوپر یوزر در دسترس است.")
 
 

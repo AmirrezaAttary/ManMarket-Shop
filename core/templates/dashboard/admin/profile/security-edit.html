@@ -1,17 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <!-- Card -->
-    <div class="col-md-9 mb-9">
-        <!-- Card -->
-        <div class="card mb-3">
-            <div class="card-header border-bottom">
+<!-- Card -->
+        <div class="card mb-4">
+            <div class="card-header">
                 <h5 class="card-header-title">رمزعبور</h5>
             </div>
 
@@ -21,21 +14,21 @@
                 <form action="." method="post">
                     {% csrf_token %}
                     <!-- Form -->
-                    <div class="row mb-4">
-                        <label for="currentPasswordLabel" class="col-sm-3 col-form-label form-label">رمز عبور
+                    <div class="grid grid-cols-12 gap-x-4 mb-5">
+                        <label for="currentPasswordLabel" class="col-span-12 sm:col-span-3">رمز عبور
                             فعلی</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-span-12 sm:col-span-9">
                             {{form.old_password}}
                         </div>
                     </div>
                     <!-- End Form -->
 
                     <!-- Form -->
-                    <div class="row mb-4">
-                        <label for="newPassword" class="col-sm-3 col-form-label form-label">رمز عبور جدید</label>
+                    <div class="grid grid-cols-12 gap-x-4 mb-5">
+                        <label for="newPassword" class="col-span-12 sm:col-span-3">رمز عبور جدید</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-span-12 sm:col-span-9">
                             {{form.new_password1}}
                         </div>
 
@@ -43,20 +36,20 @@
                     <!-- End Form -->
 
                     <!-- Form -->
-                    <div class="row mb-4">
-                        <label for="confirmNewPasswordLabel" class="col-sm-3 col-form-label form-label">رمز عبور جدید را
+                    <div class="grid grid-cols-12 gap-x-4 mb-5">
+                        <label for="confirmNewPasswordLabel" class="col-span-12 sm:col-span-3">رمز عبور جدید را
                             تایید کنید</label>
 
-                        <div class="col-sm-9">
-                            <div class="mb-3">
+                        <div class="col-span-12 sm:col-span-9">
+                            <div class="mb-4">
                                 {{form.new_password2}}
                             </div>
 
                             <h5>الزامات رمز عبور:</h5>
 
-                            <p class="card-text small">اطمینان حاصل کنید که این الزامات برآورده شده است:</p>
+                            <p class="card-text text-sm">اطمینان حاصل کنید که این الزامات برآورده شده است:</p>
 
-                            <ul class="small">
+                            <ul class="text-sm">
                                 <li>حداقل 8 کاراکتر - هر چه بیشتر باشد، بهتر است</li>
                                 <li>حداقل یک نویسه کوچک</li>
                                 <li>حداقل یک کاراکتر بزرگ</li>
@@ -66,7 +59,7 @@
                     </div>
                     <!-- End Form -->
 
-                    <div class="d-flex justify-content-end gap-3">
+                    <div class="flex justify-end gap-3">
                         <button type="submit" class="btn theme-color" style="color: white;">بروزرسانی</button>
                     </div>
                 </form>
@@ -78,7 +71,7 @@
 
         <!-- Card -->
 
-    </div>
-</div>
+    
+
 <!-- End Card -->
 {% endblock %}

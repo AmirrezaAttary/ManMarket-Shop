@@ -1,248 +1,117 @@
-{% load static %}
+{% load static %}{% with view_name=request.resolver_match.url_name|default:"" %}
+<aside id="sidebar" class="fixed inset-y-0 start-0 z-50 flex w-72 max-w-[85vw] translate-x-full flex-col border-s border-slate-200 bg-white transition-transform duration-300 ease-out lg:translate-x-0" aria-label="منوی اصلی">
 
-<div class="col-md-3 mb-3">
-    <aside class="user-panel-aside">
-        <div class="aside-header d-flex align-items-center flex-column">
-            <form method="post" action="{% url 'dashboard:admin:profile-image-edit' %}" enctype="multipart/form-data">
-                {% csrf_token %}
+  {# لوگو #}
+  <div class="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-slate-100 px-5">
+    <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2.5">
+      <img src="{% static 'img/main.logo2.png' %}" alt="من مارکت" class="h-9 w-auto">
+      <span class="text-sm font-bold text-slate-900">پنل مدیریت</span>
+    </a>
+    <button id="navClose" type="button" class="btn btn-ghost btn-icon btn-sm lg:hidden" aria-label="بستن منو">
+      <svg class="i h-5 w-5" viewBox="0 0 24 24"><use href="#i-x"/></svg>
+    </button>
+  </div>
 
-                <label for="imageUpload" class="profile-container">
-                    {% if request.user.user_profile.image %}
-                    <img class="profile-img" src="{{ request.user.user_profile.image.url }}" alt="Your profile photo">
-                    {% else %}
-                    <img class="profile-img" src="{% static 'img/default/default.webp' %}" alt="Default profile photo">
-                    {% endif %}
-                    <span class="change-text">برای تغییر تصویر کلیک کنید</span>
-                </label>
+  {# کاربر #}
+  <div class="shrink-0 border-b border-slate-100 p-4">
+    <div class="flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
+      <form method="post" action="{% url 'dashboard:admin:profile-image-edit' %}" enctype="multipart/form-data" class="shrink-0">
+        {% csrf_token %}
+        <label for="imageUpload" class="group relative mb-0 block h-12 w-12 cursor-pointer overflow-hidden rounded-full ring-2 ring-white" title="برای تغییر تصویر کلیک کنید">
+          {% if request.user.user_profile.image %}
+          <img class="h-full w-full object-cover" src="{{ request.user.user_profile.image.url }}" alt="تصویر پروفایل">
+          {% else %}
+          <img class="h-full w-full object-cover" src="{% static 'img/default/default.webp' %}" alt="تصویر پیش‌فرض">
+          {% endif %}
+          <span class="absolute inset-0 flex items-center justify-center bg-slate-900/55 text-[10px] font-medium text-white opacity-0 transition group-hover:opacity-100">تغییر</span>
+        </label>
+        <input id="imageUpload" type="file" name="image" accept="image/*" class="hidden" onchange="this.form.submit()">
+      </form>
+      <div class="min-w-0">
+        <p class="truncate text-sm font-semibold text-slate-900">{{ request.user.user_profile.get_full_name }}</p>
+        <p class="truncate text-xs text-slate-500" dir="ltr" style="text-align:right">{{ request.user.email }}</p>
+      </div>
+    </div>
+  </div>
 
-                <input id="imageUpload" type="file" name="image" accept="image/*" style="display: none;"
-                    onchange="this.form.submit()">
-            </form>
-            <div class="me-2 flex-column d-flex mx-3 mt-3">
-                <span
-                    class="mb-1 d-inline-block custom-text text-wrap text-center">{{request.user.user_profile.get_full_name}}</span>
-                <span class="text-muted fw-lighter">{{request.user.email}}</span>
-            </div>
-        </div>
-        <div class="aside-menu">
+  {# لینک‌ها #}
+  <nav class="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
+    <a href="{% url 'dashboard:home' %}" class="nav-link mt-3{% if view_name == 'home' %} is-active{% endif %}">
+      <svg class="i" viewBox="0 0 24 24"><use href="#i-home"/></svg><span>داشبورد</span>
+    </a>
+      <p class="nav-group-title">فروشگاه</p>
+      <a href="{% url 'dashboard:admin:product-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' product-list product-create product-edit product-delete product-add-color product-edit-color product-color-delete product-add-image product-remove-image product-update-image-color ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' product-list product-create product-edit product-delete product-add-color product-edit-color product-color-delete product-add-image product-remove-image product-update-image-color ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-cube"/></svg><span>محصولات</span>
+      </a>
+      <a href="{% url 'dashboard:admin:order-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' order-list order-detail order-edit order-invoice ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' order-list order-detail order-edit order-invoice ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-bag"/></svg><span>پیگیری سفارشات</span>
+      </a>
+      <a href="{% url 'dashboard:admin:person_pay-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' person_pay-list person_pay-create person-pay-create ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' person_pay-list person_pay-create person-pay-create ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-cash"/></svg><span>فروش حضوری</span>
+      </a>
+      <a href="{% url 'dashboard:admin:users-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' users-list users-detail users-order users-wallet users-wishlist users-chat users-review ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' users-list users-detail users-order users-wallet users-wishlist users-chat users-review ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg><span>کاربران</span>
+      </a>
+      <a href="{% url 'dashboard:admin:review-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' review-list review-edit ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' review-list review-edit ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-star"/></svg><span>نظرات</span>
+      </a>
+      <a href="{% url 'dashboard:admin:chat-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' chat-list chat-detail chat_room_send ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' chat-list chat-detail chat_room_send ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-chat"/></svg><span>چت‌ها</span>
+      </a>
+      <a href="{% url 'dashboard:admin:coupon-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' coupon-list coupon-create coupon-edit coupon-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' coupon-list coupon-create coupon-edit coupon-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-ticket"/></svg><span>کوپن‌های تخفیف</span>
+      </a>
+      <a href="{% url 'dashboard:admin:story-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' story-list story-create story-edit story-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' story-list story-create story-edit story-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-photo"/></svg><span>استوری‌ها</span>
+      </a>
+      <p class="nav-group-title">اطلاعات پایه محصول</p>
+      <a href="{% url 'dashboard:admin:category-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' category-list category-add category-edit category-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' category-list category-add category-edit category-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-grid"/></svg><span>دسته‌بندی‌ها</span>
+      </a>
+      <a href="{% url 'dashboard:admin:brand-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' brand-list brand-add brand-edit brand-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' brand-list brand-add brand-edit brand-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-tag"/></svg><span>برندها</span>
+      </a>
+      <a href="{% url 'dashboard:admin:color-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' color-list color-add color-edit color-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' color-list color-add color-edit color-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-swatch"/></svg><span>رنگ‌ها</span>
+      </a>
+      <a href="{% url 'dashboard:admin:specification-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' specification-list specification-add specification-add-one specification-edit specification-edit-one specification-delete specification-one-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' specification-list specification-add specification-add-one specification-edit specification-edit-one specification-delete specification-one-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-clipboard"/></svg><span>مشخصات محصول</span>
+      </a>
+      <a href="{% url 'dashboard:admin:colors-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' colors-list colors-add colors-edit colors-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' colors-list colors-add colors-edit colors-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-coin"/></svg><span>رنگ برای قیمت</span>
+      </a>
+      <p class="nav-group-title">محتوا و ارتباط</p>
+      <a href="{% url 'dashboard:admin:blog-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' blog-list blog-create blog-edit blog-delete admin_blog_add_product admin_blog_delete_product ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' blog-list blog-create blog-edit blog-delete admin_blog_add_product admin_blog_delete_product ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-news"/></svg><span>بلاگ</span>
+      </a>
+      <a href="{% url 'dashboard:admin:blog-category-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' blog-category-list blog-category-add blog-category-edit blog-category-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' blog-category-list blog-category-add blog-category-edit blog-category-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-folder"/></svg><span>دسته‌بندی بلاگ</span>
+      </a>
+      <a href="{% url 'dashboard:admin:contact-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' contact-list contact-detail contact-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' contact-list contact-detail contact-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-mail"/></svg><span>ارتباط با ما</span>
+      </a>
+      <p class="nav-group-title">حساب کاربری</p>
+      <a href="{% url 'dashboard:admin:profile-edit' %}" class="nav-link{% if view_name == 'profile-edit' %} is-active{% endif %}">
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-user"/></svg><span>پروفایل</span>
+      </a>
+      <a href="{% url 'dashboard:admin:security-edit' %}" class="nav-link{% if view_name == 'security-edit' %} is-active{% endif %}">
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-shield"/></svg><span>امنیت</span>
+      </a>
+      {% if user.is_superuser %}
+      <a href="/admin/" class="nav-link">
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-cog"/></svg><span>ادمین جنگو</span>
+      </a>
+      {% endif %}
+  </nav>
 
-            {% if user.is_superuser %}
-            <a href="/admin/" class="custom-text">
-                <svg viewBox="0 0 448 512" fill="currentColor" height="1.4em" width="1.4em">
-                    <path
-                        d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32 0-97.2-78.8-176-176-176zM48.99 464c7.9-63.1 61.81-112 127.01-112h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128S294.69 0 224 0 96 57.31 96 128c0 70.7 57.3 128 128 128zm0-208c44.11 0 80 35.89 80 80s-35.89 80-80 80-80-35.9-80-80c0-44.11 35.9-80 80-80z" />
-                </svg>
-                ادمین جنگو
-            </a>
-            {% endif %}
-
-
-            <a href="{% url 'dashboard:admin:profile-edit' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:profile-edit' %}active {% endif %}custom-text">
-                <svg viewBox="0 0 448 512" fill="currentColor" height="1.4em" width="1.4em">
-                    <path
-                        d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32 0-97.2-78.8-176-176-176zM48.99 464c7.9-63.1 61.81-112 127.01-112h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128S294.69 0 224 0 96 57.31 96 128c0 70.7 57.3 128 128 128zm0-208c44.11 0 80 35.89 80 80s-35.89 80-80 80-80-35.9-80-80c0-44.11 35.9-80 80-80z" />
-                </svg>
-                پروفایل
-            </a>
-            <a href="{% url 'dashboard:admin:security-edit' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:security-edit' %}active {% endif %}custom-text">
-                <svg viewBox="0 0 448 512" fill="currentColor" height="1.4em" width="1.4em">
-                    <path
-                        d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32 0-97.2-78.8-176-176-176zM48.99 464c7.9-63.1 61.81-112 127.01-112h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128S294.69 0 224 0 96 57.31 96 128c0 70.7 57.3 128 128 128zm0-208c44.11 0 80 35.89 80 80s-35.89 80-80 80-80-35.9-80-80c0-44.11 35.9-80 80-80z" />
-                </svg>
-                امنیت
-            </a>
-            <a href="{% url 'dashboard:admin:product-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:product-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                محصولات
-            </a>
-            <a href="{% url 'dashboard:admin:chat-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:chat-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                چت ها
-            </a>
-            <a href="{% url 'dashboard:admin:story-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:story-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                استوری ها
-            </a>
-            <a href="{% url 'dashboard:admin:users-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:users-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                کاربران
-            </a>
-            <a href="{% url 'dashboard:admin:order-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:order-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                پیگیری سفارشات
-            </a>
-            <a href="{% url 'dashboard:admin:person_pay-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:person_pay-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                فروش حضوری 
-            </a>
-            <a href="{% url 'dashboard:admin:category-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:category-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                افزودن دسته بندی
-            </a>
-            <a href="{% url 'dashboard:admin:brand-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:brand-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                افزودن برند
-            </a>
-            <a href="{% url 'dashboard:admin:color-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:color-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                افزودن رنگ
-            </a>
-            <a href="{% url 'dashboard:admin:specification-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:specification-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                ثبت مشخصات محصول
-            </a>
-            <a href="{% url 'dashboard:admin:colors-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:colors-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                ثبت رنگ برای قیمت
-            </a>
-            </a>
-            <a href="{% url 'dashboard:admin:review-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:review-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                نظرات
-            </a>
-            <a href="{% url 'dashboard:admin:blog-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:blog-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                بلاگ
-            </a>
-            <a href="{% url 'dashboard:admin:blog-category-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:blog-category-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                دسته بندی بلاگ
-            </a>
-            <a href="{% url 'dashboard:admin:contact-list' %}"
-                class="{% if request.resolver_match.view_name == 'dashboard:admin:contact-list' %}active {% endif %} custom-text">
-
-                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="{2}"
-                    viewBox="0 0 24 24" height="1.4em" width="1.4em">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
-                    <path d="M11 3 H13 A2 2 0 0 1 15 5 V5 A2 2 0 0 1 13 7 H11 A2 2 0 0 1 9 5 V5 A2 2 0 0 1 11 3 z" />
-                    <path d="M9 12h.01M13 12h2M9 16h.01M13 16h2" />
-                </svg>
-                ارتباط با ما
-            </a>
-
-            <form method="post" action="{% url 'accounts:logout' %}" class="m-0 p-0">               {% csrf_token %}           <button type="submit" class="custom-text border-0 bg-transparent w-100 text-end">
-                <svg viewBox="0 0 24 24" fill="currentColor" height="1.4em" width="1.4em">
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path
-                        d="M5 11h8v2H5v3l-5-4 5-4v3zm-1 7h2.708a8 8 0 100-12H4a9.985 9.985 0 018-4c5.523 0 10 4.477 10 10s-4.477 10-10 10a9.985 9.985 0 01-8-4z" />
-                </svg>
-                خروج
-            </button>         </form>
-        </div>
-    </aside>
-</div>
+  {# خروج #}
+  <div class="pb-safe shrink-0 border-t border-slate-100 p-3">
+    <form method="post" action="{% url 'accounts:logout' %}" class="m-0">
+      {% csrf_token %}
+      <button type="submit" class="nav-link w-full text-rose-600 hover:bg-rose-50 hover:text-rose-700">
+        <svg class="i !text-rose-500" viewBox="0 0 24 24"><use href="#i-logout"/></svg><span>خروج از حساب</span>
+      </button>
+    </form>
+  </div>
+</aside>
+{% endwith %}

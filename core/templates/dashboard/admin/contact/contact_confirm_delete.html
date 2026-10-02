@@ -1,15 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <!-- Card -->
-    <div class="col-md-9 mb-9">
-        <h2>حذف پیام</h2>
+<h2>حذف پیام</h2>
         <p>آیا مطمئن هستید که می‌خواهید پیام "{{ object.name }}" را حذف کنید؟</p>
 
         <form method="post">
@@ -18,7 +11,6 @@
             <a href="{% url 'dashboard:admin:contact-list' %}" class="btn btn-secondary">انصراف</a>
         </form>
 
-    </div>
-</div>
+    
 
 {% endblock content %}

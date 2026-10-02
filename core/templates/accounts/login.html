@@ -1,36 +1,42 @@
-{% load static %}
-<!doctype html>
+{% load static %}<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ورود به پنل مدیریت</title>
-  <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <style>
-    body{min-height:100vh;background:#f7f8fa;display:flex;align-items:center;justify-content:center;font-family:Peyda, sans-serif}
-    .login-card{width:min(420px,92vw);background:#fff;border-radius:18px;padding:32px;box-shadow:0 12px 45px rgba(0,0,0,.08)}
-    .login-card h1{font-size:24px;font-weight:700;margin-bottom:8px}.login-card p{color:#777;margin-bottom:24px}
-    .login-card label{display:block;margin-bottom:7px;font-weight:600}.login-card input{width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:10px;margin-bottom:16px}
-    .login-card button{width:100%;border:0;border-radius:10px;padding:12px;background:#222;color:#fff;font-weight:700}
-    .errorlist{list-style:none;padding:0;color:#c62828;font-size:14px}.help{font-size:13px;color:#888;margin-top:14px;text-align:center}
-  </style>
+  <meta name="robots" content="noindex, nofollow">
+  <title>ورود به پنل مدیریت | من مارکت</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
-<body>
-  <div class="login-card">
-    <h1>ورود به پنل مدیریت</h1>
-    <p>برای ادامه، با حساب ادمین یا سوپر یوزر وارد شوید.</p>
-    {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
-    <form method="post">
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ next }}">
-      <label for="id_username">شماره موبایل</label>
-      {{ form.username }}
-      <label for="id_password">رمز عبور</label>
-      {{ form.password }}
-      <button type="submit">ورود به پنل</button>
-    </form>
-    <div class="help">دسترسی کاربران عادی به این پنل مجاز نیست.</div>
-  </div>
+<body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 via-white to-slate-100 p-4">
+  <main class="w-full max-w-md">
+    <div class="mb-6 text-center">
+      <img src="{% static 'img/main.logo2.png' %}" alt="من مارکت" class="mx-auto h-14 w-auto">
+    </div>
+    <div class="card p-6 sm:p-8">
+      <h1 class="text-xl">ورود به پنل مدیریت</h1>
+      <p class="mb-6 mt-1 text-sm text-slate-500">برای ادامه، با حساب ادمین یا سوپر یوزر وارد شوید.</p>
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger mb-4">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <form method="post" class="space-y-4" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div>
+          <label for="id_username">شماره موبایل</label>
+          {{ form.username }}
+          {{ form.username.errors }}
+        </div>
+        <div>
+          <label for="id_password">رمز عبور</label>
+          {{ form.password }}
+          {{ form.password.errors }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block !mt-6">ورود به پنل</button>
+      </form>
+      <p class="mt-5 text-center text-xs text-slate-400">دسترسی کاربران عادی به این پنل مجاز نیست.</p>
+    </div>
+  </main>
 </body>
 </html>

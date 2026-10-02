@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 {% load humanize %}
 
@@ -21,20 +21,14 @@
 </style>
 {% endblock %}
 
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <div class="col-md-9">
-        <div>
-            <div class="card mb-5">
+<div>
+            <div class="card mb-6">
                 <!-- Header -->
-                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <div class="card-header flex justify-between items-center">
                     <h5 class="card-header-title">ویرایش بلاگ</h5>
                     {% if object.is_published %}
-                    <a class="btn btn-sm btn-primary" target="_blank"
-                        href="">نمایش
+                    <a class="btn btn-primary btn-sm" target="_blank" href="">نمایش
                         بلاگ</a>
                     {% endif %}
                 </div>
@@ -44,73 +38,66 @@
                 <form action="." method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="card-body">
-                        <div class="row d-flex ">
-                            <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                        <div class="grid grid-cols-12 gap-x-4 flex">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>نام محصول</label>
                                 {{form.title}}
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label>slug محصول - <button class="small-primary-button" type="button"
-                                        onclick="generateSlug()">ساخت
+                            <div class="col-span-12 md:col-span-6 mb-4">
+                                <label>slug محصول - <button class="small-primary-button" type="button" onclick="generateSlug()">ساخت
                                         slug</button> </label>
                                 {{form.slug}}
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>وضعیت</label>
                                 {{form.status}}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>تگ بلاگ</label>
                                 {{form.tags}}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>متا دیسکریپشن</label>
                                 {{form.meta_description}}
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>دسته بندی</label>
                                 {{form.category}}
                             </div>
 
-                            <div class="col-md-12 mb-3">
+                            <div class="col-span-12 mb-4">
                                 <label>توضیح کوتاه</label>
                                 {{form.content}}
                             </div>
 
-
-
-                            <div class="col-md-12 mb-3">
+                            <div class="col-span-12 mb-4">
                                 <label for="validationValidFileInput1">تصویر محصول</label>
                                 {{form.image}}
                             </div>
 
-
                         </div>
                         <div class="card-footer">
-                            <div class=" d-flex pt-5 justify-content-end">
-                                <a class="btn btn-danger ms-3"
-                                    href="{% url 'dashboard:admin:blog-delete' pk=object.pk %}">حذف</a>
-                                <a class="btn btn-secondary ms-3"
-                                    href="{% url 'dashboard:admin:blog-list' %}">بازگشت</a>
-                                <button class="btn btn-primary ms-3" type="submit">ثبت تغییرات</button>
+                            <div class="flex pt-6 justify-end">
+                                <a class="btn btn-danger" href="{% url 'dashboard:admin:blog-delete' pk=object.pk %}">حذف</a>
+                                <a class="btn btn-secondary" href="{% url 'dashboard:admin:blog-list' %}">بازگشت</a>
+                                <button class="btn btn-primary" type="submit">ثبت تغییرات</button>
                             </div>
                         </div>
                 </form>
             </div>
         </div>
-        <div class="">
-            <div class="card mb-5">
-                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+        <div >
+            <div class="card mb-6">
+                <div class="card-header flex justify-between items-center">
                     <h5 class="card-header-title">محصولات مرتبط</h5>
-                    <a class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;"
-                        href="{% url 'dashboard:admin:admin_blog_add_product' post_id=object.id %}">افزودن محصول مرتبط</a>
+                    <a class="btn btn-primary" href="{% url 'dashboard:admin:admin_blog_add_product' post_id=object.id %}">افزودن محصول مرتبط</a>
                 </div>
 
-                                <div class="table-responsive">
-                    <table class="table">
-                        <thead class="thead-light">
+                                <div class="table-wrap">
+                    <table class="table stack">
+                        <thead >
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">محصول</th>
@@ -121,14 +108,12 @@
                         <tbody>
                             {% for item in object.post_products.all %}
                             <tr>
-                                <th scope="row">{{item.id}}</th>
-                                <td>{{item.product.title}}</td>
-                                <td>{{item.product.id}}</td>
+                                <th scope="row" data-label="#">{{item.id}}</th>
+                                <td data-label="محصول">{{item.product.title}}</td>
+                                <td data-label="کد محصول">{{item.product.id}}</td>
 
-                                <td class="d-flex">
-                                    <a class="btn btn-sm btn-danger btn-icon btn-ghost-primary" target="_blank"
-                                        href="{% url 'dashboard:admin:admin_blog_delete_product' pk=item.pk %}"><i
-                                            class="bi-eye">delete</i></a>
+                                <td class="flex" data-label="عملیات">
+                                    <a class="btn btn-ghost-primary btn-sm" target="_blank" href="{% url 'dashboard:admin:admin_blog_delete_product' pk=item.pk %}"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-trash"/></svg><span>حذف</span></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -140,7 +125,6 @@
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 

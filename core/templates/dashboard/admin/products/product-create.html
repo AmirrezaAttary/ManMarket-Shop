@@ -1,6 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
-
 
 {% block extra_css %}
 <style>
@@ -22,16 +21,10 @@
 
 {% endblock %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <div class="col-md-9">
 <div class="card">
     <!-- Header -->
-    <div class="card-header border-bottom">
+    <div class="card-header">
         <h5 class="card-header-title">ایجاد محصول</h5>
     </div>
     <!-- End Header -->
@@ -41,75 +34,72 @@
         {{form.media}}
         {% csrf_token %}
         <div class="card-body">
-            <div class="row d-flex ">
-                <div style="margin-top: 28px;" class="col-md-6 mb-3">
+            <div class="grid grid-cols-12 gap-x-4 flex">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>نام محصول</label>
                     {{form.title}}
                 </div>
-                <div class="col-md-6 mb-3" style="margin-top: 22px;">
-                    <label>slug محصول - <button style="background-color: #f96747;border-color: #f96747;" class="small-primary-button" type="button"
-                        onclick="generateSlug()">ساخت slug</button> </label>
+                <div class="col-span-12 md:col-span-6 mb-4">
+                    <label>slug محصول - <button class="small-primary-button" type="button" onclick="generateSlug()">ساخت slug</button> </label>
                     {{form.slug}}
                 </div>
 
-
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>وضعیت</label>
                     {{form.status}}
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>دسته بندی</label>
                     {{form.category}}
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label> برند</label>
                     {{form.brand}}
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label> گارانتی</label>
                     {{form.warranty}}
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label> تایتل کوچولو</label>
                     {{form.brief_title}}
                 </div>
                 
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>متا تایتل</label>
                     {{form.meta_title}}
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-span-12 md:col-span-6 mb-4">
                     <label>متا دیسکریپشن</label>
                     {{form.meta_description}}
                 </div>
-                <div class="col-md-12 mb-3">
+                <div class="col-span-12 mb-4">
                     <label>توضیحات</label>
                     {{form.description}}
                 </div>
                 
-                <div class="col-md-12 mb-3">
+                <div class="col-span-12 mb-4">
                     <label>توضیح کوتاه</label>
                     {{form.brief_description}}
                 </div>
 
-                <div class="col-md-12 mb-3">
+                <div class="col-span-12 mb-4">
                     <label for="validationValidFileInput1">تصویر محصول</label>
                     {{form.image}}
                 </div>
 
-
             </div>
             <div class="card-footer">
-                <div class=" d-flex pt-5 justify-content-end">
-                    <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:product-list' %}">بازگشت</a>
-                    <button class="btn btn-primary ms-3" type="submit">ایجاد محصول</button>
+                <div class="flex pt-6 justify-end">
+                    <a class="btn btn-secondary" href="{% url 'dashboard:admin:product-list' %}">بازگشت</a>
+                    <button class="btn btn-primary" type="submit">ایجاد محصول</button>
                 </div>
             </div>
     </form>
 </div>
 </div>
-</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -143,7 +133,6 @@ function slugify(titleStr) {
 
     return titleStr;
 }
-
 
 </script>
 

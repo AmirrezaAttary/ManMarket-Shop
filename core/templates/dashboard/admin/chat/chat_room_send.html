@@ -1,84 +1,85 @@
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+{% block title %}پاسخ به چت{% endblock title %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Chat UI</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/chats.css' %}">
-</head>
+{% block content %}
+<div class="card flex h-[calc(100dvh-9rem)] min-h-[28rem] flex-col md:flex-row">
 
-<body style="background-color: #fff;">
-    <div class="chat-container">
-        <div class="chat-overlay" id="chatOverlay"></div>
+  {# ---------- لیست گفتگوها ---------- #}
+  <aside id="chatList" class="hidden w-full shrink-0 flex-col border-slate-100 md:flex md:w-80 md:border-e">
+    <div class="flex items-center justify-between gap-2 border-b border-slate-100 p-3">
+      <a href="{% url 'dashboard:admin:chat-list' %}" class="btn btn-secondary btn-sm">
+        <svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-back"/></svg>بازگشت
+      </a>
+      <button type="button" id="chatListClose" class="btn btn-ghost btn-sm btn-icon md:hidden" aria-label="بستن"><svg class="i h-5 w-5" viewBox="0 0 24 24"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="min-h-0 flex-1 overflow-y-auto p-2">
+      {% for chat in chats %}
+      <a href="{% url 'dashboard:admin:chat_room_send' chat.pk %}" class="flex items-center gap-3 rounded-xl p-2.5 transition hover:bg-slate-50 {% if chat.id == chat_room.id %}bg-brand-50{% endif %}">
+        <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}" class="thumb">
+        <span class="min-w-0 flex-1">
+          <span class="block truncate text-sm font-semibold text-slate-900">{{ chat.product.title }}</span>
+          <span class="block truncate text-xs text-slate-500">{{ chat.chat_messages.last.text|truncatechars:40 }}</span>
+        </span>
+        {% if not chat.last_message_from_admin %}<span class="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-500 px-1 text-[11px] font-bold text-white">1</span>{% endif %}
+      </a>
+      {% endfor %}
+    </div>
+  </aside>
 
-        <div class="chat-list" id="chatList">
-            <div class="search-bar">
-                <a href="{% url 'dashboard:admin:chat-list' %}">بازگشت</a>
-            </div>
-            {% for chat in chats %}
-            <a href="{% url 'dashboard:admin:chat_room_send' chat.pk %}" class="chat-item {% if chat.id == chat_room.id %}active{% endif %}">
-                <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}" class="avatar">
-                <div class="chat-info">
-                    <span class="chat-name">{{ chat.product.title }}</span>
-                    <span class="last-message">{{ chat.chat_messages.last.text|truncatechars:40 }}</span>
-                </div>
-                {% if not chat.last_message_from_admin %}
-                    <span class="unread-count">1</span>
-                {% endif %}
-            </a>
-            {% endfor %}
-        </div>
-        <div class="chat-main">
-            <div class="chat-header">
-                <div class="mobile-menu-icon" id="mobileMenuIcon">
-                    <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-                    </svg>
-                </div>
-                <a href="{{ chat.product.get_absolute_url }}" target="_blank" class="user-info">
-                    <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}" class="avatar">
-                    <span style="white-space: normal; padding: 0 22px;" class="user-name">{{ chat.product.title }}</span>
-                    <span class="status online">آنلاین</span>
-                </a>
-                <div class="header-actions">
-                </div>
-            </div>
-            <div class="message-area" id="messageArea">
-            {% for msg in messages %}
-                <div class="message {% if msg.sender.type == 2 or msg.sender.type == 3 %}sent{% else %}received{% endif %}">
-                    <span class="message-sender">
-                        {% if msg.sender.type == 2 or msg.sender.type == 3 %}پشتیبان :{% else %}کاربر :{% endif %} {{ msg.sender.user_profile.get_fullname }}
-                    </span>
-                    <p>{{ msg.text }}</p>
-                    <span class="message-time">{{ msg.timestamp|date:"H:i" }}</span>
-                </div>
-            {% empty %}
-                <p>هنوز پیامی وجود ندارد.</p>
-            {% endfor %}
-                <button class="scroll-to-bottom-btn" id="scrollToBottomBtn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="1em" height="1em">
-                        <path fill="none" stroke="currentColor" stroke-Linecap="round" stroke-Linejoin="round"
-                            stroke-Width="2" d="M30 12L16 24L2 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <form class="message-input-area"  method="post">
-                {% csrf_token %}
-                <textarea name="text" placeholder="پیام خود را بنویسید..." name="messageContent"></textarea>
-                <button type="submit">
-                    <svg fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                    </svg>
-                </button>
-            </form>
-        </div>
+  {# ---------- گفتگو ---------- #}
+  <section class="flex min-h-0 min-w-0 flex-1 flex-col">
+    <div class="flex items-center gap-3 border-b border-slate-100 p-3">
+      <button type="button" id="chatListOpen" class="btn btn-secondary btn-sm btn-icon md:hidden" aria-label="لیست گفتگوها"><svg class="i h-5 w-5" viewBox="0 0 24 24"><use href="#i-bars"/></svg></button>
+      <a href="{{ chat.product.get_absolute_url }}" target="_blank" rel="noopener" class="flex min-w-0 items-center gap-3">
+        <img src="{{ chat.product.image.url }}" alt="{{ chat.product.title }}" class="thumb !h-11 !w-11">
+        <span class="truncate text-sm font-bold text-slate-900">{{ chat.product.title }}</span>
+      </a>
     </div>
 
-    <script src="{% static 'js/chat.js' %}"></script>
-</body>
+    <div id="messageArea" class="min-h-0 flex-1 space-y-3 overflow-y-auto bg-slate-50 p-4">
+      {% for msg in messages %}
+      {% if msg.sender.type == 2 or msg.sender.type == 3 %}
+      <div class="flex justify-start">
+        <div class="max-w-[85%] rounded-2xl rounded-ss-sm bg-brand-500 px-4 py-2.5 text-white sm:max-w-[70%]">
+          <p class="mb-1 text-[11px] text-white/80">پشتیبان: {{ msg.sender.user_profile.get_fullname }}</p>
+          <p class="whitespace-pre-line break-words text-sm leading-7">{{ msg.text }}</p>
+          <p class="mt-1 text-end text-[11px] text-white/75">{{ msg.timestamp|date:"H:i" }}</p>
+        </div>
+      </div>
+      {% else %}
+      <div class="flex justify-end">
+        <div class="max-w-[85%] rounded-2xl rounded-se-sm border border-slate-200 bg-white px-4 py-2.5 sm:max-w-[70%]">
+          <p class="mb-1 text-[11px] text-slate-500">کاربر: {{ msg.sender.user_profile.get_fullname }}</p>
+          <p class="whitespace-pre-line break-words text-sm leading-7 text-slate-800">{{ msg.text }}</p>
+          <p class="mt-1 text-end text-[11px] text-slate-400">{{ msg.timestamp|date:"H:i" }}</p>
+        </div>
+      </div>
+      {% endif %}
+      {% empty %}
+      <p class="py-10 text-center text-sm text-slate-400">هنوز پیامی وجود ندارد.</p>
+      {% endfor %}
+    </div>
 
-</html>
+    <form method="post" class="flex items-end gap-2 border-t border-slate-100 p-3">
+      {% csrf_token %}
+      <textarea name="text" rows="1" required placeholder="پیام خود را بنویسید..." class="!min-h-[2.75rem] !py-2.5 max-h-32 flex-1 resize-none"></textarea>
+      <button type="submit" class="btn btn-primary btn-icon" aria-label="ارسال"><svg class="i h-5 w-5 -scale-x-100" viewBox="0 0 24 24"><use href="#i-send"/></svg></button>
+    </form>
+  </section>
+</div>
+{% endblock content %}
 
+{% block extra_js %}
+<script>
+  (function () {
+    var area = document.getElementById('messageArea');
+    if (area) area.scrollTop = area.scrollHeight;
+    var list = document.getElementById('chatList');
+    function show(v) { list.classList.toggle('hidden', !v); list.classList.toggle('flex', v); }
+    var o = document.getElementById('chatListOpen'), c = document.getElementById('chatListClose');
+    if (o) o.addEventListener('click', function () { show(true); });
+    if (c) c.addEventListener('click', function () { show(false); });
+  })();
+</script>
+{% endblock extra_js %}

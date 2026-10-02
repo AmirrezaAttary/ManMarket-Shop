@@ -1,6 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
-
 
 {% block extra_css %}
 <style>
@@ -22,16 +21,10 @@
 
 {% endblock %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <div class="col-md-9">
-        <div class="card">
+<div class="card">
             <!-- Header -->
-            <div class="card-header border-bottom">
+            <div class="card-header">
                 <h5 class="card-header-title">ایجاد استوری</h5>
             </div>
             <!-- End Header -->
@@ -41,51 +34,48 @@
                 {{form.media}}
                 {% csrf_token %}
                 <div class="card-body">
-                    <div class="row d-flex ">
+                    <div class="grid grid-cols-12 gap-x-4 flex">
 
-
-
-                        <div class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>ویدیو</label>
                             {{form.video}}
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>آیکون</label>
                             {{form.icon}}
                         </div>
 
-                        <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>تایتل استوری</label>
                             {{form.title}}
                         </div>
-                        <div class="col-md-6 mb-3" style="margin-top: 22px;">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>وضعیت استوری</label>
                             {{form.status}}
                         </div>
-                        <div class="col-md-6 mb-3" style="margin-top: 22px;">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label> تایتل محصول</label>
                             {{form.title_product}}
                         </div>
-                        <div class="col-md-6 mb-3" style="margin-top: 22px;">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>محصول</label>
                             {{form.product}}
                         </div>
 
                     </div>
                     <div class="card-footer">
-                        <div class=" d-flex pt-5 justify-content-end">
-                            <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:story-list' %}">بازگشت</a>
-                            <button class="btn btn-primary ms-3" type="submit">ایجاد استوری</button>
+                        <div class="flex pt-6 justify-end">
+                            <a class="btn btn-secondary" href="{% url 'dashboard:admin:story-list' %}">بازگشت</a>
+                            <button class="btn btn-primary" type="submit">ایجاد استوری</button>
                         </div>
                     </div>
             </form>
         </div>
     </div>
-</div>
+
 {% endblock %}
 
 {% block extra_js %}
-
 
 {% endblock %}
 

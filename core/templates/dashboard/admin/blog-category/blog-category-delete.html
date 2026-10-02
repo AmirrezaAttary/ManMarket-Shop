@@ -1,16 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <div class="col-md-9">
-        <div class="card">
+<div class="card">
             <!-- Header -->
-            <div class="card-header border-bottom">
+            <div class="card-header">
                 <h5 class="card-header-title">حذف محصول</h5>
             </div>
             <!-- End Header -->
@@ -19,23 +13,22 @@
             <form action="." method="post">
                 {% csrf_token %}
                 <div class="card-body">
-                    <div class="row d-flex ">
+                    <div class="flex flex-col gap-2">
                         <p> آیا از حذف محصول زیر اطمینان دارید؟</p>
-                        <div class="row">
+                        <div class="flex flex-col gap-2">
                             <span>شناسه دسته بندی : {{object.pk}}</span>
                             <span>نام دسته بندی : {{object.name}}</span>
                         </div>
 
                     </div>
                     <div class="card-footer">
-                        <div class=" d-flex pt-5 justify-content-end">
-                            <button type="submit" class="btn btn-danger ms-3">تایید حذف</button>
-                            <a class="btn btn-secondary ms-3"
-                                href="{% url 'dashboard:admin:blog-category-edit' pk=object.pk %}">بازگشت</a>
+                        <div class="flex pt-6 justify-end">
+                            <button type="submit" class="btn btn-danger">تایید حذف</button>
+                            <a class="btn btn-secondary" href="{% url 'dashboard:admin:blog-category-edit' pk=object.pk %}">بازگشت</a>
                         </div>
                     </div>
             </form>
         </div>
     </div>
-</div>
+
 {% endblock %}

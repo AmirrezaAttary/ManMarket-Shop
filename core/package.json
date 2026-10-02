@@ -1,0 +1,17 @@
+{
+  "name": "manmarket-dashboard-ui",
+  "version": "1.0.0",
+  "description": "Tailwind build for the ManMarket admin dashboard",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind/tailwind.config.js -i tailwind/src/input.css -o staticfiles/css/dashboard.css --minify",
+    "watch:css": "tailwindcss -c tailwind/tailwind.config.js -i tailwind/src/input.css -o staticfiles/css/dashboard.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.11",
+    "tailwindcss": "3.4"
+  },
+  "private": true
+}

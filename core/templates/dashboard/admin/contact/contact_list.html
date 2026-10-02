@@ -1,16 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <!-- Card -->
-    <div class="col-md-9 mb-9">
-        <h2>لیست پیام‌ها</h2>
-        <table class="table table-striped">
+<h2>لیست پیام‌ها</h2>
+        <table class="table stack">
             <thead>
                 <tr>
                     <th>#</th>
@@ -24,39 +17,36 @@
             <tbody>
                 {% for contact in contacts %}
                 <tr>
-                    <td>{{ contact.id }}</td>
-                    <td>{{ contact.name }}</td>
-                    <td>{{ contact.email }}</td>
-                    <td>{{ contact.subject }}</td>
-                    <td>{{ contact.created_date|date:"Y-m-d H:i" }}</td>
-                    <td>
-                        <a class="btn btn-sm btn-info"
-                            href="{% url 'dashboard:admin:contact-detail' contact.pk %}">مشاهده</a>
-                        <a class="btn btn-sm btn-danger"
-                            href="{% url 'dashboard:admin:contact-delete' contact.pk %}">حذف</a>
+                    <td data-label="#">{{ contact.id }}</td>
+                    <td data-label="نام">{{ contact.name }}</td>
+                    <td data-label="ایمیل">{{ contact.email }}</td>
+                    <td data-label="موضوع">{{ contact.subject }}</td>
+                    <td data-label="تاریخ">{{ contact.created_date|date:"Y-m-d H:i" }}</td>
+                    <td data-label="عملیات">
+                        <a class="btn btn-info btn-sm" href="{% url 'dashboard:admin:contact-detail' contact.pk %}">مشاهده</a>
+                        <a class="btn btn-danger btn-sm" href="{% url 'dashboard:admin:contact-delete' contact.pk %}">حذف</a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5">هیچ پیامی یافت نشد.</td>
+                    <td class="table-empty"  colspan="5">هیچ پیامی یافت نشد.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-</div>
+
 <!-- Pagination controls -->
-<div class="row pt-5 mt-3">
+<div class="flex flex-col gap-2 pt-6 mt-4">
     {% if page_obj.has_other_pages %}
     <!-- Pagination -->
     <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <button class="page-link" onclick="changePage(`{{ page_obj.previous_page_number }}`)"
-                    aria-label="Previous">
+                <button class="page-link" onclick="changePage(`{{ page_obj.previous_page_number }}`)" aria-label="Previous">
                     <span aria-hidden="true">
-                        <i class="bi-chevron-double-right small"></i>
+                        <svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-chev-r"/></svg>
                     </span>
                 </button>
             </li>
@@ -72,13 +62,11 @@
 
                 {% endfor %}
 
-
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <button class="page-link" onclick="changePage(`{{ page_obj.next_page_number }}`)"
-                        aria-label="Previous">
+                    <button class="page-link" onclick="changePage(`{{ page_obj.next_page_number }}`)" aria-label="Previous">
                         <span aria-hidden="true">
-                            <i class="bi-chevron-double-left small"></i>
+                            <svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-chev-l"/></svg>
                         </span>
                     </button>
                 </li>
@@ -88,5 +76,5 @@
     </nav>
     {% endif %}
     <!-- End Pagination -->
-</div>
+
 {% endblock content %}

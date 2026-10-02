@@ -1,25 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 {% load humanize %}
 {% load jformat %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-  {% include 'dashboard/admin/sidebar.html' %}
-  <!-- Card -->
-  <div class="col-md-9 mb-9">
-    <!-- Card -->
+<!-- Card -->
     <div class="card">
       <!-- Header -->
-      <div class="card-header border-bottom">
-        <div class="d-flex justify-content-between align-items-center">
-          <h5 class=""> کاربر {{object.email}}</h5>
+      <div class="card-header">
+        <div class="flex justify-between items-center">
+          <h5 > کاربر {{object.email}}</h5>
           {% if object.is_successful %}
-          <!-- <a class="btn btn-primary" href="{% comment %}{% url 'dashboard:admin:order-invoice' pk=object.pk %}{% endcomment %}"
-            target="_blank">مشاهده فاکتور</a> -->
+          <!-- <a class="btn btn-primary" href="{% comment %}{% url 'dashboard:admin:order-invoice' pk=object.pk %}{% endcomment %}" target="_blank">مشاهده فاکتور</a> -->
           {% endif %}
         </div>
       </div>
@@ -28,11 +20,11 @@
       <!-- Body -->
       <div class="card-body">
 
-        <div class="row">
+        <div class="flex flex-col gap-2">
           <!-- Table -->
-          <div class="table-responsive">
-            <table class="table">
-              <thead class="thead-light">
+          <div class="table-wrap">
+            <table class="table stack">
+              <thead >
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">تصویر</th>
@@ -46,17 +38,17 @@
               <tbody>
                 
                 <tr>
-                  <th scope="row">{{object.id}}</th>
-                  <td>
-                    <span class="avatar ">
-                      <img class="avatar-img" style="max-width: 80px;max-height: 80px;" src="{{object.user_profile.image.url}}" alt="Image Description">
+                  <th scope="row" data-label="#">{{object.id}}</th>
+                  <td data-label="تصویر">
+                    <span class="avatar">
+                      <img class="thumb" src="{{object.user_profile.image.url}}" alt="Image Description">
                     </span>
                   </td>
-                  <td>{{object.user_profile.get_fullname}}</td>
-                  <td>{{object.phone_number}}</td>
-                  <td>{{object.get_type_display}}</td>
-                  <td> {{ order_count }}<a href="{% url 'dashboard:admin:users-order' pk=object.id %}">مشاهده</a></td>
-                  <td class="formatted-price">{{object.user_profile.age}}</td>
+                  <td data-label="نام و نام خانوادگی">{{object.user_profile.get_fullname}}</td>
+                  <td data-label="شماره کاربر">{{object.phone_number}}</td>
+                  <td data-label="نوع کاربر">{{object.get_type_display}}</td>
+                  <td data-label="تعداد سفارش ها"> {{ order_count }}<a href="{% url 'dashboard:admin:users-order' pk=object.id %}">مشاهده</a></td>
+                  <td class="formatted-price" data-label="سن کاربر">{{object.user_profile.age}}</td>
                 </tr>
                 
               </tbody>
@@ -67,32 +59,31 @@
         </div>
         <!-- End Row -->
 
-
       </div>
-      <div class="card-footer row pt-5 mt-5">
+      <div class="flex flex-col gap-2 card-footer pt-6 mt-6">
         <form>
-          <div class="row mb-3 align-items-center">
-            <dt class="col-md-3">موجودی کیف پول : <a href="{% url 'dashboard:admin:users-wallet' pk=object.wallet_user.id %}">مشاهده</a></dt>
-            <dl class="col-md-3">{{object.wallet_user.balance|floatformat:0|intcomma}} تومان</dl>
-            <dt class="col-md-3">تعداد محصولات مورد علاقه: <a href="{% url 'dashboard:admin:users-wishlist' pk=object.id %}">مشاهده</a></dt>
-            <dl class="col-md-3 ">{{wishlist_count}}</dl>
+          <div class="grid grid-cols-12 gap-x-4 mb-4 items-center">
+            <dt class="detail-label">موجودی کیف پول : <a href="{% url 'dashboard:admin:users-wallet' pk=object.wallet_user.id %}">مشاهده</a></dt>
+            <dl class="detail-value">{{object.wallet_user.balance|floatformat:0|intcomma}} تومان</dl>
+            <dt class="detail-label">تعداد محصولات مورد علاقه: <a href="{% url 'dashboard:admin:users-wishlist' pk=object.id %}">مشاهده</a></dt>
+            <dl class="detail-value">{{wishlist_count}}</dl>
           </div>
-          <div class="row mb-3">
-            <dt class="col-md-3"> تاریخ عضویت:</dt>
-            <dl class="col-md-3">{{ object.created_date|jformat:"%Y/%m/%d" }}</dl>
-            <dt class="col-md-3">تعداد چت ها : <a href="{% url 'dashboard:admin:users-chat' pk=object.id %}">مشاهده</a></dt>
-            <dl class="col-md-3">{{customer_chat_count}}</dl>
+          <div class="grid grid-cols-12 gap-x-4 mb-4">
+            <dt class="detail-label"> تاریخ عضویت:</dt>
+            <dl class="detail-value">{{ object.created_date|jformat:"%Y/%m/%d" }}</dl>
+            <dt class="detail-label">تعداد چت ها : <a href="{% url 'dashboard:admin:users-chat' pk=object.id %}">مشاهده</a></dt>
+            <dl class="detail-value">{{customer_chat_count}}</dl>
           </div>
           <!-- End Row -->
-          <div class="row mb-3">
-            <dt class="col-md-3"> تعداد نظر های داده شده: <a href="{% url 'dashboard:admin:users-review' pk=object.id %}">مشاهده</a></dt>
-            <dl class="col-md-3">{{reviw_count}}</dl>
+          <div class="grid grid-cols-12 gap-x-4 mb-4">
+            <dt class="detail-label"> تعداد نظر های داده شده: <a href="{% url 'dashboard:admin:users-review' pk=object.id %}">مشاهده</a></dt>
+            <dl class="detail-value">{{reviw_count}}</dl>
 
           </div>
 
                     
-          <div class=" d-flex pt-5 justify-content-end">
-            <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:users-list' %}">بازگشت</a>
+          <div class="flex pt-6 justify-end">
+            <a class="btn btn-secondary" href="{% url 'dashboard:admin:users-list' %}">بازگشت</a>
 
           </div>
         </form>
@@ -100,7 +91,6 @@
       <!-- End Body -->
     </div>
     <!-- End Card -->
-  </div>
-</div>
+  
 
 {% endblock %}

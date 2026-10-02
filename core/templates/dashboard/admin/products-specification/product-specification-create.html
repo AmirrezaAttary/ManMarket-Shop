@@ -1,36 +1,27 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-
-    
-    <!-- Card -->
-    <div class="col-md-9 mb-9">
-        <!-- Card -->
-        <div class="card mb-3">
-            <div class="card-header border-bottom">
+<!-- Card -->
+        <div class="card mb-4">
+            <div class="card-header">
                 <h4 class="card-header-title">ویرایش محصول ثبت شده </h4>
             </div>
             <form method="get" action=".">
                 <label for="brand-select">فیلتر بر اساس برند:</label>
-                <select id="brand-select" name="brand" onchange="this.form.submit()" class="form-control">
+                <select id="brand-select" name="brand" onchange="this.form.submit()" >
                     <option value="">همه برندها</option>
                     {% for brand in brands %}
                         <option value="{{ brand.slug }}" {% if brand.slug == selected_brand %}selected{% endif %}>{{ brand.title }}</option>
                     {% endfor %}
                 </select>
-                <select id="category-select" name="category" onchange="this.form.submit()" class="form-control">
+                <select id="category-select" name="category" onchange="this.form.submit()" >
                     <option value="">همه دسته‌بندی‌ها</option>
                     {% for category in categorys %}
                         <option value="{{ category.slug }}" {% if category.slug == selected_category %}selected{% endif %}>{{ category.title }}</option>
                     {% endfor %}
                 </select>
-                <input type="text" name="q"  placeholder="جستجو... کد محصول یا نام" class="form-control" value="{{ request.GET.q }}">
+                <input type="text" name="q" placeholder="جستجو... کد محصول یا نام" value="{{ request.GET.q }}">
             </form>
 
             <form action="." method="post">
@@ -40,18 +31,17 @@
 
                     {% csrf_token %}
 
-
                     <!-- Form -->
-                    <div class="row">
-                        <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                    <div class="grid grid-cols-12 gap-x-4">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>نام محصول </label>
                             {{form.product}}
                         </div>
-                        <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>آدرس محصول دیجیکالا </label>
                             {{form.url}}
                         </div>
-                            <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>تعداد نظرات دیجیکالا </label>
                                 {{form.number_comments}}
                             </div>
@@ -59,11 +49,9 @@
 
                         <!-- Footer -->
                         <div class="card-footer pt-0">
-                            <div class="d-flex justify-content-end gap-3">
-                                <a class="btn btn-secondary"
-                                    href="{% url 'dashboard:admin:specification-list' %}">بازگشت</a>
-                                <button class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;"
-                                    type="submit">ذخیره تغییرات</button>
+                            <div class="flex justify-end gap-3">
+                                <a class="btn btn-secondary" href="{% url 'dashboard:admin:specification-list' %}">بازگشت</a>
+                                <button class="btn btn-primary" type="submit">ذخیره تغییرات</button>
                             </div>
                         </div>
             </form>
@@ -72,5 +60,5 @@
         <!-- End Card -->
     </div>
 </div>
-</div>
+
 {% endblock %}

@@ -1,14 +1,17 @@
-{# templates/dashboard/admin/person_pay/person-pay-create.html #}
-
-{% extends 'base.html' %}
-{% load static %}
-
+{% extends 'dashboard/admin/layout.html' %}
+{% block title %}ثبت پرداخت حضوری{% endblock title %}
 {% block content %}
-<br><br><br><br><br>
-<h2>ثبت پرداخت حضوری</h2>
-<form method="post">
+<div class="card mx-auto max-w-2xl">
+  <div class="card-header"><h5 class="card-header-title">ثبت پرداخت حضوری</h5></div>
+  <form method="post" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">ثبت پرداخت</button>
-</form>
-{% endblock %}
+    <div class="card-body">
+      <div class="space-y-5 [&_p]:space-y-1.5">{{ form.as_p }}</div>
+      <div class="card-footer">
+        <a class="btn btn-secondary" href="{% url 'dashboard:admin:person_pay-list' %}">بازگشت</a>
+        <button type="submit" class="btn btn-primary">ثبت پرداخت</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock content %}

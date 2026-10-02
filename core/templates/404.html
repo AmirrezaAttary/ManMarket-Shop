@@ -1,56 +1,17 @@
-{% load static %}
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>من مارکت</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>صفحه پیدا نشد | من مارکت</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
-
-<body style="background-color: #fff;">
-
-
-
-    <center>
-
-
-
-
-
-        <main class="d-flex justify-content-center flex-column">
-
-
-            <div style="width: 100% ; height: 90vh"
-                class="align-items-center d-flex justify-content-center flex-column">
-                <a class="text-dark" href="{% url 'website:index' %}"><button class="btn bg-custom">بازگشت به صفحه
-                        اصلی</button></a>
-                <h3 class="text-center mt-5">صفحه ای که به دنبال آن هستید پیدا نشد</h3>
-                <div class="text-center d-flex justify-content-center mt-5">
-                    <img class="w-50" alt="404" src="{% static 'img/404.png' %}">
-                </div>
-            </div>
-
-
-        </main>
-
-
-
-
-
-
-
-        <div class="custom-overlay"></div>
-        <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-        <script src="script.js"></script>
-    </center>
+<body class="flex min-h-screen items-center justify-center bg-white p-6">
+  <main class="w-full max-w-md text-center">
+    <img class="mx-auto mb-8 w-full max-w-xs" alt="404" src="{% static 'img/404.png' %}">
+    <h1 class="text-xl">صفحه‌ای که به دنبال آن هستید پیدا نشد</h1>
+    <p class="mt-2 text-sm text-slate-500">ممکن است آدرس را اشتباه وارد کرده باشید یا صفحه حذف شده باشد.</p>
+    <a href="manmarket.ir" class="btn btn-primary mt-8">بازگشت به صفحه اصلی</a>
+  </main>
 </body>
-<!-- partial -->
-
 </html>

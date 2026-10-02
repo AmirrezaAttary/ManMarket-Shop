@@ -1,17 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <!-- Card -->
-    <div class="col-md-9 mb-9">
-        <!-- Card -->
-        <div class="card mb-3">
-            <div class="card-header border-bottom">
+<!-- Card -->
+        <div class="card mb-4">
+            <div class="card-header">
                 <h4 class="card-header-title">ویرایش رنگ </h4>
             </div>
 
@@ -22,32 +15,31 @@
 
                     {% csrf_token %}
 
-
                     <!-- Form -->
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label class="col-form-label form-label">رنگ</label>
+                    <div class="grid grid-cols-12 gap-x-4">
+                        <div class="col-span-12 md:col-span-6 mb-5">
+                            <label >رنگ</label>
                             {{ form.color }}
                         </div>
-                        <div class="col-md-6 mb-4">
-                            <label class="col-form-label form-label">قیمت</label>
+                        <div class="col-span-12 md:col-span-6 mb-5">
+                            <label >قیمت</label>
                             {{ form.price }}
                         </div>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label class="col-form-label form-label">قیمت با تخفیف</label>
+                    <div class="grid grid-cols-12 gap-x-4">
+                        <div class="col-span-12 md:col-span-6 mb-5">
+                            <label >قیمت با تخفیف</label>
                             {{ form.final_price }}
                         </div>
-                        <div class="col-md-6 mb-4">
-                            <label class="col-form-label form-label">تعداد</label>
+                        <div class="col-span-12 md:col-span-6 mb-5">
+                            <label >تعداد</label>
                             {{ form.stock }}
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label class="col-form-label form-label">کد رنگ</label>
+                    <div class="grid grid-cols-12 gap-x-4">
+                        <div class="col-span-12 md:col-span-6 mb-5">
+                            <label >کد رنگ</label>
                             {{ form.hex_color }}
                         </div>
                     </div>
@@ -55,9 +47,9 @@
                     
                 <!-- Footer -->
                 <div class="card-footer pt-0">
-                    <div class="d-flex justify-content-end gap-3">
+                    <div class="flex justify-end gap-3">
                         <a class="btn btn-secondary" href="{% url 'dashboard:admin:product-edit' pk=product.id %}">بازگشت</a>
-                        <button class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;" type="submit">ذخیره تغییرات</button>
+                        <button class="btn btn-primary" type="submit">ذخیره تغییرات</button>
                     </div>
                 </div>
             </form>
@@ -65,5 +57,5 @@
         </div>
         <!-- End Card -->
     </div>
-</div>
+
 {% endblock %}

@@ -1,115 +1,63 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 {% load humanize %}
 {% load jformat %}
+{% block title %}کیف پول کاربر{% endblock title %}
 
 {% block content %}
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="icon-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path
-            d="M21 12.7v5.8a1.5 1.5 0 0 1-1.5 1.5H4.5A1.5 1.5 0 0 1 3 18.5v-13A1.5 1.5 0 0 1 4.5 4H18a1.5 1.5 0 0 1 1.5 1.5V9">
-        </path>
-        <path d="M21 7.5H3"></path>
-        <path d="M18 12.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
-    </symbol>
-    <symbol id="icon-arrow-up-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="12" cy="12" r="10"></circle>
-        <polyline points="16 12 12 8 8 12"></polyline>
-        <line x1="12" y1="16" x2="12" y2="8"></line>
-    </symbol>
-    <symbol id="icon-arrow-down-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="12" cy="12" r="10"></circle>
-        <polyline points="8 12 12 16 16 12"></polyline>
-        <line x1="12" y1="8" x2="12" y2="16"></line>
-    </symbol>
-</svg>
-<main class="profile-content-area-new">
-    <section id="wallet-section" class="profile-section-new">
-        <header class="section-header-new border-0">
-            <h2><svg>
-                    <use xlink:href="#icon-wallet"></use>
-                </svg>کیف پول کاربر {{wallet.user.email}}</h2>
-        </header>
-        <center>
-            <section class="w-center p-0" style="width: 883px;">
-                <div class="wallet-balance-card w-50 w-right m-0">
-                    <div>
-                        <p class="wallet-balance-label my-3">{{wallet.user.user_profile.get_fullname}} - {{wallet.user.email}}</p>
-                        <p class="wallet-balance-amount my-3">
-                        <p class="my-3"></p> موجودی فعلی
-                        :
-
-                        {% if wallet.balance == 0 %}
-                        {{wallet.balance|floatformat:0|intcomma}}.0
-                        {% else %}
-
-                        {{wallet.balance|floatformat:0|intcomma}}
-                        {% endif %} <span class="currency">تومان</span></p>
-                    </div>
-
-                    <img class="position-absolute w-25 brand-card" alt="من مارکت" src="{% static 'img/main-Bubble.webp' %}">
-                    <img class="position-absolute w-25 brand-card-2" alt="من مارکت"
-                        src="{% static 'img/main-Bubble.webp' %}">
-                    <img class="position-absolute w-25 brand-card-3" alt="من مارکت"
-                        src="{% static 'img/main-Bubble.webp' %}">
-                    <img class="position-absolute w-25 brand-card-4" alt="من مارکت"
-                        src="{% static 'img/main-Bubble.webp' %}">
-                    <img class="position-absolute w-25 brand-card-5" alt="من مارکت"
-                        src="{% static 'img/main-Bubble.webp' %}">
-                </div>
-            </section>
-        </center>
-        <center>
-        <div class="transaction-list-container" style="width:800px;">
-            <h3 class="transaction-list-header mt-5">تراکنش‌های اخیر</h3>
-            <div class="transaction-list">
-
-                {% for transaction in object.transactions.all %}
-                <div
-                    class="transaction-item {% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}deposit{% else %}withdrawal{% endif %}">
-                    <div class="transaction-icon">
-                        <svg>
-                            <use
-                                xlink:href="#icon-arrow-{% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}up{% else %}down{% endif %}-circle">
-                            </use>
-                        </svg>
-                    </div>
-                    <div class="transaction-details">
-                        <p class="transaction-title">
-                            {{ transaction.description }}
-                        </p>
-                        <p class="transaction-date">
-                            {{ transaction.created_at|jformat:"%Y/%m/%d - %H:%M"}}
-                        </p>
-                    </div>
-                    <div
-                        class="transaction-amount {% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}deposit{% else %}withdrawal{% endif %}">
-                        {% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}
-                        +
-                        {% else %}
-                        -
-                        {% endif %}
-                        {{ transaction.amount|floatformat:0|intcomma }} تومان
-                    </div>
-                </div>
-                {% empty %}
-                <p>تراکنشی برای نمایش وجود ندارد.</p>
-                {% endfor %}
-
-            </div>
-        </div>
-        </center>
-    </section>
-</main>
-</div>
+<div class="flex flex-wrap items-center justify-between gap-3">
+  <h1 class="flex items-center gap-2 text-xl font-bold text-slate-900">
+    <svg class="i h-6 w-6 text-brand-500" viewBox="0 0 24 24"><use href="#i-wallet"/></svg>
+    کیف پول کاربر
+  </h1>
+  <a href="{% url 'dashboard:admin:users-list' %}" class="btn btn-secondary btn-sm">
+    <svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-back"/></svg>بازگشت به کاربران
+  </a>
 </div>
 
+<section class="relative overflow-hidden rounded-3xl bg-gradient-to-bl from-brand-500 to-brand-700 p-6 text-white shadow-card sm:p-8">
+  <div class="pointer-events-none absolute -start-12 -top-12 h-48 w-48 rounded-full bg-white/10"></div>
+  <div class="pointer-events-none absolute -bottom-16 end-10 h-40 w-40 rounded-full bg-white/10"></div>
+  <div class="relative">
+    <p class="text-sm text-white/85">{{ wallet.user.user_profile.get_fullname }}</p>
+    <p class="mt-0.5 text-xs text-white/70" dir="ltr" style="text-align:right">{{ wallet.user.email }}</p>
+    <p class="mt-6 text-sm text-white/85">موجودی فعلی</p>
+    <p class="mt-1 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+      {{ wallet.balance|floatformat:0|intcomma }} <span class="text-base font-medium text-white/85">تومان</span>
+    </p>
+  </div>
+</section>
 
-<!-- <div class="wow-notification-container-new" id="notificationToastContainer"></div> -->
-
-<div class="custom-overlay"></div>
+<section class="card">
+  <div class="card-header"><h2 class="card-header-title">تراکنش‌های اخیر</h2></div>
+  <div class="divide-y divide-slate-100">
+    {% for transaction in object.transactions.all %}
+    {% if transaction.transaction_type == 'charge' or transaction.transaction_type == 'refund' %}
+    <div class="flex items-center gap-4 px-4 py-4 sm:px-6">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+        <svg class="i h-5 w-5" viewBox="0 0 24 24"><use href="#i-plus"/></svg>
+      </span>
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-sm font-semibold text-slate-900">{{ transaction.description }}</p>
+        <p class="text-xs text-slate-500">{{ transaction.created_at|jformat:"%Y/%m/%d - %H:%M" }}</p>
+      </div>
+      <p class="shrink-0 text-sm font-bold text-emerald-600">+ {{ transaction.amount|floatformat:0|intcomma }} تومان</p>
+    </div>
+    {% else %}
+    <div class="flex items-center gap-4 px-4 py-4 sm:px-6">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-rose-50 text-rose-600">
+        <svg class="i h-5 w-5" viewBox="0 0 24 24"><path d="M19.5 12h-15"/></svg>
+      </span>
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-sm font-semibold text-slate-900">{{ transaction.description }}</p>
+        <p class="text-xs text-slate-500">{{ transaction.created_at|jformat:"%Y/%m/%d - %H:%M" }}</p>
+      </div>
+      <p class="shrink-0 text-sm font-bold text-rose-600">- {{ transaction.amount|floatformat:0|intcomma }} تومان</p>
+    </div>
+    {% endif %}
+    {% empty %}
+    <p class="table-empty">تراکنشی برای نمایش وجود ندارد.</p>
+    {% endfor %}
+  </div>
+</section>
 {% endblock content %}
-
-{% block extra_js %}
-<script src="{% static 'js/profile.js' %}"></script>
-{% endblock extra_js %}

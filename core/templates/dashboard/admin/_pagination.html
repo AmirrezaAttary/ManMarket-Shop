@@ -1,0 +1,28 @@
+{# صفحه‌بندی — نیازمند تابع changePage در js/custom.js و متغیر page_obj #}
+{% if page_obj.has_other_pages %}
+<nav aria-label="صفحه‌بندی" class="mt-6 flex justify-center">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <button type="button" class="page-link" onclick="changePage('{{ page_obj.previous_page_number }}')" aria-label="صفحه قبل">
+        <svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-chev-r"/></svg>
+      </button>
+    </li>
+    {% endif %}
+    {% for i in page_obj.paginator.page_range %}
+      {% if page_obj.number == i %}
+      <li class="page-item active"><span class="page-link" aria-current="page">{{ i }}</span></li>
+      {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+      <li class="page-item"><button type="button" class="page-link" onclick="changePage('{{ i }}')">{{ i }}</button></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <button type="button" class="page-link" onclick="changePage('{{ page_obj.next_page_number }}')" aria-label="صفحه بعد">
+        <svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-chev-l"/></svg>
+      </button>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

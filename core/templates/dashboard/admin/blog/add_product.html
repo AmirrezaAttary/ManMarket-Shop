@@ -1,6 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
-
 
 {% block extra_css %}
 <style>
@@ -22,64 +21,54 @@
 
 {% endblock %}
 
-
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <div class="col-md-9">
-        <div class="card">
+<div class="card">
             <!-- Header -->
-            <div class="card-header border-bottom">
+            <div class="card-header">
                 <h5 class="card-header-title">ایجاد محصول مرتبط با {{post.title}}</h5>
             </div>
             <!-- End Header -->
             <form method="get" action=".">
                 <label for="brand-select">فیلتر بر اساس برند:</label>
-                <select id="brand-select" name="brand" onchange="this.form.submit()" class="form-control">
+                <select id="brand-select" name="brand" onchange="this.form.submit()" >
                     <option value="">همه برندها</option>
                     {% for brand in brands %}
                         <option value="{{ brand.slug }}" {% if brand.slug == selected_brand %}selected{% endif %}>{{ brand.title }}</option>
                     {% endfor %}
                 </select>
-                <select id="category-select" name="category" onchange="this.form.submit()" class="form-control">
+                <select id="category-select" name="category" onchange="this.form.submit()" >
                     <option value="">همه دسته‌بندی‌ها</option>
                     {% for category in categorys %}
                         <option value="{{ category.slug }}" {% if category.slug == selected_category %}selected{% endif %}>{{ category.title }}</option>
                     {% endfor %}
                 </select>
-                <input type="text" name="q"  placeholder="جستجو... کد محصول یا نام" class="form-control" value="{{ request.GET.q }}">
+                <input type="text" name="q" placeholder="جستجو... کد محصول یا نام" value="{{ request.GET.q }}">
             </form>
             <!-- Body -->
             <form action="." method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="card-body">
-                    <div class="row d-flex ">
+                    <div class="grid grid-cols-12 gap-x-4 flex">
 
-
-
-                        <div class="col-md-6 mb-3">
+                        <div class="col-span-12 md:col-span-6 mb-4">
                             <label>محصول</label>
                             {{form.product}}
                         </div>
 
-
                     </div>
                     <div class="card-footer">
-                        <div class=" d-flex pt-5 justify-content-end">
-                            <a class="btn btn-secondary ms-3" href="{% url 'dashboard:admin:blog-edit' pk=post.id %}">بازگشت</a>
-                            <button class="btn btn-primary ms-3" type="submit">ایجاد استوری</button>
+                        <div class="flex pt-6 justify-end">
+                            <a class="btn btn-secondary" href="{% url 'dashboard:admin:blog-edit' pk=post.id %}">بازگشت</a>
+                            <button class="btn btn-primary" type="submit">ایجاد استوری</button>
                         </div>
                     </div>
             </form>
         </div>
     </div>
-</div>
+
 {% endblock %}
 
 {% block extra_js %}
-
 
 {% endblock %}
 

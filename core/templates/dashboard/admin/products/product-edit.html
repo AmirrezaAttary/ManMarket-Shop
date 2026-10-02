@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin/layout.html' %}
 {% load static %}
 {% load humanize %}
 
@@ -21,16 +21,11 @@
 </style>
 {% endblock %}
 
-
 {% block content %}
-<br><br><br><br>
-<div class="row">
-    {% include 'dashboard/admin/sidebar.html' %}
-    <div class="col-md-9">
-        <div>
-            <div class="card mb-5">
+<div>
+            <div class="card mb-6">
                 <!-- Header -->
-                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <div class="card-header flex justify-between items-center">
                     <h5 class="card-header-title">ویرایش محصول</h5>
                     {% if object.pricespecification %}
                         <a href="{% url 'dashboard:admin:specification-edit' pk=object.pricespecification.id %}">
@@ -40,8 +35,7 @@
                         <span style="color: red;">مشخصات ثبت نشده است</span>
                     {% endif %}
                     {% if object.is_published %}
-                    <a class="btn btn-sm btn-primary" target="_blank"
-                        href="">نمایش
+                    <a class="btn btn-primary btn-sm" target="_blank" href="">نمایش
                         محصول</a>
                     {% endif %}
                 </div>
@@ -51,70 +45,66 @@
                 <form action="." method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="card-body">
-                        <div class="row d-flex ">
-                            <div style="margin-top: 28px;" class="col-md-6 mb-3">
+                        <div class="grid grid-cols-12 gap-x-4 flex">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>نام محصول</label>
                                 {{form.title}}
                             </div>
-                            <div class="col-md-6 mb-3" style="margin-top: 22px;">
-                                <label>slug محصول - <button style="background-color: #f96747;border-color: #f96747;" class="small-primary-button" type="button"
-                                        onclick="generateSlug()">ساخت
+                            <div class="col-span-12 md:col-span-6 mb-4">
+                                <label>slug محصول - <button class="small-primary-button" type="button" onclick="generateSlug()">ساخت
                                         slug</button> </label>
                                 {{form.slug}}
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>وضعیت</label>
                                 {{form.status}}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>دسته بندی</label>
                                 {{form.category}}
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label> برند</label>
                                 {{form.brand}}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>گارانتی </label>
                                 {{form.warranty}}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>تایتل کوچولو </label>
                                 {{form.brief_title}}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>متا تایتل</label>
                                 {{form.meta_title}}
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-span-12 md:col-span-6 mb-4">
                                 <label>متا دیسکریپشن</label>
                                 {{form.meta_description}}
                             </div>
-                            <div class="col-md-12 mb-3">
+                            <div class="col-span-12 mb-4">
                                 <label>توضیح کوتاه</label>
                                 {{form.brief_description}}
                             </div>
-                            <div class="col-md-12 mb-3">
+                            <div class="col-span-12 mb-4">
                                 <label>توضیحات</label>
                                 {{form.description}}
                             </div>
 
-                            <div class="col-md-12 mb-3">
+                            <div class="col-span-12 mb-4">
                                 <label for="validationValidFileInput1">تصویر محصول</label>
                                 {{form.image}}
                             </div>
 
-
                         </div>
                         <div class="card-footer">
-                            <div class=" d-flex pt-5 justify-content-end">
-                                <a class="btn btn-danger ms-3"
-                                    href="{% url 'dashboard:admin:product-delete' pk=object.pk %}">حذف</a>
-                                <a class="btn btn-secondary ms-3"
-                                    href="{% url 'dashboard:admin:product-list' %}">بازگشت</a>
-                                <button class="btn btn-primary ms-3" type="submit">ثبت تغییرات</button>
+                            <div class="flex pt-6 justify-end">
+                                <a class="btn btn-danger" href="{% url 'dashboard:admin:product-delete' pk=object.pk %}">حذف</a>
+                                <a class="btn btn-secondary" href="{% url 'dashboard:admin:product-list' %}">بازگشت</a>
+                                <button class="btn btn-primary" type="submit">ثبت تغییرات</button>
                             </div>
                         </div>
                 </form>
@@ -123,7 +113,7 @@
         <div>
             <div class="card">
                 <!-- Header -->
-                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <div class="card-header flex justify-between items-center">
                     <h5 class="card-header-title">ویرایش تصاویر بیشتر</h5>
                 </div>
                 <!-- End Header -->
@@ -133,28 +123,27 @@
                     enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="card-body">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-9 mb-3 d-flex align-items-center">
+                        <div class="grid grid-cols-12 gap-x-4 flex items-center">
+                            <div class="col-span-12 md:col-span-9 mb-4 flex items-center">
                                 <label>تصاویر محصول</label>
-                                <input type="file" name="files" multiple class="form-control"
-                                    accept="image/png, image/webp, image/jpg, image/jpeg">
+                                <input type="file" name="files" multiple accept="image/png, image/webp, image/jpg, image/jpeg">
                             </div>
-                            <div class="col-md-9 mb-3 d-flex align-items-center">
+                            <div class="col-span-12 md:col-span-9 mb-4 flex items-center">
                                 <label>رنگ</label>
                                 {{ image_form.color }}
                             </div>
-                            <div class="col-md-3 mb-3">
-                                <button class="btn btn-primary ms-3" type="submit">ثبت تصاویر</button>
+                            <div class="col-span-12 md:col-span-3 mb-4">
+                                <button class="btn btn-primary" type="submit">ثبت تصاویر</button>
                             </div>
                         </div>
                     </div>
                 </form> 
 
                 <div class="card-body"> 
-                    <div class="row d-flex ">
+                    <div class="grid grid-cols-12 gap-x-4 flex">
                         {% for product_image in object.product_images.all %}
-                        <div class="col-md-2">
-                            <img class="img-fluid" style="width:100px; height:100px" src="{{product_image.file.url}}" alt="Image Description">
+                        <div class="col-span-12 md:col-span-2">
+                            <img class="max-w-full h-auto" style="width:100px; height:100px" src="{{product_image.file.url}}" alt="Image Description">
                             <h5>{{product_image.color}}</h5>
 
                             <!-- فرم حذف -->
@@ -166,7 +155,7 @@
                             <!-- فرم تغییر رنگ -->
                         <form action="{% url 'dashboard:admin:product-update-image-color' pk=object.pk image_id=product_image.pk %}" method="post">
                             {% csrf_token %}
-                            <select name="color" class="form-control">
+                            <select name="color" >
                                 {% for val, label in image_form.fields.color.choices %}
                                     <option value="{{ val }}" {% if val == product_image.color_id %}selected{% endif %}>{{ label }}</option>
                                 {% endfor %}
@@ -180,18 +169,18 @@
             </div>
 
         </div>
-        <div class="">
-            <div class="card mb-5">
+        <div >
+            <div class="card mb-6">
                 <!-- Header -->
-                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <div class="card-header flex justify-between items-center">
                     <h5 class="card-header-title">رنگ های محصول</h5>
-                    <a class="btn btn-primary" style="background-color: #f96747;border-color: #f96747;" href="{% url 'dashboard:admin:product-add-color' pk=object.pk %}">افزودن
+                    <a class="btn btn-primary" href="{% url 'dashboard:admin:product-add-color' pk=object.pk %}">افزودن
                         رنگ</a>
                 </div>
                 <!-- End Header -->
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead class="thead-light">
+                <div class="table-wrap">
+                    <table class="table stack">
+                        <thead >
                             <tr>
                                 <th scope="col">رنگ </th>
                                 <th scope="col">کد رنگ </th>
@@ -205,23 +194,18 @@
                         <tbody>
                             {% for color_inventor in object.color_inventories.all %}
                             <tr>
-                                <th scope="row">{{color_inventor.color}}</th>
-                                <td>{{color_inventor.hex_color}}</td>
-                                <td>{{color_inventor.price|intcomma}}</td>
-                                <td>{{color_inventor.discount_percent}}%</td>
-                                <td>{{color_inventor.stock}}</td>
-                                <td>{{color_inventor.get_price|intcomma}}</td>
+                                <th scope="row" data-label="رنگ">{{color_inventor.color}}</th>
+                                <td data-label="کد رنگ">{{color_inventor.hex_color}}</td>
+                                <td data-label="قیمت">{{color_inventor.price|intcomma}}</td>
+                                <td data-label="تخفیف">{{color_inventor.discount_percent}}%</td>
+                                <td data-label="تعداد">{{color_inventor.stock}}</td>
+                                <td data-label="قیمت نمایش">{{color_inventor.get_price|intcomma}}</td>
 
-
-                                <td class="d-flex">
-                                    <a class="btn btn-success btn-sm btn-icon btn-ghost-secondary"
-                                        href="{% url 'dashboard:admin:product-edit-color'  pk=color_inventor.id prduct_pk=object.pk %}"><i
-                                            class="bi-pencil-square">eidt</i></a>
+                                <td class="flex" data-label="عملیات">
+                                    <a class="btn btn-ghost-secondary btn-sm" href="{% url 'dashboard:admin:product-edit-color' pk=color_inventor.id prduct_pk=object.pk %}"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-edit"/></svg><span>ویرایش</span></a>
                                     
                                     {% if object.is_published %}
-                                    <a class="btn btn-sm btn-danger btn-icon btn-ghost-primary" target="_blank"
-                                        href="{% url 'dashboard:admin:product-color-delete' pk=color_inventor.id prduct_pk=object.pk %}"><i
-                                            class="bi-eye">delete</i></a>
+                                    <a class="btn btn-ghost-primary btn-sm" target="_blank" href="{% url 'dashboard:admin:product-color-delete' pk=color_inventor.id prduct_pk=object.pk %}"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-trash"/></svg><span>حذف</span></a>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -234,7 +218,7 @@
             </div>
         </div>
     </div>
-</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -268,7 +252,6 @@ function slugify(titleStr) {
 
     return titleStr;
 }
-
 
 </script>
 

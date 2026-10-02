@@ -1,162 +1,75 @@
-{% load static %}
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-    <!-- Required Meta Tags Always Come First -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Title -->
-    <title>فاکتور سفارش</title>
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="/favicon.ico">
-
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-    <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="{% static 'css/vendor.min.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/font/bootstrap-icons.css' %}">
-
-    <!-- CSS Front Template -->
-    <link rel="stylesheet" href="{% static 'css/theme.min.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/toastify/toastify.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>فاکتور سفارش</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
-
-<body style="background-color: #fff;">
-    <!-- ========== MAIN CONTENT ========== -->
-    <main id="content" role="main">
-        <!-- Content -->
-        <div class="container content-space-2">
-            <div class="w-lg-85 mx-lg-auto">
-                <!-- Card -->
-                <div class="card card-lg mb-5">
-                    <div class="card-body">
-                        <div class="row justify-content-lg-between">
-
-
-                            <div class="col-sm-auto  text-right mb-3">
-                                <div class="mb-3">
-                                    <h2> فاکتور شماره</h2>
-                                    <span class="d-block">{{order.id}}</span>
-                                </div>
-
-                            </div>
-                            <!-- End Col -->
-
-                            <div class="col-sm-auto  mb-3">
-                                <div class="mb-2">
-                                    <img class="avatar" src="{% static '/svg/logos/logo-short.svg' %}" alt="Logo">
-                                </div>
-
-                                <h1 class="h2 text-primary">Front Inc.</h1>
-                            </div>
-                            <!-- End Col -->
-
-                        </div>
-                        <!-- End Row -->
-
-                        <div class="row justify-content-md-between mb-3">
-                            <div class="col-md">
-                                <dl class="row">
-                                    <dt class="col-sm-8">نام سفارش دهنده:</dt>
-                                    <dd class="col-sm-4">{{object.user.user_profile.get_fullname}}</dd>
-                                </dl>
-                                <dl>
-                                    <dt class="col-sm-4">آدرس:</dt>
-                                    <dd class="col-sm-8">{{object.get_full_address}}</dd>
-
-                                </dl>
-                            </div>
-                            <!-- End Col -->
-
-                            <div class="col-md text-md-end">
-                                <dl class="row">
-                                    <dt class="col-sm-8">زمان سفارش:</dt>
-                                    <dd class="col-sm-4">{{object.created_date|date:"Y-m-d h:i"}}</dd>
-                             
-                                </dl>
-                            </div>
-                            <!-- End Col -->
-                        </div>
-                        <!-- End Row -->
-
-                        <!-- Table -->
-                        <div class="table-responsive">
-                            <table class="table table-borderless table-nowrap table-align-middle">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>کد کالا</th>
-                                        <th>کالا</th>
-                                        <th>تعداد</th>
-                                        <th class="table-text-end">قیمت هر واحد</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {% for order_item in object.order_items.all  %}
-                                    <tr>
-                                        <th>{{forloop.counter}}</th>
-                                        <th>{{order_item.product.id}}</th>
-                                        <th>{{order_item.product.title}}</th>
-                                        <td>{{order_item.quantity}}</td>
-
-                                        <td class="table-text-end formatted-price">{{order_item.price}}</td>
-                                    </tr>
-                                    {% endfor %}
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- End Table -->
-
-                        <hr class="my-5">
-
-                        <div class="row mb-3">
-                            <div class="row mb-3">
-                                <dt class="col-md-3">مبلغ نهایی:</dt>
-                                <dl class="col-md-3 formatted-price">{{object.total_price}}</dl>
-                                {% if object.coupon %}
-                                <dt class="col-md-3">تخفیف:</dt>                                
-                                <dl class="col-md-3 ">با اعمال {{object.coupon.discount_percent}} % تخفیف </dl>
-                                <dt class="col-md-3">مبلغ نهایی با اعمال تخفیف:</dt>  
-                                <dl class="col-md-3 formatted-price ">{{object.get_price}}</dl>
-                                {% else %}
-                                <dl class="col-md-3 ">تخفیف</dl>
-                                <dl class="col-md-3 ">0</dl>
-                                {% endif %}
-
-                            </div>
-                            <!-- End Row -->
-
-                        </div>
-                        <!-- End Row -->
-
-
-                    </div>
-                </div>
-                <!-- End Card -->
-
-                <!-- Footer -->
-                <div class="d-flex justify-content-end d-print-none gap-3">
-                    <a class="btn btn-primary" href="javascript:;" onclick="window.print(); return false;">
-                        <i class="bi-printer me-1"></i>چاپ فاکتور 
-                    </a>
-                </div>
-                <!-- End Footer -->
-            </div>
+<body class="bg-slate-100 py-6 print:bg-white print:py-0">
+{% include 'dashboard/admin/_sprite.html' %}
+{% load humanize %}
+<main class="mx-auto w-full max-w-4xl px-4">
+  <div class="card print:rounded-none print:border-0">
+    <div class="card-body sm:!p-8">
+      <div class="flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-6">
+        <div>
+          <h1 class="text-2xl">فاکتور سفارش</h1>
+          <p class="mt-1 text-sm text-slate-500">شماره: <span class="font-semibold text-slate-900">{{ object.id }}</span></p>
         </div>
-        <!-- End Content -->
-    </main>
-    <!-- ========== END MAIN CONTENT ========== -->
+        <img src="{% static 'img/main.logo2.png' %}" alt="من مارکت" class="h-12 w-auto">
+      </div>
 
-    <!-- JS Front -->
-      <script src="{% static 'js/theme.min.js' %}"></script>
-      <script src="{% static 'js/custom.js' %}"></script>
+      <div class="grid grid-cols-1 gap-4 py-6 sm:grid-cols-2">
+        <div>
+          <p class="text-xs text-slate-500">نام سفارش‌دهنده</p>
+          <p class="font-semibold text-slate-900">{{ object.user.user_profile.get_fullname }}</p>
+          <p class="mt-3 text-xs text-slate-500">آدرس</p>
+          <p class="text-sm text-slate-800">{{ object.get_full_address }}</p>
+        </div>
+        <div class="sm:text-end">
+          <p class="text-xs text-slate-500">زمان سفارش</p>
+          <p class="font-semibold text-slate-900">{{ object.created_date|date:"Y-m-d H:i" }}</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>#</th><th>کد کالا</th><th>کالا</th><th>تعداد</th><th>قیمت هر واحد</th></tr>
+          </thead>
+          <tbody>
+            {% for order_item in object.order_items.all %}
+            <tr>
+              <th>{{ forloop.counter }}</th>
+              <td>{{ order_item.product.id }}</td>
+              <td>{{ order_item.product.title }}</td>
+              <td>{{ order_item.quantity }}</td>
+              <td class="formatted-price">{{ order_item.price|intcomma }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <dl class="mt-6 ms-auto w-full max-w-sm space-y-2 text-sm">
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">مبلغ نهایی</dt><dd class="formatted-price font-semibold text-slate-900">{{ object.total_price|intcomma }}</dd></div>
+        {% if object.coupon %}
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">تخفیف</dt><dd>{{ object.coupon.discount_percent }}٪</dd></div>
+        <div class="flex justify-between gap-4 border-t border-slate-100 pt-2"><dt class="font-semibold text-slate-900">مبلغ با اعمال تخفیف</dt><dd class="formatted-price font-bold text-brand-600">{{ object.get_price|intcomma }}</dd></div>
+        {% else %}
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">تخفیف</dt><dd>۰</dd></div>
+        {% endif %}
+      </dl>
+
+      <div class="no-print mt-8 flex justify-end gap-3">
+        <button type="button" class="btn btn-primary" onclick="window.print()">
+          <svg class="i h-5 w-5" viewBox="0 0 24 24"><use href="#i-printer"/></svg>چاپ فاکتور
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
 </body>
-
 </html>
