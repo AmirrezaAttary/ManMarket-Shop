@@ -33,7 +33,8 @@ ALLOWED_HOSTS = [
     'mail.manmarket.ir',
     "https://manmarket.ir",
     "https://www.manmarket.ir",
-    "https://mail.manmarket.ir",  # ← این خط را اضافه کن
+    "https://mail.manmarket.ir", 
+    "api.manmarket.ir" # ← این خط را اضافه کن
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -3,6 +3,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from . import views
 
 
 app_name = 'api-v1-accounts'

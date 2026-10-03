@@ -41,7 +41,7 @@ class OTPRequestAPIView(generics.GenericAPIView):
                 )
 
         otp = OTP.create_otp(user)
-        send_bulk_sms(f"کد ورود شما: {otp.code}", [phone_number])
+        send_bulk_sms(f"کد ورود شما: {otp.code}\nمن مارکت\nmanmarket.ir", [phone_number])
 
         return Response(
             {"detail": "کد تایید ارسال شد.", "phone_number": phone_number},
