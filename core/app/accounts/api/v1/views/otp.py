@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
@@ -11,15 +12,16 @@ from ..serializers import OTPRequestSerializer, OTPVerifySerializer
 
 User = get_user_model()
 
-# حداقل فاصله‌ی زمانی بین دو درخواست ارسال کد (ثانیه)
+# حداقل فاصله زمانی بین دو درخواست ارسال کد (ثانیه)
 OTP_RESEND_COOLDOWN_SECONDS = 60
 
 
 class OTPRequestAPIView(generics.GenericAPIView):
     """
-    درخواست ارسال کد ورود (OTP) به شماره موبایل.
-    اگر کد فعالی وجود داشته باشد و هنوز به پایان cooldown نرسیده باشد،
-    خطای 429 برمی‌گردد تا از اسپم پیامک جلوگیری شود.
+    درخواست ارسال OTP.
+
+    اگر شماره قبلاً ثبت نشده باشد، یک حساب مشتری برای آن شماره ساخته می‌شود
+    و سپس OTP برای همان حساب ارسال می‌گردد.
     """
     serializer_class = OTPRequestSerializer
     permission_classes = [AllowAny]
@@ -28,33 +30,55 @@ class OTPRequestAPIView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         phone_number = serializer.validated_data["phone_number"]
-        user = User.objects.get(phone_number=phone_number)
+
+        # اتمیک بودن فقط برای ساخت کاربر است؛ اگر کاربر از قبل وجود داشته باشد
+        # همان کاربر استفاده می‌شود.
+        with transaction.atomic():
+            user, created = User.objects.get_or_create(
+                phone_number=phone_number,
+                defaults={
+                    "is_active": True,
+                    "is_verified": False,
+                },
+            )
 
         last_otp = OTP.objects.filter(user=user).order_by("-created_at").first()
         if last_otp:
-            seconds_passed = (timezone.now() - last_otp.created_at).seconds
+            seconds_passed = (timezone.now() - last_otp.created_at).total_seconds()
             if seconds_passed < OTP_RESEND_COOLDOWN_SECONDS:
-                wait = OTP_RESEND_COOLDOWN_SECONDS - seconds_passed
+                wait = max(1, int(OTP_RESEND_COOLDOWN_SECONDS - seconds_passed))
                 return Response(
                     {"detail": f"لطفا {wait} ثانیه دیگر دوباره تلاش کنید."},
                     status=status.HTTP_429_TOO_MANY_REQUESTS,
                 )
 
         otp = OTP.create_otp(user)
-        send_bulk_sms(f"کد ورود شما: {otp.code}\nمن مارکت\nmanmarket.ir", [phone_number])
+
+        try:
+            sms_result = send_bulk_sms(
+                f"کد ورود شما: {otp.code}\nمن مارکت\nmanmarket.ir",
+                [phone_number],
+            )
+        except Exception as exc:
+            # کد ارسال‌نشده نباید قابل استفاده باقی بماند.
+            otp.delete()
+            return Response(
+                {"detail": "مشکل در ارسال کد تایید. لطفا دوباره تلاش کنید."},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
 
         return Response(
-            {"detail": "کد تایید ارسال شد.", "phone_number": phone_number},
+            {
+                "detail": "کد تایید ارسال شد.",
+                "phone_number": phone_number,
+                "is_new_user": created,
+            },
             status=status.HTTP_200_OK,
         )
 
 
 class OTPVerifyAPIView(generics.GenericAPIView):
-    """
-    تایید کد ارسال‌شده و ورود کاربر.
-    در صورت موفقیت، توکن‌های JWT (access/refresh) بازگردانده می‌شود
-    تا کاربر بتواند با آن‌ها به عنوان لاگین‌شده به سایر اندپوینت‌ها دسترسی داشته باشد.
-    """
+    """تایید OTP و ورود کاربر با JWT."""
     serializer_class = OTPVerifySerializer
     permission_classes = [AllowAny]
 
@@ -68,9 +92,10 @@ class OTPVerifyAPIView(generics.GenericAPIView):
         otp.is_used = True
         otp.save(update_fields=["is_used"])
 
-        user.is_active = True
-        user.is_verified = True
-        user.save(update_fields=["is_active", "is_verified"])
+        if not user.is_active or not user.is_verified:
+            user.is_active = True
+            user.is_verified = True
+            user.save(update_fields=["is_active", "is_verified"])
 
         refresh = RefreshToken.for_user(user)
 

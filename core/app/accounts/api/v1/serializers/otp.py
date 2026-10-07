@@ -8,27 +8,28 @@ User = get_user_model()
 
 class OTPRequestSerializer(serializers.Serializer):
     """
-    درخواست ارسال کد یکبار مصرف برای شماره موبایل
+    درخواست ارسال کد یکبار مصرف برای شماره موبایل.
+
+    اگر شماره قبلاً ثبت نشده باشد، در مرحله ارسال OTP کاربر ساخته می‌شود؛
+    بنابراین OTP هم برای کاربر جدید و هم کاربر قبلی قابل استفاده است.
     """
     phone_number = serializers.CharField(max_length=12)
 
     def validate_phone_number(self, value):
         validate_iranian_cellphone_number(value)
-        if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError("کاربری با این شماره وجود ندارد.")
         return value
 
 
 class OTPVerifySerializer(serializers.Serializer):
-    """
-    تایید کد یکبار مصرف و ورود با آن
-    """
+    """تایید کد یکبار مصرف و ورود با آن."""
     phone_number = serializers.CharField(max_length=12)
-    code = serializers.CharField(max_length=6)
+    code = serializers.CharField(max_length=6, min_length=6)
 
     def validate(self, attrs):
         phone_number = attrs.get("phone_number")
         code = attrs.get("code")
+
+        validate_iranian_cellphone_number(phone_number)
 
         user = User.objects.filter(phone_number=phone_number).first()
         if not user:

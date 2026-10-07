@@ -9,11 +9,12 @@ class OTP(models.Model):
     is_used = models.BooleanField(default=False)
 
     def is_valid(self):
-        return not self.is_used and (timezone.now() - self.created_at).seconds < 300  # معتبر تا ۵ دقیقه
-    
+        return not self.is_used and (timezone.now() - self.created_at).total_seconds() < 300
+
     @classmethod
     def create_otp(cls, user):
-        import random
-        code = f"{random.randint(10000, 99999)}"
-        otp = cls.objects.create(user=user, code=code)
-        return otp
+        import secrets
+
+        # همیشه ۶ رقم؛ با صفر ابتدایی هم مشکلی ندارد.
+        code = f"{secrets.randbelow(1_000_000):06d}"
+        return cls.objects.create(user=user, code=code)
