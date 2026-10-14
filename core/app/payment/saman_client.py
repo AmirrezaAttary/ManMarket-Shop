@@ -2,86 +2,60 @@ import requests
 from django.conf import settings
 
 
+def toman_to_rial(amount):
+    """سامان مبلغ را به ریال می‌گیرد؛ پروژه‌ی شما با تومان کار می‌کند."""
+    return int(amount) * 10
+
+
 class SamanGateway:
     """
-    کلاینت درگاه پرداخت اینترنتی بانک سامان (SEP).
+    کلاینت درگاه پرداخت اینترنتی بانک سامان (SEP / OnlinePG).
 
-    نکات مهم:
-    - واحد پول این درگاه ریال است (نه تومان). اگر مبالغ پروژه‌ی شما بر حسب تومان
-      محاسبه می‌شود، قبل از ارسال به payment_request باید در ۱۰ ضرب شود.
-    - بر خلاف زرین‌پال، انتقال کاربر به درگاه با یک GET ساده انجام نمی‌شود؛
-      باید یک فرم HTML با متد POST و یک اینپوت مخفی به نام Token به آدرس
-      درگاه ارسال شود (متد build_redirect_form این کار را برایتان انجام می‌دهد).
+    - واحد مبلغ در این درگاه «ریال» است.
+    - انتقال کاربر به درگاه با فرم POST و فیلد مخفی Token انجام می‌شود.
+    - بانک بعد از پرداخت، کاربر را با POST به RedirectUrl برمی‌گرداند
+      (پارامترها: State, RefNum, ResNum, RRN, TraceNo, Amount, ...).
     """
 
-    _payment_request_url = "https://sep.shaparak.ir/onlinepg/onlinepg"
-    _payment_page_url = "https://sep.shaparak.ir/OnlinePG/OnlinePG"
-    _payment_verify_url = "https://sep.shaparak.ir/verifyTxnRandomSessionkey/ipg/VerifyTransaction"
+    _token_url = "https://sep.shaparak.ir/onlinepg/onlinepg"
+    page_url = "https://sep.shaparak.ir/OnlinePG/OnlinePG"
+    _verify_url = "https://sep.shaparak.ir/verifyTxnRandomSessionkey/ipg/VerifyTransaction"
+    _reverse_url = "https://sep.shaparak.ir/verifyTxnRandomSessionkey/ipg/ReverseTransaction"
 
     def __init__(self, terminal_id=None):
-        self.terminal_id = terminal_id or settings.SAMAN_TERMINAL_ID
+        self.terminal_id = str(terminal_id or settings.SAMAN_TERMINAL_ID)
 
-    def payment_request(self, callback_url, amount, res_num, mobile_number=None):
+    def _post(self, url, payload):
+        try:
+            response = requests.post(url, json=payload, timeout=15)
+            return response.json()
+        except (requests.RequestException, ValueError) as exc:
+            return {"_transport_error": str(exc)}
+
+    def payment_request(self, callback_url, amount_rial, res_num, mobile_number=None):
         """
-        درخواست توکن پرداخت.
-
-        callback_url : آدرسی که سامان بعد از پرداخت کاربر را به آن برمی‌گرداند
-        amount       : مبلغ به ریال (عدد صحیح)
-        res_num      : شماره یکتای سفارش شما (باید برای هر تراکنش منحصربه‌فرد باشد،
-                       معمولاً id سفارش یا id رکورد PaymentModel)
-        mobile_number: شماره موبایل خریدار (اختیاری)
+        درخواست توکن. پاسخ موفق: {"status": 1, "token": "..."}
+        res_num باید برای هر تراکنش یکتا باشد (ما id رکورد PaymentModel را می‌دهیم).
         """
         payload = {
             "action": "token",
             "TerminalId": self.terminal_id,
-            "Amount": int(amount),
+            "Amount": int(amount_rial),
             "ResNum": str(res_num),
             "RedirectUrl": callback_url,
         }
         if mobile_number:
             payload["CellNumber"] = mobile_number
+        return self._post(self._token_url, payload)
 
-        headers = {"Content-Type": "application/json"}
+    def _ref_payload(self, ref_num):
+        terminal = int(self.terminal_id) if self.terminal_id.isdigit() else self.terminal_id
+        return {"RefNum": ref_num, "TerminalNumber": terminal}
 
-        response = requests.post(
-            self._payment_request_url, headers=headers, json=payload, timeout=15
-        )
-        return response.json()
-        # پاسخ موفق چیزی شبیه این است:
-        # {"status": 1, "token": "xxxxxxxxxxxxxxxxxxxxx"}
-        # پاسخ ناموفق:
-        # {"status": 0, "errorCode": "...", "errorDesc": "..."}
+    def payment_verify(self, ref_num):
+        """تأیید تراکنش. موفق: ResultCode == 0 و Success == True"""
+        return self._post(self._verify_url, self._ref_payload(ref_num))
 
-    def payment_verify(self, ref_num, cell_number=None, national_code=None):
-        """
-        تایید نهایی تراکنش بعد از بازگشت کاربر از درگاه.
-
-        ref_num: مقداری است که سامان در callback شما تحت پارامتر RefNum ارسال می‌کند
-                 (نه Token و نه ResNum خودتان).
-        """
-        payload = {
-            "RefNum": ref_num,
-            "TerminalNumber": self.terminal_id,
-            "CellNumber": cell_number or "",
-            "NationalCode": national_code or "",
-            "IgnoreNationalcode": True,
-        }
-        headers = {"Content-Type": "application/json"}
-
-        response = requests.post(
-            self._payment_verify_url, headers=headers, json=payload, timeout=15
-        )
-        return response.json()
-        # پاسخ موفق چیزی شبیه این است:
-        # {"ResultCode": 0, "ResultDescription": "Success", "Success": true}
-        # ResultCode == 0 یعنی تراکنش با موفقیت تایید شده است.
-
-    def build_redirect_form(self, token):
-        """
-        چون سامان (بر خلاف زرین‌پال) نیاز به POST دارد، این متد یک context
-        برمی‌گرداند که می‌توانید مستقیم در یک تمپلیت auto-submit استفاده کنید.
-        """
-        return {
-            "url": self._payment_page_url,
-            "token": token,
-        }
+    def payment_reverse(self, ref_num):
+        """برگشت تراکنش (استرداد وجه به کارت مشتری)."""
+        return self._post(self._reverse_url, self._ref_payload(ref_num))

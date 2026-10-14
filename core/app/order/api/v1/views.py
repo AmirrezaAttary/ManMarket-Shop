@@ -2,12 +2,13 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from ...models import UserAddressModel, OrderModel, OrderItemModel, OrderStatusType, CouponModel
 from ....cart.models import CartModel
-from ....payment.zarinpal_client import ZarinPalSandbox
-from ....payment.models import PaymentModel, PayemntType
+from ....payment.saman_client import SamanGateway, toman_to_rial
+from ....payment.models import PaymentModel, PayemntType, PayemntStatusType
 from .serializers import OrderCheckOutSerializer
 
 
@@ -68,18 +69,44 @@ class OrderCheckOutAPIView(GenericAPIView):
         order.total_price = total_price
         order.save()
 
-        # ایجاد پرداخت زرین‌پال
-        zarinpal = ZarinPalSandbox()
+        # ایجاد پرداخت سامان
         total_price += 150000  # هزینه ارسال ثابت
-        callback_url = request.build_absolute_uri(reverse("payment:api-v1-payment:verify"))
-        response = zarinpal.payment_request(callback_url, int(total_price))
 
+        # ResNum سامان = id پرداخت، پس اول رکورد را می‌سازیم و بعد توکن می‌گیریم
         payment_obj = PaymentModel.objects.create(
-            authority_id=response['data']['authority'],
+            authority_id="",
             amount=total_price,
             order=order,
             payemnt_type=PayemntType.cart.value
         )
+
+        saman = SamanGateway()
+        callback_url = request.build_absolute_uri(reverse("payment:api-v1-payment:verify"))
+        payment_link = request.build_absolute_uri(reverse("payment:api-v1-payment:redirect", args=["__T__"]))
+        if not settings.DEBUG:
+            # پشت reverse proxy ممکن است http ساخته شود؛ سامان و مرورگر https می‌خواهند
+            callback_url = callback_url.replace("http://", "https://", 1)
+            payment_link = payment_link.replace("http://", "https://", 1)
+        response = saman.payment_request(
+            callback_url, toman_to_rial(total_price), res_num=payment_obj.id
+        )
+        token = response.get("token")
+
+        if response.get("status") != 1 or not token:
+            payment_obj.status = PayemntStatusType.failed.value
+            payment_obj.response_json = response
+            payment_obj.save()
+            order.status = OrderStatusType.failed.value
+            order.save()
+            # سبد خرید پاک نمی‌شود تا کاربر بتواند دوباره تلاش کند
+            return Response(
+                {"error": "ارتباط با درگاه پرداخت برقرار نشد. لطفاً دوباره تلاش کنید."},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
+
+        payment_obj.authority_id = token
+        payment_obj.response_json = response
+        payment_obj.save()
 
         order.payment = payment_obj
         order.save()
@@ -87,7 +114,7 @@ class OrderCheckOutAPIView(GenericAPIView):
         # پاک کردن سبد خرید
         cart.cart_items.all().delete()
 
-        # تولید لینک پرداخت
-        payment_url = zarinpal.generate_payment_url(response['data']['authority'])
+        # لینک صفحه‌ی واسطی که فرم POST را به سامان ارسال می‌کند
+        payment_url = payment_link.replace("__T__", token)
 
         return Response({"payment_url": payment_url}, status=status.HTTP_200_OK)

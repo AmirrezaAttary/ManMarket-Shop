@@ -28,8 +28,14 @@
                 <div class="card-header flex justify-between items-center">
                     <h5 class="card-header-title">ویرایش بلاگ</h5>
                     {% if object.is_published %}
-                    <a class="btn btn-primary btn-sm" target="_blank" href="">نمایش
-                        بلاگ</a>
+                        <a
+                            class="btn btn-primary btn-sm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://manmarket.ir/blog/{{ object.id }}"
+                        >
+                            نمایش بلاگ
+                        </a>
                     {% endif %}
                 </div>
                 <!-- End Header -->

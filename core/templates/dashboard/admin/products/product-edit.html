@@ -35,8 +35,14 @@
                         <span style="color: red;">مشخصات ثبت نشده است</span>
                     {% endif %}
                     {% if object.is_published %}
-                    <a class="btn btn-primary btn-sm" target="_blank" href="">نمایش
-                        محصول</a>
+                        <a
+                            class="btn btn-primary btn-sm"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="https://manmarket.ir/product/{{ object.slug|urlencode }}"
+                        >
+                            نمایش محصول
+                        </a>
                     {% endif %}
                 </div>
                 <!-- End Header -->
