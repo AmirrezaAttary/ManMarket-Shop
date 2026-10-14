@@ -22,6 +22,15 @@
         <div class="card">
             <!-- Header -->
             <div class="card-header">
+        <div class="flex justify-between items-center">
+            <h5>لیست استوری ها</h5>
+        </div>
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body">
+                <div class="pb-6">
                 <form action="." class="mb-6 grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] items-end gap-3">
 
                     <!-- Input Card -->
@@ -56,17 +65,21 @@
                         </select>
                     </div>
 
-                    <div class="min-w-0">
-                        <button type="submit" class="btn btn-primary btn-sm w-full">اعمال</button>
-                        <a href="{% url 'dashboard:admin:story-create' %}"><button type="button" class="btn btn-primary btn-sm w-full">ایجاد استوری</button></a>
-                    </div>
+<div class="min-w-0">
+    <div class="flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm flex-1">
+            اعمال
+        </button>
+
+        <a href="{% url 'dashboard:admin:story-create' %}" class="flex-1">
+            <button type="button" class="btn btn-primary btn-sm w-full">
+                ایجاد استوری
+            </button>
+        </a>
+    </div>
+</div>
                 </form>
-            </div>
-            <!-- End Header -->
-
-            <!-- Body -->
-            <div class="card-body">
-
+                </div>
                 <!-- Tab Content -->
                 <div class="tab-content" id="accountOrdersTabContent">
                     <div class="tab-pane fade show active" id="accountOrdersOne" role="tabpanel" aria-labelledby="accountOrdersOne-tab">

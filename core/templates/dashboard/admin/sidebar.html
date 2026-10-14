@@ -46,9 +46,7 @@
       <a href="{% url 'dashboard:admin:order-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' order-list order-detail order-edit order-invoice ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' order-list order-detail order-edit order-invoice ' %} aria-current="page"{% endif %}>
         <svg class="i" viewBox="0 0 24 24"><use href="#i-bag"/></svg><span>پیگیری سفارشات</span>
       </a>
-      <a href="{% url 'dashboard:admin:person_pay-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' person_pay-list person_pay-create person-pay-create ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' person_pay-list person_pay-create person-pay-create ' %} aria-current="page"{% endif %}>
-        <svg class="i" viewBox="0 0 24 24"><use href="#i-cash"/></svg><span>فروش حضوری</span>
-      </a>
+
       <a href="{% url 'dashboard:admin:users-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' users-list users-detail users-order users-wallet users-wishlist users-chat users-review ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' users-list users-detail users-order users-wallet users-wishlist users-chat users-review ' %} aria-current="page"{% endif %}>
         <svg class="i" viewBox="0 0 24 24"><use href="#i-users"/></svg><span>کاربران</span>
       </a>

@@ -40,7 +40,7 @@ class AdminOrderDetailView(LoginRequiredMixin, HasAdminAccessPermission, DetailV
     template_name = "dashboard/admin/orders/order-detail.html"
 
     def get_queryset(self):
-        return OrderModel.objects.all()
+        return OrderModel.objects.select_related("bwdk_order")
     
     
 from django.contrib import messages
@@ -96,3 +96,40 @@ class AdminOrderInvoiceView(LoginRequiredMixin, HasAdminAccessPermission, Detail
 
     def get_queryset(self):
         return OrderModel.objects.filter(status=OrderStatusType.success.value)
+
+# ---------------------------------------------------------------- Buy with Digikala (BWDK)
+from django.shortcuts import get_object_or_404, redirect
+from django.views import View
+from ....bwdk.models import BWDKOrder
+from ....bwdk.services import BWDKService
+
+
+class AdminOrderBWDKVerifyView(LoginRequiredMixin, HasAdminAccessPermission, View):
+    """Manual Verify: Get Order first, Verify only if the BWDK status is 7 (Paid By User)."""
+
+    http_method_names = ["post"]
+
+    def post(self, request, pk):
+        bw = get_object_or_404(BWDKOrder, order_id=pk)
+        bw = BWDKService().manual_verify(bw)
+        if bw.finalized_at:
+            messages.success(request, "سفارش دیجی‌کالا تأیید (Verify) و نهایی شد ✅")
+        else:
+            messages.warning(request, f"سفارش هنوز قابل تأیید نیست. وضعیت دیجی‌کالا: {bw.status_display or bw.status}")
+        return redirect("dashboard:admin:order-detail", pk=pk)
+
+
+class AdminOrderBWDKRefundView(LoginRequiredMixin, HasAdminAccessPermission, View):
+    """Full refund (Digipay payments only)."""
+
+    http_method_names = ["post"]
+
+    def post(self, request, pk):
+        bw = get_object_or_404(BWDKOrder, order_id=pk)
+        reason = (request.POST.get("reason") or "انصراف مشتری از خرید").strip()[:255]
+        try:
+            BWDKService().refund(bw, reason)
+            messages.success(request, "درخواست بازگشت وجه ثبت شد ✅")
+        except ValueError as exc:
+            messages.error(request, f"بازگشت وجه انجام نشد: {exc}")
+        return redirect("dashboard:admin:order-detail", pk=pk)

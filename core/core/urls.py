@@ -22,7 +22,7 @@ from django.contrib.sitemaps.views import sitemap
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-
+from django.views.generic import RedirectView
 
 
 schema_view = get_schema_view(
@@ -39,6 +39,8 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path("", RedirectView.as_view(pattern_name="dashboard:home", permanent=False)),
+
     path('admin/', admin.site.urls),
     path("accounts/", include('app.accounts.urls')),
     path("product/", include('app.shop.urls')),
@@ -47,6 +49,7 @@ urlpatterns = [
     path("dashboard/", include('app.dashboard.urls')),
     path('order/', include('app.order.urls')),
     path('payment/', include('app.payment.urls')),
+    path('bwdk/', include('app.bwdk.urls')),
     path('review/', include('app.review.urls')),
     path('pricegethamrh/', include('app.pricegethamrh.urls')),
     path('getspecification/', include('app.getspecification.urls')),

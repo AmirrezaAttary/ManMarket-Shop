@@ -127,6 +127,97 @@
       <!-- End Body -->
     </div>
     <!-- End Card -->
-  
+
+{% if object.bwdk_order %}
+{% with bw=object.bwdk_order %}
+    <!-- BWDK card -->
+    <div class="card mt-6">
+      <div class="card-header">
+        <div class="flex justify-between items-center">
+          <h5>خرید با دیجی‌کالا (BWDK)</h5>
+          {% if bw.needs_review %}<span class="badge bg-danger">نیازمند بررسی دستی</span>{% endif %}
+        </div>
+      </div>
+      <div class="card-body">
+        {% if bw.needs_review %}
+        <div class="alert alert-danger mb-4" style="white-space:pre-line">{{ bw.review_note }}</div>
+        {% endif %}
+
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">کد رهگیری دیجی‌کالا:</dt>
+          <dl class="detail-value">{{ bw.reference_code|default:"—" }}</dl>
+          <dt class="detail-label">شناسه سفارش BWDK:</dt>
+          <dl class="detail-value" dir="ltr">{{ bw.order_uuid|default:"—" }}</dl>
+        </div>
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">وضعیت BWDK:</dt>
+          <dl class="detail-value">{{ bw.get_status_display }} ({{ bw.status }})</dl>
+          <dt class="detail-label">تعداد تلاش Verify:</dt>
+          <dl class="detail-value">{{ bw.verify_attempts }}</dl>
+        </div>
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">نوع پرداخت:</dt>
+          <dl class="detail-value">{{ bw.payment_data.gateway_name|default:"—" }} / {{ bw.payment_data.gateway_type_display|default:"—" }}</dl>
+          <dt class="detail-label">زمان پرداخت:</dt>
+          <dl class="detail-value">{% if bw.paid_at %}{{ bw.paid_at|jformat:"%Y/%m/%d - %H:%M" }}{% else %}—{% endif %}</dl>
+        </div>
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">مبلغ کالاها:</dt>
+          <dl class="detail-value formatted-price">{{ bw.main_amount|intcomma }}</dl>
+          <dt class="detail-label">هزینه ارسال:</dt>
+          <dl class="detail-value formatted-price">{{ bw.shipping_amount|intcomma }}</dl>
+        </div>
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">هزینه بسته‌بندی:</dt>
+          <dl class="detail-value formatted-price">{{ bw.packing_amount|intcomma }}</dl>
+          <dt class="detail-label">تخفیف دیجی‌کالا:</dt>
+          <dl class="detail-value formatted-price">{{ bw.promotion_discount_amount|intcomma }}</dl>
+        </div>
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">مارک‌آپ دیجی‌پی:</dt>
+          <dl class="detail-value formatted-price">{{ bw.digipay_markup_amount|intcomma }}</dl>
+          <dt class="detail-label">مبلغ پرداخت‌شده توسط مشتری:</dt>
+          <dl class="detail-value formatted-price">{{ bw.total_paid_amount|intcomma }}</dl>
+        </div>
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">گیرنده:</dt>
+          <dl class="detail-value">{{ bw.destination_address.receiver_name|default:"—" }} - {{ bw.destination_address.receiver_phone|default:"—" }}</dl>
+          <dt class="detail-label">روش ارسال:</dt>
+          <dl class="detail-value">{{ bw.shipping_data.name|default:"—" }} ({{ bw.shipping_data.delivery_time_display|default:"—" }})</dl>
+        </div>
+        <div class="grid grid-cols-12 gap-x-4 mb-4">
+          <dt class="detail-label">آدرس تحویل:</dt>
+          <dl class="detail-value">
+            {{ bw.destination_address.state_name }} - {{ bw.destination_address.city_name }}
+            {% if bw.destination_address.district_name %}- {{ bw.destination_address.district_name }}{% endif %}
+            - {{ bw.destination_address.address }}
+            (پلاک {{ bw.destination_address.building_number|default:"—" }}، واحد {{ bw.destination_address.unit|default:"—" }})
+          </dl>
+          <dt class="detail-label">کد پستی:</dt>
+          <dl class="detail-value">{{ bw.destination_address.postal_code|default:"—" }}</dl>
+        </div>
+
+        <div class="flex gap-4 pt-6 flex-wrap items-end">
+          {% if bw.can_verify or bw.status == 9 and not bw.finalized_at %}
+          <form method="post" action="{% url 'dashboard:admin:order-bwdk-verify' pk=object.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Verify سفارش</button>
+          </form>
+          {% endif %}
+
+          {% if bw.can_refund %}
+          <form method="post" action="{% url 'dashboard:admin:order-bwdk-refund' pk=object.pk %}"
+                onsubmit="return confirm('بازگشت وجه کامل (مرجوعی کل سفارش) انجام شود؟');" class="flex gap-2 items-end">
+            {% csrf_token %}
+            <input type="text" name="reason" class="form-control" maxlength="255" placeholder="دلیل مرجوعی" value="انصراف مشتری از خرید">
+            <button type="submit" class="btn btn-danger">بازگشت وجه (Refund)</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End BWDK card -->
+{% endwith %}
+{% endif %}
 
 {% endblock %}

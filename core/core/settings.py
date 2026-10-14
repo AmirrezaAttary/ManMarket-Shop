@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'app.order',
     'app.dashboard',
     'app.payment',
+    'app.bwdk',
     'app.pricegethamrh',
     'app.getspecification',
     'app.review',
@@ -250,6 +251,20 @@ SANDBOX_MODE = config("SANDBOX_MODE", cast=bool, default=True)
 # gsmpay client
 GSMPAY_MERCHANT_CODE = config("GSMPAY_MERCHANT_CODE",default="1f8c54e2-6bd2-4acf-b54c-cedce1ef942b")
 
+# BWDK / Digikala Buy With Digikala
+# The API key is issued ONCE and must only live in .env (never in git / defaults).
+BWDK_ENV = config("BWDK_ENV", default="production")            # sandbox | production
+BWDK_API_KEY = config("BWDK_API_KEY", default="qGONVxzg.PL7k0cHHRobemioPZxDw5UK2X5rKXziB")
+BWDK_BASE_URL = config("BWDK_BASE_URL", default="https://bwdk-backend.digify.shop/")         # optional override of the env URL
+# front-end origin registered for the API key: the callback page is <this>/bwdk/callback/<id>/
+BWDK_CALLBACK_BASE = config("BWDK_CALLBACK_BASE", default="https://manmarket.ir")
+# placeholder owner of orders created without login (replaced by the real user after payment)
+BWDK_GUEST_PHONE = config("BWDK_GUEST_PHONE", default="09000000000")
+BWDK_RESERVATION_MINUTES = config("BWDK_RESERVATION_MINUTES", cast=int, default=30)  # doc: >= 20
+BWDK_DEFAULT_PREPARATION_TIME = config("BWDK_DEFAULT_PREPARATION_TIME", cast=int, default=1)
+BWDK_DEFAULT_ITEM_WEIGHT = config("BWDK_DEFAULT_ITEM_WEIGHT", cast=int, default=0)
+BWDK_DEFAULT_TOTAL_WEIGHT = config("BWDK_DEFAULT_TOTAL_WEIGHT", cast=int, default=0)
+
 # refah client
 REFAH_USERNAME = "70072831"
 REFAH_PASSWORD = "PF%cv-GI"
@@ -303,6 +318,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_THROTTLE_RATES': {
+        # public endpoints of the express checkout (they reserve stock, so keep them throttled)
+        'bwdk-create': '10/min',
+        'bwdk-complete': '60/min',
+    },
 }
 
 SIMPLE_JWT = {
@@ -315,4 +335,4 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-SAMAN_TERMINAL_ID = 14315215
+SAMAN_TERMINAL_ID = 15848232

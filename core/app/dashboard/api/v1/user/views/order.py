@@ -12,7 +12,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        qs = OrderModel.objects.filter(user=user).order_by('-created_date')
+        qs = OrderModel.objects.filter(user=user).select_related('bwdk_order').order_by('-created_date')
         if self.action == 'retrieve':
             qs = qs.prefetch_related(
                 'order_items__product',

@@ -56,7 +56,7 @@ class OTPRequestAPIView(generics.GenericAPIView):
 
         try:
             sms_result = send_bulk_sms(
-                f"کد ورود شما: {otp.code}\nمن مارکت\nmanmarket.ir",
+                f"کد ورود شما: {otp.code}\nمن مارکت",
                 [phone_number],
             )
         except Exception as exc:

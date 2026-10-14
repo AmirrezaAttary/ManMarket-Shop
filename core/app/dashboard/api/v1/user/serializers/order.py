@@ -42,6 +42,7 @@ class UserOrderSerializer(serializers.ModelSerializer):
     final_price = serializers.SerializerMethodField()
     full_address = serializers.SerializerMethodField()
     tracking_url = serializers.SerializerMethodField()
+    bwdk = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderModel
@@ -69,7 +70,31 @@ class UserOrderSerializer(serializers.ModelSerializer):
         return obj.get_status()
 
     def get_final_price(self, obj):
+        bwdk = getattr(obj, "bwdk_order", None)
+        if bwdk and bwdk.finalized_at and bwdk.total_paid_amount:
+            return bwdk.total_paid_amount  # what the customer really paid at Digikala
         return obj.get_price()
+
+    def get_bwdk(self, obj):
+        """Order bought through "Buy with Digikala" (None for normal orders)."""
+        bwdk = getattr(obj, "bwdk_order", None)
+        if not bwdk:
+            return None
+        shipping = bwdk.shipping_data or {}
+        return {
+            "reference_code": bwdk.reference_code,
+            "status": bwdk.status,
+            "paid": bool(bwdk.finalized_at),
+            "gateway": (bwdk.payment_data or {}).get("gateway_type_display")
+            or (bwdk.payment_data or {}).get("gateway_name"),
+            "shipping_amount": bwdk.shipping_amount,
+            "packing_amount": bwdk.packing_amount,
+            "promotion_discount_amount": bwdk.promotion_discount_amount,
+            "digipay_markup_amount": bwdk.digipay_markup_amount,
+            "total_paid_amount": bwdk.total_paid_amount,
+            "shipping_method": shipping.get("name"),
+            "delivery_time": shipping.get("delivery_time_display"),
+        }
 
     def get_full_address(self, obj):
         return obj.get_full_address()

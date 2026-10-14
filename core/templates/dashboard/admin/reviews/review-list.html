@@ -19,114 +19,119 @@
 
 {% block content %}
 <!-- Card -->
-        <div class="card">
-            <!-- Header -->
-            <div class="card-header">
-                <form action="." class="mb-6 grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] items-end gap-3">
+<div class="card">
 
-                    <!-- Input Card -->
-                    <div class="min-w-0">
-                        <input type="text" placeholder="جستو جوی نظرات" name="q" id="search-query-filter">
+    <!-- Header -->
+    <div class="card-header">
+        <div class="flex justify-between items-center">
+            <h5>لیست نظرات</h5>
+        </div>
+    </div>
+    <!-- End Header -->
 
-                    </div>
-                    <div class="min-w-0">
-                        <select id="status-type-filter" name="status">
-                            <option value="" selected>وضعیت</option>
-                            {% for status_type in status_types %}
-                            <option value="{{status_type.0}}">{{status_type.1}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="min-w-0">
-                        <select id="order-by-filter">
-                            <option value="" selected>مرتب سازی</option>
-                            <option value="-created_date">جدیدترین</option>
-                            <option value="created_date">قدیمی ترین</option>
-                        </select>
-                    </div>
+    <!-- Body -->
+    <div class="card-body">
 
-                    <div class="min-w-0">
-                        <select id="page-size-filter">
-                            <option value="" selected>تعداد</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                        </select>
-                    </div>
+        <div class="pb-6">
+            <form action="." class="mb-6 grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] items-end gap-3">
 
-                    <div class="min-w-0">
-                        <button type="submit" class="btn btn-primary btn-sm w-full"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-search"/></svg><span>جستجو</span></button>
-                    </div>
-                </form>
-            </div>
-            <!-- End Header -->
-
-            <!-- Body -->
-            <div class="card-body">
-
-                <!-- Tab Content -->
-                <div class="tab-content" id="accountOrdersTabContent">
-                    <div class="tab-pane fade show active" id="accountOrdersOne" role="tabpanel" aria-labelledby="accountOrdersOne-tab">
-                        <!-- Select Group -->
-                        <div class="sm:flex sm:items-center mb-6">
-                            <div class="mb-2 sm:mb-0 me-4">
-                                <span><strong class="text-slate-800">{{ total_items}} نظر</strong></span>
-                            </div>
-                        </div>
-                        <!-- End Select Group -->
-                        <div class="flex flex-col gap-2">
-                            <!-- Table -->
-                            <div class="table-wrap">
-                                <table class="table stack">
-                                    <thead >
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">محصول</th>
-                                            <th scope="col">نام و نام خانوادگی</th>
-                                            <th scope="col">امتیاز</th>
-                                            <th scope="col">تاریخ ثبت</th>
-                                            <th scope="col">وضعیت</th>
-                                            <th scope="col">عملیات</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for object in object_list %}
-                                        <tr>
-                                            <th scope="row" data-label="#">{{forloop.counter}}</th>
-                                            <td data-label="محصول">{{object.product.title}}</td>
-                                            <td data-label="نام و نام خانوادگی">{{object.user.user_profile.get_fullname}}</td>
-                                            <td data-label="امتیاز">{{object.rate}}</td>
-                                            <td data-label="تاریخ ثبت">{{object.created_date|date:"Y-m-d h:i"}}</td>
-                                            <td data-label="وضعیت"><span class="badge bg- {{object.get_status.title}}">{{object.get_status.label}}</span>
-                                            </td>
-                                            <td class="flex" data-label="عملیات">
-                                                <a class="btn btn-ghost-secondary btn-sm" href="{% url 'dashboard:admin:review-edit' pk=object.pk %}"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-edit"/></svg><span>ویرایش</span></a>
-
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- End Table -->
-
-                            {% include 'dashboard/admin/_pagination.html' %}
-                            <!-- End Pagination -->
-
-                        </div>
-
-                    </div>
+                <!-- Input Card -->
+                <div class="min-w-0">
+                    <input type="text" placeholder="جستو جوی نظرات" name="q" id="search-query-filter">
 
                 </div>
-                <!-- End Tab Content -->
-            </div>
-            <!-- End Body -->
+                <div class="min-w-0">
+                    <select id="status-type-filter" name="status">
+                        <option value="" selected>وضعیت</option>
+                        {% for status_type in status_types %}
+                        <option value="{{status_type.0}}">{{status_type.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="min-w-0">
+                    <select id="order-by-filter">
+                        <option value="" selected>مرتب سازی</option>
+                        <option value="-created_date">جدیدترین</option>
+                        <option value="created_date">قدیمی ترین</option>
+                    </select>
+                </div>
+
+                <div class="min-w-0">
+                    <select id="page-size-filter">
+                        <option value="" selected>تعداد</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+
+                <div class="min-w-0">
+                    <button type="submit" class="btn btn-primary btn-sm w-full"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-search"/></svg><span>جستجو</span></button>
+                </div>
+            </form>
         </div>
-    
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="accountOrdersTabContent">
+            <div class="tab-pane fade show active" id="accountOrdersOne" role="tabpanel" aria-labelledby="accountOrdersOne-tab">
+
+                <!-- Select Group -->
+                <div class="sm:flex sm:items-center mb-6">
+                    <div class="mb-2 sm:mb-0 me-4">
+                        <span><strong class="text-slate-800">{{ total_items}} نظر</strong></span>
+                    </div>
+                </div>
+                <!-- End Select Group -->
+
+                <div class="flex flex-col gap-2">
+                    <!-- Table -->
+                    <div class="table-wrap">
+                        <table class="table stack">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">محصول</th>
+                                    <th scope="col">نام و نام خانوادگی</th>
+                                    <th scope="col">امتیاز</th>
+                                    <th scope="col">تاریخ ثبت</th>
+                                    <th scope="col">وضعیت</th>
+                                    <th scope="col">عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for object in object_list %}
+                                <tr>
+                                    <th scope="row" data-label="#">{{forloop.counter}}</th>
+                                    <td data-label="محصول">{{object.product.title}}</td>
+                                    <td data-label="نام و نام خانوادگی">{{object.user.user_profile.get_fullname}}</td>
+                                    <td data-label="امتیاز">{{object.rate}}</td>
+                                    <td data-label="تاریخ ثبت">{{object.created_date|date:"Y-m-d h:i"}}</td>
+                                    <td data-label="وضعیت"><span class="badge bg- {{object.get_status.title}}">{{object.get_status.label}}</span>
+                                    </td>
+                                    <td class="flex" data-label="عملیات">
+                                        <a class="btn btn-ghost-secondary btn-sm" href="{% url 'dashboard:admin:review-edit' pk=object.pk %}"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-edit"/></svg><span>ویرایش</span></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End Table -->
+
+                    {% include 'dashboard/admin/_pagination.html' %}
+                    <!-- End Pagination -->
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- End Tab Content -->
+    </div>
+    <!-- End Body -->
+</div>
 
 <!-- End Card -->
 {% endblock %}
@@ -142,6 +147,7 @@
         $("#status-type-filter").val(current_url_params.get("status") || "")
 
     });
+
     $('#page-size-filter').change(function () {
         let current_url_params = new URLSearchParams(window.location.search)
         var selectedOption = $(this).val();
@@ -149,6 +155,7 @@
         let new_url = window.location.pathname + "?" + current_url_params.toString()
         window.location.href = new_url
     });
+
     $('#order-by-filter').change(function () {
         let current_url_params = new URLSearchParams(window.location.search)
         var selectedOption = $(this).val();
