@@ -18,7 +18,10 @@ class PostCategorySerializer(serializers.ModelSerializer):
 
 class PostSerializerList(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
-    relative_url = serializers.URLField(source="get_absolute_api_url", read_only=True)
+    relative_url = serializers.URLField(
+        source="get_absolute_api_url",
+        read_only=True
+    )
     absolute_url = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,25 +31,31 @@ class PostSerializerList(serializers.ModelSerializer):
             "image",
             "title",
             "slug",
-            "category",            
+            "category",
             "relative_url",
             "absolute_url",
-            "created_at"
+            "created_at",
         ]
 
     def get_absolute_url(self, obj):
         request = self.context.get("request")
-        return f"{request.build_absolute_uri(obj.pk)}/"
-    
+        relative_url = obj.get_absolute_api_url()
+
+        if request:
+            return request.build_absolute_uri(relative_url)
+
+        return relative_url
 
     def get_category(self, obj):
         first_category = obj.get_first_category()
+
         if first_category:
             return {
                 "id": first_category.id,
                 "name": first_category.name,
-                "slug": first_category.slug
+                "slug": first_category.slug,
             }
+
         return None
 
 

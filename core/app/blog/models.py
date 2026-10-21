@@ -35,10 +35,13 @@ class Post(models.Model):
         return reverse('blog:blog-detail', args=[self.slug])
     
     def get_first_category(self):
-        return self.category.first() 
+        return self.category.first()
 
     def get_absolute_api_url(self):
-        return reverse("blog:api-v1-blog:post-detail", kwargs={"pk": self.pk})
+        return reverse(
+            "blog:api-v1-blog:post-detail",
+            kwargs={"slug": self.slug}
+        )
 
 
 class Category(models.Model):
