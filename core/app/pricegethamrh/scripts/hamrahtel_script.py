@@ -1,12 +1,16 @@
+
 import requests
-from requests.exceptions import Timeout, RequestException
 import re
+from requests.exceptions import RequestException, Timeout
+
+
+GRAPHQL_URL = "https://core-api.hamrahtel.com/graphql/"
 
 
 def normalize_variants(variants):
     result = []
 
-    for variant in variants:
+    for variant in variants or []:
         try:
             pricing = variant.get("pricing") or {}
             price_obj = pricing.get("price") or {}
@@ -14,17 +18,21 @@ def normalize_variants(variants):
             amount = gross.get("amount")
 
             if amount is None:
-                continue  # ⬅️ این variant رو رد کن
+                continue
 
             color_name = None
             color_code = None
 
             for attr in variant.get("attributes", []):
-                if attr.get("attribute", {}).get("slug") == "color":
+                attribute = attr.get("attribute") or {}
+
+                if attribute.get("slug") == "color":
                     values = attr.get("values") or []
+
                     if values:
                         color_name = values[0].get("name")
                         color_code = values[0].get("value")
+                    break
 
             result.append({
                 "color": color_name or variant.get("name"),
@@ -33,95 +41,107 @@ def normalize_variants(variants):
                 "quantity": variant.get("quantityAvailable") or 0,
             })
 
-        except Exception:
-            # ⬅️ اگر یک variant خراب بود، کل محصول خراب نشه
+        except (TypeError, ValueError, AttributeError):
             continue
 
-    return result if result else None
-
+    return result or None
 
 
 def extract_product_data(url):
-    graphql_url = "https://core-api.hamrahtel.com/graphql/"
-    
-    query = """
-    query productDetail($slug: String!) {
-      publicProduct(slug: $slug) {
-        variants {
-          name
-          quantityAvailable
-          pricing {
-            price {
-              gross {
-                amount
-              }
-            }
-          }
-          attributes {
-            attribute {
-              slug
-              name
-            }
-            values {
-              name
-              value
-            }
-          }
-        }
-      }
-    }
-    """
+    match = re.search(r"/products/([^/?#]+)", url)
 
-    match = re.search(r'/products/([^/]+)', url)
     if not match:
         return None
 
     slug = match.group(1)
 
+    query = """
+    query ProductDetailV2(
+        $slug: String!,
+        $channel: String = "customer"
+    ) {
+        publicProductV2(slug: $slug, channel: $channel) {
+            id
+            name
+            slug
+            isAvailable
+            isAvailableForPurchase
+            variants {
+                id
+                name
+                quantityAvailable
+                attributes {
+                    attribute {
+                        name
+                        slug
+                    }
+                    values {
+                        name
+                        value
+                    }
+                }
+                pricing {
+                    price {
+                        gross {
+                            amount
+                        }
+                    }
+                }
+            }
+        }
+    }
+    """
+
     payload = {
+        "operationName": "ProductDetailV2",
+        "variables": {
+            "channel": "customer",
+            "slug": slug,
+        },
         "query": query,
-        "variables": {"slug": slug}
     }
 
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0",
+        "Referer": "https://hamrahtel.com/",
     }
 
     try:
         response = requests.post(
-            graphql_url,
+            GRAPHQL_URL,
             json=payload,
             headers=headers,
-            timeout=10
+            timeout=20,
         )
         response.raise_for_status()
-    except Timeout:
-        return None
-    except RequestException as e:
-        return None
-    except requests.exceptions.RequestException:
-        return None
-    if response.status_code != 200:
+        data = response.json()
+
+    except (Timeout, RequestException, ValueError) as exc:
+        print(f"Request error: {exc}")
         return None
 
-    data = response.json()
+    if data.get("errors"):
+        print("GraphQL errors:", data["errors"])
+        return None
 
-    # ✅ بررسی مرحله‌به‌مرحله
-    product = data.get("data", {}).get("publicProduct")
+    product = (data.get("data") or {}).get("publicProductV2")
 
     if not product:
+        print("Product not found:", data)
         return None
 
-    variants = product.get("variants")
+    variants = product.get("variants") or []
+    normalized = normalize_variants(variants)
 
-    if not variants:
-        return None
-    normal_var = normalize_variants(variants)
-    return normal_var
+    return normalized
 
 
+# if __name__ == "__main__":
+#     url = (
+#         "https://hamrahtel.com/products/"
+#         "xiaomi-15t-5g-512gb-ram-12gb"
+#     )
 
-# variants = extract_product_data(
-#     "https://hamrahtel.com/products/blackview-color-6-128gb-ram-8gb"
-# )
-# print(variants)
+#     print(extract_product_data(url))
