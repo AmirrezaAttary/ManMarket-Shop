@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from app.accounts.models import UserType
 from app.dashboard.api.v1.admin.permissions import IsAdminOrSuperUser
 
+from ...authentication import OptionalJWTAuthentication
 from ...client import BWDKError
 from ...models import BWDKOrder
 from ...services import BWDKService
@@ -28,6 +29,7 @@ class BWDKCreateOrderAPIView(APIView):
     users can omit items and their saved cart is used. The stock is reserved for the payment window.
     """
 
+    authentication_classes = [OptionalJWTAuthentication]
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "bwdk-create"
@@ -56,6 +58,7 @@ class BWDKCompleteAPIView(APIView):
     trusted: Get Order decides. Idempotent, so the page can poll while Verify is pending.
     """
 
+    authentication_classes = [OptionalJWTAuthentication]
     permission_classes = [AllowAny]
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "bwdk-complete"
