@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from decimal import Decimal, ROUND_HALF_UP
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import pre_save
@@ -14,6 +15,15 @@ class Color(models.Model):
 
     class Meta:
         ordering = ["-id"]
+
+
+class InventoryQuerySet(models.QuerySet):
+    """queryset.update(stock=F(...)) does not run auto_now, so the catalog feed (app.digify) would never
+    see the change. Make every bulk update bump updated_date too."""
+
+    def update(self, **kwargs):
+        kwargs.setdefault("updated_date", timezone.now())
+        return super().update(**kwargs)
 
 
 class ProductColorInventory(models.Model):
@@ -39,6 +49,8 @@ class ProductColorInventory(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     final_price = models.DecimalField(default=0, max_digits=10, decimal_places=0)
+
+    objects = InventoryQuerySet.as_manager()
 
     def get_price(self):
         if self.final_price and self.final_price > 0:

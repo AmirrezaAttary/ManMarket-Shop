@@ -50,6 +50,7 @@ urlpatterns = [
     path('order/', include('app.order.urls')),
     path('payment/', include('app.payment.urls')),
     path('bwdk/', include('app.bwdk.urls')),
+    path('digify/', include('app.digify.urls')),
     path('review/', include('app.review.urls')),
     path('pricegethamrh/', include('app.pricegethamrh.urls')),
     path('getspecification/', include('app.getspecification.urls')),

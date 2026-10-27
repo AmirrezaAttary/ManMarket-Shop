@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'app.dashboard',
     'app.payment',
     'app.bwdk',
+    'app.digify',
     'app.pricegethamrh',
     'app.getspecification',
     'app.review',
@@ -307,6 +308,14 @@ CACHES = {
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 50000
 
+
+# Digify (Bazaar) catalog feed: GET /digify/v1/products/ and /digify/v1/products/<id>/
+DIGIFY_FEED_API_KEY = config("DIGIFY_FEED_API_KEY", default="")  # empty = public feed; else header `Authorization: Api-Key <key>`
+DIGIFY_FEED_ALLOWED_IPS = [ip.strip() for ip in config("DIGIFY_FEED_ALLOWED_IPS", default="").split(",") if ip.strip()]
+DIGIFY_SITE_URL = config("DIGIFY_SITE_URL", default="https://manmarket.ir")  # storefront, used for source_url
+DIGIFY_MEDIA_BASE_URL = config("DIGIFY_MEDIA_BASE_URL", default="https://api.manmarket.ir")  # public origin of /media/
+DIGIFY_FEED_DEFAULT_LIMIT = config("DIGIFY_FEED_DEFAULT_LIMIT", cast=int, default=100)
+DIGIFY_FEED_MAX_LIMIT = config("DIGIFY_FEED_MAX_LIMIT", cast=int, default=200)
 
 # API SETTINGS
 CORS_ALLOW_ALL_ORIGINS = True
