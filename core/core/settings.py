@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'app.payment',
     'app.bwdk',
     'app.digify',
+    'app.torob',
     'app.pricegethamrh',
     'app.getspecification',
     'app.review',
@@ -316,6 +317,15 @@ DIGIFY_SITE_URL = config("DIGIFY_SITE_URL", default="https://manmarket.ir")  # s
 DIGIFY_MEDIA_BASE_URL = config("DIGIFY_MEDIA_BASE_URL", default="https://api.manmarket.ir")  # public origin of /media/
 DIGIFY_FEED_DEFAULT_LIMIT = config("DIGIFY_FEED_DEFAULT_LIMIT", cast=int, default=100)
 DIGIFY_FEED_MAX_LIMIT = config("DIGIFY_FEED_MAX_LIMIT", cast=int, default=200)
+
+# Torob API v3: POST /torob_api/v3/products  (JWT in X-Torob-Token, EdDSA, signed by Torob)
+# Torob's public key (base64 DER, from https://panel.torob.com/s/torob_api_token_guide)
+TOROB_PUBLIC_KEY = config("TOROB_PUBLIC_KEY", default="MCowBQYDK2VwAyEAt6Mu4T0pBORY11W+QeM35UsmLO3vsf+6yKpFDEImFk0=")
+# the token's `aud` must equal one of these (= the host Torob calls). Empty = use the request Host header (weaker)
+TOROB_ALLOWED_AUDIENCES = [h.strip() for h in config("TOROB_ALLOWED_AUDIENCES", default="api.manmarket.ir").split(",") if h.strip()]
+TOROB_TOKEN_LEEWAY_SECONDS = config("TOROB_TOKEN_LEEWAY_SECONDS", cast=int, default=30)
+TOROB_SITE_URL = config("TOROB_SITE_URL", default="https://manmarket.ir")
+TOROB_MEDIA_BASE_URL = config("TOROB_MEDIA_BASE_URL", default="https://api.manmarket.ir")
 
 # API SETTINGS
 CORS_ALLOW_ALL_ORIGINS = True
