@@ -10,6 +10,7 @@ from ....models import (
     ProductSpecification,
 )
 from .....review.models import ReviewModel,ReviewStatusType
+from .....review.utils import clean_review_text
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,6 +121,11 @@ class ReviewModelSerializer(serializers.ModelSerializer):
             "created_date",
             "updated_date",
         ]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["description"] = clean_review_text(data.get("description"))
+        return data
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):

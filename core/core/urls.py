@@ -57,6 +57,7 @@ urlpatterns = [
     path('getspecification/', include('app.getspecification.urls')),
     path('wallets/', include('app.wallets.urls')),
     path('chat/', include('app.chat.urls')),
+    path('website/', include('app.website.urls')),
     path('summernote/', include('django_summernote.urls')),
     
 

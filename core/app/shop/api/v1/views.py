@@ -1,6 +1,8 @@
 from django.db.models import Case, When, Value, IntegerField, Min, Exists, OuterRef
 from django.db.models import Q
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.throttling import ScopedRateThrottle
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.decorators import action
@@ -13,6 +15,8 @@ from ...models import (
     Color,
     MegaMenu,
     ProductColorInventory,
+    ProductQuestion,
+    QuestionStatusType,
 )
 from .serializers import (
     CategorySerializer,
@@ -21,7 +25,8 @@ from .serializers import (
     ProductListSerializer,
     ProductDetailSerializer,
     SimilarProductSerializer,
-    MegaMenuSerializer
+    MegaMenuSerializer,
+    ProductQuestionSerializer,
 )
 from .paginations import LargeResultsSetPagination
 from .filterset import ProductFilter
@@ -184,3 +189,28 @@ class MegaMenuViewSet(viewsets.ReadOnlyModelViewSet):
     ).all()
 
     serializer_class = MegaMenuSerializer
+
+
+class ProductQuestionViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    پرسش و پاسخ محصول.
+    GET  /product/v1/question/?product=<slug>   فقط پرسش‌های تاییدشده
+    POST /product/v1/question/                  {product: <slug>, question: "..."}  (نیازمند ورود؛ بعد از تایید ادمین نمایش داده می‌شود)
+    """
+
+    serializer_class = ProductQuestionSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "question"
+    pagination_class = LargeResultsSetPagination
+
+    def get_queryset(self):
+        qs = ProductQuestion.objects.filter(status=QuestionStatusType.approved.value).select_related(
+            "user", "user__user_profile"
+        )
+        if slug := self.request.query_params.get("product"):
+            qs = qs.filter(product__slug=unquote(slug))
+        return qs
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, status=QuestionStatusType.pending.value)

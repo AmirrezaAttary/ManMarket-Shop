@@ -1,0 +1,55 @@
+{% extends 'dashboard/admin/layout.html' %}
+{% load static %}
+
+{% block title %}{% if singleton %}{{ config.title }}{% elif object %}ویرایش {{ config.title }}{% else %}افزودن {{ config.title }}{% endif %}{% endblock title %}
+{% block page_title %}{% if singleton %}{{ config.title }}{% elif object %}ویرایش {{ config.title }}{% else %}افزودن {{ config.title }}{% endif %}{% endblock page_title %}
+
+{% block content %}
+<div class="card mb-6">
+  <div class="card-header flex justify-between items-center">
+    <h5 class="card-header-title">{% if singleton %}{{ config.title }}{% elif object %}ویرایش {{ config.title }}{% else %}افزودن {{ config.title }}{% endif %}</h5>
+  </div>
+
+  <form action="." method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card-body">
+      {% if config.description %}<p class="mb-5 text-sm text-slate-500">{{ config.description }}</p>{% endif %}
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger mb-4">{% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}</div>
+      {% endif %}
+
+      <div class="grid grid-cols-12 gap-x-4">
+        {% for field in form %}
+        <div class="col-span-12 {% if field.name not in wide_fields %}md:col-span-6{% endif %} mb-4">
+          {% if field.name in bool_fields %}
+            <label class="flex items-center gap-2 pt-7">{{ field }}<span>{{ field.label }}</span></label>
+          {% elif field.name in multi_fields %}
+            <label>{{ field.label }}</label>
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {% for choice in field %}
+              <label class="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2">{{ choice.tag }}<span>{{ choice.choice_label }}</span></label>
+              {% endfor %}
+            </div>
+          {% else %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          {% endif %}
+          {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+          {% for error in field.errors %}<p class="mt-1 text-xs text-rose-600">{{ error }}</p>{% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="flex gap-3 justify-end">
+        {% if object and not singleton %}
+        <a class="btn btn-danger" href="{% url 'dashboard:admin:'|add:config.key|add:'-delete' pk=object.pk %}">حذف</a>
+        {% endif %}
+        {% if not singleton %}<a class="btn btn-secondary" href="{% url 'dashboard:admin:'|add:config.key|add:'-list' %}">بازگشت</a>{% endif %}
+        <button class="btn btn-primary" type="submit">ذخیره</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

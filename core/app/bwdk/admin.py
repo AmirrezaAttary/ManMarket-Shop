@@ -18,9 +18,9 @@ class BWDKOrderAdmin(admin.ModelAdmin):
     )
     actions = ["manual_verify"]
 
-    @admin.action(description="Verify دستی (Get Order سپس Verify اگر status=7)")
+    @admin.action(description="Verify دستی سفارش (ابتدا Get Order، سپس Verify اگر وضعیت ۷ باشد)")
     def manual_verify(self, request, queryset):
         service = BWDKService()
         for bw in queryset:
             bw = service.manual_verify(bw)
-            self.message_user(request, f"#{bw.pk}: status={bw.status}", messages.INFO)
+            self.message_user(request, f"سفارش #{bw.pk}: وضعیت = {bw.status}", messages.INFO)

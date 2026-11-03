@@ -1,3 +1,4 @@
+from ...review.utils import clean_review_text
 import re
 import requests
 import datetime
@@ -125,7 +126,7 @@ def getCommentsDigikala(url, number_comments=15):
 
             results.append({
                 "name": normalize_text(comment.get("user_name", "")),  # فاصله عادی
-                "description": text_to_html(raw_body),                # HTML امن
+                "description": clean_review_text(raw_body),          # متن ساده (بدون تگ HTML)
                 "rate": comment.get("rate", 0),
                 "created_at": jalali_str_to_gregorian(comment.get("created_at", ""))
             })

@@ -6,3 +6,4 @@ from . images import *
 from . specifications import *
 from . wishlists import *
 from . megamenu import *
+from . questions import *

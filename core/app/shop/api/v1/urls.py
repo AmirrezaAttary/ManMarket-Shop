@@ -37,5 +37,11 @@ router.register(
     basename='mega-menu'
 )
 
+router.register(
+    r'question',
+    views.ProductQuestionViewSet,
+    basename='question'
+)
+
 
 urlpatterns = router.urls

@@ -1,0 +1,38 @@
+/* فارسی‌سازی ظاهر ادمین جنگو — فونت پیدا + رنگ برند من‌مارکت */
+@font-face { font-family: 'Peyda'; font-weight: 400; font-display: swap;
+  src: url('../../Peyda.font/Peyda/02-Farsi_Namerals/WebFonts/fonts/woff2/PeydaWebFaNum-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Peyda'; font-weight: 500; font-display: swap;
+  src: url('../../Peyda.font/Peyda/02-Farsi_Namerals/WebFonts/fonts/woff2/PeydaWebFaNum-Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Peyda'; font-weight: 700; font-display: swap;
+  src: url('../../Peyda.font/Peyda/02-Farsi_Namerals/WebFonts/fonts/woff2/PeydaWebFaNum-Bold.woff2') format('woff2'); }
+
+:root {
+  --font-family-primary: 'Peyda', Vazirmatn, Tahoma, system-ui, sans-serif;
+  --primary: #e84c2a;
+  --secondary: #f96747;
+  --accent: #fd866a;
+  --primary-fg: #fff;
+  --header-bg: #e84c2a;
+  --header-branding-color: #fff;
+  --breadcrumbs-bg: #c23b1e;
+  --object-tools-bg: #f96747;
+  --object-tools-hover-bg: #c23b1e;
+  --button-bg: #f96747;
+  --button-hover-bg: #c23b1e;
+  --default-button-bg: #c23b1e;
+  --default-button-hover-bg: #842f1c;
+  --link-fg: #c23b1e;
+  --link-hover-color: #842f1c;
+  --selected-bg: #fff4f1;
+  --selected-row: #fff4f1;
+}
+html, body, input, select, textarea, button, table, .module h2, .module caption, .inline-group h2 {
+  font-family: var(--font-family-primary);
+}
+body { font-size: 14px; }
+#header { box-shadow: 0 1px 4px rgb(15 23 42 / .15); }
+#site-name a { font-weight: 700; letter-spacing: 0; }
+.mm-back { color: #fff !important; background: rgb(255 255 255 / .18); border-radius: 8px; padding: 6px 12px; margin-inline: 12px; }
+.mm-back:hover { background: rgb(255 255 255 / .3); text-decoration: none; }
+.submit-row input, .button, input[type=submit], input[type=button], .button.default { border-radius: 8px; }
+.module { border-radius: 10px; overflow: hidden; }

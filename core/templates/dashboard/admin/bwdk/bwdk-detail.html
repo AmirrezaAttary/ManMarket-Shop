@@ -1,0 +1,142 @@
+{% extends 'dashboard/admin/layout.html' %}
+{% load static humanize jformat %}
+
+{% block title %}سفارش دیجی‌کالا {{ bw.merchant_order_id }}{% endblock title %}
+{% block page_title %}سفارش دیجی‌کالا {{ bw.merchant_order_id }}{% endblock page_title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <div class="flex justify-between items-center gap-3">
+      <h5>جزئیات سفارش خرید با دیجی‌کالا</h5>
+      <div class="flex gap-2">
+        <a class="btn btn-secondary btn-sm" href="{% url 'dashboard:admin:order-detail' pk=bw.order_id %}">مشاهده سفارش در فروشگاه</a>
+        <a class="btn btn-secondary btn-sm" href="{% url 'dashboard:admin:bwdk-list' %}">بازگشت</a>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    {% if bw.needs_review %}
+    <div class="alert alert-danger mb-5">
+      <p class="font-bold">این سفارش نیازمند بررسی دستی است.</p>
+      {% if bw.review_note %}<p class="mt-1" style="white-space:pre-line">{{ bw.review_note }}</p>{% endif %}
+      <form method="post" action="{% url 'dashboard:admin:bwdk-review-done' pk=bw.pk %}" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary btn-sm">بررسی شد؛ علامت را بردار</button>
+      </form>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">شماره سفارش فروشنده:</dt><dl class="detail-value">{{ bw.merchant_order_id }}</dl>
+      <dt class="detail-label">کد پیگیری دیجی‌کالا:</dt><dl class="detail-value">{{ bw.reference_code|default:"—" }}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">شناسه سفارش (UUID):</dt><dl class="detail-value" dir="ltr">{{ bw.order_uuid|default:"—" }}</dl>
+      <dt class="detail-label">وضعیت دیجی‌کالا:</dt><dl class="detail-value">{{ bw.status_display|default:bw.get_status_display }} ({{ bw.status }})</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">نوع خرید:</dt><dl class="detail-value">{% if bw.guest_checkout %}مهمان (بدون ورود){% else %}کاربر واردشده — {{ bw.order.user.phone_number }}{% endif %}</dl>
+      <dt class="detail-label">موجودی رزرو شده:</dt><dl class="detail-value">{% if bw.stock_reserved %}بله{% else %}خیر{% endif %}{% if bw.reservation_expires_at %} (تا {{ bw.reservation_expires_at|jformat:"%Y/%m/%d - %H:%M" }}){% endif %}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">تعداد تلاش Verify:</dt><dl class="detail-value">{{ bw.verify_attempts }}</dl>
+      <dt class="detail-label">آخرین همگام‌سازی:</dt><dl class="detail-value">{% if bw.last_synced_at %}{{ bw.last_synced_at|jformat:"%Y/%m/%d - %H:%M" }}{% else %}—{% endif %}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">زمان پرداخت:</dt><dl class="detail-value">{% if bw.paid_at %}{{ bw.paid_at|jformat:"%Y/%m/%d - %H:%M" }}{% else %}—{% endif %}</dl>
+      <dt class="detail-label">زمان نهایی‌شدن:</dt><dl class="detail-value">{% if bw.finalized_at %}{{ bw.finalized_at|jformat:"%Y/%m/%d - %H:%M" }}{% elif bw.cancelled_at %}لغو شده در {{ bw.cancelled_at|jformat:"%Y/%m/%d - %H:%M" }}{% else %}—{% endif %}</dl>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h5>مبالغ و پرداخت</h5></div>
+  <div class="card-body">
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">مبلغ کالاها:</dt><dl class="detail-value formatted-price">{{ bw.main_amount|intcomma }}</dl>
+      <dt class="detail-label">هزینه ارسال:</dt><dl class="detail-value formatted-price">{{ bw.shipping_amount|intcomma }}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">هزینه بسته‌بندی:</dt><dl class="detail-value formatted-price">{{ bw.packing_amount|intcomma }}</dl>
+      <dt class="detail-label">تخفیف دیجی‌کالا:</dt><dl class="detail-value formatted-price">{{ bw.promotion_discount_amount|intcomma }}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">مارک‌آپ دیجی‌پی:</dt><dl class="detail-value formatted-price">{{ bw.digipay_markup_amount|intcomma }}</dl>
+      <dt class="detail-label">مبلغ پرداخت‌شده توسط مشتری:</dt><dl class="detail-value formatted-price">{{ bw.total_paid_amount|intcomma }}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">مبلغ نهایی سفارش:</dt><dl class="detail-value formatted-price">{{ bw.final_amount|intcomma }}</dl>
+      <dt class="detail-label">درگاه پرداخت:</dt><dl class="detail-value">{{ bw.payment_data.gateway_name|default:"—" }} / {{ bw.payment_data.gateway_type_display|default:"—" }}</dl>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h5>مشتری و تحویل</h5></div>
+  <div class="card-body">
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">گیرنده:</dt><dl class="detail-value">{{ bw.destination_address.receiver_name|default:"—" }} - {{ bw.destination_address.receiver_phone|default:"—" }}</dl>
+      <dt class="detail-label">روش ارسال:</dt><dl class="detail-value">{{ bw.shipping_data.name|default:"—" }} ({{ bw.shipping_data.delivery_time_display|default:"—" }})</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">آدرس تحویل:</dt>
+      <dl class="detail-value">
+        {{ bw.destination_address.state_name|default:"—" }} - {{ bw.destination_address.city_name|default:"—" }}
+        {% if bw.destination_address.district_name %}- {{ bw.destination_address.district_name }}{% endif %}
+        - {{ bw.destination_address.address|default:"—" }}
+        (پلاک {{ bw.destination_address.building_number|default:"—" }}، واحد {{ bw.destination_address.unit|default:"—" }})
+      </dl>
+      <dt class="detail-label">کد پستی:</dt><dl class="detail-value">{{ bw.destination_address.postal_code|default:"—" }}</dl>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h5>اقلام سفارش</h5></div>
+  <div class="card-body">
+    <div class="table-wrap">
+      <table class="table stack">
+        <thead><tr><th>#</th><th>کالا</th><th>تعداد</th><th>قیمت واحد</th></tr></thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <th scope="row" data-label="#">{{ forloop.counter }}</th>
+            <td data-label="کالا">{% firstof item.name item.title "—" %}</td>
+            <td data-label="تعداد">{% firstof item.count item.quantity "—" %}</td>
+            <td data-label="قیمت واحد" class="formatted-price">{% if item.amount %}{{ item.amount|intcomma }}{% else %}—{% endif %}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="table-empty">اقلام هنوز از دیجی‌کالا همگام نشده است؛ «بررسی وضعیت» را بزنید.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h5>عملیات</h5></div>
+  <div class="card-body">
+    <div class="flex gap-4 flex-wrap items-end">
+      <form method="post" action="{% url 'dashboard:admin:bwdk-verify' pk=bw.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">بررسی وضعیت و Verify</button>
+      </form>
+      {% if bw.can_refund %}
+      <form method="post" action="{% url 'dashboard:admin:bwdk-refund' pk=bw.pk %}" onsubmit="return confirm('بازگشت وجه کامل (مرجوعی کل سفارش) انجام شود؟');" class="flex gap-2 items-end">
+        {% csrf_token %}
+        <input type="text" name="reason" maxlength="255" placeholder="دلیل مرجوعی" value="انصراف مشتری از خرید">
+        <button type="submit" class="btn btn-danger">بازگشت وجه (Refund)</button>
+      </form>
+      {% endif %}
+    </div>
+    <p class="mt-4 text-sm text-slate-500">دکمه‌ی «بررسی وضعیت و Verify» ابتدا وضعیت را از دیجی‌کالا می‌گیرد و فقط اگر سفارش «پرداخت‌شده توسط کاربر (۷)» باشد Verify می‌کند. بازگشت وجه فقط برای پرداخت‌های دیجی‌پی ممکن است.</p>
+
+    <details class="mt-5">
+      <summary class="cursor-pointer text-sm font-medium text-slate-600">آخرین پاسخ خام دیجی‌کالا (برای عیب‌یابی)</summary>
+      <pre class="mt-3 max-h-96 overflow-auto rounded-xl bg-slate-900 p-4 text-xs text-slate-100" dir="ltr">{{ last_response_json }}</pre>
+    </details>
+  </div>
+</div>
+{% endblock %}

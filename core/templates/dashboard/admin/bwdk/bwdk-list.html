@@ -1,0 +1,99 @@
+{% extends 'dashboard/admin/layout.html' %}
+{% load static humanize jformat %}
+
+{% block title %}خرید با دیجی‌کالا{% endblock title %}
+{% block page_title %}خرید با دیجی‌کالا (BWDK){% endblock page_title %}
+
+{% block content %}
+<div class="grid grid-cols-2 gap-4 lg:grid-cols-5">
+  <div class="card p-5"><p class="text-sm text-slate-500">همه‌ی سفارش‌ها</p><p class="mt-1 text-2xl font-bold text-slate-900">{{ stats.total|intcomma }}</p></div>
+  <div class="card p-5"><p class="text-sm text-slate-500">باز / در انتظار</p><p class="mt-1 text-2xl font-bold text-slate-900">{{ stats.open|intcomma }}</p></div>
+  <div class="card p-5"><p class="text-sm text-slate-500">نیازمند بررسی دستی</p><p class="mt-1 text-2xl font-bold {% if stats.needs_review %}text-rose-600{% else %}text-slate-900{% endif %}">{{ stats.needs_review|intcomma }}</p></div>
+  <div class="card p-5"><p class="text-sm text-slate-500">نهایی‌شده</p><p class="mt-1 text-2xl font-bold text-slate-900">{{ stats.completed|intcomma }}</p></div>
+  <div class="card p-5"><p class="text-sm text-slate-500">مجموع فروش (تومان)</p><p class="mt-1 text-2xl font-bold text-slate-900 formatted-price">{{ stats.sales|default:0|intcomma }}</p></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="flex justify-between items-center gap-3">
+      <h5>سفارش‌های خرید با دیجی‌کالا</h5>
+      <form method="post" action="{% url 'dashboard:admin:bwdk-sync' %}" onsubmit="return confirm('سفارش‌های باز با دیجی‌کالا همگام‌سازی شوند؟');">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary btn-sm">همگام‌سازی سفارش‌های باز</button>
+      </form>
+    </div>
+  </div>
+  <div class="card-body">
+    <form action="." method="get" class="mb-6 grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] items-end gap-3">
+      <div class="min-w-0"><input type="text" name="q" value="{{ f.q }}" placeholder="شماره سفارش، کد پیگیری..."></div>
+      <div class="min-w-0">
+        <select name="status">
+          <option value="">وضعیت: همه</option>
+          {% for value, label in status_choices %}<option value="{{ value }}" {% if f.status == value|stringformat:"s" %}selected{% endif %}>{{ label }} ({{ value }})</option>{% endfor %}
+        </select>
+      </div>
+      <div class="min-w-0">
+        <select name="needs_review">
+          <option value="">بررسی دستی: همه</option>
+          <option value="true" {% if f.needs_review == 'true' %}selected{% endif %}>نیازمند بررسی</option>
+          <option value="false" {% if f.needs_review == 'false' %}selected{% endif %}>بدون مشکل</option>
+        </select>
+      </div>
+      <div class="min-w-0">
+        <select name="guest">
+          <option value="">نوع خرید: همه</option>
+          <option value="true" {% if f.guest == 'true' %}selected{% endif %}>مهمان (بدون ورود)</option>
+          <option value="false" {% if f.guest == 'false' %}selected{% endif %}>کاربر واردشده</option>
+        </select>
+      </div>
+      <div class="min-w-0">
+        <select name="open">
+          <option value="">باز/بسته: همه</option>
+          <option value="true" {% if f.open == 'true' %}selected{% endif %}>فقط باز</option>
+          <option value="false" {% if f.open == 'false' %}selected{% endif %}>نهایی یا لغوشده</option>
+        </select>
+      </div>
+      <div class="min-w-0"><button type="submit" class="btn btn-primary btn-sm w-full"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-search"/></svg><span>اعمال</span></button></div>
+    </form>
+
+    <div class="flex flex-col gap-2">
+      <div class="table-wrap">
+        <table class="table stack">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">شماره سفارش</th>
+              <th scope="col">وضعیت دیجی‌کالا</th>
+              <th scope="col">نوع خرید</th>
+              <th scope="col">مبلغ نهایی</th>
+              <th scope="col">تاریخ</th>
+              <th scope="col">عملیات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for bw in object_list %}
+            <tr>
+              <th scope="row" data-label="#">{{ bw.pk }}</th>
+              <td data-label="شماره سفارش">{{ bw.merchant_order_id }}{% if bw.needs_review %} <span class="badge badge-danger">نیازمند بررسی</span>{% endif %}</td>
+              <td data-label="وضعیت دیجی‌کالا">
+                <span class="badge {% if bw.status == 9 or bw.status == 19 or bw.status == 20 %}badge-success{% elif bw.status == 5 or bw.status == 8 or bw.status == 18 or bw.status == 17 %}badge-danger{% elif bw.status == 7 %}badge-info{% else %}badge-warning{% endif %}">{{ bw.status_display|default:bw.get_status_display }}</span>
+              </td>
+              <td data-label="نوع خرید">{% if bw.guest_checkout %}مهمان{% else %}کاربر واردشده{% endif %}</td>
+              <td data-label="مبلغ نهایی" class="formatted-price">{{ bw.final_amount|intcomma }}</td>
+              <td data-label="تاریخ">{{ bw.created_date|jformat:"%Y/%m/%d - %H:%M" }}</td>
+              <td class="flex gap-2" data-label="عملیات">
+                <a class="btn btn-ghost-secondary btn-sm" href="{% url 'dashboard:admin:bwdk-detail' pk=bw.pk %}"><svg class="i h-4 w-4" viewBox="0 0 24 24"><use href="#i-eye"/></svg><span>مشاهده</span></a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="table-empty">هنوز سفارشی با خرید دیجی‌کالا ثبت نشده است.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-sm text-slate-500">{{ total_items }} سفارش</p>
+      {% include 'dashboard/admin/_pagination.html' %}
+    </div>
+  </div>
+</div>
+{% endblock %}

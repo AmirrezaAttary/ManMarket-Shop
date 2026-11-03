@@ -24,6 +24,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = (
         "id",
         "phone_number",
+        "type",
         "is_superuser",
         "is_active",
         "is_verified",
@@ -47,13 +48,13 @@ class CustomUserAdmin(UserAdmin):
     # فرم تغییر کاربر
     fieldsets = (
         (
-            "Authentication",
+            "اطلاعات ورود",
             {
                 "fields": ("phone_number", "password", "email", "code_melli"),
             },
         ),
         (
-            "Permissions",
+            "دسترسی‌ها",
             {
                 "fields": (
                     "is_staff",
@@ -65,13 +66,13 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
         (
-            "Group Permissions",
+            "گروه‌ها و نوع کاربر",
             {
                 "fields": ("groups", "user_permissions", "type"),
             },
         ),
         (
-            "Important Dates",
+            "تاریخ‌های مهم",
             {
                 "fields": ("last_login", "created_date", "updated_date"),
             },
@@ -102,7 +103,7 @@ class CustomUserAdmin(UserAdmin):
 
 class CustomProfileAdmin(admin.ModelAdmin):
     list_display = ("id","user", "first_name","last_name")
-    searching_fields = ("user","first_name","last_name")
+    search_fields = ("user__phone_number", "first_name", "last_name")
 
 
 admin.site.register(Profile,CustomProfileAdmin)
@@ -114,6 +115,7 @@ class SessionAdmin(admin.ModelAdmin):
         return obj.get_decoded()
     list_display = ['session_key', '_session_data', 'expire_date']
     readonly_fields = ['_session_data']
+    _session_data.short_description = 'داده‌های نشست'
 admin.site.register(Session, SessionAdmin)
 
 

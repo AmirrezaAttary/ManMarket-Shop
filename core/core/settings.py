@@ -51,7 +51,7 @@ SECRET_KEY = 'django-insecure-jc35qo)gv(idt+zlq=2&!yq%y)twxum-$8@s^#3dj^7n^!yn_e
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'core.admin_config.PersianAdminConfig',  # = django.contrib.admin با ادمین فارسی
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -109,6 +109,7 @@ AUTHENTICATION_BACKENDS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'core.middleware.AdminPersianMiddleware',  # ادمین جنگو (/admin/) فارسی و راست‌چین
     "corsheaders.middleware.CorsMiddleware", 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -177,6 +178,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+LANGUAGES = [('fa', 'فارسی'), ('en', 'English')]
+# مسیر ادمین جنگو؛ فقط برای میدلور فارسی‌ساز استفاده می‌شود (باید با core/urls.py یکی باشد)
+ADMIN_URL_PREFIX = 'admin/'
 
 TIME_ZONE = 'Asia/Tehran'
 
@@ -190,11 +194,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = "/home/kkdkcorm/public_html/api/static/"
 
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = "/home/kkdkcorm/public_html/api/media/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "staticfiles",
@@ -341,6 +345,8 @@ REST_FRAMEWORK = {
         # public endpoints of the express checkout (they reserve stock, so keep them throttled)
         'bwdk-create': '10/min',
         'bwdk-complete': '60/min',
+        # فرم‌های عمومی سایت
+        'question': '20/hour',
     },
 }
 

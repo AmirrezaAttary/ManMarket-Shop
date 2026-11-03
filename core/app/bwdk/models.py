@@ -20,60 +20,62 @@ class BWDKOrder(models.Model):
     order = models.OneToOneField(
         "order.OrderModel",
         on_delete=models.CASCADE,
-        related_name="bwdk_order",
+        related_name="bwdk_order", verbose_name="سفارش داخلی",
     )
-    merchant_unique_id = models.CharField(max_length=255, unique=True)
-    merchant_order_id = models.CharField(max_length=255, db_index=True)
-    order_uuid = models.UUIDField(unique=True, null=True, blank=True)
-    order_start_url = models.URLField(max_length=1000, blank=True)
-    reference_code = models.CharField(max_length=100, blank=True)
+    merchant_unique_id = models.CharField(max_length=255, unique=True, verbose_name="شناسه یکتای فروشنده")
+    merchant_order_id = models.CharField(max_length=255, db_index=True, verbose_name="شماره سفارش فروشنده")
+    order_uuid = models.UUIDField(unique=True, null=True, blank=True, verbose_name="شناسه سفارش در دیجی‌کالا (UUID)")
+    order_start_url = models.URLField(max_length=1000, blank=True, verbose_name="لینک شروع پرداخت")
+    reference_code = models.CharField(max_length=100, blank=True, verbose_name="کد پیگیری")
 
     status = models.IntegerField(
         choices=BWDKOrderStatus.choices,
-        default=BWDKOrderStatus.PENDING,
+        default=BWDKOrderStatus.PENDING, verbose_name="وضعیت",
     )
-    status_display = models.CharField(max_length=100, blank=True)
+    status_display = models.CharField(max_length=100, blank=True, verbose_name="عنوان وضعیت")
 
-    main_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    final_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    total_paid_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    discount_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    promotion_discount_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    tax_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    shipping_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    packing_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
-    digipay_markup_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0)
+    main_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="مبلغ کالاها")
+    final_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="مبلغ نهایی")
+    total_paid_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="مبلغ پرداخت‌شده")
+    discount_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="مبلغ تخفیف")
+    promotion_discount_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="تخفیف پروموشن")
+    tax_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="مالیات")
+    shipping_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="هزینه ارسال")
+    packing_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="هزینه بسته‌بندی")
+    digipay_markup_amount = models.DecimalField(max_digits=14, decimal_places=0, default=0, verbose_name="کارمزد دیجی‌پی")
 
-    payment_data = models.JSONField(default=dict, blank=True)
-    destination_address = models.JSONField(default=dict, blank=True)
-    shipping_data = models.JSONField(default=dict, blank=True)
-    customer_data = models.JSONField(default=dict, blank=True)
-    items_data = models.JSONField(default=list, blank=True)
-    last_response = models.JSONField(default=dict, blank=True)
+    payment_data = models.JSONField(default=dict, blank=True, verbose_name="اطلاعات پرداخت")
+    destination_address = models.JSONField(default=dict, blank=True, verbose_name="نشانی مقصد")
+    shipping_data = models.JSONField(default=dict, blank=True, verbose_name="اطلاعات ارسال")
+    customer_data = models.JSONField(default=dict, blank=True, verbose_name="اطلاعات مشتری")
+    items_data = models.JSONField(default=list, blank=True, verbose_name="اقلام سفارش")
+    last_response = models.JSONField(default=dict, blank=True, verbose_name="آخرین پاسخ دیجی‌کالا")
 
     # --- lifecycle / safety (added for express checkout) ---
     guest_checkout = models.BooleanField(
         default=False,
-        help_text="سفارش بدون ورود به سایت ساخته شده؛ مالک واقعی بعد از پرداخت از روی شماره موبایل پیدا می‌شود.",
+        help_text="سفارش بدون ورود به سایت ساخته شده؛ مالک واقعی بعد از پرداخت از روی شماره موبایل پیدا می‌شود.", verbose_name="خرید بدون ورود (مهمان)",
     )
-    stock_reserved = models.BooleanField(default=False)
-    reservation_expires_at = models.DateTimeField(null=True, blank=True, db_index=True)
-    verify_attempts = models.PositiveSmallIntegerField(default=0)
-    last_verify_attempt_at = models.DateTimeField(null=True, blank=True)
-    finalized_at = models.DateTimeField(null=True, blank=True)
-    cancelled_at = models.DateTimeField(null=True, blank=True)
-    needs_review = models.BooleanField(default=False)
-    review_note = models.TextField(blank=True)
+    stock_reserved = models.BooleanField(default=False, verbose_name="موجودی رزرو شده")
+    reservation_expires_at = models.DateTimeField(null=True, blank=True, db_index=True, verbose_name="پایان رزرو موجودی")
+    verify_attempts = models.PositiveSmallIntegerField(default=0, verbose_name="تعداد تلاش برای Verify")
+    last_verify_attempt_at = models.DateTimeField(null=True, blank=True, verbose_name="زمان آخرین تلاش Verify")
+    finalized_at = models.DateTimeField(null=True, blank=True, verbose_name="زمان نهایی‌شدن")
+    cancelled_at = models.DateTimeField(null=True, blank=True, verbose_name="زمان لغو")
+    needs_review = models.BooleanField(default=False, verbose_name="نیازمند بررسی دستی")
+    review_note = models.TextField(blank=True, verbose_name="یادداشت بررسی")
 
-    created_at_bwdk = models.DateTimeField(null=True, blank=True)
-    paid_at = models.DateTimeField(null=True, blank=True)
-    verified_at = models.DateTimeField(null=True, blank=True)
-    last_synced_at = models.DateTimeField(null=True, blank=True)
+    created_at_bwdk = models.DateTimeField(null=True, blank=True, verbose_name="زمان ایجاد در دیجی‌کالا")
+    paid_at = models.DateTimeField(null=True, blank=True, verbose_name="زمان پرداخت")
+    verified_at = models.DateTimeField(null=True, blank=True, verbose_name="زمان تایید (Verify)")
+    last_synced_at = models.DateTimeField(null=True, blank=True, verbose_name="آخرین همگام‌سازی")
 
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
 
     class Meta:
+        verbose_name = "سفارش خرید با دیجی‌کالا"
+        verbose_name_plural = "سفارش‌های خرید با دیجی‌کالا"
         ordering = ["-created_date"]
         indexes = [models.Index(fields=["status"])]
 

@@ -20,56 +20,66 @@ class OrderStatusType(models.IntegerChoices):
 
 
 class UserAddressModel(models.Model):
-    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE)
-    name = models.CharField(max_length=250,default="")
-    phone_number = models.CharField(max_length=12,default="",validators=[validate_iranian_cellphone_number])
+    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE, verbose_name="کاربر")
+    name = models.CharField(max_length=250,default="", verbose_name="نام گیرنده")
+    phone_number = models.CharField(max_length=12,default="",validators=[validate_iranian_cellphone_number], verbose_name="شماره تماس")
     
-    address = models.CharField(max_length=250)
-    state = models.CharField(max_length=50)
-    city = models.CharField(max_length=50)
-    zip_code = models.CharField(max_length=50)
+    address = models.CharField(max_length=250, verbose_name="نشانی")
+    state = models.CharField(max_length=50, verbose_name="استان")
+    city = models.CharField(max_length=50, verbose_name="شهر")
+    zip_code = models.CharField(max_length=50, verbose_name="کد پستی")
 
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
+
+    class Meta:
+        verbose_name = "نشانی کاربر"
+        verbose_name_plural = "نشانی‌های کاربران"
 
 class CouponModel(models.Model):
-    code = models.CharField(max_length=100)
-    discount_percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)])
-    max_limit_usage = models.PositiveIntegerField(default=10)
-    used_by = models.ManyToManyField('accounts.User',related_name = "coupon_users",blank=True)
+    code = models.CharField(max_length=100, verbose_name="کد تخفیف")
+    discount_percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)], verbose_name="درصد تخفیف")
+    max_limit_usage = models.PositiveIntegerField(default=10, verbose_name="حداکثر دفعات استفاده")
+    used_by = models.ManyToManyField('accounts.User',related_name = "coupon_users",blank=True, verbose_name="استفاده‌شده توسط")
     
-    expiration_date = models.DateTimeField(null=True,blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    expiration_date = models.DateTimeField(null=True,blank=True, verbose_name="تاریخ انقضا")
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
 
     def __str__(self):
         return self.code
 
+    class Meta:
+        verbose_name = "کد تخفیف"
+        verbose_name_plural = "کدهای تخفیف"
+
 
 # Create your models here.
 class OrderModel(models.Model):
-    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE,related_name='order_user')
-    name = models.CharField(max_length=250,default="")
-    phone_number = models.CharField(max_length=250,default="")
+    user = models.ForeignKey('accounts.User',on_delete=models.CASCADE,related_name='order_user', verbose_name="کاربر")
+    name = models.CharField(max_length=250,default="", verbose_name="نام گیرنده")
+    phone_number = models.CharField(max_length=250,default="", verbose_name="شماره تماس")
 
     # order address information
-    address = models.CharField(max_length=250)
-    state = models.CharField(max_length=50)
-    city = models.CharField(max_length=50)
-    zip_code = models.CharField(max_length=50)
+    address = models.CharField(max_length=250, verbose_name="نشانی")
+    state = models.CharField(max_length=50, verbose_name="استان")
+    city = models.CharField(max_length=50, verbose_name="شهر")
+    zip_code = models.CharField(max_length=50, verbose_name="کد پستی")
     
-    payment = models.ForeignKey('payment.PaymentModel',on_delete=models.SET_NULL,null=True,blank=True)
+    payment = models.ForeignKey('payment.PaymentModel',on_delete=models.SET_NULL,null=True,blank=True, verbose_name="پرداخت")
     
     
-    total_price = models.DecimalField(default=0,max_digits=10,decimal_places=0)
-    coupon = models.ForeignKey(CouponModel,on_delete=models.PROTECT,null=True,blank=True)
-    status = models.IntegerField(choices=OrderStatusType.choices,default=OrderStatusType.pending.value)
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
-    tracking_type = models.IntegerField(choices=TrackingType.choices,default=TrackingType.post.value)
+    total_price = models.DecimalField(default=0,max_digits=10,decimal_places=0, verbose_name="مبلغ کل (تومان)")
+    coupon = models.ForeignKey(CouponModel,on_delete=models.PROTECT,null=True,blank=True, verbose_name="کد تخفیف")
+    status = models.IntegerField(choices=OrderStatusType.choices,default=OrderStatusType.pending.value, verbose_name="وضعیت سفارش")
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
+    tracking_type = models.IntegerField(choices=TrackingType.choices,default=TrackingType.post.value, verbose_name="نوع ارسال")
     tracking_code = models.CharField(max_length=100, null=True, blank=True, verbose_name="کد رهگیری پستی")
     
     class Meta:
+        verbose_name = "سفارش"
+        verbose_name_plural = "سفارش‌ها"
         ordering = ['-created_date']
     
     def calculate_total_price(self):
@@ -111,15 +121,19 @@ class OrderModel(models.Model):
     
     
 class OrderItemModel(models.Model):
-    order = models.ForeignKey(OrderModel,on_delete=models.CASCADE,related_name="order_items") 
-    product = models.ForeignKey('shop.ProductModel',on_delete=models.PROTECT)
-    color = models.ForeignKey('shop.Color',on_delete=models.PROTECT)
-    quantity = models.PositiveIntegerField(default=0)
-    price = models.DecimalField(default=0,max_digits=10,decimal_places=0)
+    order = models.ForeignKey(OrderModel,on_delete=models.CASCADE,related_name="order_items", verbose_name="سفارش") 
+    product = models.ForeignKey('shop.ProductModel',on_delete=models.PROTECT, verbose_name="محصول")
+    color = models.ForeignKey('shop.Color',on_delete=models.PROTECT, verbose_name="رنگ")
+    quantity = models.PositiveIntegerField(default=0, verbose_name="تعداد")
+    price = models.DecimalField(default=0,max_digits=10,decimal_places=0, verbose_name="قیمت واحد")
     
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
     
     def __str__(self):
         return f"{self.product.title} - {self.order.id}"
+
+    class Meta:
+        verbose_name = "آیتم سفارش"
+        verbose_name_plural = "آیتم‌های سفارش"
     

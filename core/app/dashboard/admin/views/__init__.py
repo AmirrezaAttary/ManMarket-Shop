@@ -18,3 +18,8 @@ from .chat import *
 from .story import *
 from .users import *
 from .person_pay import *
+from .crud import *
+from .megamenu import *
+from .bwdk import *
+from .markets import *
+from .exports import *

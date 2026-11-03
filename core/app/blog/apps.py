@@ -4,5 +4,6 @@ from django.apps import AppConfig
 class BlogConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'app.blog'
+    verbose_name = "بلاگ"
     def ready(self):
         from . import signals

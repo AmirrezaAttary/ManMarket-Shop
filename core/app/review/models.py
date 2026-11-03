@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.db.models import Avg
 from django.utils import timezone
+from .utils import clean_review_text
 # Create your models here.
 
 
@@ -15,22 +16,29 @@ class ReviewStatusType(models.IntegerChoices):
 
 
 class ReviewModel(models.Model):
-    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE,related_name='reviw_user',blank=True,null=True)
-    product = models.ForeignKey('shop.ProductModel',on_delete=models.CASCADE, related_name='reviews')
-    name = models.CharField(max_length=200, blank=True, null=True)
-    description = models.TextField()
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE,related_name='reviw_user',blank=True,null=True, verbose_name="کاربر")
+    product = models.ForeignKey('shop.ProductModel',on_delete=models.CASCADE, related_name='reviews', verbose_name="محصول")
+    name = models.CharField(max_length=200, blank=True, null=True, verbose_name="نام")
+    description = models.TextField(verbose_name="متن نظر")
     rate = models.IntegerField(default=5, validators=[
-                               MinValueValidator(0), MaxValueValidator(5)])
+                               MinValueValidator(0), MaxValueValidator(5)], verbose_name="امتیاز")
     status = models.IntegerField(
-        choices=ReviewStatusType.choices, default=ReviewStatusType.pending.value)
-    created_date = models.DateTimeField(default=timezone.now)  
-    updated_date = models.DateTimeField(auto_now=True)
+        choices=ReviewStatusType.choices, default=ReviewStatusType.pending.value, verbose_name="وضعیت نظر")
+    created_date = models.DateTimeField(default=timezone.now, verbose_name="تاریخ ایجاد")  
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
 
     class Meta:
+        verbose_name = "نظر"
+        verbose_name_plural = "نظرات"
         ordering = ["-created_date"]
     
     def __str__(self):
         return f"{self.user} - {self.product.id}"
+
+    def save(self, *args, **kwargs):
+        # نظرها همیشه متن ساده ذخیره می‌شوند (نظرات اسکرپ‌شده از دیجی‌کالا HTML دارند)
+        self.description = clean_review_text(self.description)
+        super().save(*args, **kwargs)
     
     
     def get_status(self):

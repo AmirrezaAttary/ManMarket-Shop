@@ -5,10 +5,10 @@ from ..accounts.models import UserType
 User = get_user_model()
 # Create your models here.
 class ChatRoom(models.Model):
-    product = models.ForeignKey("shop.ProductModel", on_delete=models.CASCADE)
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_chats')
-    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_chats')
-    created_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey("shop.ProductModel", on_delete=models.CASCADE, verbose_name="محصول")
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_chats', verbose_name="مشتری")
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_chats', verbose_name="پشتیبان")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
 
     def __str__(self):
         return f"{self.product.title} | {self.customer.id} ↔ {self.admin.id}"
@@ -21,6 +21,8 @@ class ChatRoom(models.Model):
         return last_msg and last_msg.sender.type in [UserType.admin.value, UserType.superuser.value]
     
     class Meta:
+        verbose_name = "اتاق گفتگو"
+        verbose_name_plural = "اتاق‌های گفتگو"
         ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(fields=['product', 'customer'], name='unique_product_customer_chat')
@@ -28,10 +30,14 @@ class ChatRoom(models.Model):
 
 
 class Message(models.Model):
-    chat_room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='chat_messages')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    chat_room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='chat_messages', verbose_name="اتاق گفتگو")
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="فرستنده")
+    text = models.TextField(verbose_name="متن پیام")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="زمان ارسال")
 
     def __str__(self):
         return f"{self.sender.id}: {self.text[:30]}"
+
+    class Meta:
+        verbose_name = "پیام"
+        verbose_name_plural = "پیام‌ها"

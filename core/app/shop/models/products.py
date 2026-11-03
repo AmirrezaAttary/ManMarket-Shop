@@ -7,25 +7,25 @@ class ProductStatusType(models.IntegerChoices):
 
 
 class ProductModel(models.Model):
-    category = models.ForeignKey("ProductCategoryModel", on_delete=models.SET_NULL, null=True)
-    brand = models.ForeignKey("Brand", on_delete=models.SET_NULL, null=True)
-    title = models.CharField(max_length=255)
-    meta_title = models.CharField(max_length=255,null=True,blank=True)
-    brief_title = models.CharField(max_length=255, blank=True)
-    slug = models.SlugField(allow_unicode=True, unique=True, max_length=200)
-    image = models.ImageField(default="default/product-image.png",upload_to="product/img/")
-    description = models.TextField()
-    brief_description = models.TextField(null=True,blank=True)
-    product_view = models.IntegerField(default=0)
-    sales_count = models.PositiveIntegerField(default=0)
-    warranty = models.CharField(max_length=100, null=True, blank=True)
+    category = models.ForeignKey("ProductCategoryModel", on_delete=models.SET_NULL, null=True, verbose_name="دسته‌بندی")
+    brand = models.ForeignKey("Brand", on_delete=models.SET_NULL, null=True, verbose_name="برند")
+    title = models.CharField(max_length=255, verbose_name="عنوان محصول")
+    meta_title = models.CharField(max_length=255,null=True,blank=True, verbose_name="عنوان سئو")
+    brief_title = models.CharField(max_length=255, blank=True, verbose_name="عنوان کوتاه")
+    slug = models.SlugField(allow_unicode=True, unique=True, max_length=200, verbose_name="نامک (slug)")
+    image = models.ImageField(default="default/product-image.png",upload_to="product/img/", verbose_name="تصویر اصلی")
+    description = models.TextField(verbose_name="توضیحات")
+    brief_description = models.TextField(null=True,blank=True, verbose_name="توضیحات کوتاه")
+    product_view = models.IntegerField(default=0, verbose_name="تعداد بازدید")
+    sales_count = models.PositiveIntegerField(default=0, verbose_name="تعداد فروش")
+    warranty = models.CharField(max_length=100, null=True, blank=True, verbose_name="گارانتی")
     
-    status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.publish.value)
-    meta_description = models.CharField(max_length=255,null=True,blank=True)
-    avg_rate = models.FloatField(default=0.0)
+    status = models.IntegerField(choices=ProductStatusType.choices,default=ProductStatusType.publish.value, verbose_name="وضعیت نمایش")
+    meta_description = models.CharField(max_length=255,null=True,blank=True, verbose_name="توضیحات سئو")
+    avg_rate = models.FloatField(default=0.0, verbose_name="میانگین امتیاز")
     
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
     
     def get_min_price(self):
         prices = self.color_inventories.filter(price__gt=0, stock__gt=0).order_by('price').values_list('price', flat=True)
@@ -40,6 +40,8 @@ class ProductModel(models.Model):
         return min(discounted_prices) if discounted_prices else None
     
     class Meta:
+        verbose_name = "محصول"
+        verbose_name_plural = "محصولات"
         ordering = ["-created_date"]
         
     def __str__(self):

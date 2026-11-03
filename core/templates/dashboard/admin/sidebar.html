@@ -88,6 +88,29 @@
       <a href="{% url 'dashboard:admin:contact-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' contact-list contact-detail contact-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' contact-list contact-detail contact-delete ' %} aria-current="page"{% endif %}>
         <svg class="i" viewBox="0 0 24 24"><use href="#i-mail"/></svg><span>ارتباط با ما</span>
       </a>
+      <p class="nav-group-title">دیجی‌کالا و بازارها</p>
+      <a href="{% url 'dashboard:admin:bwdk-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' bwdk-list bwdk-detail ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' bwdk-list bwdk-detail ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-bag"/></svg><span>خرید با دیجی‌کالا (BWDK)</span>
+      </a>
+      <a href="{% url 'dashboard:admin:markets' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' markets ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' markets ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-external"/></svg><span>دیجی‌فای و ترب</span>
+      </a>
+      <p class="nav-group-title">ظاهر و محتوای سایت</p>
+      <a href="{% url 'dashboard:admin:mega-menu-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' mega-menu-list mega-menu-edit mega-menu-delete mega-menu-add ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' mega-menu-list mega-menu-edit mega-menu-delete mega-menu-add ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-grid"/></svg><span>مگا منو</span>
+      </a>
+      <a href="{% url 'dashboard:admin:banner-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' banner-list banner-edit banner-delete banner-add ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' banner-list banner-edit banner-delete banner-add ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-photo"/></svg><span>بنرها</span>
+      </a>
+      <a href="{% url 'dashboard:admin:faq-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' faq-list faq-edit faq-delete faq-add ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' faq-list faq-edit faq-delete faq-add ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-clipboard"/></svg><span>سوالات متداول</span>
+      </a>
+      <a href="{% url 'dashboard:admin:product-question-list' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' product-question-list product-question-edit product-question-delete ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' product-question-list product-question-edit product-question-delete ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-chat"/></svg><span>پرسش و پاسخ محصولات</span>
+      </a>
+      <a href="{% url 'dashboard:admin:site-setting' %}" class="nav-link{% if ' '|add:view_name|add:' ' in ' site-setting ' %} is-active{% endif %}"{% if ' '|add:view_name|add:' ' in ' site-setting ' %} aria-current="page"{% endif %}>
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-cog"/></svg><span>تنظیمات سایت</span>
+      </a>
       <p class="nav-group-title">حساب کاربری</p>
       <a href="{% url 'dashboard:admin:profile-edit' %}" class="nav-link{% if view_name == 'profile-edit' %} is-active{% endif %}">
         <svg class="i" viewBox="0 0 24 24"><use href="#i-user"/></svg><span>پروفایل</span>

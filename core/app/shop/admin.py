@@ -9,7 +9,8 @@ from .models import (ProductModel,
                     ProductSpecification ,
                     Brand,
                     WishlistProductModel,
-                    MegaMenu
+                    MegaMenu,
+                    ProductQuestion,
                     )
 
 # ثبت رنگ‌ها به صورت مستقل
@@ -66,7 +67,7 @@ class ProductImageModelAdmin(admin.ModelAdmin):
         if obj.file:
             return format_html('<img src="{}" width="20" height="20" style="object-fit: cover; border-radius: 6px;" />', obj.file.url)
         return "-"
-    thumbnail_preview.short_description = "Preview"  # عنوان ستون
+    thumbnail_preview.short_description = "پیش‌نمایش"  # عنوان ستون
     
     
     
@@ -82,3 +83,28 @@ class MegaMenuAdmin(admin.ModelAdmin):
     search_fields = ("category__title", "brand__title")
     list_filter = ("category", "brand")
     list_per_page = 20
+
+
+@admin.register(ProductQuestion)
+class ProductQuestionAdmin(admin.ModelAdmin):
+    list_display = ("id", "product", "user", "short_question", "status", "created_date")
+    list_filter = ("status",)
+    search_fields = ("question", "answer", "product__title", "user__phone_number")
+    list_per_page = 20
+    autocomplete_fields = ("product",)
+    raw_id_fields = ("user",)
+    actions = ("approve_selected", "reject_selected")
+
+    @admin.display(description="پرسش")
+    def short_question(self, obj):
+        return (obj.question[:60] + "…") if len(obj.question) > 60 else obj.question
+
+    @admin.action(description="تایید پرسش‌های انتخاب‌شده")
+    def approve_selected(self, request, queryset):
+        updated = queryset.update(status=2)
+        self.message_user(request, f"{updated} پرسش تایید شد.")
+
+    @admin.action(description="رد پرسش‌های انتخاب‌شده")
+    def reject_selected(self, request, queryset):
+        updated = queryset.update(status=3)
+        self.message_user(request, f"{updated} پرسش رد شد.")

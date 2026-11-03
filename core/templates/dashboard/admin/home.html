@@ -21,6 +21,16 @@
   </div>
 </section>
 
+{% if bwdk_needs_review or questions_pending %}
+<section class="card border-amber-200 bg-amber-50 p-5">
+  <h2 class="mb-2 text-base font-bold text-slate-900">نیازمند توجه</h2>
+  <ul class="space-y-1 text-sm text-slate-700">
+    {% if bwdk_needs_review %}<li><a class="font-semibold text-brand-700" href="{% url 'dashboard:admin:bwdk-list' %}?needs_review=true">{{ bwdk_needs_review }} سفارش دیجی‌کالا</a> نیازمند بررسی دستی است.</li>{% endif %}
+    {% if questions_pending %}<li><a class="font-semibold text-brand-700" href="{% url 'dashboard:admin:product-question-list' %}?status=1">{{ questions_pending }} پرسش محصول</a> منتظر تایید است.</li>{% endif %}
+  </ul>
+</section>
+{% endif %}
+
 <section>
   <h2 class="mb-3 text-base font-bold text-slate-900">دسترسی سریع</h2>
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -60,6 +70,30 @@
     <a href="{% url 'dashboard:admin:story-list' %}" class="card group flex items-center gap-4 p-5 transition hover:-translate-y-0.5 hover:border-brand-300">
       <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white"><svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-photo"/></svg></span>
       <span class="min-w-0"><span class="block font-bold text-slate-900">استوری‌ها</span><span class="block text-sm text-slate-500">مدیریت استوری‌های صفحه‌ی اصلی</span></span>
+    </a>
+    <a href="{% url 'dashboard:admin:bwdk-list' %}" class="card group flex items-center gap-4 p-5 transition hover:-translate-y-0.5 hover:border-brand-300">
+      <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white"><svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-bag"/></svg></span>
+      <span class="min-w-0"><span class="block font-bold text-slate-900">خرید با دیجی‌کالا</span><span class="block text-sm text-slate-500">سفارش‌ها، Verify و بازگشت وجه BWDK</span></span>
+    </a>
+    <a href="{% url 'dashboard:admin:markets' %}" class="card group flex items-center gap-4 p-5 transition hover:-translate-y-0.5 hover:border-brand-300">
+      <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white"><svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-external"/></svg></span>
+      <span class="min-w-0"><span class="block font-bold text-slate-900">دیجی‌فای و ترب</span><span class="block text-sm text-slate-500">آدرس فیدها و وضعیت اتصال</span></span>
+    </a>
+    <a href="{% url 'dashboard:admin:mega-menu-list' %}" class="card group flex items-center gap-4 p-5 transition hover:-translate-y-0.5 hover:border-brand-300">
+      <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white"><svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-grid"/></svg></span>
+      <span class="min-w-0"><span class="block font-bold text-slate-900">مگا منو</span><span class="block text-sm text-slate-500">برندهای هر دسته در منوی سایت</span></span>
+    </a>
+    <a href="{% url 'dashboard:admin:banner-list' %}" class="card group flex items-center gap-4 p-5 transition hover:-translate-y-0.5 hover:border-brand-300">
+      <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white"><svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-photo"/></svg></span>
+      <span class="min-w-0"><span class="block font-bold text-slate-900">بنرها</span><span class="block text-sm text-slate-500">اسلایدر و بنرهای تبلیغاتی</span></span>
+    </a>
+    <a href="{% url 'dashboard:admin:faq-list' %}" class="card group flex items-center gap-4 p-5 transition hover:-translate-y-0.5 hover:border-brand-300">
+      <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white"><svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-clipboard"/></svg></span>
+      <span class="min-w-0"><span class="block font-bold text-slate-900">سوالات متداول</span><span class="block text-sm text-slate-500">مدیریت پرسش و پاسخ‌های عمومی</span></span>
+    </a>
+    <a href="{% url 'dashboard:admin:site-setting' %}" class="card group flex items-center gap-4 p-5 transition hover:-translate-y-0.5 hover:border-brand-300">
+      <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white"><svg class="i h-6 w-6" viewBox="0 0 24 24"><use href="#i-cog"/></svg></span>
+      <span class="min-w-0"><span class="block font-bold text-slate-900">تنظیمات سایت</span><span class="block text-sm text-slate-500">تماس، شبکه‌های اجتماعی، اعلان</span></span>
     </a>
   </div>
 </section>

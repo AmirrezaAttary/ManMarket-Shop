@@ -4,6 +4,7 @@ from .. import views
  
 urlpatterns = [
     path("users/list/",views.AdminUsersListView.as_view(),name="users-list"),
+    path("users/export-phones/",views.AdminCustomersPhonesExportView.as_view(),name="users-export-phones"),
     path("users/<int:pk>/detail/",views.AdminUsersDetailView.as_view(),name="users-detail"),
     path("users/<int:pk>/wallet/detail/",views.AdminUsersDetailWalletView.as_view(),name="users-wallet"),
     path("users/<int:pk>/wishlist/detail/",views.AdminUsersDetailWishlistView.as_view(),name="users-wishlist"),

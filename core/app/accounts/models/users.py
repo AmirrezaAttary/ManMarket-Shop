@@ -12,9 +12,9 @@ from ...accounts.validators import validate_iranian_cellphone_number
 
 
 class UserType(models.IntegerChoices):
-    customer = 1, _("customer")
-    admin = 2, _("admin")
-    superuser = 3, _("superuser")
+    customer = 1, "مشتری"
+    admin = 2, "ادمین"
+    superuser = 3, "سوپر یوزر"
 
 
 class UserManager(BaseUserManager):
@@ -50,18 +50,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=12,
         unique=True,
         validators=[validate_iranian_cellphone_number],
-        default='09120000000'
+        default='09120000000', verbose_name="شماره موبایل"
     )
     
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    is_verified = models.BooleanField(default=False)
-    code_melli = models.CharField(max_length=10,unique=True,null=True,blank=True)
+    is_staff = models.BooleanField(default=False, verbose_name="دسترسی به ادمین جنگو")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
+    is_verified = models.BooleanField(default=False, verbose_name="تایید شده")
+    code_melli = models.CharField(max_length=10,unique=True,null=True,blank=True, verbose_name="کد ملی")
     type = models.IntegerField(
-        choices=UserType.choices, default=UserType.customer.value)
+        choices=UserType.choices, default=UserType.customer.value, verbose_name="نوع کاربر")
 
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
 
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = []
@@ -76,17 +76,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"User #{self.pk}"
 
     class Meta:
+        verbose_name = "کاربر"
+        verbose_name_plural = "کاربران"
         ordering = ['-phone_number']
 
 class Profile(models.Model):
-    user = models.OneToOneField('User', on_delete=models.CASCADE,related_name="user_profile")
-    first_name = models.CharField(max_length=255,null=True,blank=True)
-    last_name = models.CharField(max_length=255,null=True,blank=True)
+    user = models.OneToOneField('User', on_delete=models.CASCADE,related_name="user_profile", verbose_name="کاربر")
+    first_name = models.CharField(max_length=255,null=True,blank=True, verbose_name="نام")
+    last_name = models.CharField(max_length=255,null=True,blank=True, verbose_name="نام خانوادگی")
 
-    image = models.ImageField(upload_to='profile/',default='default/default-profile.webp')
-    created_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
-    birth_date = models.CharField(max_length=10, null=True, blank=True, help_text="تاریخ تولد را وارد کنید (مثلاً 1375-05-10)")
+    image = models.ImageField(upload_to='profile/',default='default/default-profile.webp', verbose_name="تصویر پروفایل")
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
+    birth_date = models.CharField(max_length=10, null=True, blank=True, help_text="تاریخ تولد را وارد کنید (مثلاً 1375-05-10)", verbose_name="تاریخ تولد")
 
     # def age(self):
     #     """محاسبه‌ی سن کاربر بر اساس birth_date"""
@@ -100,6 +102,10 @@ class Profile(models.Model):
     def get_fullname(self):
         name = " ".join(filter(None, [self.first_name, self.last_name]))
         return name if name else "کاربر جدید"
+
+    class Meta:
+        verbose_name = "پروفایل"
+        verbose_name_plural = "پروفایل‌ها"
     
     
     

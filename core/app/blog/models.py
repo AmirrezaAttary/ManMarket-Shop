@@ -10,19 +10,21 @@ class BlogStatusType(models.IntegerChoices):
     
 
 class Post(models.Model):
-    image = models.ImageField(upload_to='blog/images',default='blog/images/default.jpg')
-    title = models.CharField(max_length=200)
-    content = models.TextField()
+    image = models.ImageField(upload_to='blog/images',default='blog/images/default.jpg', verbose_name="تصویر شاخص")
+    title = models.CharField(max_length=200, verbose_name="عنوان مقاله")
+    content = models.TextField(verbose_name="محتوا")
     
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    category = models.ManyToManyField("Category")
-    status = models.IntegerField(choices=BlogStatusType.choices,default=BlogStatusType.publish.value)
-    slug = models.SlugField(allow_unicode=True,unique=True,max_length=200)
-    tags = TaggableManager()
-    meta_description = models.CharField(max_length=255,null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
+    category = models.ManyToManyField("Category", verbose_name="دسته‌بندی‌ها")
+    status = models.IntegerField(choices=BlogStatusType.choices,default=BlogStatusType.publish.value, verbose_name="وضعیت")
+    slug = models.SlugField(allow_unicode=True,unique=True,max_length=200, verbose_name="نامک (slug)")
+    tags = TaggableManager(verbose_name="برچسب‌ها")
+    meta_description = models.CharField(max_length=255,null=True,blank=True, verbose_name="توضیحات سئو")
     
     class Meta:
+        verbose_name = "مقاله"
+        verbose_name_plural = "مقالات"
         ordering = ['-created_at']
         
     def __str__(self):
@@ -45,16 +47,20 @@ class Post(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(allow_unicode=True, blank=True, null=True, max_length=200)
+    name = models.CharField(max_length=255, verbose_name="نام دسته‌بندی")
+    slug = models.SlugField(allow_unicode=True, blank=True, null=True, max_length=200, verbose_name="نامک (slug)")
     
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "دسته‌بندی بلاگ"
+        verbose_name_plural = "دسته‌بندی‌های بلاگ"
+
 
 class PostProduct(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_products')
-    product = models.ForeignKey('shop.ProductModel', on_delete=models.CASCADE, related_name='post_products')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_products', verbose_name="مقاله")
+    product = models.ForeignKey('shop.ProductModel', on_delete=models.CASCADE, related_name='post_products', verbose_name="محصول")
     
     def __str__(self):
         return f"{self.post.title} - {self.product.title}"

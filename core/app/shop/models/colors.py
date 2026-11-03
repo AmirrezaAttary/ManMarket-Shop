@@ -7,13 +7,15 @@ from django.dispatch import receiver
 
 
 class Color(models.Model):
-    title = models.CharField(max_length=100, unique=True)
-    hex_color = models.CharField(max_length=20, default="#000000")
+    title = models.CharField(max_length=100, unique=True, verbose_name="نام رنگ")
+    hex_color = models.CharField(max_length=20, default="#000000", verbose_name="کد رنگ (HEX)")
 
     def __str__(self):
         return self.title
 
     class Meta:
+        verbose_name = "رنگ"
+        verbose_name_plural = "رنگ‌ها"
         ordering = ["-id"]
 
 
@@ -30,25 +32,25 @@ class ProductColorInventory(models.Model):
     product = models.ForeignKey(
         "shop.ProductModel",
         on_delete=models.CASCADE,
-        related_name="color_inventories"
+        related_name="color_inventories", verbose_name="محصول"
     )
     color = models.ForeignKey(
         "shop.Color",
         on_delete=models.CASCADE,
-        related_name="product_inventories"
+        related_name="product_inventories", verbose_name="رنگ"
     )
-    stock = models.PositiveIntegerField(default=0)
+    stock = models.PositiveIntegerField(default=0, verbose_name="موجودی")
 
     discount_percent = models.IntegerField(
         default=0,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        validators=[MinValueValidator(0), MaxValueValidator(100)], verbose_name="درصد تخفیف"
     )
 
-    price = models.DecimalField(default=0, max_digits=10, decimal_places=0)
-    hex_color = models.CharField(max_length=20, default="#000000")
-    updated_date = models.DateTimeField(auto_now=True)
+    price = models.DecimalField(default=0, max_digits=10, decimal_places=0, verbose_name="قیمت (تومان)")
+    hex_color = models.CharField(max_length=20, default="#000000", verbose_name="کد رنگ (HEX)")
+    updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین بروزرسانی")
 
-    final_price = models.DecimalField(default=0, max_digits=10, decimal_places=0)
+    final_price = models.DecimalField(default=0, max_digits=10, decimal_places=0, verbose_name="قیمت نهایی (تومان)")
 
     objects = InventoryQuerySet.as_manager()
 
@@ -64,6 +66,8 @@ class ProductColorInventory(models.Model):
         return self.discount_percent > 0
 
     class Meta:
+        verbose_name = "قیمت و موجودی رنگ"
+        verbose_name_plural = "قیمت و موجودی رنگ‌ها"
         unique_together = ("product", "color")
 
     def __str__(self):

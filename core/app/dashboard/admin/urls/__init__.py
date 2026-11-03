@@ -23,4 +23,7 @@ urlpatterns = [
     path("",include("app.dashboard.admin.urls.story")),
     path("",include("app.dashboard.admin.urls.users")),
     path("",include("app.dashboard.admin.urls.person_pay")),
+    path("",include("app.dashboard.admin.urls.site_content")),
+    path("",include("app.dashboard.admin.urls.bwdk")),
+    path("",include("app.dashboard.admin.urls.markets")),
 ]

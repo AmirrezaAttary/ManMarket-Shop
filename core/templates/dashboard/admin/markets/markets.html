@@ -1,0 +1,98 @@
+{% extends 'dashboard/admin/layout.html' %}
+{% load static humanize %}
+
+{% block title %}دیجی‌فای و ترب{% endblock title %}
+{% block page_title %}دیجی‌فای، ترب و خرید با دیجی‌کالا{% endblock page_title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header"><h5>فید کاتالوگ دیجی‌فای (بازار)</h5></div>
+  <div class="card-body">
+    <p class="mb-5 text-sm text-slate-500">این آدرس‌ها را به تیم فنی دیجی‌فای بدهید تا محصولات سایت را به‌صورت دوره‌ای بخوانند.</p>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">آدرس لیست محصولات:</dt>
+      <dl class="detail-value md:!col-span-9" dir="ltr"><code>{{ digify.list_url }}</code> <button type="button" class="btn btn-ghost-secondary btn-xs" data-copy="{{ digify.list_url }}">کپی</button></dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">آدرس جزئیات محصول:</dt>
+      <dl class="detail-value md:!col-span-9" dir="ltr"><code>{{ digify.detail_url }}</code> <button type="button" class="btn btn-ghost-secondary btn-xs" data-copy="{{ digify.detail_url }}">کپی</button></dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">محصولات داخل فید:</dt><dl class="detail-value">{{ digify.feed_total|intcomma }}</dl>
+      <dt class="detail-label">منتشرشده / موجود:</dt><dl class="detail-value">{{ digify.published|intcomma }} / {{ digify.in_stock|intcomma }}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">دسترسی به فید:</dt>
+      <dl class="detail-value">{% if digify.protected %}<span class="badge badge-success">نیازمند کلید API</span>{% else %}<span class="badge badge-warning">عمومی (بدون کلید)</span>{% endif %}</dl>
+      <dt class="detail-label">IP های مجاز:</dt>
+      <dl class="detail-value" dir="ltr">{% if digify.allowed_ips %}{{ digify.allowed_ips|join:", " }}{% else %}همه{% endif %}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">آدرس سایت (source_url):</dt><dl class="detail-value" dir="ltr">{{ digify.site_url }}</dl>
+      <dt class="detail-label">آدرس عمومی تصاویر:</dt><dl class="detail-value" dir="ltr">{{ digify.media_url }}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4">
+      <dt class="detail-label">تعداد در هر صفحه:</dt><dl class="detail-value">پیش‌فرض {{ digify.default_limit }} / حداکثر {{ digify.max_limit }}</dl>
+    </div>
+    <p class="mt-5 text-xs text-slate-400">کلید API و IP ها از فایل <code>.env</code> (DIGIFY_FEED_API_KEY / DIGIFY_FEED_ALLOWED_IPS) تنظیم می‌شوند.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h5>ترب (Torob API v3)</h5></div>
+  <div class="card-body">
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">آدرس API برای ترب:</dt>
+      <dl class="detail-value md:!col-span-9" dir="ltr"><code>{{ torob.url }}</code> <button type="button" class="btn btn-ghost-secondary btn-xs" data-copy="{{ torob.url }}">کپی</button></dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4">
+      <dt class="detail-label">دامنه‌های مجاز (aud):</dt><dl class="detail-value" dir="ltr">{{ torob.audiences|join:", "|default:"بر اساس Host درخواست" }}</dl>
+      <dt class="detail-label">آدرس سایت:</dt><dl class="detail-value" dir="ltr">{{ torob.site_url }}</dl>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="flex justify-between items-center gap-3">
+      <h5>خرید با دیجی‌کالا (BWDK)</h5>
+      <a class="btn btn-primary btn-sm" href="{% url 'dashboard:admin:bwdk-list' %}">مشاهده سفارش‌ها</a>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">محیط:</dt>
+      <dl class="detail-value">{% if bwdk.env == 'production' %}<span class="badge badge-success">واقعی (production)</span>{% else %}<span class="badge badge-warning">آزمایشی ({{ bwdk.env }})</span>{% endif %}</dl>
+      <dt class="detail-label">کلید API:</dt>
+      <dl class="detail-value">{% if bwdk.key_set %}<span class="badge badge-success">تنظیم شده</span>{% else %}<span class="badge badge-danger">تنظیم نشده</span>{% endif %}</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">آدرس صفحه‌ی بازگشت:</dt><dl class="detail-value" dir="ltr">{{ bwdk.callback_base }}/bwdk/callback/&lt;id&gt;/</dl>
+      <dt class="detail-label">مدت رزرو موجودی:</dt><dl class="detail-value">{{ bwdk.reservation_minutes }} دقیقه</dl>
+    </div>
+    <div class="grid grid-cols-12 gap-x-4 mb-4">
+      <dt class="detail-label">سفارش‌های باز:</dt><dl class="detail-value">{{ bwdk.stats.open|intcomma }}</dl>
+      <dt class="detail-label">نیازمند بررسی:</dt><dl class="detail-value">{{ bwdk.stats.needs_review|intcomma }}</dl>
+    </div>
+    <form method="post" action="{% url 'dashboard:admin:bwdk-sync' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'dashboard:admin:markets' %}">
+      <button type="submit" class="btn btn-secondary btn-sm">همگام‌سازی سفارش‌های باز با دیجی‌کالا</button>
+    </form>
+    <p class="mt-4 text-xs text-slate-400">کلیدها هرگز در این صفحه نمایش داده نمی‌شوند؛ فقط وضعیت تنظیم‌بودنشان.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(btn.getAttribute('data-copy')).then(function () {
+        var old = btn.textContent; btn.textContent = 'کپی شد ✓';
+        setTimeout(function () { btn.textContent = old; }, 1500);
+      });
+    });
+  });
+</script>
+{% endblock %}
