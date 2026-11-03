@@ -1,3 +1,9 @@
+import hashlib
+import hmac
+import logging
+from uuid import UUID
+
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -16,6 +22,9 @@ from .serializers import (
     CreateCheckoutSerializer,
     RefundSerializer,
 )
+
+
+log = logging.getLogger("bwdk")
 
 
 def _is_admin(user):
@@ -121,3 +130,73 @@ class BWDKRefundOrderAPIView(APIView):
         except ValueError as exc:
             return Response({"detail": str(exc)}, status=400)
         return Response({"status": bw.status, "status_display": bw.status_display})
+
+
+# Headers in which a webhook secret / signature may arrive (Django META names).
+_SIGNATURE_HEADERS = (
+    "HTTP_X_SIGNATURE",
+    "HTTP_X_WEBHOOK_SIGNATURE",
+    "HTTP_X_WEBHOOK_SECRET",
+    "HTTP_X_HUB_SIGNATURE_256",
+    "HTTP_AUTHORIZATION",
+)
+
+
+def _webhook_signature_ok(request):
+    """True when the request carries our secret, either as an HMAC-SHA256 of the raw body or as the
+    plain secret (optionally prefixed with sha256= / Bearer / Api-Key). No secret configured => reject."""
+    secret = getattr(settings, "BWDK_WEBHOOK_SECRET", "") or ""
+    if not secret:
+        return False
+    extra = getattr(settings, "BWDK_WEBHOOK_SIGNATURE_HEADER", "")
+    headers = ((extra,) if extra else ()) + _SIGNATURE_HEADERS
+    expected = hmac.new(secret.encode(), request.body, hashlib.sha256).hexdigest()
+    for name in headers:
+        value = (request.META.get(name) or "").strip()
+        if not value:
+            continue
+        for prefix in ("sha256=", "Bearer ", "Api-Key ", "bearer ", "api-key "):
+            if value.startswith(prefix):
+                value = value[len(prefix):].strip()
+        if hmac.compare_digest(value.lower(), expected) or hmac.compare_digest(value, secret):
+            return True
+    return False
+
+
+class BWDKWebhookAPIView(APIView):
+    """POST /bwdk/v1/webhook/ - Digikala notifies us about an order.
+
+    The request must carry the shared Webhook Secret. The body is still NOT trusted: we only pick an
+    id out of it and let Get Order decide (same path as the callback page), so it is idempotent.
+    """
+
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "bwdk-complete"
+
+    def post(self, request):
+        if not _webhook_signature_ok(request):
+            log.warning("BWDK webhook rejected: bad or missing secret")
+            return Response({"detail": "invalid signature"}, status=403)
+
+        data = request.data if isinstance(request.data, dict) else {}
+        bw = None
+        mid = data.get("merchant_unique_id")
+        if mid:
+            bw = BWDKOrder.objects.filter(merchant_unique_id=str(mid)).first()
+        if bw is None:
+            raw = data.get("order_uuid") or data.get("uuid") or data.get("id")
+            try:
+                bw = BWDKOrder.objects.filter(order_uuid=UUID(str(raw))).first()
+            except (ValueError, TypeError, AttributeError):
+                bw = None
+
+        if bw is None:
+            log.warning("BWDK webhook: order not found, payload=%s", str(data)[:300])
+        else:
+            try:
+                BWDKService().reconcile(bw.pk)
+            except Exception:
+                log.exception("BWDK webhook reconcile failed (bwdk #%s)", bw.pk)
+        return Response({"ok": True})  # 200 so Digikala does not retry forever

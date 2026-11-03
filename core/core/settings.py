@@ -271,6 +271,11 @@ BWDK_DEFAULT_PREPARATION_TIME = config("BWDK_DEFAULT_PREPARATION_TIME", cast=int
 BWDK_DEFAULT_ITEM_WEIGHT = config("BWDK_DEFAULT_ITEM_WEIGHT", cast=int, default=0)
 BWDK_DEFAULT_TOTAL_WEIGHT = config("BWDK_DEFAULT_TOTAL_WEIGHT", cast=int, default=0)
 
+# Shared secret for the Digikala BWDK webhook (the value entered in the Digikala form)
+BWDK_WEBHOOK_SECRET = config("BWDK_WEBHOOK_SECRET", default="")
+# optional: exact header name Digikala sends the signature in, e.g. HTTP_X_SIGNATURE
+BWDK_WEBHOOK_SIGNATURE_HEADER = config("BWDK_WEBHOOK_SIGNATURE_HEADER", default="")
+
 # refah client
 REFAH_USERNAME = "70072831"
 REFAH_PASSWORD = "PF%cv-GI"
