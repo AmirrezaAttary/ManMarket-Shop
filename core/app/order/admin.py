@@ -37,13 +37,20 @@ class CouponModelAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "code",
+        "discount_type",
         "discount_percent",
+        "max_discount_amount",
+        "discount_amount",
+        "min_order_amount",
+        "is_active",
         "max_limit_usage",
         "used_by_count",
         "expiration_date",
         "created_date"
     )
-    
+    list_filter = ("discount_type", "is_active")
+    search_fields = ("code",)
+
     def used_by_count(self, obj):
         return obj.used_by.all().count()
 

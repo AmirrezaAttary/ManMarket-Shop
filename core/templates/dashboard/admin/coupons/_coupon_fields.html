@@ -1,0 +1,80 @@
+{{ form.non_field_errors }}
+
+<div class="col-span-12 md:col-span-6 mb-4">
+    <label>کد تخفیف</label>
+    {{ form.code }}
+    {% for e in form.code.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+<div class="col-span-12 md:col-span-6 mb-4">
+    <label>نوع تخفیف</label>
+    {{ form.discount_type }}
+    {% for e in form.discount_type.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+
+<div class="col-span-12 md:col-span-6 mb-4" data-coupon-field="percent">
+    <label>درصد تخفیف</label>
+    {{ form.discount_percent }}
+    {% for e in form.discount_percent.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+<div class="col-span-12 md:col-span-6 mb-4" data-coupon-field="cap">
+    <label>سقف تخفیف (تومان)</label>
+    {{ form.max_discount_amount }}
+    <p class="text-xs text-slate-500 mt-1">مثلاً ۵۰۰۰۰۰ یعنی تخفیف هیچ‌وقت بیشتر از ۵۰۰ هزار تومان نمی‌شود.</p>
+    {% for e in form.max_discount_amount.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+<div class="col-span-12 md:col-span-6 mb-4" data-coupon-field="fixed">
+    <label>مبلغ تخفیف (تومان)</label>
+    {{ form.discount_amount }}
+    <p class="text-xs text-slate-500 mt-1">این مبلغ مستقیم از جمع سفارش کم می‌شود.</p>
+    {% for e in form.discount_amount.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+
+<div class="col-span-12 md:col-span-6 mb-4">
+    <label>حداقل مبلغ سفارش (تومان)</label>
+    {{ form.min_order_amount }}
+    <p class="text-xs text-slate-500 mt-1">۰ یعنی بدون محدودیت.</p>
+    {% for e in form.min_order_amount.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+<div class="col-span-12 md:col-span-6 mb-4">
+    <label>محدودیت کل دفعات استفاده</label>
+    {{ form.max_limit_usage }}
+    {% for e in form.max_limit_usage.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+<div class="col-span-12 md:col-span-6 mb-4">
+    <label>حداکثر استفاده‌ی هر کاربر</label>
+    {{ form.per_user_limit }}
+    <p class="text-xs text-slate-500 mt-1">۰ یعنی هر کاربر هر چند بار بخواهد می‌تواند استفاده کند.</p>
+    {% for e in form.per_user_limit.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+<div class="col-span-12 md:col-span-6 mb-4">
+    <label>تاریخ انقضا</label>
+    {{ form.expiration_date }}
+    <p class="text-xs text-slate-500 mt-1">اگر خالی بماند، کد تاریخ انقضا ندارد.</p>
+    {% for e in form.expiration_date.errors %}<p class="text-sm text-red-600 mt-1">{{ e }}</p>{% endfor %}
+</div>
+<div class="col-span-12 mb-4">
+    <label class="inline-flex items-center gap-2">
+        {{ form.is_active }}
+        <span>فعال (با غیرفعال کردن، کد بدون حذف از دسترس خارج می‌شود)</span>
+    </label>
+</div>
+
+<script>
+(function () {
+    var select = document.getElementById("{{ form.discount_type.id_for_label }}");
+    if (!select) return;
+    var visible = {
+        percent: ["percent"],
+        percent_capped: ["percent", "cap"],
+        fixed: ["fixed"]
+    };
+    function sync() {
+        var show = visible[select.value] || visible.percent;
+        document.querySelectorAll("[data-coupon-field]").forEach(function (el) {
+            el.style.display = show.indexOf(el.getAttribute("data-coupon-field")) === -1 ? "none" : "";
+        });
+    }
+    select.addEventListener("change", sync);
+    sync();
+})();
+</script>

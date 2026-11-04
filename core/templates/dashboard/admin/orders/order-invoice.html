@@ -56,8 +56,9 @@
       <dl class="mt-6 ms-auto w-full max-w-sm space-y-2 text-sm">
         <div class="flex justify-between gap-4"><dt class="text-slate-500">مبلغ نهایی</dt><dd class="formatted-price font-semibold text-slate-900">{{ object.total_price|intcomma }}</dd></div>
         {% if object.coupon %}
-        <div class="flex justify-between gap-4"><dt class="text-slate-500">تخفیف</dt><dd>{{ object.coupon.discount_percent }}٪</dd></div>
-        <div class="flex justify-between gap-4 border-t border-slate-100 pt-2"><dt class="font-semibold text-slate-900">مبلغ با اعمال تخفیف</dt><dd class="formatted-price font-bold text-brand-600">{{ object.get_price|intcomma }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">مبلغ قبل از تخفیف</dt><dd class="formatted-price">{{ object.get_price_before_discount|intcomma }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">تخفیف ({{ object.coupon.code }})</dt><dd class="formatted-price">{{ object.get_discount_amount|intcomma }}</dd></div>
+        <div class="flex justify-between gap-4 border-t border-slate-100 pt-2"><dt class="font-semibold text-slate-900">مبلغ پس از تخفیف</dt><dd class="formatted-price font-bold text-brand-600">{{ object.get_price|intcomma }}</dd></div>
         {% else %}
         <div class="flex justify-between gap-4"><dt class="text-slate-500">تخفیف</dt><dd>۰</dd></div>
         {% endif %}

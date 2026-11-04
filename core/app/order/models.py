@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from decimal import Decimal
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from .coupon_logic import compute_discount
 from ..accounts.validators import validate_iranian_cellphone_number
 
 class TrackingType(models.IntegerChoices):
@@ -36,12 +39,24 @@ class UserAddressModel(models.Model):
         verbose_name = "نشانی کاربر"
         verbose_name_plural = "نشانی‌های کاربران"
 
+class CouponType(models.TextChoices):
+    percent = "percent", "درصدی"
+    percent_capped = "percent_capped", "درصدی با سقف"
+    fixed = "fixed", "مبلغ ثابت"
+
+
 class CouponModel(models.Model):
     code = models.CharField(max_length=100, verbose_name="کد تخفیف")
-    discount_percent = models.IntegerField(default=0,validators = [MinValueValidator(0),MaxValueValidator(100)], verbose_name="درصد تخفیف")
+    discount_type = models.CharField(max_length=20, choices=CouponType.choices, default=CouponType.percent.value, verbose_name="نوع تخفیف")
+    discount_percent = models.IntegerField(default=0, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)], verbose_name="درصد تخفیف")
+    max_discount_amount = models.PositiveIntegerField(null=True, blank=True, verbose_name="سقف تخفیف (تومان)")
+    discount_amount = models.PositiveIntegerField(default=0, blank=True, verbose_name="مبلغ تخفیف ثابت (تومان)")
+    min_order_amount = models.PositiveIntegerField(default=0, blank=True, verbose_name="حداقل مبلغ سفارش (تومان)")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
     max_limit_usage = models.PositiveIntegerField(default=10, verbose_name="حداکثر دفعات استفاده")
+    per_user_limit = models.PositiveIntegerField(default=1, verbose_name="حداکثر استفاده‌ی هر کاربر (۰ = نامحدود)")
     used_by = models.ManyToManyField('accounts.User',related_name = "coupon_users",blank=True, verbose_name="استفاده‌شده توسط")
-    
+
     expiration_date = models.DateTimeField(null=True,blank=True, verbose_name="تاریخ انقضا")
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated_date = models.DateTimeField(auto_now=True, verbose_name="آخرین ویرایش")
@@ -52,6 +67,57 @@ class CouponModel(models.Model):
     class Meta:
         verbose_name = "کد تخفیف"
         verbose_name_plural = "کدهای تخفیف"
+
+    # ---------- وضعیت ----------
+    @property
+    def used_count(self):
+        """تعداد سفارش‌هایی که با این کد ثبت شده‌اند (سفارش‌های لغو/ناموفق حساب نمی‌شوند)."""
+        return self.ordermodel_set.exclude(status=OrderStatusType.failed.value).count()
+
+    @property
+    def is_expired(self):
+        return bool(self.expiration_date and self.expiration_date < timezone.now())
+
+    def get_summary(self):
+        """متن کوتاه برای نمایش در لیست‌ها."""
+        if self.discount_type == CouponType.fixed.value:
+            return f"{self.discount_amount:,} تومان"
+        if self.discount_type == CouponType.percent_capped.value and self.max_discount_amount:
+            return f"{self.discount_percent}٪ تا سقف {self.max_discount_amount:,} تومان"
+        return f"{self.discount_percent}٪"
+
+    # ---------- محاسبه و اعتبارسنجی ----------
+    def calculate_discount(self, subtotal):
+        return compute_discount(
+            self.discount_type,
+            subtotal,
+            percent=self.discount_percent,
+            max_discount=self.max_discount_amount,
+            fixed=self.discount_amount,
+        )
+
+    def get_discount_for(self, user, subtotal):
+        """
+        مبلغ تخفیف را برای این کاربر و جمع سفارش برمی‌گرداند.
+        اگر کد قابل استفاده نباشد، ValidationError با پیام فارسی می‌دهد.
+        """
+        if not self.is_active:
+            raise ValidationError("این کد تخفیف غیرفعال است.")
+        if self.is_expired:
+            raise ValidationError("مهلت استفاده از این کد تخفیف به پایان رسیده است.")
+        if self.min_order_amount and int(subtotal) < self.min_order_amount:
+            raise ValidationError(f"این کد برای سفارش‌های بالای {self.min_order_amount:,} تومان قابل استفاده است.")
+
+        used = self.ordermodel_set.exclude(status=OrderStatusType.failed.value)
+        if self.max_limit_usage and used.count() >= self.max_limit_usage:
+            raise ValidationError("ظرفیت استفاده از این کد تخفیف تکمیل شده است.")
+        if self.per_user_limit and used.filter(user=user).count() >= self.per_user_limit:
+            raise ValidationError("شما قبلاً از این کد تخفیف استفاده کرده‌اید.")
+
+        discount = self.calculate_discount(subtotal)
+        if discount <= 0:
+            raise ValidationError("این کد تخفیف روی این سفارش اعمال نمی‌شود.")
+        return discount
 
 
 # Create your models here.
@@ -109,10 +175,17 @@ class OrderModel(models.Model):
         return self.status == OrderStatusType.success.value
     
     def get_price(self):
-        if self.coupon:
-            return round(self.total_price - (self.total_price * Decimal( self.coupon.discount_percent /100)))
-        else:
-            return self.total_price
+        # total_price هنگام ثبت سفارش، بعد از کسر تخفیف ذخیره می‌شود
+        return self.total_price
+
+    def get_discount_amount(self):
+        """مبلغ تخفیف اعمال‌شده (از روی جمع آیتم‌ها و مبلغ نهایی؛ برای سفارش‌های قدیمی هم درست است)."""
+        if not self.coupon_id:
+            return 0
+        return max(int(self.calculate_total_price() - self.total_price), 0)
+
+    def get_price_before_discount(self):
+        return self.total_price + self.get_discount_amount()
 
     def get_tracking_url(self):
         if self.tracking_code:

@@ -76,10 +76,12 @@
           </div>
           {% if object.coupon %}
           <div class="grid grid-cols-12 gap-x-4 mb-4">
-            <dt class="detail-label">تخفیف</dt>
-            <dl class="detail-value">{{object.coupon.discount_percent}}%</dl>
-            <dt class="detail-label">قیمت با اعمال تخفیف</dt>
-            <dl class="detail-value formatted-price">{{object.get_price|intcomma}}</dl>
+            <dt class="detail-label">کد تخفیف</dt>
+            <dl class="detail-value">{{object.coupon.code}} ({{object.coupon.get_summary}})</dl>
+            <dt class="detail-label">مبلغ تخفیف</dt>
+            <dl class="detail-value formatted-price">{{object.get_discount_amount|intcomma}}</dl>
+            <dt class="detail-label">قیمت قبل از تخفیف</dt>
+            <dl class="detail-value formatted-price">{{object.get_price_before_discount|intcomma}}</dl>
           </div>
           {% endif %}
           <!-- End Row -->

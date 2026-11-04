@@ -184,6 +184,8 @@ class PaymentVerifyAPIView(APIView):
             if order:
                 order.status = OrderStatusType.awaiting.value
                 order.save()
+                if order.coupon_id:
+                    order.coupon.used_by.add(order.user)
                 for item, inv in inventories:
                     inv.stock -= item.quantity
                     inv.save()

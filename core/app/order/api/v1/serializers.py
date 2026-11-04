@@ -50,6 +50,7 @@ class OrderCheckOutSerializer(serializers.Serializer):
 
     def validate_coupon(self, value):
         if value:
-            if not CouponModel.objects.filter(code=value).exists():
-                raise serializers.ValidationError("کوپن وارد شده معتبر نیست.")
+            value = value.strip()
+            if not CouponModel.objects.filter(code__iexact=value).exists():
+                raise serializers.ValidationError("کد تخفیف وارد شده معتبر نیست.")
         return value

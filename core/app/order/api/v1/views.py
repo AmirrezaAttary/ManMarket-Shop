@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
+from django.db import transaction
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from ...models import UserAddressModel, OrderModel, OrderItemModel, OrderStatusType, CouponModel
@@ -31,43 +33,53 @@ class OrderCheckOutAPIView(GenericAPIView):
         if cart.cart_items.count() == 0:
             return Response({"error": "سبد خرید شما خالی است."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # ایجاد سفارش
-        order = OrderModel.objects.create(
-            user=user,
-            name=address.name,
-            phone_number=address.phone_number,
-            address=address.address,
-            state=address.state,
-            city=address.city,
-            zip_code=address.zip_code,
-            tracking_type=tracking_type,
-            status=OrderStatusType.pending.value
-        )
+        # ایجاد سفارش و اعمال کد تخفیف در یک تراکنش:
+        # اگر کد قابل استفاده نباشد، سفارشی ساخته نمی‌شود و پیام خطا برمی‌گردد.
+        try:
+            with transaction.atomic():
+                order = OrderModel.objects.create(
+                    user=user,
+                    name=address.name,
+                    phone_number=address.phone_number,
+                    address=address.address,
+                    state=address.state,
+                    city=address.city,
+                    zip_code=address.zip_code,
+                    tracking_type=tracking_type,
+                    status=OrderStatusType.pending.value
+                )
 
-        # ایجاد آیتم‌های سفارش
-        for item in cart.cart_items.all():
-            OrderItemModel.objects.create(
-                order=order,
-                product=item.product,
-                color=item.color_inventory.color,   # ✅ درست
-                quantity=item.quantity,
-                price=item.color_inventory.get_price()
-            )
+                # ایجاد آیتم‌های سفارش
+                for item in cart.cart_items.all():
+                    OrderItemModel.objects.create(
+                        order=order,
+                        product=item.product,
+                        color=item.color_inventory.color,   # ✅ درست
+                        quantity=item.quantity,
+                        price=item.color_inventory.get_price()
+                    )
 
-        # محاسبه کل قیمت
-        total_price = order.calculate_total_price()
+                # محاسبه کل قیمت
+                total_price = order.calculate_total_price()
 
-        # اعمال کوپن
-        if coupon_code:
-            try:
-                coupon_obj = CouponModel.objects.get(code=coupon_code)
-                total_price = round(total_price - (total_price * (coupon_obj.discount_percent / 100)))
-                order.coupon = coupon_obj
-            except CouponModel.DoesNotExist:
-                pass  # کوپن اشتباه نادیده گرفته می‌شود
+                # اعمال کد تخفیف (قفل ردیف کد تا دو سفارش هم‌زمان ظرفیت را رد نکنند)
+                if coupon_code:
+                    coupon_obj = (
+                        CouponModel.objects.select_for_update()
+                        .filter(code__iexact=coupon_code.strip())
+                        .first()
+                    )
+                    if coupon_obj is None:
+                        raise DjangoValidationError("کد تخفیف وارد شده معتبر نیست.")
+                    discount = coupon_obj.get_discount_for(user, total_price)
+                    total_price = total_price - discount
+                    order.coupon = coupon_obj
 
-        order.total_price = total_price
-        order.save()
+                total_price = int(total_price)
+                order.total_price = total_price
+                order.save()
+        except DjangoValidationError as e:
+            return Response({"coupon": e.messages}, status=status.HTTP_400_BAD_REQUEST)
 
         # ایجاد پرداخت سامان
         total_price += 150000  # هزینه ارسال ثابت

@@ -31,23 +31,7 @@
         {% csrf_token %}
         <div class="card-body">
             <div class="grid grid-cols-12 gap-x-4 flex">
-                <div class="col-span-12 md:col-span-6 mb-4">
-                    <label>کد تخفیف</label>
-                    {{form.code}}
-                </div>
-                <div class="col-span-12 md:col-span-6 mb-4">
-                    <label>درصد تخفیف</label>
-                    {{form.discount_percent}}
-                </div>
-                <div class="col-span-12 md:col-span-6 mb-4">
-                    <label>محدودیت نفرات استفاده</label>
-                    {{form.max_limit_usage}}
-                </div>
-
-                <div class="col-span-12 md:col-span-6 mb-4">
-                    <label>تاریخ انقضا</label>
-                    {{form.expiration_date}}
-                </div>
+                {% include 'dashboard/admin/coupons/_coupon_fields.html' %}
 
             </div>
 
