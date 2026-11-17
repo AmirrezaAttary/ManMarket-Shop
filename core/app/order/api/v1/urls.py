@@ -5,4 +5,5 @@ app_name = 'api-v1-order'
 
 urlpatterns = [
     path("checkout/",views.OrderCheckOutAPIView.as_view(),name="checkout"),
+    path("coupon/preview/",views.CouponPreviewAPIView.as_view(),name="coupon-preview"),
 ]

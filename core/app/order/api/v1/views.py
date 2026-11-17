@@ -14,6 +14,39 @@ from ....payment.models import PaymentModel, PayemntType, PayemntStatusType
 from .serializers import OrderCheckOutSerializer
 
 
+class CouponPreviewAPIView(GenericAPIView):
+    """مبلغ تخفیف کد را روی سبد فعلی کاربر حساب می‌کند (بدون ساخت سفارش).
+
+    همان منطق checkout (get_discount_for) را صدا می‌زند تا فرانت هیچ‌وقت خودش
+    از روی درصد حساب نکند؛ کد «مبلغ ثابت» و «درصدی با سقف» هم درست نمایش داده شوند.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        code = (request.data.get("coupon") or "").strip()
+        if not code:
+            return Response({"coupon": ["کد تخفیف را وارد کنید."]}, status=status.HTTP_400_BAD_REQUEST)
+
+        coupon = CouponModel.objects.filter(code__iexact=code).first()
+        if coupon is None:
+            return Response({"coupon": ["کد تخفیف وارد شده معتبر نیست."]}, status=status.HTTP_400_BAD_REQUEST)
+
+        cart = CartModel.objects.filter(user=request.user).first()
+        subtotal = int(cart.calculate_total_price()) if cart else 0
+        try:
+            discount = coupon.get_discount_for(request.user, subtotal)
+        except DjangoValidationError as e:
+            return Response({"coupon": e.messages}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "coupon": coupon.code,
+            "summary": coupon.get_summary(),
+            "subtotal": subtotal,
+            "discount": int(discount),
+            "total": subtotal - int(discount),
+        })
+
+
 class OrderCheckOutAPIView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = OrderCheckOutSerializer

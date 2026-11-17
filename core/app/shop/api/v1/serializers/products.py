@@ -41,6 +41,11 @@ class ProductColorSerializer(serializers.ModelSerializer):
 
 class ProductColorInventorySerializer(serializers.ModelSerializer):
     color = ProductColorSerializer(read_only=True)  # به جای فقط id، کل اطلاعات رنگ رو میاره
+    # قیمتی که واقعاً در سبد و پرداخت حساب می‌شود؛ فرانت نباید از روی درصد دوباره حسابش کند
+    final_price = serializers.SerializerMethodField()
+
+    def get_final_price(self, obj):
+        return obj.get_price()
 
     class Meta:
         model = ProductColorInventory
@@ -49,6 +54,7 @@ class ProductColorInventorySerializer(serializers.ModelSerializer):
             "color",
             "stock",
             "price",
+            "final_price",
             "discount_percent",
             "hex_color",
             "updated_date"
@@ -80,6 +86,9 @@ class ProductListSerializer(serializers.ModelSerializer):
     min_price = serializers.ReadOnlyField(source="get_min_price")
     min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
     has_discount = serializers.ReadOnlyField()
+    # قیمت اصلی و درصد تخفیف همان رنگی که min_discounted_price از آن می‌آید
+    original_price = serializers.SerializerMethodField()
+    discount_percent = serializers.SerializerMethodField()
     relative_url = serializers.URLField(source="get_absolute_api_url", read_only=True)
     absolute_url = serializers.SerializerMethodField()
 
@@ -98,9 +107,17 @@ class ProductListSerializer(serializers.ModelSerializer):
             "min_price",
             "min_discounted_price",
             "has_discount",
+            "original_price",
+            "discount_percent",
         ]
 
+    def get_original_price(self, obj):
+        inv = obj.get_min_discounted_price_template()
+        return int(inv.price) if inv else None
 
+    def get_discount_percent(self, obj):
+        inv = obj.get_min_discounted_price_template()
+        return inv.discount_percent if inv else 0
         
     def get_absolute_url(self, obj):
         request = self.context.get("request")
@@ -138,6 +155,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     min_price = serializers.ReadOnlyField(source="get_min_price")
     min_discounted_price = serializers.ReadOnlyField(source="get_min_discounted_price")
     has_discount = serializers.ReadOnlyField()
+    original_price = serializers.SerializerMethodField()
+    discount_percent = serializers.SerializerMethodField()
     similar_url = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField() 
 
@@ -172,8 +191,17 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "min_price",
             "min_discounted_price",
             "has_discount",
+            "original_price",
+            "discount_percent",
         ]
 
+    def get_original_price(self, obj):
+        inv = obj.get_min_discounted_price_template()
+        return int(inv.price) if inv else None
+
+    def get_discount_percent(self, obj):
+        inv = obj.get_min_discounted_price_template()
+        return inv.discount_percent if inv else 0
 
     def get_similar_url(self, obj):
         request = self.context.get("request")

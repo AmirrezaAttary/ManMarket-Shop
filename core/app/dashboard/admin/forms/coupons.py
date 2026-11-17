@@ -34,8 +34,10 @@ class CouponForm(forms.ModelForm):
             if name != 'is_active':
                 field.widget.attrs['class'] = 'form-control'
         self.fields['discount_percent'].widget.attrs.update({'min': 0, 'max': 100})
-        self.fields['max_discount_amount'].widget.attrs['min'] = 1
-        self.fields['discount_amount'].widget.attrs['min'] = 1
+        # min=1 نباید روی این دو فیلد باشد: وقتی نوع تخفیف چیز دیگری است، فیلد مخفی می‌شود
+        # ولی مقدارش ۰ است و مرورگر فرم را بی‌صدا رد می‌کند. اعتبارسنجی در clean() انجام می‌شود.
+        self.fields['max_discount_amount'].widget.attrs['min'] = 0
+        self.fields['discount_amount'].widget.attrs['min'] = 0
         self.fields['discount_percent'].required = False
         self.fields['discount_amount'].required = False
         self.fields['min_order_amount'].required = False
